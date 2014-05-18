@@ -1,6 +1,5 @@
 package fr.mrcraftcod;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
@@ -16,9 +15,7 @@ public class ImagePanel extends JPanel
 	}
 
 	public ImagePanel()
-	{
-		this.setBackground(Color.RED);
-	}
+	{}
 
 	@Override
 	protected void paintComponent(Graphics g)

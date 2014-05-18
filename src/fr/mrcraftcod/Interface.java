@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -47,7 +48,7 @@ public class Interface extends JFrame
 	private JTextField userNameField;
 	private HashMap<String, JLabel> showingArea;
 	private ImagePanel avatar;
-	private JLabel level, username;
+	private JLabel level, username, countSS, countS, countA;
 	private JProgressBar levelBar;
 
 	public enum Mods
@@ -69,7 +70,7 @@ public class Interface extends JFrame
 	public Interface() throws IOException
 	{
 		showingArea = new HashMap<String, JLabel>();
-		String[] fields = {"user_id", "count300", "count100", "count50", "playcount", "ranked_score", "total_score", "pp_rank", "level", "pp_raw", "accuracy", "count_rank_ss", "count_rank_s", "count_rank_a", "country"};
+		String[] fields = {"playcount", "ranked_score", "total_score", "pp_rank", "level", "pp_raw", "accuracy", "count_rank_ss", "count_rank_s", "count_rank_a", "country"};
 		/************** FRAME INFOS ********************/
 		frame = new JFrame(Main.APPNAME);
 		frame.setLayout(new GridBagLayout());
@@ -119,6 +120,7 @@ public class Interface extends JFrame
 		levelBar = new JProgressBar();
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
+		updateLevel(0D);
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.CENTER;
@@ -133,6 +135,113 @@ public class Interface extends JFrame
 		constraint.gridwidth = 2;
 		constraint.gridx = 1;
 		levelUserPanel.add(levelBar, constraint);
+		/***************** RANK PANEL ********************/
+		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
+		final int picturesRankSize = 40;
+		// SS
+		JPanel ssPanel = new JPanel();
+		final ImagePanel ssPicture = new ImagePanel();
+		ssPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
+		ssPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
+		ssPicture.setMaximumSize(new Dimension(picturesRankSize, picturesRankSize));
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					BufferedImage temp = ImageIO.read(new URL("https://s.ppy.sh/images/X.png"));
+					Image tmp = temp.getScaledInstance(picturesRankSize, picturesRankSize, BufferedImage.SCALE_FAST);
+					BufferedImage buffered = new BufferedImage(picturesRankSize, picturesRankSize, BufferedImage.TYPE_INT_ARGB);
+					buffered.getGraphics().drawImage(tmp, 0, 0, null);
+					ssPicture.setImage(buffered);
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		countSS = new JLabel(" ");
+		countSS.setHorizontalAlignment(JLabel.CENTER);
+		countSS.setVerticalAlignment(JLabel.CENTER);
+		ssPanel.add(ssPicture);
+		ssPanel.add(countSS);
+		// S
+		JPanel sPanel = new JPanel();
+		final ImagePanel sPicture = new ImagePanel();
+		sPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
+		sPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
+		sPicture.setMaximumSize(new Dimension(picturesRankSize, picturesRankSize));
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					BufferedImage temp = ImageIO.read(new URL("https://s.ppy.sh/images/S.png"));
+					Image tmp = temp.getScaledInstance(picturesRankSize, picturesRankSize, BufferedImage.SCALE_FAST);
+					BufferedImage buffered = new BufferedImage(picturesRankSize, picturesRankSize, BufferedImage.TYPE_INT_ARGB);
+					buffered.getGraphics().drawImage(tmp, 0, 0, null);
+					sPicture.setImage(buffered);
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		countS = new JLabel(" ");
+		countS.setHorizontalAlignment(JLabel.CENTER);
+		countS.setVerticalAlignment(JLabel.CENTER);
+		sPanel.add(sPicture);
+		sPanel.add(countS);
+		// A
+		JPanel aPanel = new JPanel();
+		final ImagePanel aPicture = new ImagePanel();
+		aPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
+		aPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
+		aPicture.setMaximumSize(new Dimension(picturesRankSize, picturesRankSize));
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					BufferedImage temp = ImageIO.read(new URL("https://s.ppy.sh/images/A.png"));
+					Image tmp = temp.getScaledInstance(picturesRankSize, picturesRankSize, BufferedImage.SCALE_FAST);
+					BufferedImage buffered = new BufferedImage(picturesRankSize, picturesRankSize, BufferedImage.TYPE_INT_ARGB);
+					buffered.getGraphics().drawImage(tmp, 0, 0, null);
+					aPicture.setImage(buffered);
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		countA = new JLabel(" ");
+		countA.setHorizontalAlignment(JLabel.CENTER);
+		countA.setVerticalAlignment(JLabel.CENTER);
+		aPanel.add(aPicture);
+		aPanel.add(countA);
+		// Construct
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridwidth = 1;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		ranksUserPanel.add(ssPanel, constraint);
+		constraint.gridx = 1;
+		ranksUserPanel.add(sPanel, constraint);
+		constraint.gridx = 2;
+		ranksUserPanel.add(aPanel, constraint);
 		/******************** AVATAR PANEL *****************/
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		int avatarSize = 128;
@@ -207,9 +316,13 @@ public class Interface extends JFrame
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
 		frame.add(avatarPanel, constraint);
-		constraint.insets = new Insets(0, 0, 0, 0);
+		constraint.insets = new Insets(3, 0, 0, 0);
 		constraint.gridy = line++;
 		frame.add(levelUserPanel, constraint);
+		constraint.gridy = line++;
+		constraint.insets = new Insets(7, 0, 0, 0);
+		frame.add(ranksUserPanel, constraint);
+		constraint.insets = new Insets(0, 0, 0, 0);
 		JLabel tmp;
 		constraint.gridy = line++;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
@@ -269,6 +382,9 @@ public class Interface extends JFrame
 			username.setText(obj.getString("username"));
 			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
 			updateLevel(obj.getDouble("level"));
+			countSS.setText(String.valueOf(obj.getInt("count_rank_ss")));
+			countS.setText(String.valueOf(obj.getInt("count_rank_s")));
+			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override
