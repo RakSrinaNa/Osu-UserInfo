@@ -1,5 +1,6 @@
 package fr.mrcraftcod;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class Main
 					break;
 				}
 			}
+			UIManager.put("nimbusOrange", new Color(255, 200, 0));
 		}
 		catch(final Exception exception)
 		{}

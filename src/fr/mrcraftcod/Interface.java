@@ -29,9 +29,12 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import org.json.JSONException;
@@ -44,8 +47,10 @@ public class Interface extends JFrame
 	private JTextField userNameField;
 	private HashMap<String, JLabel> showingArea;
 	private ImagePanel avatar;
+	private JLabel level, username;
+	private JProgressBar levelBar;
 
-	public static enum Mods
+	public enum Mods
 	{
 		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
 		private long key;
@@ -61,10 +66,11 @@ public class Interface extends JFrame
 		}
 	}
 
-	public Interface()
+	public Interface() throws IOException
 	{
 		showingArea = new HashMap<String, JLabel>();
 		String[] fields = {"user_id", "count300", "count100", "count50", "playcount", "ranked_score", "total_score", "pp_rank", "level", "pp_raw", "accuracy", "count_rank_ss", "count_rank_s", "count_rank_a", "country"};
+		/************** FRAME INFOS ********************/
 		frame = new JFrame(Main.APPNAME);
 		frame.setLayout(new GridBagLayout());
 		frame.setPreferredSize(new Dimension(500, 500));
@@ -73,12 +79,14 @@ public class Interface extends JFrame
 		frame.setVisible(true);
 		frame.getContentPane().setBackground(Color.GRAY);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		final JLabel userNameLabel = new JLabel("Username: ");
-		userNameLabel.setHorizontalAlignment(JLabel.CENTER);
-		userNameLabel.setVerticalAlignment(JLabel.CENTER);
+		/*************** TOP PANEL **********************/
+		JPanel topUserPanel = new JPanel(new GridBagLayout());
+		JLabel usernameAsk = new JLabel("Username : ");
+		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
+		usernameAsk.setVerticalAlignment(JLabel.CENTER);
 		userNameField = new JTextField();
 		userNameField.setPreferredSize(new Dimension(200, 30));
-		JButton validButon = new JButton("Get infos");
+		JButton validButon = new JButton(new ImageIcon(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/loupe.png"))));
 		validButon.addActionListener(new ActionListener()
 		{
 			@Override
@@ -87,6 +95,46 @@ public class Interface extends JFrame
 				getInfos(userNameField.getText());
 			}
 		});
+		// Construct panel
+		GridBagConstraints constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridwidth = 1;
+		constraint.weightx = 0.1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		topUserPanel.add(usernameAsk, constraint);
+		constraint.weightx = 0.8;
+		constraint.gridx = 1;
+		topUserPanel.add(userNameField, constraint);
+		constraint.gridx = 2;
+		constraint.weightx = 0.1;
+		topUserPanel.add(validButon, constraint);
+		/***************** LEVEL PANEL ********************/
+		JPanel levelUserPanel = new JPanel(new GridBagLayout());
+		level = new JLabel(" ");
+		level.setHorizontalAlignment(JLabel.CENTER);
+		level.setVerticalAlignment(JLabel.CENTER);
+		levelBar = new JProgressBar();
+		levelBar.setMaximum(100);
+		levelBar.setStringPainted(true);
+		// Construct
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridwidth = 1;
+		constraint.weightx = 0.1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		levelUserPanel.add(level, constraint);
+		constraint.weightx = 0.9;
+		constraint.gridwidth = 2;
+		constraint.gridx = 1;
+		levelUserPanel.add(levelBar, constraint);
+		/******************** AVATAR PANEL *****************/
+		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		int avatarSize = 128;
 		avatar = new ImagePanel();
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
@@ -131,38 +179,38 @@ public class Interface extends JFrame
 			public void mouseReleased(MouseEvent arg0)
 			{}
 		});
-		GridBagConstraints constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.PAGE_START;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		int line = 0;
-		constraint.gridwidth = 1;
+		username = new JLabel(" ");
+		username.setFont(new Font(username.getFont().getName(), Font.PLAIN, 25));
+		// Construct
+		constraint = new GridBagConstraints();
+		constraint.fill = GridBagConstraints.NONE;
+		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.gridwidth = 3;
 		constraint.weightx = 0.1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
-		constraint.gridy = line++;
-		constraint.insets = new Insets(10, 0, 0, 0);
-		frame.add(userNameLabel, constraint);
-		constraint.insets = new Insets(3, 0, 0, 0);
-		constraint.weightx = 0.8;
-		constraint.gridx = 1;
-		frame.add(userNameField, constraint);
-		constraint.insets = new Insets(5, 0, 0, 0);
-		constraint.gridx = 2;
-		constraint.weightx = 0.1;
-		frame.add(validButon, constraint);
-		constraint.fill = GridBagConstraints.NONE;
-		constraint.gridwidth = 3;
-		constraint.insets = new Insets(5, 5, 0, 0);
+		constraint.gridy = 0;
+		avatarPanel.add(avatar, constraint);
+		constraint.gridy = 1;
+		avatarPanel.add(username, constraint);
+		/*************** FRAME CONSTRUCT ******************/
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.PAGE_START;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		int line = 0;
+		constraint.gridwidth = GridBagConstraints.REMAINDER;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
-		frame.add(avatar, constraint);
+		frame.add(topUserPanel, constraint);
+		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
-		JLabel tmp = new JLabel();
-		tmp.setFont(new Font(tmp.getFont().getName(), Font.PLAIN, 25));
-		Random r = new Random();
-		tmp.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
-		showingArea.put("username", tmp);
-		frame.add(tmp, constraint);
+		frame.add(avatarPanel, constraint);
+		constraint.insets = new Insets(0, 0, 0, 0);
+		constraint.gridy = line++;
+		frame.add(levelUserPanel, constraint);
+		JLabel tmp;
 		constraint.gridy = line++;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		for(String param : fields)
@@ -171,7 +219,7 @@ public class Interface extends JFrame
 			constraint.gridy = line++;
 			constraint.gridx = 0;
 			constraint.weightx = 0.1;
-			frame.add(new JLabel(getText(param)), constraint);
+			frame.add(new JLabel(param), constraint);
 			constraint.gridwidth = 2;
 			constraint.gridx = 1;
 			constraint.weightx = 0.9;
@@ -183,40 +231,6 @@ public class Interface extends JFrame
 		frame.setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		frame.pack();
 		frame.toFront();
-	}
-
-	private String getText(String param)
-	{
-		return param;
-	}
-
-	private BufferedImage getAvatar(String user_id) throws MalformedURLException, IOException, Exception
-	{
-		return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + user_id, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
-	}
-
-	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
-	{
-		if(!string.contains(ending))
-			throw new Exception();
-		boolean exists = false;
-		for(final String temp : begining)
-			if(string.contains(temp))
-				exists = true;
-		if(!exists)
-			throw new Exception();
-		int beginingIndex = 0;
-		for(final String temp : begining)
-			if((beginingIndex = string.indexOf(temp)) > -1)
-				break;
-		String result = string.substring(beginingIndex, string.indexOf(ending) + ending.length());
-		if(deleteDelimiters)
-		{
-			result = result.replace(ending, "");
-			for(final String temp : begining)
-				result = result.replace(temp, "");
-		}
-		return result;
 	}
 
 	private static String[] getCode(String link) throws IOException
@@ -251,21 +265,10 @@ public class Interface extends JFrame
 		try
 		{
 			final JSONObject obj = new JSONObject(getJSONText(user));
-			@SuppressWarnings("unchecked")
-			Iterator<String> keys = obj.keys();
-			while(keys.hasNext())
-			{
-				String key = keys.next();
-				if(showingArea.containsKey(key))
-				{
-					showingArea.get(key).setText(obj.getString(key));
-					if(key.equals("username"))
-					{
-						Random r = new Random();
-						showingArea.get(key).setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
-					}
-				}
-			}
+			Random r = new Random();
+			username.setText(obj.getString("username"));
+			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
+			updateLevel(obj.getDouble("level"));
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override
@@ -281,6 +284,17 @@ public class Interface extends JFrame
 					}
 				}
 			});
+			/******************/
+			@SuppressWarnings("unchecked")
+			Iterator<String> keys = obj.keys();
+			while(keys.hasNext())
+			{
+				String key = keys.next();
+				if(showingArea.containsKey(key))
+				{
+					showingArea.get(key).setText(obj.getString(key));
+				}
+			}
 		}
 		catch(JSONException | IOException e)
 		{
@@ -292,7 +306,21 @@ public class Interface extends JFrame
 		}
 	}
 
-	private String getJSONText(String user) throws IOException
+	private synchronized BufferedImage getAvatar(String user_id) throws MalformedURLException, IOException, Exception
+	{
+		return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + user_id, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+	}
+
+	private void updateLevel(double d)
+	{
+		int baseLevel = (int) d;
+		double progress = round((d - baseLevel) * 100, 2);
+		level.setText("Level " + baseLevel + "(" + progress + "%)");
+		levelBar.setValue((int) progress);
+		levelBar.setString(progress + "%");
+	}
+
+	private synchronized String getJSONText(String user) throws IOException
 	{
 		String str = null, urlParameters = "k=" + Main.API_KEY + "&u=" + user + "&m=" + "0" + "&type=string&event_days=1";
 		StringBuilder page = new StringBuilder();
@@ -326,5 +354,39 @@ public class Interface extends JFrame
 			page.append(str);
 		in.close();
 		return page.toString();
+	}
+
+	private double round(double value, int places)
+	{
+		if(places < 0)
+			throw new IllegalArgumentException();
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}
+
+	private String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
+	{
+		if(!string.contains(ending))
+			throw new Exception();
+		boolean exists = false;
+		for(final String temp : begining)
+			if(string.contains(temp))
+				exists = true;
+		if(!exists)
+			throw new Exception();
+		int beginingIndex = 0;
+		for(final String temp : begining)
+			if((beginingIndex = string.indexOf(temp)) > -1)
+				break;
+		String result = string.substring(beginingIndex, string.indexOf(ending) + ending.length());
+		if(deleteDelimiters)
+		{
+			result = result.replace(ending, "");
+			for(final String temp : begining)
+				result = result.replace(temp, "");
+		}
+		return result;
 	}
 }
