@@ -634,7 +634,7 @@ public class Interface extends JFrame
 		userNameField.setBackground(null);
 		try
 		{
-			final JSONObject obj = new JSONObject(sendPost(user));
+			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
 			if(!lastUser.equals(obj.get("username")))
 				avatar.setImage(null);
 			Random r = new Random();
@@ -647,7 +647,7 @@ public class Interface extends JFrame
 			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
 			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getInt("playcount")));
 			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("ranked_score")));
-			totalScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("total_score")));
+			totalScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("total_score")) + " (" + getScoreToNextLevel(getLevel(obj.getDouble("level")), getProgressLevel(obj.getDouble("level"))) + " " + resourceBundle.getString("score_to_next_level") + " " + (getLevel(obj.getDouble("level") + 1)) + ")");
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override
@@ -733,9 +733,9 @@ public class Interface extends JFrame
 		levelBar.setString(resourceBundle.getString("level") + " " + baseLevel + " (" + progress + "%)");
 	}
 
-	synchronized private String sendPost(String user) throws Exception
+	synchronized public static String sendPost(String key, String user, int selectedMode) throws Exception
 	{
-		String urlParameters = "k=" + Main.API_KEY + "&u=" + user + "&m=" + mode.getSelectedIndex() + "&type=string&event_days=1";
+		String urlParameters = "k=" + key + "&u=" + user + "&m=" + selectedMode + "&type=string&event_days=1";
 		StringBuilder page = new StringBuilder();
 		if(true)
 		{
