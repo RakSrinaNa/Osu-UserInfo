@@ -12,6 +12,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -27,11 +29,17 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Level;
+import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,7 +57,12 @@ public class Interface extends JFrame
 	private HashMap<String, JLabel> showingArea;
 	private ImagePanel avatar;
 	private JLabel level, username, countSS, countS, countA;
+	private JComboBox<String> mode;
+	private String lastUser = "";
+	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
+	private Date lastPost = new Date(0);
+	public static ResourceBundle resourceBundle;
 
 	public enum Mods
 	{
@@ -71,10 +84,14 @@ public class Interface extends JFrame
 	{
 		showingArea = new HashMap<String, JLabel>();
 		String[] fields = {"playcount", "ranked_score", "total_score", "pp_rank", "level", "pp_raw", "accuracy", "count_rank_ss", "count_rank_s", "count_rank_a", "country"};
+		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", Locale.getDefault());
 		/************** FRAME INFOS ********************/
 		frame = new JFrame(Main.APPNAME);
+		frame.setVisible(false);
 		frame.setLayout(new GridBagLayout());
 		frame.setPreferredSize(new Dimension(500, 500));
+		frame.setMinimumSize(new Dimension(350, 450));
+		frame.setPreferredSize(new Dimension(550, 550));
 		frame.setAlwaysOnTop(false);
 		frame.setIconImages(Main.icons);
 		frame.setVisible(true);
@@ -83,10 +100,34 @@ public class Interface extends JFrame
 		/*************** TOP PANEL **********************/
 		JPanel topUserPanel = new JPanel(new GridBagLayout());
 		JLabel usernameAsk = new JLabel("Username : ");
+		/*************** SEARCH PANEL **********************/
+		JPanel searchPanel = new JPanel(new GridBagLayout());
+		// searchPanel.setBackground(Color.GRAY);
+		JLabel usernameAsk = new JLabel(resourceBundle.getString("username") + " : ");
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
 		userNameField = new JTextField();
 		userNameField.setPreferredSize(new Dimension(200, 30));
+		new GhostText(userNameField, resourceBundle.getString("ghost_username_field"));
+		userNameField.addKeyListener(new KeyListener()
+		{
+			@Override
+			public void keyPressed(KeyEvent arg0)
+			{
+				if(KeyEvent.VK_ENTER == arg0.getExtendedKeyCode())
+					getInfos(userNameField.getText());
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0)
+			{}
+
+			@Override
+			public void keyTyped(KeyEvent arg0)
+			{}
+		});
+		mode = new JComboBox<String>(new String[] {"Osu!", "Taiko", "CTB", "Osu!Mania"});
+		mode.setSelectedIndex(0);
 		JButton validButon = new JButton(new ImageIcon(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/loupe.png"))));
 		validButon.addActionListener(new ActionListener()
 		{
@@ -107,16 +148,24 @@ public class Interface extends JFrame
 		constraint.gridy = 0;
 		topUserPanel.add(usernameAsk, constraint);
 		constraint.weightx = 0.8;
+		searchPanel.add(usernameAsk, constraint);
+		constraint.weightx = 0.7;
 		constraint.gridx = 1;
 		topUserPanel.add(userNameField, constraint);
+		searchPanel.add(userNameField, constraint);
 		constraint.gridx = 2;
+		constraint.weightx = 0.2;
+		searchPanel.add(mode, constraint);
+		constraint.gridx = 3;
 		constraint.weightx = 0.1;
 		topUserPanel.add(validButon, constraint);
+		searchPanel.add(validButon, constraint);
 		/***************** LEVEL PANEL ********************/
 		JPanel levelUserPanel = new JPanel(new GridBagLayout());
 		level = new JLabel(" ");
 		level.setHorizontalAlignment(JLabel.CENTER);
 		level.setVerticalAlignment(JLabel.CENTER);
+		levelUserPanel.setBackground(Color.GRAY);
 		levelBar = new JProgressBar();
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
@@ -125,21 +174,86 @@ public class Interface extends JFrame
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.CENTER;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridwidth = 3;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		levelUserPanel.add(levelBar, constraint);
+		/***************** HITS PANEL ********************/
+		JPanel hitCountPanel = new JPanel(new GridBagLayout());
+		hitCountPanel.setBackground(Color.GRAY);
+		float picturesSize = 40f;
+		// 300
+		JPanel count300Panel = new JPanel();
+		count300Panel.setBackground(Color.GRAY);
+		final ImagePanel count300Picture = new ImagePanel();
+		count300Picture.setBackground(Color.GRAY);
+		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count300Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")), picturesSize, picturesSize));
+		hitCount300 = new JLabel("0");
+		hitCount300.setHorizontalAlignment(JLabel.CENTER);
+		hitCount300.setVerticalAlignment(JLabel.CENTER);
+		count300Panel.add(count300Picture);
+		count300Panel.add(hitCount300);
+		// 100
+		JPanel count100Panel = new JPanel();
+		count100Panel.setBackground(Color.GRAY);
+		final ImagePanel count100Picture = new ImagePanel();
+		count100Picture.setBackground(Color.GRAY);
+		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count100Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")), picturesSize, picturesSize));
+		hitCount100 = new JLabel("0");
+		hitCount100.setHorizontalAlignment(JLabel.CENTER);
+		hitCount100.setVerticalAlignment(JLabel.CENTER);
+		count100Panel.add(count100Picture);
+		count100Panel.add(hitCount100);
+		// 50
+		JPanel count50Panel = new JPanel();
+		count50Panel.setBackground(Color.GRAY);
+		picturesSize = 30f;
+		final ImagePanel count50Picture = new ImagePanel();
+		count50Picture.setBackground(Color.GRAY);
+		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		count50Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")), picturesSize, picturesSize));
+		hitCount50 = new JLabel("0");
+		hitCount50.setHorizontalAlignment(JLabel.CENTER);
+		hitCount50.setVerticalAlignment(JLabel.CENTER);
+		count50Panel.add(count50Picture);
+		count50Panel.add(hitCount50);
+		// Construct
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.gridwidth = 1;
 		constraint.weightx = 0.1;
+		constraint.weightx = 1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
 		levelUserPanel.add(level, constraint);
 		constraint.weightx = 0.9;
 		constraint.gridwidth = 2;
+		hitCountPanel.add(count300Panel, constraint);
 		constraint.gridx = 1;
 		levelUserPanel.add(levelBar, constraint);
+		hitCountPanel.add(count100Panel, constraint);
+		constraint.gridx = 2;
+		hitCountPanel.add(count50Panel, constraint);
 		/***************** RANK PANEL ********************/
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
 		final int picturesRankSize = 40;
+		ranksUserPanel.setBackground(Color.GRAY);
+		picturesSize = 40f;
 		// SS
 		JPanel ssPanel = new JPanel();
+		ssPanel.setBackground(Color.GRAY);
 		final ImagePanel ssPicture = new ImagePanel();
 		ssPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
 		ssPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
@@ -164,12 +278,19 @@ public class Interface extends JFrame
 			}
 		});
 		countSS = new JLabel(" ");
+		ssPicture.setBackground(Color.GRAY);
+		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		ssPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")), picturesSize, picturesSize));
+		countSS = new JLabel("0");
 		countSS.setHorizontalAlignment(JLabel.CENTER);
 		countSS.setVerticalAlignment(JLabel.CENTER);
 		ssPanel.add(ssPicture);
 		ssPanel.add(countSS);
 		// S
 		JPanel sPanel = new JPanel();
+		sPanel.setBackground(Color.GRAY);
 		final ImagePanel sPicture = new ImagePanel();
 		sPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
 		sPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
@@ -194,12 +315,19 @@ public class Interface extends JFrame
 			}
 		});
 		countS = new JLabel(" ");
+		sPicture.setBackground(Color.GRAY);
+		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		sPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")), picturesSize, picturesSize));
+		countS = new JLabel("0");
 		countS.setHorizontalAlignment(JLabel.CENTER);
 		countS.setVerticalAlignment(JLabel.CENTER);
 		sPanel.add(sPicture);
 		sPanel.add(countS);
 		// A
 		JPanel aPanel = new JPanel();
+		aPanel.setBackground(Color.GRAY);
 		final ImagePanel aPicture = new ImagePanel();
 		aPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
 		aPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
@@ -224,6 +352,12 @@ public class Interface extends JFrame
 			}
 		});
 		countA = new JLabel(" ");
+		aPicture.setBackground(Color.GRAY);
+		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		aPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")), picturesSize, picturesSize));
+		countA = new JLabel("0");
 		countA.setHorizontalAlignment(JLabel.CENTER);
 		countA.setVerticalAlignment(JLabel.CENTER);
 		aPanel.add(aPicture);
@@ -243,9 +377,12 @@ public class Interface extends JFrame
 		constraint.gridx = 2;
 		ranksUserPanel.add(aPanel, constraint);
 		/******************** AVATAR PANEL *****************/
+		/******************** USER PANEL *****************/
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
+		avatarPanel.setBackground(Color.GRAY);
 		int avatarSize = 128;
-		avatar = new ImagePanel();
+		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png")), 128, 128));
+		avatar.setBackground(Color.GRAY);
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
@@ -272,15 +409,13 @@ public class Interface extends JFrame
 					if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
 						try
 						{
-							String user_id = showingArea.get("user_id").getText();
+							String user_id = username.getText();
 							if(user_id.equalsIgnoreCase(""))
 								return;
 							desktop.browse(new URL("https://osu.ppy.sh/u/" + user_id).toURI());
 						}
 						catch(final Exception e)
-						{
-							Main.logger.log(Level.WARNING, "Problem when trying to open link in web browser!", e);
-						}
+						{}
 				}
 			}
 
@@ -302,6 +437,115 @@ public class Interface extends JFrame
 		avatarPanel.add(avatar, constraint);
 		constraint.gridy = 1;
 		avatarPanel.add(username, constraint);
+		/**************** OTHERS PANEL *********************/
+		JPanel otherPanel = new JPanel(new GridBagLayout());
+		otherPanel.setBackground(Color.GRAY);
+		// PlayCount
+		JLabel playCountLabel = new JLabel(resourceBundle.getString("play_count") + " : ");
+		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
+		playCountLabel.setVerticalAlignment(JLabel.CENTER);
+		playCount = new JLabel("          ");
+		playCount.setHorizontalAlignment(JLabel.LEFT);
+		playCount.setVerticalAlignment(JLabel.CENTER);
+		// RankedScore
+		JLabel rankedScoreLabel = new JLabel(resourceBundle.getString("ranked_score") + " : ");
+		rankedScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
+		rankedScoreLabel.setVerticalAlignment(JLabel.CENTER);
+		rankedScore = new JLabel("          ");
+		rankedScore.setHorizontalAlignment(JLabel.LEFT);
+		rankedScore.setVerticalAlignment(JLabel.CENTER);
+		// TotalScore
+		JLabel totalScoreLabel = new JLabel(resourceBundle.getString("total_score") + " : ");
+		totalScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
+		totalScoreLabel.setVerticalAlignment(JLabel.CENTER);
+		totalScore = new JLabel("          ");
+		totalScore.setHorizontalAlignment(JLabel.LEFT);
+		totalScore.setVerticalAlignment(JLabel.CENTER);
+		// PP
+		JLabel ppCountLabel = new JLabel("PP : ");
+		ppCountLabel.setHorizontalAlignment(JLabel.RIGHT);
+		ppCountLabel.setVerticalAlignment(JLabel.CENTER);
+		ppCount = new JLabel("          ");
+		ppCount.setHorizontalAlignment(JLabel.LEFT);
+		ppCount.setVerticalAlignment(JLabel.CENTER);
+		// Accuracy
+		JLabel accuracyLabel = new JLabel(resourceBundle.getString("accuracy") + " : ");
+		accuracyLabel.setHorizontalAlignment(JLabel.RIGHT);
+		accuracyLabel.setVerticalAlignment(JLabel.CENTER);
+		accuracy = new JLabel("          ");
+		accuracy.setHorizontalAlignment(JLabel.LEFT);
+		accuracy.setVerticalAlignment(JLabel.CENTER);
+		// Country
+		JLabel countryLabel = new JLabel(resourceBundle.getString("country") + " : ");
+		countryLabel.setHorizontalAlignment(JLabel.RIGHT);
+		countryLabel.setVerticalAlignment(JLabel.CENTER);
+		country = new JLabel("          ");
+		country.setHorizontalAlignment(JLabel.LEFT);
+		country.setVerticalAlignment(JLabel.CENTER);
+		// Country
+		JLabel totalHitsLabel = new JLabel(resourceBundle.getString("total_hits") + " : ");
+		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
+		totalHitsLabel.setVerticalAlignment(JLabel.CENTER);
+		totalHits = new JLabel("          ");
+		totalHits.setHorizontalAlignment(JLabel.LEFT);
+		totalHits.setVerticalAlignment(JLabel.CENTER);
+		// Construct
+		constraint = new GridBagConstraints();
+		constraint.fill = GridBagConstraints.NONE;
+		constraint.anchor = GridBagConstraints.BASELINE;
+		constraint.gridwidth = 1;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		constraint.anchor = GridBagConstraints.EAST;
+		otherPanel.add(playCountLabel, constraint);
+		constraint.gridx = 1;
+		constraint.anchor = GridBagConstraints.WEST;
+		otherPanel.add(playCount, constraint);
+		constraint.gridx = 0;
+		constraint.gridy = 1;
+		constraint.anchor = GridBagConstraints.EAST;
+		otherPanel.add(rankedScoreLabel, constraint);
+		constraint.gridx = 1;
+		constraint.anchor = GridBagConstraints.WEST;
+		otherPanel.add(rankedScore, constraint);
+		constraint.gridx = 0;
+		constraint.gridy = 2;
+		constraint.anchor = GridBagConstraints.EAST;
+		otherPanel.add(totalScoreLabel, constraint);
+		constraint.gridx = 1;
+		constraint.anchor = GridBagConstraints.WEST;
+		otherPanel.add(totalScore, constraint);
+		constraint.gridx = 0;
+		constraint.gridy = 3;
+		constraint.anchor = GridBagConstraints.EAST;
+		otherPanel.add(ppCountLabel, constraint);
+		constraint.gridx = 1;
+		constraint.anchor = GridBagConstraints.WEST;
+		otherPanel.add(ppCount, constraint);
+		constraint.gridx = 0;
+		constraint.gridy = 4;
+		constraint.anchor = GridBagConstraints.EAST;
+		otherPanel.add(accuracyLabel, constraint);
+		constraint.gridx = 1;
+		constraint.anchor = GridBagConstraints.WEST;
+		otherPanel.add(accuracy, constraint);
+		constraint.gridx = 0;
+		constraint.gridy = 5;
+		constraint.anchor = GridBagConstraints.EAST;
+		otherPanel.add(countryLabel, constraint);
+		constraint.gridx = 1;
+		constraint.anchor = GridBagConstraints.WEST;
+		otherPanel.add(country, constraint);
+		constraint.insets = new Insets(20, 0, 0, 0);
+		constraint.gridx = 0;
+		constraint.gridy = 6;
+		constraint.anchor = GridBagConstraints.EAST;
+		otherPanel.add(totalHitsLabel, constraint);
+		constraint.gridx = 1;
+		constraint.anchor = GridBagConstraints.WEST;
+		otherPanel.add(totalHits, constraint);
 		/*************** FRAME CONSTRUCT ******************/
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
@@ -312,18 +556,16 @@ public class Interface extends JFrame
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
+		frame.add(searchPanel, constraint);
 		frame.add(topUserPanel, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
 		frame.add(avatarPanel, constraint);
-		constraint.insets = new Insets(3, 0, 0, 0);
+		constraint.insets = new Insets(0, 0, 0, 0);
 		constraint.gridy = line++;
 		frame.add(levelUserPanel, constraint);
 		constraint.gridy = line++;
-		constraint.insets = new Insets(7, 0, 0, 0);
-		frame.add(ranksUserPanel, constraint);
-		constraint.insets = new Insets(0, 0, 0, 0);
-		JLabel tmp;
+		frame.add(otherPanel, constraint);
 		constraint.gridy = line++;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		for(String param : fields)
@@ -343,7 +585,18 @@ public class Interface extends JFrame
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		frame.pack();
+		frame.setVisible(true);
 		frame.toFront();
+	}
+
+	private BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
+	{
+		int baseWidth = image.getWidth(), baseHeight = image.getHeight();
+		float ratio = (baseWidth > baseHeight) ? (width / baseWidth) : (height / baseHeight);
+		Image tmp = image.getScaledInstance((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.SCALE_SMOOTH);
+		BufferedImage buffered = new BufferedImage((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.TYPE_INT_ARGB);
+		buffered.getGraphics().drawImage(tmp, 0, 0, null);
+		return buffered;
 	}
 
 	private static String[] getCode(String link) throws IOException
@@ -375,16 +628,26 @@ public class Interface extends JFrame
 
 	private void getInfos(String user)
 	{
+		if(new Date().getTime() - lastPost.getTime() < 2500)
+			return;
+		lastPost = new Date();
+		userNameField.setBackground(null);
 		try
 		{
-			final JSONObject obj = new JSONObject(getJSONText(user));
+			final JSONObject obj = new JSONObject(sendPost(user));
+			if(!lastUser.equals(obj.get("username")))
+				avatar.setImage(null);
 			Random r = new Random();
 			username.setText(obj.getString("username"));
+			username.setText(obj.getString("username") + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("pp_rank")) + ")");
 			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
 			updateLevel(obj.getDouble("level"));
 			countSS.setText(String.valueOf(obj.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(obj.getInt("count_rank_s")));
 			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
+			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getInt("playcount")));
+			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("ranked_score")));
+			totalScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("total_score")));
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override
@@ -415,6 +678,7 @@ public class Interface extends JFrame
 		catch(JSONException | IOException e)
 		{
 			e.printStackTrace();
+			userNameField.setBackground(Color.RED);
 		}
 		catch(Exception e)
 		{
@@ -427,18 +691,51 @@ public class Interface extends JFrame
 		return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + user_id, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
 	}
 
+	private double getScoreToNextLevel(int currentLevel, double currentScore)
+	{
+		double result = -1;
+		if(currentLevel <= 100)
+		{
+			if(currentLevel >= 2)
+			{
+				int temp = 4 * ((int) Math.pow(currentLevel, 3)) - 3 * ((int) Math.pow(currentLevel, 2)) - currentLevel;
+				result = (long) (5000 / 3 * temp + 1.25 * ((int) Math.pow(1.8, currentLevel - 60)));
+			}
+			else if(currentLevel == 0 || currentLevel == 1)
+			{
+				result = 0;
+			}
+		}
+		else if(currentLevel >= 101)
+		{
+			int temp = currentLevel - 100;
+			result = 26931190829D + 100000000000D * temp;
+		}
+		return result;
+	}
+
+	private int getLevel(double d)
+	{
+		return (int) d;
+	}
+
+	private double getProgressLevel(double d)
+	{
+		return d - ((int) d);
+	}
+
 	private void updateLevel(double d)
 	{
 		int baseLevel = (int) d;
 		double progress = round((d - baseLevel) * 100, 2);
 		level.setText("Level " + baseLevel + "(" + progress + "%)");
 		levelBar.setValue((int) progress);
-		levelBar.setString(progress + "%");
+		levelBar.setString(resourceBundle.getString("level") + " " + baseLevel + " (" + progress + "%)");
 	}
 
-	private synchronized String getJSONText(String user) throws IOException
+	synchronized private String sendPost(String user) throws Exception
 	{
-		String str = null, urlParameters = "k=" + Main.API_KEY + "&u=" + user + "&m=" + "0" + "&type=string&event_days=1";
+		String urlParameters = "k=" + Main.API_KEY + "&u=" + user + "&m=" + mode.getSelectedIndex() + "&type=string&event_days=1";
 		StringBuilder page = new StringBuilder();
 		if(true)
 		{
@@ -449,6 +746,7 @@ public class Interface extends JFrame
 			return page.toString();
 		}
 		URL url = new URL(" https://osu.ppy.sh/p/api/get_user");
+		URL url = new URL("https://osu.ppy.sh/api/get_user?" + urlParameters);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setDoOutput(true);
 		connection.setDoInput(true);
