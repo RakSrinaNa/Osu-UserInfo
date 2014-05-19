@@ -647,7 +647,7 @@ public class Interface extends JFrame
 			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
 			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getInt("playcount")));
 			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("ranked_score")));
-			totalScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("total_score")) + " (" + getScoreToNextLevel(getLevel(obj.getDouble("level")), getProgressLevel(obj.getDouble("level"))) + " " + resourceBundle.getString("score_to_next_level") + " " + (getLevel(obj.getDouble("level") + 1)) + ")");
+			totalScore.setText(String.format(resourceBundle.getString("total_score_value"), obj.getDouble("total_score"), getScoreToNextLevel(getLevel(obj.getDouble("level")), obj.getDouble("total_score")), getLevel(obj.getDouble("level")) + 1));
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override
@@ -711,7 +711,7 @@ public class Interface extends JFrame
 			int temp = currentLevel - 100;
 			result = 26931190829D + 100000000000D * temp;
 		}
-		return result;
+		return result - currentScore;
 	}
 
 	private int getLevel(double d)
@@ -726,11 +726,10 @@ public class Interface extends JFrame
 
 	private void updateLevel(double d)
 	{
-		int baseLevel = (int) d;
-		double progress = round((d - baseLevel) * 100, 2);
+		double progress = round(getProgressLevel(d) * 100, 2);
 		level.setText("Level " + baseLevel + "(" + progress + "%)");
 		levelBar.setValue((int) progress);
-		levelBar.setString(resourceBundle.getString("level") + " " + baseLevel + " (" + progress + "%)");
+		levelBar.setString(String.format(resourceBundle.getString("level"), getLevel(d), progress));
 	}
 
 	synchronized public static String sendPost(String key, String user, int selectedMode) throws Exception
