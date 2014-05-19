@@ -18,23 +18,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -54,9 +48,7 @@ public class Interface extends JFrame
 	private static final long serialVersionUID = 2629819156905465351L;
 	private JFrame frame;
 	private JTextField userNameField;
-	private HashMap<String, JLabel> showingArea;
 	private ImagePanel avatar;
-	private JLabel level, username, countSS, countS, countA;
 	private JComboBox<String> mode;
 	private String lastUser = "";
 	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
@@ -82,24 +74,17 @@ public class Interface extends JFrame
 
 	public Interface() throws IOException
 	{
-		showingArea = new HashMap<String, JLabel>();
-		String[] fields = {"playcount", "ranked_score", "total_score", "pp_rank", "level", "pp_raw", "accuracy", "count_rank_ss", "count_rank_s", "count_rank_a", "country"};
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", Locale.getDefault());
 		/************** FRAME INFOS ********************/
 		frame = new JFrame(Main.APPNAME);
 		frame.setVisible(false);
 		frame.setLayout(new GridBagLayout());
-		frame.setPreferredSize(new Dimension(500, 500));
 		frame.setMinimumSize(new Dimension(350, 450));
 		frame.setPreferredSize(new Dimension(550, 550));
 		frame.setAlwaysOnTop(false);
 		frame.setIconImages(Main.icons);
-		frame.setVisible(true);
 		frame.getContentPane().setBackground(Color.GRAY);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		/*************** TOP PANEL **********************/
-		JPanel topUserPanel = new JPanel(new GridBagLayout());
-		JLabel usernameAsk = new JLabel("Username : ");
 		/*************** SEARCH PANEL **********************/
 		JPanel searchPanel = new JPanel(new GridBagLayout());
 		// searchPanel.setBackground(Color.GRAY);
@@ -146,25 +131,18 @@ public class Interface extends JFrame
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
-		topUserPanel.add(usernameAsk, constraint);
-		constraint.weightx = 0.8;
 		searchPanel.add(usernameAsk, constraint);
 		constraint.weightx = 0.7;
 		constraint.gridx = 1;
-		topUserPanel.add(userNameField, constraint);
 		searchPanel.add(userNameField, constraint);
 		constraint.gridx = 2;
 		constraint.weightx = 0.2;
 		searchPanel.add(mode, constraint);
 		constraint.gridx = 3;
 		constraint.weightx = 0.1;
-		topUserPanel.add(validButon, constraint);
 		searchPanel.add(validButon, constraint);
 		/***************** LEVEL PANEL ********************/
 		JPanel levelUserPanel = new JPanel(new GridBagLayout());
-		level = new JLabel(" ");
-		level.setHorizontalAlignment(JLabel.CENTER);
-		level.setVerticalAlignment(JLabel.CENTER);
 		levelUserPanel.setBackground(Color.GRAY);
 		levelBar = new JProgressBar();
 		levelBar.setMaximum(100);
@@ -232,52 +210,23 @@ public class Interface extends JFrame
 		constraint.anchor = GridBagConstraints.CENTER;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.gridwidth = 1;
-		constraint.weightx = 0.1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
-		levelUserPanel.add(level, constraint);
-		constraint.weightx = 0.9;
-		constraint.gridwidth = 2;
 		hitCountPanel.add(count300Panel, constraint);
 		constraint.gridx = 1;
-		levelUserPanel.add(levelBar, constraint);
 		hitCountPanel.add(count100Panel, constraint);
 		constraint.gridx = 2;
 		hitCountPanel.add(count50Panel, constraint);
 		/***************** RANK PANEL ********************/
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
-		final int picturesRankSize = 40;
 		ranksUserPanel.setBackground(Color.GRAY);
 		picturesSize = 40f;
 		// SS
 		JPanel ssPanel = new JPanel();
 		ssPanel.setBackground(Color.GRAY);
 		final ImagePanel ssPicture = new ImagePanel();
-		ssPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
-		ssPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
-		ssPicture.setMaximumSize(new Dimension(picturesRankSize, picturesRankSize));
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					BufferedImage temp = ImageIO.read(new URL("https://s.ppy.sh/images/X.png"));
-					Image tmp = temp.getScaledInstance(picturesRankSize, picturesRankSize, BufferedImage.SCALE_FAST);
-					BufferedImage buffered = new BufferedImage(picturesRankSize, picturesRankSize, BufferedImage.TYPE_INT_ARGB);
-					buffered.getGraphics().drawImage(tmp, 0, 0, null);
-					ssPicture.setImage(buffered);
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-		countSS = new JLabel(" ");
 		ssPicture.setBackground(Color.GRAY);
 		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -292,29 +241,6 @@ public class Interface extends JFrame
 		JPanel sPanel = new JPanel();
 		sPanel.setBackground(Color.GRAY);
 		final ImagePanel sPicture = new ImagePanel();
-		sPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
-		sPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
-		sPicture.setMaximumSize(new Dimension(picturesRankSize, picturesRankSize));
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					BufferedImage temp = ImageIO.read(new URL("https://s.ppy.sh/images/S.png"));
-					Image tmp = temp.getScaledInstance(picturesRankSize, picturesRankSize, BufferedImage.SCALE_FAST);
-					BufferedImage buffered = new BufferedImage(picturesRankSize, picturesRankSize, BufferedImage.TYPE_INT_ARGB);
-					buffered.getGraphics().drawImage(tmp, 0, 0, null);
-					sPicture.setImage(buffered);
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-		countS = new JLabel(" ");
 		sPicture.setBackground(Color.GRAY);
 		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -329,29 +255,6 @@ public class Interface extends JFrame
 		JPanel aPanel = new JPanel();
 		aPanel.setBackground(Color.GRAY);
 		final ImagePanel aPicture = new ImagePanel();
-		aPicture.setMinimumSize(new Dimension(picturesRankSize, picturesRankSize));
-		aPicture.setPreferredSize(new Dimension(picturesRankSize, picturesRankSize));
-		aPicture.setMaximumSize(new Dimension(picturesRankSize, picturesRankSize));
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					BufferedImage temp = ImageIO.read(new URL("https://s.ppy.sh/images/A.png"));
-					Image tmp = temp.getScaledInstance(picturesRankSize, picturesRankSize, BufferedImage.SCALE_FAST);
-					BufferedImage buffered = new BufferedImage(picturesRankSize, picturesRankSize, BufferedImage.TYPE_INT_ARGB);
-					buffered.getGraphics().drawImage(tmp, 0, 0, null);
-					aPicture.setImage(buffered);
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-		countA = new JLabel(" ");
 		aPicture.setBackground(Color.GRAY);
 		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -376,7 +279,6 @@ public class Interface extends JFrame
 		ranksUserPanel.add(sPanel, constraint);
 		constraint.gridx = 2;
 		ranksUserPanel.add(aPanel, constraint);
-		/******************** AVATAR PANEL *****************/
 		/******************** USER PANEL *****************/
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		avatarPanel.setBackground(Color.GRAY);
@@ -557,7 +459,6 @@ public class Interface extends JFrame
 		constraint.gridx = 0;
 		constraint.gridy = line++;
 		frame.add(searchPanel, constraint);
-		frame.add(topUserPanel, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
 		frame.add(avatarPanel, constraint);
@@ -567,21 +468,9 @@ public class Interface extends JFrame
 		constraint.gridy = line++;
 		frame.add(otherPanel, constraint);
 		constraint.gridy = line++;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		for(String param : fields)
-		{
-			constraint.gridwidth = 1;
-			constraint.gridy = line++;
-			constraint.gridx = 0;
-			constraint.weightx = 0.1;
-			frame.add(new JLabel(param), constraint);
-			constraint.gridwidth = 2;
-			constraint.gridx = 1;
-			constraint.weightx = 0.9;
-			tmp = new JLabel();
-			showingArea.put(param, tmp);
-			frame.add(tmp, constraint);
-		}
+		frame.add(hitCountPanel, constraint);
+		constraint.gridy = line++;
+		frame.add(ranksUserPanel, constraint);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		frame.pack();
@@ -638,7 +527,6 @@ public class Interface extends JFrame
 			if(!lastUser.equals(obj.get("username")))
 				avatar.setImage(null);
 			Random r = new Random();
-			username.setText(obj.getString("username"));
 			username.setText(obj.getString("username") + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("pp_rank")) + ")");
 			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
 			updateLevel(obj.getDouble("level"));
@@ -647,32 +535,35 @@ public class Interface extends JFrame
 			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
 			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getInt("playcount")));
 			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("ranked_score")));
-			totalScore.setText(String.format(resourceBundle.getString("total_score_value"), obj.getDouble("total_score"), getScoreToNextLevel(getLevel(obj.getDouble("level")), obj.getDouble("total_score")), getLevel(obj.getDouble("level")) + 1));
-			SwingUtilities.invokeLater(new Runnable()
+			totalScore.setText(String.format(resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("total_score")), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), obj.getDouble("total_score"))), getLevel(obj.getDouble("level")) + 1));
+			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("pp_raw")));
+			accuracy.setText(String.valueOf(round(obj.getDouble("accuracy"), 2)) + "%");
+			country.setText(CountryCode.getByCode(obj.getString("country")).getName());
+			long totalHit = obj.getLong("count300") + obj.getLong("count100") + obj.getLong("count50");
+			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(totalHit));
+			DecimalFormat decimalFormat = new DecimalFormat();
+			decimalFormat.setMaximumFractionDigits(2);
+			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count300")) + " (" + decimalFormat.format((obj.getLong("count300") * 100f) / totalHit) + "%)");
+			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count100")) + " (" + decimalFormat.format((obj.getLong("count100") * 100f) / totalHit) + "%)");
+			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count50")) + " (" + decimalFormat.format((obj.getLong("count50") * 100f) / totalHit) + "%)");
+			if(!lastUser.equals(obj.get("username")))
 			{
-				@Override
-				public void run()
+				lastUser = obj.getString("username");
+				SwingUtilities.invokeLater(new Runnable()
 				{
-					try
+					@Override
+					public void run()
 					{
-						avatar.setImage(getAvatar(obj.getString("user_id")));
+						try
+						{
+							avatar.setImage(resizeBufferedImage(getAvatar(obj.getString("user_id")), 128, 128));
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
 					}
-					catch(Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-			});
-			/******************/
-			@SuppressWarnings("unchecked")
-			Iterator<String> keys = obj.keys();
-			while(keys.hasNext())
-			{
-				String key = keys.next();
-				if(showingArea.containsKey(key))
-				{
-					showingArea.get(key).setText(obj.getString(key));
-				}
+				});
 			}
 		}
 		catch(JSONException | IOException e)
@@ -693,15 +584,18 @@ public class Interface extends JFrame
 
 	private double getScoreToNextLevel(int currentLevel, double currentScore)
 	{
+		currentLevel++;
 		double result = -1;
+		// 5,000 / 3 * (4n^3 - 3n^2 - n) + 1.25 * 1.8^(n - 60), where n <= 100
+		// 26,931,190,829 + 100,000,000,000 * (n - 100), where n >= 101
 		if(currentLevel <= 100)
 		{
 			if(currentLevel >= 2)
 			{
-				int temp = 4 * ((int) Math.pow(currentLevel, 3)) - 3 * ((int) Math.pow(currentLevel, 2)) - currentLevel;
-				result = (long) (5000 / 3 * temp + 1.25 * ((int) Math.pow(1.8, currentLevel - 60)));
+				double temp = 4 * Math.pow(currentLevel, 3) - 3 * Math.pow(currentLevel, 2) - currentLevel;
+				result = 5000 / 3 * temp + 1.25 * Math.pow(1.8, currentLevel - 60);
 			}
-			else if(currentLevel == 0 || currentLevel == 1)
+			else
 			{
 				result = 0;
 			}
@@ -711,7 +605,7 @@ public class Interface extends JFrame
 			int temp = currentLevel - 100;
 			result = 26931190829D + 100000000000D * temp;
 		}
-		return result - currentScore;
+		return (int) (result - currentScore);
 	}
 
 	private int getLevel(double d)
@@ -727,7 +621,6 @@ public class Interface extends JFrame
 	private void updateLevel(double d)
 	{
 		double progress = round(getProgressLevel(d) * 100, 2);
-		level.setText("Level " + baseLevel + "(" + progress + "%)");
 		levelBar.setValue((int) progress);
 		levelBar.setString(String.format(resourceBundle.getString("level"), getLevel(d), progress));
 	}
@@ -735,38 +628,22 @@ public class Interface extends JFrame
 	synchronized public static String sendPost(String key, String user, int selectedMode) throws Exception
 	{
 		String urlParameters = "k=" + key + "&u=" + user + "&m=" + selectedMode + "&type=string&event_days=1";
-		StringBuilder page = new StringBuilder();
-		if(true)
-		{
-			final BufferedReader in = new BufferedReader(new FileReader(new File(".", "test.json")));
-			while((str = in.readLine()) != null)
-				page.append(str);
-			in.close();
-			return page.toString();
-		}
-		URL url = new URL(" https://osu.ppy.sh/p/api/get_user");
 		URL url = new URL("https://osu.ppy.sh/api/get_user?" + urlParameters);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setDoOutput(true);
-		connection.setDoInput(true);
-		connection.setInstanceFollowRedirects(false);
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		connection.setRequestProperty("charset", "utf-8");
 		connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
-		connection.setUseCaches(false);
-		connection.setConnectTimeout(30000);
-		connection.setReadTimeout(30000);
-		OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-		writer.write(urlParameters);
-		writer.flush();
-		writer.close();
-		final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-		while((str = in.readLine()) != null)
-			page.append(str);
-		in.close();
-		return page.toString();
+		BufferedReader inputSream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+		while((inputLine = inputSream.readLine()) != null)
+			response.append(inputLine);
+		inputSream.close();
+		response.deleteCharAt(0);
+		response.deleteCharAt(response.length() - 1);
+		return response.toString();
 	}
 
 	private double round(double value, int places)
