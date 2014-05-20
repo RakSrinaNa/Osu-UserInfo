@@ -33,6 +33,7 @@ import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -53,6 +54,7 @@ public class Interface extends JFrame
 	private String lastUser = "";
 	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
+	private JCheckBox track;
 	private Date lastPost = new Date(0);
 	public static ResourceBundle resourceBundle;
 
