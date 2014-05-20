@@ -13,13 +13,14 @@ import java.util.logging.Level;
 
 public class Configuration // TODO Javadoc
 {
+	public static File appData;
 	private File configFile;
 	private String normalConfigName = "vars.or";
 	private List<String> lastConfigFile;
 
 	public Configuration()
 	{
-		final File appData = new File(System.getenv("APPDATA"), "OsuRank");
+		appData = new File(System.getenv("APPDATA"), Main.APPNAME);
 		if(!appData.exists())
 			appData.mkdir();
 		configFile = new File(appData, normalConfigName);

@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
@@ -19,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -45,6 +45,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import net.miginfocom.layout.CC;
+import net.miginfocom.swing.MigLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,7 +57,7 @@ public class Interface extends JFrame
 	private JTextField userNameField;
 	private ImagePanel avatar;
 	private JComboBox<String> mode;
-	private String lastUser = "";
+	private User lastUser = new User();
 	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track;
@@ -91,7 +93,7 @@ public class Interface extends JFrame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
 		JMenuBar menuBar = new JMenuBar();
-		JMenu menuFile = new JMenu("File");
+		// JMenu menuFile = new JMenu("File");
 		JMenu menuHelp = new JMenu(Main.resourceBundle.getString("menu_bar_help"));
 		JMenuItem itemAbout = new JMenuItem(Main.resourceBundle.getString("menu_bar_help_about"));
 		itemAbout.addActionListener(new ActionListener()
@@ -190,7 +192,14 @@ public class Interface extends JFrame
 			public void actionPerformed(ActionEvent arg0)
 			{
 				if(track.isSelected())
-					trackNewUser(lastUser);
+					try
+					{
+						trackNewUser(lastUser);
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();
+					}
 				else
 					unTrackUser(lastUser);
 			}
@@ -387,7 +396,7 @@ public class Interface extends JFrame
 		constraint.gridy = 1;
 		avatarPanel.add(username, constraint);
 		/**************** OTHERS PANEL *********************/
-		JPanel otherPanel = new JPanel(new GridLayout(7, 2));
+		JPanel otherPanel = new JPanel(new MigLayout());
 		otherPanel.setBackground(Color.GRAY);
 		// PlayCount
 		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
@@ -439,20 +448,21 @@ public class Interface extends JFrame
 		totalHits.setHorizontalAlignment(JLabel.LEFT);
 		totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
-		otherPanel.add(playCountLabel);
-		otherPanel.add(playCount);
-		otherPanel.add(rankedScoreLabel);
-		otherPanel.add(rankedScore);
-		otherPanel.add(totalScoreLabel);
-		otherPanel.add(totalScore);
-		otherPanel.add(ppCountLabel);
-		otherPanel.add(ppCount);
-		otherPanel.add(accuracyLabel);
-		otherPanel.add(accuracy);
-		otherPanel.add(countryLabel);
-		otherPanel.add(country);
-		otherPanel.add(totalHitsLabel);
-		otherPanel.add(totalHits);
+		int lign = 0;
+		otherPanel.add(playCountLabel, new CC().cell(0, lign).alignX("right"));
+		otherPanel.add(playCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(rankedScoreLabel, new CC().cell(0, lign).alignX("right"));
+		otherPanel.add(rankedScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(totalScoreLabel, new CC().cell(0, lign).alignX("right"));
+		otherPanel.add(totalScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(ppCountLabel, new CC().cell(0, lign).alignX("right"));
+		otherPanel.add(ppCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(accuracyLabel, new CC().cell(0, lign).alignX("right"));
+		otherPanel.add(accuracy, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(countryLabel, new CC().cell(0, lign).alignX("right"));
+		otherPanel.add(country, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
+		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
@@ -485,17 +495,19 @@ public class Interface extends JFrame
 		frame.toFront();
 	}
 
-	private void trackNewUser(String user)
+	private void trackNewUser(User user) throws IOException
 	{
 		ArrayList<String> users = getTrackedUsers();
-		users.add(user);
+		users.add(user.getUsername());
+		user.serialize(new File(Configuration.appData, user.getUsername()));
 		setTrackedUser(users);
 	}
 
-	private void unTrackUser(String user)
+	private void unTrackUser(User user)
 	{
 		ArrayList<String> users = getTrackedUsers();
 		users.remove(user);
+		new File(Configuration.appData, user.getUsername()).delete();
 		setTrackedUser(users);
 	}
 
@@ -568,34 +580,44 @@ public class Interface extends JFrame
 		userNameField.setBackground(null);
 		try
 		{
+			User userObj = new User(), previousUser = null;
 			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
+			boolean tracked = isUserTracked(obj.getString("username"));
+			if(tracked)
+				previousUser = User.deserialize(new File(Configuration.appData, obj.getString("username")));
 			track.setEnabled(true);
-			track.setSelected(isUserTracked(obj.getString("username")));
-			if(!lastUser.equals(obj.getString("username")))
+			track.setSelected(tracked);
+			if(!lastUser.getUsername().equals(obj.getString("username")))
 				avatar.setImage(null);
 			Random r = new Random();
-			username.setText(obj.getString("username") + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("pp_rank")) + ")");
+			userObj.setUsername(obj.getString("username"));
+			userObj.setRank(obj.getDouble("pp_rank"));
+			userObj.setPlaycount(obj.getInt("playcount"));
+			userObj.setRankedScore(obj.getLong("ranked_score"));
+			userObj.setTotalScore(obj.getLong("total_score"));
+			userObj.setAccuracy(obj.getDouble("accuracy"));
+			userObj.setPp(obj.getDouble("pp_raw"));
+			userObj.setTotalHits(obj.getLong("count300") + obj.getLong("count100") + obj.getLong("count50"));
+			username.setText(userObj.getUsername() + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(userObj.getRank()) + ")" + userObj.compareRank(previousUser));
 			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
 			updateLevel(obj.getDouble("level"));
 			countSS.setText(String.valueOf(obj.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(obj.getInt("count_rank_s")));
 			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
-			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getInt("playcount")));
-			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("ranked_score")));
-			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("total_score")), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), obj.getDouble("total_score"))), getLevel(obj.getDouble("level")) + 1));
-			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("pp_raw")));
-			accuracy.setText(String.valueOf(round(obj.getDouble("accuracy"), 2)) + "%");
+			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getPlaycount()) + userObj.comparePlayCount(previousUser));
+			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getRankedScore()) + userObj.compareRankedScore(previousUser));
+			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(userObj.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), userObj.getTotalScore())), getLevel(obj.getDouble("level")) + 1));
+			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getPp()) + userObj.comparePP(previousUser));
+			accuracy.setText(String.valueOf(round(userObj.getAccuracy(), 2)) + "%" + userObj.compareAccuracy(previousUser));
 			country.setText(CountryCode.getByCode(obj.getString("country")).getName());
-			long totalHit = obj.getLong("count300") + obj.getLong("count100") + obj.getLong("count50");
-			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(totalHit));
+			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getTotalHits()) + userObj.compareTotalHits(previousUser));
 			DecimalFormat decimalFormat = new DecimalFormat();
 			decimalFormat.setMaximumFractionDigits(2);
-			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count300")) + " (" + decimalFormat.format((obj.getLong("count300") * 100f) / totalHit) + "%)");
-			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count100")) + " (" + decimalFormat.format((obj.getLong("count100") * 100f) / totalHit) + "%)");
-			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count50")) + " (" + decimalFormat.format((obj.getLong("count50") * 100f) / totalHit) + "%)");
+			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count300")) + " (" + decimalFormat.format((obj.getLong("count300") * 100f) / userObj.getTotalHits()) + "%)");
+			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count100")) + " (" + decimalFormat.format((obj.getLong("count100") * 100f) / userObj.getTotalHits()) + "%)");
+			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count50")) + " (" + decimalFormat.format((obj.getLong("count50") * 100f) / userObj.getTotalHits()) + "%)");
 			if(!lastUser.equals(obj.get("username")))
 			{
-				lastUser = obj.getString("username");
 				SwingUtilities.invokeLater(new Runnable()
 				{
 					@Override
@@ -612,6 +634,9 @@ public class Interface extends JFrame
 					}
 				});
 			}
+			if(tracked)
+				userObj.serialize(new File(Configuration.appData, userObj.getUsername()));
+			lastUser = userObj;
 		}
 		catch(JSONException | IOException e)
 		{

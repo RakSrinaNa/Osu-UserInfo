@@ -44,7 +44,7 @@ public class InterfaceAbout extends JFrame
 		frame.setPreferredSize(new Dimension(550, 175));
 		frame.setAlwaysOnTop(false);
 		frame.setIconImages(Main.icons);
-		frame.setBackground(Color.GRAY);
+		// frame.setBackground(Color.GRAY);
 		frame.addWindowListener(new WindowListener()
 		{
 			@Override
@@ -80,11 +80,11 @@ public class InterfaceAbout extends JFrame
 			{}
 		});
 		JLabel text = new JLabel(Main.resourceBundle.getString("about_text"));
-		text.setBackground(Color.GRAY);
+		// text.setBackground(Color.GRAY);
 		frame.add(text, BorderLayout.NORTH);
 		model = new JTableUneditableModel(valuesTable = getTraducers(), new String[] {Main.resourceBundle.getString("language"), Main.resourceBundle.getString("traducer")});
 		table = new JTable(model);
-		table.setBackground(Color.GRAY);
+		// table.setBackground(Color.GRAY);
 		table.addMouseListener(new MouseListener()
 		{
 			@Override
@@ -130,11 +130,11 @@ public class InterfaceAbout extends JFrame
 		tca = new TableColumnAdjuster(table);
 		tca.adjustColumns();
 		scrollPane = new JScrollPane(table);
-		scrollPane.setBackground(Color.GRAY);
+		// scrollPane.setBackground(Color.GRAY);
 		scrollPane.setAutoscrolls(false);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		frame.add(scrollPane, BorderLayout.CENTER);
-		frame.getContentPane().setBackground(Color.GRAY);
+		// frame.getContentPane().setBackground(Color.GRAY);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLocationRelativeTo(parent);
 		frame.pack();
