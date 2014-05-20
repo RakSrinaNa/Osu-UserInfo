@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -15,33 +14,38 @@ import org.json.JSONObject;
 
 public class Main
 {
-	public final static String APPNAME = "Osu!Rank", API_KEY = "";
-	public static Logger logger;
+	public final static String APPNAME = "Osu!Stats";
+	public static String API_KEY = "";
 	public static Configuration config;
-	public static ResourceBundle resourceBundle;
 	public static ArrayList<Image> icons;
+	public static InterfaceStartup startup;
+	public static ResourceBundle resourceBundle;
 
 	public static void main(String[] args) throws IOException
 	{
-		logger = Logger.getLogger(APPNAME);
 		config = new Configuration();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", Locale.getDefault());
-		if(temp.equals(""))
-			temp = JOptionPane.showInputDialog(null, "Enter your API key:", "API Key needed", JOptionPane.INFORMATION_MESSAGE);
-		if(!verifyApiKey(temp))
-		{
-			JOptionPane.showMessageDialog(null, "Wrong API key!", "API key not valid", JOptionPane.ERROR_MESSAGE);
-			config.deleteVar("api_key");
-			System.exit(0);
-		}
-		config.writeVar("api_key", temp);
-		API_KEY = temp;
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		setLookAndFeel();
+		startup = new InterfaceStartup(3);
+		startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));
+		String temp = config.getVar("api_key");
+		if(temp.equals(""))
+			temp = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+		startup.setStartupText(resourceBundle.getString("startup_verify_api_key"));
+		if(!verifyApiKey(temp))
+		{
+			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
+			config.deleteVar("api_key");
+			System.exit(0);
+		}
+		config.writeVar("api_key", temp);
+		API_KEY = temp;
 		new Interface();
+		startup.exit();
 	}
 
 	private static boolean verifyApiKey(String temp)

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
@@ -26,10 +27,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,6 +38,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
@@ -47,7 +51,7 @@ import org.json.JSONObject;
 public class Interface extends JFrame
 {
 	private static final long serialVersionUID = 2629819156905465351L;
-	private JFrame frame;
+	private static JFrame frame;
 	private JTextField userNameField;
 	private ImagePanel avatar;
 	private JComboBox<String> mode;
@@ -56,7 +60,6 @@ public class Interface extends JFrame
 	private JProgressBar levelBar;
 	private JCheckBox track;
 	private Date lastPost = new Date(0);
-	public static ResourceBundle resourceBundle;
 
 	public enum Mods
 	{
@@ -76,7 +79,6 @@ public class Interface extends JFrame
 
 	public Interface() throws IOException
 	{
-		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", Locale.getDefault());
 		/************** FRAME INFOS ********************/
 		frame = new JFrame(Main.APPNAME);
 		frame.setVisible(false);
@@ -87,15 +89,31 @@ public class Interface extends JFrame
 		frame.setIconImages(Main.icons);
 		frame.getContentPane().setBackground(Color.GRAY);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		/*************** FRMAE BAR ************************/
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menuFile = new JMenu("File");
+		JMenu menuHelp = new JMenu(Main.resourceBundle.getString("menu_bar_help"));
+		JMenuItem itemAbout = new JMenuItem(Main.resourceBundle.getString("menu_bar_help_about"));
+		itemAbout.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				new InterfaceAbout(frame);
+			}
+		});
+		menuHelp.add(itemAbout);
+		menuBar.add(menuHelp);
+		frame.setJMenuBar(menuBar);
 		/*************** SEARCH PANEL **********************/
 		JPanel searchPanel = new JPanel(new GridBagLayout());
 		// searchPanel.setBackground(Color.GRAY);
-		JLabel usernameAsk = new JLabel(resourceBundle.getString("username") + " : ");
+		JLabel usernameAsk = new JLabel(Main.resourceBundle.getString("username") + " : ");
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
 		userNameField = new JTextField();
 		userNameField.setPreferredSize(new Dimension(200, 30));
-		new GhostText(userNameField, resourceBundle.getString("ghost_username_field"));
+		new GhostText(userNameField, Main.resourceBundle.getString("ghost_username_field"));
 		userNameField.addKeyListener(new KeyListener()
 		{
 			@Override
@@ -160,6 +178,33 @@ public class Interface extends JFrame
 		constraint.gridx = 0;
 		constraint.gridy = 0;
 		levelUserPanel.add(levelBar, constraint);
+		/***************** TRACK PANEL ********************/
+		JPanel trackUserPanel = new JPanel(new GridBagLayout());
+		trackUserPanel.setBackground(Color.GRAY);
+		track = new JCheckBox();
+		track.setText(Main.resourceBundle.getString("track_user"));
+		track.setEnabled(false);
+		track.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if(track.isSelected())
+					trackNewUser(lastUser);
+				else
+					unTrackUser(lastUser);
+			}
+		});
+		// Construct
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridwidth = 3;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		trackUserPanel.add(track, constraint);
 		/***************** HITS PANEL ********************/
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
 		hitCountPanel.setBackground(Color.GRAY);
@@ -342,24 +387,24 @@ public class Interface extends JFrame
 		constraint.gridy = 1;
 		avatarPanel.add(username, constraint);
 		/**************** OTHERS PANEL *********************/
-		JPanel otherPanel = new JPanel(new GridBagLayout());
+		JPanel otherPanel = new JPanel(new GridLayout(7, 2));
 		otherPanel.setBackground(Color.GRAY);
 		// PlayCount
-		JLabel playCountLabel = new JLabel(resourceBundle.getString("play_count") + " : ");
+		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		playCountLabel.setVerticalAlignment(JLabel.CENTER);
 		playCount = new JLabel("          ");
 		playCount.setHorizontalAlignment(JLabel.LEFT);
 		playCount.setVerticalAlignment(JLabel.CENTER);
 		// RankedScore
-		JLabel rankedScoreLabel = new JLabel(resourceBundle.getString("ranked_score") + " : ");
+		JLabel rankedScoreLabel = new JLabel(Main.resourceBundle.getString("ranked_score") + " : ");
 		rankedScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		rankedScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		rankedScore = new JLabel("          ");
 		rankedScore.setHorizontalAlignment(JLabel.LEFT);
 		rankedScore.setVerticalAlignment(JLabel.CENTER);
 		// TotalScore
-		JLabel totalScoreLabel = new JLabel(resourceBundle.getString("total_score") + " : ");
+		JLabel totalScoreLabel = new JLabel(Main.resourceBundle.getString("total_score") + " : ");
 		totalScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		totalScore = new JLabel("          ");
@@ -373,83 +418,41 @@ public class Interface extends JFrame
 		ppCount.setHorizontalAlignment(JLabel.LEFT);
 		ppCount.setVerticalAlignment(JLabel.CENTER);
 		// Accuracy
-		JLabel accuracyLabel = new JLabel(resourceBundle.getString("accuracy") + " : ");
+		JLabel accuracyLabel = new JLabel(Main.resourceBundle.getString("accuracy") + " : ");
 		accuracyLabel.setHorizontalAlignment(JLabel.RIGHT);
 		accuracyLabel.setVerticalAlignment(JLabel.CENTER);
 		accuracy = new JLabel("          ");
 		accuracy.setHorizontalAlignment(JLabel.LEFT);
 		accuracy.setVerticalAlignment(JLabel.CENTER);
 		// Country
-		JLabel countryLabel = new JLabel(resourceBundle.getString("country") + " : ");
+		JLabel countryLabel = new JLabel(Main.resourceBundle.getString("country") + " : ");
 		countryLabel.setHorizontalAlignment(JLabel.RIGHT);
 		countryLabel.setVerticalAlignment(JLabel.CENTER);
 		country = new JLabel("          ");
 		country.setHorizontalAlignment(JLabel.LEFT);
 		country.setVerticalAlignment(JLabel.CENTER);
-		// Country
-		JLabel totalHitsLabel = new JLabel(resourceBundle.getString("total_hits") + " : ");
+		// Total hits
+		JLabel totalHitsLabel = new JLabel(Main.resourceBundle.getString("total_hits") + " : ");
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalHitsLabel.setVerticalAlignment(JLabel.CENTER);
 		totalHits = new JLabel("          ");
 		totalHits.setHorizontalAlignment(JLabel.LEFT);
 		totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
-		constraint = new GridBagConstraints();
-		constraint.fill = GridBagConstraints.NONE;
-		constraint.anchor = GridBagConstraints.BASELINE;
-		constraint.gridwidth = 1;
-		constraint.weightx = 1;
-		constraint.weighty = 1;
-		constraint.gridx = 0;
-		constraint.gridy = 0;
-		constraint.anchor = GridBagConstraints.EAST;
-		otherPanel.add(playCountLabel, constraint);
-		constraint.gridx = 1;
-		constraint.anchor = GridBagConstraints.WEST;
-		otherPanel.add(playCount, constraint);
-		constraint.gridx = 0;
-		constraint.gridy = 1;
-		constraint.anchor = GridBagConstraints.EAST;
-		otherPanel.add(rankedScoreLabel, constraint);
-		constraint.gridx = 1;
-		constraint.anchor = GridBagConstraints.WEST;
-		otherPanel.add(rankedScore, constraint);
-		constraint.gridx = 0;
-		constraint.gridy = 2;
-		constraint.anchor = GridBagConstraints.EAST;
-		otherPanel.add(totalScoreLabel, constraint);
-		constraint.gridx = 1;
-		constraint.anchor = GridBagConstraints.WEST;
-		otherPanel.add(totalScore, constraint);
-		constraint.gridx = 0;
-		constraint.gridy = 3;
-		constraint.anchor = GridBagConstraints.EAST;
-		otherPanel.add(ppCountLabel, constraint);
-		constraint.gridx = 1;
-		constraint.anchor = GridBagConstraints.WEST;
-		otherPanel.add(ppCount, constraint);
-		constraint.gridx = 0;
-		constraint.gridy = 4;
-		constraint.anchor = GridBagConstraints.EAST;
-		otherPanel.add(accuracyLabel, constraint);
-		constraint.gridx = 1;
-		constraint.anchor = GridBagConstraints.WEST;
-		otherPanel.add(accuracy, constraint);
-		constraint.gridx = 0;
-		constraint.gridy = 5;
-		constraint.anchor = GridBagConstraints.EAST;
-		otherPanel.add(countryLabel, constraint);
-		constraint.gridx = 1;
-		constraint.anchor = GridBagConstraints.WEST;
-		otherPanel.add(country, constraint);
-		constraint.insets = new Insets(20, 0, 0, 0);
-		constraint.gridx = 0;
-		constraint.gridy = 6;
-		constraint.anchor = GridBagConstraints.EAST;
-		otherPanel.add(totalHitsLabel, constraint);
-		constraint.gridx = 1;
-		constraint.anchor = GridBagConstraints.WEST;
-		otherPanel.add(totalHits, constraint);
+		otherPanel.add(playCountLabel);
+		otherPanel.add(playCount);
+		otherPanel.add(rankedScoreLabel);
+		otherPanel.add(rankedScore);
+		otherPanel.add(totalScoreLabel);
+		otherPanel.add(totalScore);
+		otherPanel.add(ppCountLabel);
+		otherPanel.add(ppCount);
+		otherPanel.add(accuracyLabel);
+		otherPanel.add(accuracy);
+		otherPanel.add(countryLabel);
+		otherPanel.add(country);
+		otherPanel.add(totalHitsLabel);
+		otherPanel.add(totalHits);
 		/*************** FRAME CONSTRUCT ******************/
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
@@ -473,11 +476,51 @@ public class Interface extends JFrame
 		frame.add(hitCountPanel, constraint);
 		constraint.gridy = line++;
 		frame.add(ranksUserPanel, constraint);
+		constraint.gridy = line++;
+		frame.add(trackUserPanel, constraint);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		frame.pack();
 		frame.setVisible(true);
 		frame.toFront();
+	}
+
+	private void trackNewUser(String user)
+	{
+		ArrayList<String> users = getTrackedUsers();
+		users.add(user);
+		setTrackedUser(users);
+	}
+
+	private void unTrackUser(String user)
+	{
+		ArrayList<String> users = getTrackedUsers();
+		users.remove(user);
+		setTrackedUser(users);
+	}
+
+	private void setTrackedUser(ArrayList<String> users)
+	{
+		StringBuilder sb = new StringBuilder();
+		for(String user : users)
+			if(!user.equals(""))
+				sb.append(user).append(",");
+		sb.deleteCharAt(sb.length() - 1);
+		Main.config.writeVar("tracked_users", sb.toString());
+	}
+
+	private boolean isUserTracked(String user)
+	{
+		return getTrackedUsers().contains(user);
+	}
+
+	private ArrayList<String> getTrackedUsers()
+	{
+		ArrayList<String> trackedList = new ArrayList<String>();
+		String tracked = Main.config.getVar("tracked_users");
+		for(String user : tracked.split(","))
+			trackedList.add(user);
+		return trackedList;
 	}
 
 	private BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
@@ -519,14 +562,16 @@ public class Interface extends JFrame
 
 	private void getInfos(String user)
 	{
-		if(new Date().getTime() - lastPost.getTime() < 2500)
+		if(new Date().getTime() - lastPost.getTime() < 1000)
 			return;
 		lastPost = new Date();
 		userNameField.setBackground(null);
 		try
 		{
 			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
-			if(!lastUser.equals(obj.get("username")))
+			track.setEnabled(true);
+			track.setSelected(isUserTracked(obj.getString("username")));
+			if(!lastUser.equals(obj.getString("username")))
 				avatar.setImage(null);
 			Random r = new Random();
 			username.setText(obj.getString("username") + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("pp_rank")) + ")");
@@ -537,7 +582,7 @@ public class Interface extends JFrame
 			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
 			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getInt("playcount")));
 			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("ranked_score")));
-			totalScore.setText(String.format(resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("total_score")), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), obj.getDouble("total_score"))), getLevel(obj.getDouble("level")) + 1));
+			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("total_score")), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), obj.getDouble("total_score"))), getLevel(obj.getDouble("level")) + 1));
 			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getDouble("pp_raw")));
 			accuracy.setText(String.valueOf(round(obj.getDouble("accuracy"), 2)) + "%");
 			country.setText(CountryCode.getByCode(obj.getString("country")).getName());
@@ -624,7 +669,7 @@ public class Interface extends JFrame
 	{
 		double progress = round(getProgressLevel(d) * 100, 2);
 		levelBar.setValue((int) progress);
-		levelBar.setString(String.format(resourceBundle.getString("level"), getLevel(d), progress));
+		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(d), progress));
 	}
 
 	synchronized public static String sendPost(String key, String user, int selectedMode) throws Exception
@@ -680,5 +725,17 @@ public class Interface extends JFrame
 				result = result.replace(temp, "");
 		}
 		return result;
+	}
+
+	public static void hideFrame()
+	{
+		frame.setEnabled(false);
+		frame.setFocusable(false);
+	}
+
+	public static void showFrame()
+	{
+		frame.setEnabled(true);
+		frame.setFocusable(true);
 	}
 }
