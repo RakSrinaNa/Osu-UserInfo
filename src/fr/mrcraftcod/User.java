@@ -184,7 +184,7 @@ public class User implements Serializable
 		long delta = this.getTotalHits() - previousUser.getTotalHits();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(-delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
 	}
 
 	public String compareRank(User previousUser)
