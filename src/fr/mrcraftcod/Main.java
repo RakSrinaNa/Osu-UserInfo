@@ -31,20 +31,27 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		setLookAndFeel();
 		startup = new InterfaceStartup(3);
-		startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));
-		String temp = config.getVar("api_key");
-		if(temp.equals(""))
-			temp = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
-		startup.setStartupText(resourceBundle.getString("startup_verify_api_key"));
-		if(!verifyApiKey(temp))
+		try
 		{
-			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
-			config.deleteVar("api_key");
-			System.exit(0);
+			startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));
+			String temp = config.getVar("api_key");
+			if(temp.equals(""))
+				temp = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+			startup.setStartupText(resourceBundle.getString("startup_verify_api_key"));
+			if(!verifyApiKey(temp))
+			{
+				JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
+				config.deleteVar("api_key");
+				System.exit(0);
+			}
+			config.writeVar("api_key", temp);
+			API_KEY = temp;
+			new Interface();
 		}
-		config.writeVar("api_key", temp);
-		API_KEY = temp;
-		new Interface();
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		startup.exit();
 	}
 

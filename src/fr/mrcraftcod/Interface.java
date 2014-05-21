@@ -45,6 +45,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.json.JSONException;
@@ -54,9 +56,11 @@ public class Interface extends JFrame
 {
 	private static final long serialVersionUID = 2629819156905465351L;
 	private static JFrame frame;
+	private ImageIcon iconRefresh, iconSearch;
 	private JTextField userNameField;
 	private ImagePanel avatar;
 	private JComboBox<String> mode;
+	private JButton validButon;
 	private User lastUser = new User();
 	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
@@ -81,6 +85,9 @@ public class Interface extends JFrame
 
 	public Interface() throws IOException
 	{
+		int pictureButtonSize = 18;
+		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
+		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
 		/************** FRAME INFOS ********************/
 		frame = new JFrame(Main.APPNAME);
 		frame.setVisible(false);
@@ -116,6 +123,31 @@ public class Interface extends JFrame
 		userNameField = new JTextField();
 		userNameField.setPreferredSize(new Dimension(200, 30));
 		new GhostText(userNameField, Main.resourceBundle.getString("ghost_username_field"));
+		userNameField.getDocument().addDocumentListener(new DocumentListener()
+		{
+			public void changedUpdate(DocumentEvent e)
+			{
+				update();
+			}
+
+			public void removeUpdate(DocumentEvent e)
+			{
+				update();
+			}
+
+			public void insertUpdate(DocumentEvent e)
+			{
+				update();
+			}
+
+			public void update()
+			{
+				if(userNameField.getText().equals(lastUser.getUsername()) && !userNameField.getText().equals(""))
+					validButon.setIcon(iconRefresh);
+				else
+					validButon.setIcon(iconSearch);
+			}
+		});
 		userNameField.addKeyListener(new KeyListener()
 		{
 			@Override
@@ -135,7 +167,7 @@ public class Interface extends JFrame
 		});
 		mode = new JComboBox<String>(new String[] {"Osu!", "Taiko", "CTB", "Osu!Mania"});
 		mode.setSelectedIndex(0);
-		JButton validButon = new JButton(new ImageIcon(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/loupe.png"))));
+		validButon = new JButton(iconSearch);
 		validButon.addActionListener(new ActionListener()
 		{
 			@Override
@@ -634,6 +666,7 @@ public class Interface extends JFrame
 					}
 				});
 			}
+			validButon.setIcon(iconRefresh);
 			if(tracked)
 				userObj.serialize(new File(Configuration.appData, userObj.getUsername()));
 			lastUser = userObj;
