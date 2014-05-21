@@ -168,6 +168,7 @@ public class Interface extends JFrame
 		mode = new JComboBox<String>(new String[] {"Osu!", "Taiko", "CTB", "Osu!Mania"});
 		mode.setSelectedIndex(0);
 		validButon = new JButton(iconSearch);
+		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
 		validButon.addActionListener(new ActionListener()
 		{
 			@Override
@@ -616,7 +617,12 @@ public class Interface extends JFrame
 			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(obj.getString("username"));
 			if(tracked)
-				previousUser = User.deserialize(new File(Configuration.appData, obj.getString("username")));
+				try
+				{
+					previousUser = User.deserialize(new File(Configuration.appData, obj.getString("username")));
+				}
+				catch(Exception e)
+				{}
 			track.setEnabled(true);
 			track.setSelected(tracked);
 			if(!lastUser.getUsername().equals(obj.getString("username")))
@@ -751,7 +757,7 @@ public class Interface extends JFrame
 		return response.toString();
 	}
 
-	private double round(double value, int places)
+	public static double round(double value, int places)
 	{
 		if(places < 0)
 			throw new IllegalArgumentException();

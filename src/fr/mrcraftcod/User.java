@@ -172,7 +172,7 @@ public class User implements Serializable
 		if(previousUser == null)
 			return "";
 		double delta = this.getAccuracy() - previousUser.getAccuracy();
-		if(delta == 0D)
+		if(Interface.round(delta, 2) == 0D)
 			return "";
 		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
 	}
@@ -184,14 +184,14 @@ public class User implements Serializable
 		long delta = this.getTotalHits() - previousUser.getTotalHits();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(-delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
 	}
 
 	public String compareRank(User previousUser)
 	{
 		if(previousUser == null)
 			return "";
-		double delta = this.getRank() - previousUser.getRank();
+		double delta = previousUser.getRank() - this.getRank();
 		if(delta == 0D)
 			return "";
 		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
