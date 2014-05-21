@@ -15,6 +15,7 @@ import org.json.JSONObject;
 public class Main
 {
 	public final static String APPNAME = "Osu!Stats";
+	public final static double VERSION = 1.2D;
 	public static String API_KEY = "";
 	public static Configuration config;
 	public static ArrayList<Image> icons;
@@ -46,6 +47,7 @@ public class Main
 			}
 			config.writeVar("api_key", temp);
 			API_KEY = temp;
+			SystemTrayOsuStats.init();
 			new Interface();
 		}
 		catch(Exception e)

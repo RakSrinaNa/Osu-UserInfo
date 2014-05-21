@@ -1,5 +1,6 @@
 package fr.mrcraftcod;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -16,6 +17,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -94,16 +97,57 @@ public class Interface extends JFrame
 		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
 		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
 		/************** FRAME INFOS ********************/
-		frame = new JFrame(Main.APPNAME);
+		frame = new JFrame(Main.APPNAME + " v" + Main.VERSION);
 		frame.setFocusable(true);
 		frame.setVisible(false);
+		frame.addWindowListener(new WindowListener()
+		{
+			@Override
+			public void windowActivated(final WindowEvent event)
+			{}
+
+			@Override
+			public void windowClosed(final WindowEvent event)
+			{}
+
+			@Override
+			public void windowClosing(final WindowEvent event)
+			{
+				exit();
+			}
+
+			@Override
+			public void windowDeactivated(final WindowEvent event)
+			{}
+
+			@Override
+			public void windowDeiconified(final WindowEvent event)
+			{}
+
+			@Override
+			public void windowIconified(final WindowEvent event)
+			{
+				try
+				{
+					SystemTrayOsuStats.add();
+					hideFrame();
+					frame.setVisible(false);
+				}
+				catch(final AWTException exception)
+				{}
+			}
+
+			@Override
+			public void windowOpened(final WindowEvent event)
+			{}
+		});
 		frame.setLayout(new GridBagLayout());
 		frame.setMinimumSize(new Dimension(350, 450));
 		frame.setPreferredSize(new Dimension(550, 550));
 		frame.setAlwaysOnTop(false);
 		frame.setIconImages(Main.icons);
 		frame.getContentPane().setBackground(Color.GRAY);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setFocusable(true);
@@ -870,5 +914,18 @@ public class Interface extends JFrame
 	{
 		frame.setEnabled(true);
 		frame.setFocusable(true);
+		frame.setVisible(true);
+	}
+
+	public static void exit()
+	{
+		frame.dispose();
+	}
+
+	public static void backFromTray()
+	{
+		frame.setState(JFrame.NORMAL);
+		showFrame();
+		frame.toFront();
 	}
 }
