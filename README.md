@@ -5,19 +5,19 @@ Osu-Stats
 
 Informations given/tracked
 -----------------------
-Play count
-Scores
-PP
-Accuracy
-Country
-Rank
-Total hits
-Number of 300s, 100s, 50s
-Number of SS, S, A
+Play count  
+Scores  
+PP  
+Accuracy  
+Country  
+Rank  
+Total hits  
+Number of 300s, 100s, 50s  
+Number of SS, S, A  
 
 How to help that project?
 -----------------------
 
-[If you find any bugs, please report them here]'https://github.com/MrCraftCod/Osu-Stats/issues)
+[If you find any bugs, please report them here](https://github.com/MrCraftCod/Osu-Stats/issues)
 
 If you want, you can translate this project. Fork the repository and add your language file in src/resources/lang/
