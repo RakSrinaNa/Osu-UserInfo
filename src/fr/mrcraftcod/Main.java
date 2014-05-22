@@ -15,8 +15,8 @@ import org.json.JSONObject;
 
 public class Main
 {
-	public final static String APPNAME = "Osu!Stats";
-	public final static double VERSION = 1.2D;
+	public final static String APPNAME = "Osu!UserInfo";
+	public final static double VERSION = 1.3D;
 	public static String API_KEY = "";
 	public static Configuration config;
 	public static ArrayList<Image> icons;
@@ -25,7 +25,12 @@ public class Main
 
 	public static void main(String[] args) throws IOException
 	{
+		getPreviousConfigFolder();
 		config = new Configuration();
+		if(config.getDouble("last_version", -1D) < 1.2D)
+			for(File file : Configuration.appData.listFiles())
+				if(file.getName() != config.getConfigFile().getName())
+					file.delete();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", Locale.getDefault());
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
@@ -33,10 +38,6 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		setLookAndFeel();
 		startup = new InterfaceStartup(3);
-		if(config.getDouble("last_version", -1D) < VERSION)
-			for(File file : Configuration.appData.listFiles())
-				if(file.getName() != config.getConfigFile().getName())
-					file.delete();
 		config.writeVar("last_version", VERSION);
 		try
 		{
@@ -61,6 +62,19 @@ public class Main
 			e.printStackTrace();
 		}
 		startup.exit();
+	}
+
+	private static void getPreviousConfigFolder()
+	{
+		if(new File(System.getenv("APPDATA"), "Osu!Stats").exists())
+			try
+			{
+				new File(System.getenv("APPDATA"), "Osu!Stats").renameTo(new File(System.getenv("APPDATA"), Main.APPNAME));
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 	}
 
 	private static boolean verifyApiKey(String temp)
