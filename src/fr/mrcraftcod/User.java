@@ -8,20 +8,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class User implements Serializable
 {
 	private static final long serialVersionUID = 9114477464694621621L;
+	private Stats stats_normal, stats_taiko, stats_ctb, stats_mania;
 	private String username = "";
-	private int playcount;
-	private long rankedScore;
-	private long totalScore;
-	private double pp;
-	private double accuracy;
-	private long totalHits;
-	private double rank;
+
+	public User()
+	{}
 
 	public void serialize(File file) throws IOException
 	{
@@ -40,64 +35,40 @@ public class User implements Serializable
 		return user;
 	}
 
-	public long getTotalHits()
+	public void setStats(Stats stats, int mode)
 	{
-		return totalHits;
+		switch(mode)
+		{
+			case 0:
+				setStats_normal(stats);
+				return;
+			case 1:
+				setStats_taiko(stats);
+				return;
+			case 2:
+				setStats_ctb(stats);
+				return;
+			case 3:
+				setStats_mania(stats);
+				return;
+		}
+		throw new IllegalArgumentException("Mode must be between 0 and 3!");
 	}
 
-	public void setTotalHits(long totalHits)
+	public Stats getStats(int mode)
 	{
-		this.totalHits = totalHits;
-	}
-
-	public double getAccuracy()
-	{
-		return accuracy;
-	}
-
-	public void setAccuracy(double accuracy)
-	{
-		this.accuracy = accuracy;
-	}
-
-	public double getPp()
-	{
-		return pp;
-	}
-
-	public void setPp(double pp)
-	{
-		this.pp = pp;
-	}
-
-	public long getRankedScore()
-	{
-		return rankedScore;
-	}
-
-	public void setRankedScore(long rankedScore)
-	{
-		this.rankedScore = rankedScore;
-	}
-
-	public long getTotalScore()
-	{
-		return totalScore;
-	}
-
-	public void setTotalScore(long totalScore)
-	{
-		this.totalScore = totalScore;
-	}
-
-	public int getPlaycount()
-	{
-		return playcount;
-	}
-
-	public void setPlaycount(int playcount)
-	{
-		this.playcount = playcount;
+		switch(mode)
+		{
+			case 0:
+				return getStats_normal();
+			case 1:
+				return getStats_taiko();
+			case 2:
+				return getStats_ctb();
+			case 3:
+				return getStats_mania();
+		}
+		throw new IllegalArgumentException("Mode must be between 0 and 3!");
 	}
 
 	public String getUsername()
@@ -110,90 +81,43 @@ public class User implements Serializable
 		this.username = username;
 	}
 
-	public double getRank()
+	public Stats getStats_normal()
 	{
-		return rank;
+		return stats_normal;
 	}
 
-	public void setRank(double rank)
+	public void setStats_normal(Stats stats_normal)
 	{
-		this.rank = rank;
+		this.stats_normal = stats_normal;
 	}
 
-	private String getSign(double nb)
+	public Stats getStats_taiko()
 	{
-		if(nb >= 0)
-			return "+";
-		return "-";
+		return stats_taiko;
 	}
 
-	public String comparePlayCount(User previousUser)
+	public void setStats_taiko(Stats stats_taiko)
 	{
-		if(previousUser == null)
-			return "";
-		int delta = this.getPlaycount() - previousUser.getPlaycount();
-		if(delta == 0)
-			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		this.stats_taiko = stats_taiko;
 	}
 
-	public String compareRankedScore(User previousUser)
+	public Stats getStats_ctb()
 	{
-		if(previousUser == null)
-			return "";
-		long delta = this.getRankedScore() - previousUser.getRankedScore();
-		if(delta == 0L)
-			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return stats_ctb;
 	}
 
-	public String compareTotalScore(User previousUser)
+	public void setStats_ctb(Stats stats_ctb)
 	{
-		if(previousUser == null)
-			return "";
-		long delta = this.getTotalScore() - previousUser.getTotalScore();
-		if(delta == 0L)
-			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		this.stats_ctb = stats_ctb;
 	}
 
-	public String comparePP(User previousUser)
+	public Stats getStats_mania()
 	{
-		if(previousUser == null)
-			return "";
-		double delta = this.getPp() - previousUser.getPp();
-		if(delta == 0D)
-			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return stats_mania;
 	}
 
-	public String compareAccuracy(User previousUser)
+	public void setStats_mania(Stats stats_mania)
 	{
-		if(previousUser == null)
-			return "";
-		double delta = this.getAccuracy() - previousUser.getAccuracy();
-		if(Interface.round(delta, 2) == 0D)
-			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
-	}
-
-	public String compareTotalHits(User previousUser)
-	{
-		if(previousUser == null)
-			return "";
-		long delta = this.getTotalHits() - previousUser.getTotalHits();
-		if(delta == 0L)
-			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
-	}
-
-	public String compareRank(User previousUser)
-	{
-		if(previousUser == null)
-			return "";
-		double delta = previousUser.getRank() - this.getRank();
-		if(delta == 0D)
-			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		this.stats_mania = stats_mania;
 	}
 }

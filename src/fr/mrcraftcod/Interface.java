@@ -725,47 +725,51 @@ public class Interface extends JFrame
 		userNameField.setBackground(null);
 		try
 		{
-			User userObj = new User(), previousUser = null;
+			User currentUser = null;
+			Stats statsUser = new Stats();
 			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(obj.getString("username"));
 			if(tracked)
 				try
 				{
-					previousUser = User.deserialize(new File(Configuration.appData, obj.getString("username")));
+					currentUser = User.deserialize(new File(Configuration.appData, obj.getString("username")));
 				}
 				catch(Exception e)
-				{}
+				{
+					currentUser = new User();
+				}
+			Stats previousStats = currentUser.getStats(mode.getSelectedIndex());
 			track.setEnabled(true);
 			track.setSelected(tracked);
 			if(!lastUser.getUsername().equals(obj.getString("username")))
 				avatar.setImage(null);
 			Random r = new Random();
-			userObj.setUsername(obj.getString("username"));
-			userObj.setRank(obj.getDouble("pp_rank"));
-			userObj.setPlaycount(obj.getInt("playcount"));
-			userObj.setRankedScore(obj.getLong("ranked_score"));
-			userObj.setTotalScore(obj.getLong("total_score"));
-			userObj.setAccuracy(obj.getDouble("accuracy"));
-			userObj.setPp(obj.getDouble("pp_raw"));
-			userObj.setTotalHits(obj.getLong("count300") + obj.getLong("count100") + obj.getLong("count50"));
-			username.setText(userObj.getUsername() + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(userObj.getRank()) + ")" + userObj.compareRank(previousUser));
+			currentUser.setUsername(obj.getString("username"));
+			statsUser.setRank(obj.getDouble("pp_rank"));
+			statsUser.setPlaycount(obj.getInt("playcount"));
+			statsUser.setRankedScore(obj.getLong("ranked_score"));
+			statsUser.setTotalScore(obj.getLong("total_score"));
+			statsUser.setAccuracy(obj.getDouble("accuracy"));
+			statsUser.setPp(obj.getDouble("pp_raw"));
+			statsUser.setTotalHits(obj.getLong("count300") + obj.getLong("count100") + obj.getLong("count50"));
+			username.setText(currentUser.getUsername() + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRank()) + ")" + statsUser.compareRank(previousStats));
 			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
 			updateLevel(obj.getDouble("level"));
 			countSS.setText(String.valueOf(obj.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(obj.getInt("count_rank_s")));
 			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
-			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getPlaycount()) + userObj.comparePlayCount(previousUser));
-			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getRankedScore()) + userObj.compareRankedScore(previousUser));
-			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(userObj.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), userObj.getTotalScore())), getLevel(obj.getDouble("level")) + 1));
-			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getPp()) + userObj.comparePP(previousUser));
-			accuracy.setText(String.valueOf(round(userObj.getAccuracy(), 2)) + "%" + userObj.compareAccuracy(previousUser));
+			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPlaycount()) + statsUser.comparePlayCount(previousStats));
+			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRankedScore()) + statsUser.compareRankedScore(previousStats));
+			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), statsUser.getTotalScore())), getLevel(obj.getDouble("level")) + 1));
+			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPp()) + statsUser.comparePP(previousStats));
+			accuracy.setText(String.valueOf(round(statsUser.getAccuracy(), 2)) + "%" + statsUser.compareAccuracy(previousStats));
 			country.setText(CountryCode.getByCode(obj.getString("country")).getName());
-			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(userObj.getTotalHits()) + userObj.compareTotalHits(previousUser));
+			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalHits()) + statsUser.compareTotalHits(previousStats));
 			DecimalFormat decimalFormat = new DecimalFormat();
 			decimalFormat.setMaximumFractionDigits(2);
-			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count300")) + " (" + decimalFormat.format((obj.getLong("count300") * 100f) / userObj.getTotalHits()) + "%)");
-			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count100")) + " (" + decimalFormat.format((obj.getLong("count100") * 100f) / userObj.getTotalHits()) + "%)");
-			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count50")) + " (" + decimalFormat.format((obj.getLong("count50") * 100f) / userObj.getTotalHits()) + "%)");
+			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count300")) + " (" + decimalFormat.format((obj.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
+			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count100")) + " (" + decimalFormat.format((obj.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
+			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count50")) + " (" + decimalFormat.format((obj.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
 			if(!lastUser.equals(obj.get("username")))
 			{
 				SwingUtilities.invokeLater(new Runnable()
@@ -784,11 +788,12 @@ public class Interface extends JFrame
 					}
 				});
 			}
-			userNameFieldTextComponent.setText(userObj.getUsername());
+			userNameFieldTextComponent.setText(currentUser.getUsername());
 			validButon.setIcon(iconRefresh);
+			currentUser.setStats(statsUser, mode.getSelectedIndex());
 			if(tracked)
-				userObj.serialize(new File(Configuration.appData, userObj.getUsername()));
-			lastUser = userObj;
+				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
+			lastUser = currentUser;
 		}
 		catch(JSONException | IOException e)
 		{

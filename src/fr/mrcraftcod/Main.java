@@ -2,6 +2,7 @@ package fr.mrcraftcod;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -32,6 +33,11 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		setLookAndFeel();
 		startup = new InterfaceStartup(3);
+		if(config.getDouble("last_version", -1D) < VERSION)
+			for(File file : Configuration.appData.listFiles())
+				if(file.getName() != config.getConfigFile().getName())
+					file.delete();
+		config.writeVar("last_version", VERSION);
 		try
 		{
 			startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));

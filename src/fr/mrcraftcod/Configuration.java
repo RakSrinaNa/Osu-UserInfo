@@ -231,4 +231,14 @@ public class Configuration // TODO Javadoc
 		}
 		return defaultValue;
 	}
+
+	public File getConfigFile()
+	{
+		return configFile;
+	}
+
+	public void setConfigFile(File configFile)
+	{
+		this.configFile = configFile;
+	}
 }
