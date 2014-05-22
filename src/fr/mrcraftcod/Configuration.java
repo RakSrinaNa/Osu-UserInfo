@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class Configuration // TODO Javadoc
 {
@@ -29,10 +28,7 @@ public class Configuration // TODO Javadoc
 			lastConfigFile = readSmallTextFile(configFile);
 		}
 		catch(IOException e)
-		{
-			Main.logger.log(Level.SEVERE, "Failed to read configuration file", e);
-		}
-		Main.logger.log(Level.FINE, "Configuration initialized with config file " + configFile.getAbsolutePath());
+		{}
 	}
 
 	public String getVar(String key)
@@ -40,17 +36,12 @@ public class Configuration // TODO Javadoc
 		if(configFile.exists())
 			try
 			{
-				Main.logger.log(Level.FINER, "Getting configuration with key " + key);
 				for(String string : lastConfigFile)
 					if(string.startsWith(key + ":"))
 						return string.substring((key + ":").length());
 			}
 			catch(final Exception exception)
-			{
-				Main.logger.log(Level.WARNING, "Error when reading configuration!");
-			}
-		else
-			Main.logger.log(Level.INFO, "No configuration was detected!");
+			{}
 		return "";
 	}
 
@@ -61,16 +52,13 @@ public class Configuration // TODO Javadoc
 			return Boolean.parseBoolean(getVar(key));
 		}
 		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Error parsing boolean type in configuration (" + key + ")!", e);
-		}
+		{}
 		return defaultValue;
 	}
 
 	public synchronized boolean writeVar(String key, Object obj)
 	{
 		String value = obj == null ? "" : obj.toString();
-		Main.logger.log(Level.INFO, "Writting config file with key " + key + " (" + value + ")");
 		List<String> oldConfiguration = null;
 		oldConfiguration = lastConfigFile;
 		FileWriter fileWriter;
@@ -80,7 +68,6 @@ public class Configuration // TODO Javadoc
 		}
 		catch(final IOException exception)
 		{
-			Main.logger.log(Level.WARNING, "Fail when opening config file!", exception);
 			return false;
 		}
 		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
@@ -96,7 +83,6 @@ public class Configuration // TODO Javadoc
 					printWriter.println(string);
 		if(!writted)
 			printWriter.println(key + ":" + (value == null ? "" : value));
-		Main.logger.log(Level.FINER, "Writting config file done!");
 		printWriter.close();
 		try
 		{
@@ -111,7 +97,6 @@ public class Configuration // TODO Javadoc
 
 	public synchronized boolean deleteVar(String key)
 	{
-		Main.logger.log(Level.WARNING, "Deletting config file with key " + key);
 		List<String> oldConfiguration = null;
 		oldConfiguration = lastConfigFile;
 		FileWriter fileWriter;
@@ -121,7 +106,6 @@ public class Configuration // TODO Javadoc
 		}
 		catch(final IOException exception)
 		{
-			Main.logger.log(Level.WARNING, "Fail when opening config file!", exception);
 			return false;
 		}
 		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
@@ -132,7 +116,6 @@ public class Configuration // TODO Javadoc
 					continue;
 				printWriter.println(string);
 			}
-		Main.logger.log(Level.FINER, "Writting config file done!");
 		printWriter.close();
 		try
 		{
@@ -149,7 +132,6 @@ public class Configuration // TODO Javadoc
 	{
 		if(path.isDirectory())
 			return false;
-		Main.logger.log(Level.INFO, "Writting to a file (" + path.getAbsolutePath() + ")...");
 		FileWriter fileWriter;
 		try
 		{
@@ -157,13 +139,11 @@ public class Configuration // TODO Javadoc
 		}
 		catch(final IOException exception)
 		{
-			Main.logger.log(Level.WARNING, "Fail when opening config file!", exception);
 			return false;
 		}
 		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
 		printWriter.println(message);
 		printWriter.close();
-		Main.logger.log(Level.FINER, "Writting config file done!");
 		return true;
 	}
 
@@ -182,9 +162,7 @@ public class Configuration // TODO Javadoc
 			}
 		}
 		catch(IOException exception)
-		{
-			Main.logger.log(Level.SEVERE, "Failed to read configuration file", exception);
-		}
+		{}
 		finally
 		{
 			bufferedReader.close();
@@ -200,9 +178,7 @@ public class Configuration // TODO Javadoc
 			return Double.parseDouble(getVar(key));
 		}
 		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Error parsing double type in configuration (" + key + ")!", e);
-		}
+		{}
 		return defaultValue;
 	}
 
@@ -213,9 +189,7 @@ public class Configuration // TODO Javadoc
 			return Long.parseLong(getVar(key));
 		}
 		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Error parsing long type in configuration (" + key + ")!", e);
-		}
+		{}
 		return defaultValue;
 	}
 
@@ -226,9 +200,7 @@ public class Configuration // TODO Javadoc
 			return Integer.parseInt(getVar(key));
 		}
 		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Error parsing integer type in configuration (" + key + ")!", e);
-		}
+		{}
 		return defaultValue;
 	}
 

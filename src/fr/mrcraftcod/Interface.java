@@ -671,12 +671,6 @@ public class Interface extends JFrame
 		return getTrackedUsers().contains(user);
 	}
 
-	private Color getNewColor()
-	{
-		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW};
-		return colors[new Random().nextInt(colors.length)];
-	}
-
 	private ArrayList<String> getTrackedUsers()
 	{
 		ArrayList<String> trackedList = new ArrayList<String>();
@@ -749,6 +743,7 @@ public class Interface extends JFrame
 			track.setSelected(tracked);
 			if(!lastUser.getUsername().equals(obj.getString("username")))
 				avatar.setImage(null);
+			Random r = new Random();
 			currentUser.setUsername(obj.getString("username"));
 			statsUser.setRank(obj.getDouble("pp_rank"));
 			statsUser.setPlaycount(obj.getInt("playcount"));
@@ -758,7 +753,7 @@ public class Interface extends JFrame
 			statsUser.setPp(obj.getDouble("pp_raw"));
 			statsUser.setTotalHits(obj.getLong("count300") + obj.getLong("count100") + obj.getLong("count50"));
 			username.setText(currentUser.getUsername() + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRank()) + ")" + statsUser.compareRank(previousStats));
-			username.setForeground(getNewColor());
+			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
 			updateLevel(obj.getDouble("level"));
 			countSS.setText(String.valueOf(obj.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(obj.getInt("count_rank_s")));
