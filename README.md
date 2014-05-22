@@ -20,4 +20,4 @@ How to help that project?
 
 [If you find any bugs, please report them here](https://github.com/MrCraftCod/Osu-UserInfo/issues)
 
-If you want, you can translate this project. Fork the repository and add your language file in src/resources/lang/
+If you want, you can translate this project. [Fork the repository](https://github.com/MrCraftCod/Osu-UserInfo/fork) and add your language file in src/resources/lang/
