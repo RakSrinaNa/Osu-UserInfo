@@ -821,20 +821,18 @@ public class Interface extends JFrame
 		{
 			if(currentLevel >= 2)
 			{
-				double temp = 4 * Math.pow(currentLevel, 3) - 3 * Math.pow(currentLevel, 2) - currentLevel;
-				result = 5000 / 3 * temp + 1.25 * Math.pow(1.8, currentLevel - 60);
+				double temp = 4 * round(Math.pow(currentLevel, 3), 0) - 3 * round(Math.pow(currentLevel, 2), 0) - currentLevel;
+				result = (5000D / 3D) * temp + 1.25 * round(Math.pow(1.8, currentLevel - 60), 0);
 			}
 			else
-			{
 				result = 0;
-			}
 		}
 		else if(currentLevel >= 101)
 		{
 			int temp = currentLevel - 100;
 			result = 26931190829D + 100000000000D * temp;
 		}
-		return (int) (result - currentScore);
+		return round(result - currentScore, 0);
 	}
 
 	private int getLevel(double d)
