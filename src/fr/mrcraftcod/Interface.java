@@ -507,7 +507,7 @@ public class Interface extends JFrame
 			public void mouseReleased(MouseEvent arg0)
 			{}
 		});
-		username = new JLabel();
+		username = new JLabel(" ");
 		username.setFocusable(true);
 		username.setFont(new Font(username.getFont().getName(), Font.PLAIN, 25));
 		// Construct
