@@ -15,9 +15,6 @@ public class User implements Serializable
 	private Stats stats_normal, stats_taiko, stats_ctb, stats_mania;
 	private String username = "";
 
-	public User()
-	{}
-
 	public void serialize(File file) throws IOException
 	{
 		if(!file.getParentFile().exists())

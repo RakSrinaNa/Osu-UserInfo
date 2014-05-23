@@ -725,7 +725,7 @@ public class Interface extends JFrame
 		userNameField.setBackground(null);
 		try
 		{
-			User currentUser = null;
+			User currentUser = new User();
 			Stats statsUser = new Stats();
 			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(obj.getString("username"));
@@ -735,9 +735,7 @@ public class Interface extends JFrame
 					currentUser = User.deserialize(new File(Configuration.appData, obj.getString("username")));
 				}
 				catch(Exception e)
-				{
-					currentUser = new User();
-				}
+				{}
 			Stats previousStats = currentUser.getStats(mode.getSelectedIndex());
 			track.setEnabled(true);
 			track.setSelected(tracked);
