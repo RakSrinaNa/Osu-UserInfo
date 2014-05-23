@@ -175,7 +175,7 @@ public class Interface extends JFrame
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
 		userNameFieldModel = new DefaultComboBoxModel<String>(new Vector<String>(getTrackedUsers()));
-		userNameField = new JComboBox<String>(userNameFieldModel);
+		userNameField = new AutoComplete(userNameFieldModel);
 		userNameField.setEditable(true);
 		userNameField.setPreferredSize(new Dimension(200, 30));
 		userNameField.setFocusable(true);
@@ -723,6 +723,7 @@ public class Interface extends JFrame
 			return;
 		lastPost = new Date();
 		userNameField.setBackground(null);
+		userNameFieldTextComponent.setBackground(null);
 		try
 		{
 			User currentUser = new User();
@@ -797,6 +798,7 @@ public class Interface extends JFrame
 		{
 			e.printStackTrace();
 			userNameField.setBackground(Color.RED);
+			userNameFieldTextComponent.setBackground(Color.RED);
 		}
 		catch(Exception e)
 		{
