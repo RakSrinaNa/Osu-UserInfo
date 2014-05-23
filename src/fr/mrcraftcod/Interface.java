@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -65,7 +64,7 @@ public class Interface extends JFrame
 	private JTextComponent userNameFieldTextComponent;
 	private DefaultComboBoxModel<String> userNameFieldModel;
 	private ImageIcon iconRefresh, iconSearch;
-	private JComboBox<String> userNameField;
+	private AutoComboBox userNameField;
 	private ImagePanel avatar;
 	private JComboBox<String> mode;
 	private JButton validButon;
@@ -91,6 +90,7 @@ public class Interface extends JFrame
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
 	{
 		int pictureButtonSize = 18;
@@ -174,8 +174,8 @@ public class Interface extends JFrame
 		usernameAsk.setFocusable(true);
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
-		userNameFieldModel = new DefaultComboBoxModel<String>(new Vector<String>(getTrackedUsers()));
-		userNameField = new AutoComplete(userNameFieldModel);
+		userNameField = new AutoComboBox(getTrackedUsers());
+		userNameFieldModel = userNameField.getDefModel();
 		userNameField.setEditable(true);
 		userNameField.setPreferredSize(new Dimension(200, 30));
 		userNameField.setFocusable(true);

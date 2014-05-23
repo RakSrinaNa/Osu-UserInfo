@@ -1,7 +1,5 @@
 package fr.mrcraftcod;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.ComboBoxModel;
@@ -18,38 +16,6 @@ public class AutoComplete extends JComboBox<String> implements JComboBox.KeySele
 	{
 		super(model);
 		textComponent = (JTextComponent) this.getEditor().getEditorComponent();
-		textComponent.addKeyListener(new KeyListener()
-		{
-			@Override
-			public void keyPressed(KeyEvent arg0)
-			{
-				String match;
-				System.out.println(KeyEvent.getKeyText(arg0.getExtendedKeyCode()));
-				if(!isValideKey(arg0))
-					return;
-				if((match = findClosestElement(textComponent.getText())) != null)
-				{
-					System.out.println(match);
-					String previous = textComponent.getText();
-					textComponent.setText(match);
-					textComponent.setCaretPosition(previous.length());
-					textComponent.select(previous.length(), match.length());
-				}
-			}
-
-			private boolean isValideKey(KeyEvent key)
-			{
-				return KeyEvent.getKeyText(key.getExtendedKeyCode()).length() == 1;
-			}
-
-			@Override
-			public void keyReleased(KeyEvent arg0)
-			{}
-
-			@Override
-			public void keyTyped(KeyEvent arg0)
-			{}
-		});
 	}
 
 	public ArrayList<String> getSortedElements()
