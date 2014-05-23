@@ -81,6 +81,11 @@ public class AutoComboBox extends JComboBox
 				if(s == null || "".equals(s))
 					return;
 				String s1 = getText(0, i);
+				if(s1.equals(""))
+				{
+					super.insertString(i, s, attributeset);
+					return;
+				}
 				String s2 = getMatch(s1 + s);
 				int j = (i + s.length()) - 1;
 				if(isStrict && s2 == null)
@@ -106,6 +111,11 @@ public class AutoComboBox extends JComboBox
 				int k = getSelectionStart();
 				if(k > 0)
 					k--;
+				if(getText(0, k).equals(""))
+				{
+					super.remove(0, getLength());
+					return;
+				}
 				String s = getMatch(getText(0, k));
 				if(!isStrict && s == null)
 					super.remove(i, j);
