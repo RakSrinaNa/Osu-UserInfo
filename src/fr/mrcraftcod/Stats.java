@@ -1,7 +1,9 @@
 package fr.mrcraftcod;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class Stats implements Serializable
@@ -14,6 +16,7 @@ public class Stats implements Serializable
 	private double accuracy;
 	private long totalHits;
 	private double rank;
+	private long date;
 
 	public Stats()
 	{}
@@ -163,5 +166,25 @@ public class Stats implements Serializable
 		if(nb >= 0)
 			return "+";
 		return "-";
+	}
+
+	public long getDate()
+	{
+		return date;
+	}
+
+	public void setDate(long date)
+	{
+		this.date = date;
+	}
+
+	public String getLastStatsDate(Stats previousStats)
+	{
+		if(previousStats == null)
+			return "";
+		long lastDate = previousStats.getDate();
+		if(lastDate < 0)
+			return "";
+		return String.format(Main.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault()).format(new Date(lastDate)));
 	}
 }

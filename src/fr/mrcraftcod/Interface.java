@@ -69,7 +69,7 @@ public class Interface extends JFrame
 	private JComboBox<String> mode;
 	private JButton validButon;
 	private User lastUser = new User();
-	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
+	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track;
 	private Date lastPost = new Date(0);
@@ -308,6 +308,9 @@ public class Interface extends JFrame
 					unTrackUser(lastUser);
 			}
 		});
+		lastStatsDate = new JLabel();
+		lastStatsDate.setHorizontalAlignment(JLabel.RIGHT);
+		lastStatsDate.setVerticalAlignment(JLabel.CENTER);
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.CENTER;
@@ -318,6 +321,8 @@ public class Interface extends JFrame
 		constraint.gridx = 0;
 		constraint.gridy = 0;
 		trackUserPanel.add(track, constraint);
+		constraint.gridx = 1;
+		trackUserPanel.add(lastStatsDate, constraint);
 		/***************** HITS PANEL ********************/
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
 		hitCountPanel.setBackground(Color.GRAY);
@@ -690,6 +695,7 @@ public class Interface extends JFrame
 		{
 			User currentUser = new User();
 			Stats statsUser = new Stats();
+			statsUser.setDate(new Date().getTime());
 			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(obj.getString("username"));
 			if(tracked)
@@ -731,6 +737,7 @@ public class Interface extends JFrame
 			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count300")) + " (" + decimalFormat.format((obj.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count100")) + " (" + decimalFormat.format((obj.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count50")) + " (" + decimalFormat.format((obj.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
+			lastStatsDate.setText(statsUser.getLastStatsDate(previousStats));
 			if(!lastUser.equals(obj.get("username")))
 			{
 				SwingUtilities.invokeLater(new Runnable()
