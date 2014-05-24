@@ -43,6 +43,7 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import fr.mrcraftcod.AutoComboBox.Java2sAutoTextField.AutoDocument;
 
 @SuppressWarnings("rawtypes")
 public class AutoComboBox extends JComboBox
@@ -56,9 +57,9 @@ public class AutoComboBox extends JComboBox
 			return (Java2sAutoTextField) editor;
 		}
 
-		AutoTextFieldEditor(List list)
+		AutoTextFieldEditor(List list, boolean ac)
 		{
-			editor = new Java2sAutoTextField(list, AutoComboBox.this);
+			editor = new Java2sAutoTextField(list, AutoComboBox.this, ac);
 		}
 	}
 
@@ -69,6 +70,13 @@ public class AutoComboBox extends JComboBox
 		class AutoDocument extends PlainDocument
 		{
 			private static final long serialVersionUID = 5897591998358263784L;
+			private boolean autoCompletion;
+
+			public AutoDocument(boolean ac)
+			{
+				super();
+				autoCompletion = ac;
+			}
 
 			public void replace(int i, int j, String s, AttributeSet attributeset) throws BadLocationException
 			{
@@ -78,6 +86,11 @@ public class AutoComboBox extends JComboBox
 
 			public void insertString(int i, String s, AttributeSet attributeset) throws BadLocationException
 			{
+				if(!autoCompletion)
+				{
+					super.insertString(i, s, attributeset);
+					return;
+				}
 				if(s == null || "".equals(s))
 					return;
 				String s1 = getText(0, i);
@@ -108,6 +121,11 @@ public class AutoComboBox extends JComboBox
 
 			public void remove(int i, int j) throws BadLocationException
 			{
+				if(!autoCompletion)
+				{
+					super.remove(i, j);
+					return;
+				}
 				int k = getSelectionStart();
 				if(k > 0)
 					k--;
@@ -134,9 +152,19 @@ public class AutoComboBox extends JComboBox
 				catch(Exception exception)
 				{}
 			}
+
+			public boolean isAutoCompletion()
+			{
+				return autoCompletion;
+			}
+
+			public void setAutoCompletion(boolean autoCompletion)
+			{
+				this.autoCompletion = autoCompletion;
+			}
 		}
 
-		public Java2sAutoTextField(List list)
+		public Java2sAutoTextField(List list, boolean ac)
 		{
 			isCaseSensitive = false;
 			isStrict = false;
@@ -144,11 +172,11 @@ public class AutoComboBox extends JComboBox
 			if(list == null)
 				throw new IllegalArgumentException("values can not be null");
 			dataList = list;
-			init();
+			init(ac);
 			return;
 		}
 
-		Java2sAutoTextField(List list, AutoComboBox b)
+		Java2sAutoTextField(List list, AutoComboBox b, boolean ac)
 		{
 			isCaseSensitive = false;
 			isStrict = false;
@@ -157,13 +185,13 @@ public class AutoComboBox extends JComboBox
 				throw new IllegalArgumentException("values can not be null");
 			dataList = list;
 			autoComboBox = b;
-			init();
+			init(ac);
 			return;
 		}
 
-		private void init()
+		private void init(boolean ac)
 		{
-			setDocument(new AutoDocument());
+			setDocument(new AutoDocument(ac));
 			if(isStrict && dataList.size() > 0)
 				setText(dataList.get(0).toString());
 		}
@@ -238,10 +266,10 @@ public class AutoComboBox extends JComboBox
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public AutoComboBox(List list)
+	public AutoComboBox(List list, boolean ac)
 	{
 		isFired = false;
-		autoTextFieldEditor = new AutoTextFieldEditor(list);
+		autoTextFieldEditor = new AutoTextFieldEditor(list, ac);
 		setEditable(true);
 		setModel(new DefaultComboBoxModel(list.toArray())
 		{
@@ -340,6 +368,11 @@ public class AutoComboBox extends JComboBox
 	{
 		if(!isFired)
 			super.fireActionEvent();
+	}
+
+	public void setAutoCompletion(boolean status)
+	{
+		((AutoDocument) autoTextFieldEditor.getAutoTextFieldEditor().getDocument()).setAutoCompletion(status);
 	}
 
 	private AutoTextFieldEditor autoTextFieldEditor;

@@ -64,7 +64,7 @@ public class Interface extends JFrame
 	private JTextComponent userNameFieldTextComponent;
 	private DefaultComboBoxModel<String> userNameFieldModel;
 	private ImageIcon iconRefresh, iconSearch;
-	private AutoComboBox userNameField;
+	private static AutoComboBox userNameField;
 	private ImagePanel avatar;
 	private JComboBox<String> mode;
 	private JButton validButon;
@@ -97,10 +97,10 @@ public class Interface extends JFrame
 		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
 		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
 		/************** FRAME INFOS ********************/
-		frame = new JFrame(Main.APPNAME + " v" + Main.VERSION);
-		frame.setFocusable(true);
-		frame.setVisible(false);
-		frame.addWindowListener(new WindowListener()
+		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
+		getFrame().setFocusable(true);
+		getFrame().setVisible(false);
+		getFrame().addWindowListener(new WindowListener()
 		{
 			@Override
 			public void windowActivated(final WindowEvent event)
@@ -131,7 +131,7 @@ public class Interface extends JFrame
 				{
 					SystemTrayOsuStats.add();
 					hideFrame();
-					frame.setVisible(false);
+					getFrame().setVisible(false);
 				}
 				catch(final AWTException exception)
 				{}
@@ -141,44 +141,50 @@ public class Interface extends JFrame
 			public void windowOpened(final WindowEvent event)
 			{}
 		});
-		frame.setLayout(new GridBagLayout());
-		frame.setMinimumSize(new Dimension(350, 450));
-		frame.setPreferredSize(new Dimension(550, 550));
-		frame.setAlwaysOnTop(false);
-		frame.setIconImages(Main.icons);
-		frame.getContentPane().setBackground(Color.GRAY);
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		getFrame().setLayout(new GridBagLayout());
+		getFrame().setMinimumSize(new Dimension(350, 450));
+		getFrame().setPreferredSize(new Dimension(550, 550));
+		getFrame().setAlwaysOnTop(false);
+		getFrame().setIconImages(Main.icons);
+		getFrame().getContentPane().setBackground(Color.GRAY);
+		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setFocusable(true);
-		// JMenu menuFile = new JMenu("File");
+		JMenu menuFile = new JMenu(Main.resourceBundle.getString("menu_bar_file"));
 		JMenu menuHelp = new JMenu(Main.resourceBundle.getString("menu_bar_help"));
-		menuHelp.setFocusable(true);
+		JMenuItem itemSettings = new JMenuItem(Main.resourceBundle.getString("settings"));
+		itemSettings.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				new InterfaceSettings();
+			}
+		});
 		JMenuItem itemAbout = new JMenuItem(Main.resourceBundle.getString("menu_bar_help_about"));
 		itemAbout.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				new InterfaceAbout(frame);
+				new InterfaceAbout(getFrame());
 			}
 		});
+		menuFile.add(itemSettings);
 		menuHelp.add(itemAbout);
+		menuBar.add(menuFile);
 		menuBar.add(menuHelp);
-		frame.setJMenuBar(menuBar);
+		getFrame().setJMenuBar(menuBar);
 		/*************** SEARCH PANEL **********************/
 		JPanel searchPanel = new JPanel(new GridBagLayout());
-		searchPanel.setFocusable(true);
 		// searchPanel.setBackground(Color.GRAY);
 		JLabel usernameAsk = new JLabel(Main.resourceBundle.getString("username") + " : ");
-		usernameAsk.setFocusable(true);
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
-		userNameField = new AutoComboBox(getTrackedUsers());
+		userNameField = new AutoComboBox(getTrackedUsers(), Main.config.getBoolean("autoCompletion", false));
 		userNameFieldModel = userNameField.getDefModel();
 		userNameField.setEditable(true);
 		userNameField.setPreferredSize(new Dimension(200, 30));
-		userNameField.setFocusable(true);
 		userNameField.setSelectedItem(null);
 		userNameField.setToolTipText(Main.resourceBundle.getString("ghost_username_field"));
 		userNameFieldTextComponent = (JTextComponent) userNameField.getEditor().getEditorComponent();
@@ -232,9 +238,7 @@ public class Interface extends JFrame
 		});
 		mode = new JComboBox<String>(new String[] {"Osu!", "Taiko", "CTB", "Osu!Mania"});
 		mode.setSelectedIndex(0);
-		mode.setFocusable(true);
 		validButon = new JButton(iconSearch);
-		validButon.setFocusable(true);
 		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
 		validButon.addActionListener(new ActionListener()
 		{
@@ -265,10 +269,8 @@ public class Interface extends JFrame
 		searchPanel.add(validButon, constraint);
 		/***************** LEVEL PANEL ********************/
 		JPanel levelUserPanel = new JPanel(new GridBagLayout());
-		levelUserPanel.setFocusable(true);
 		levelUserPanel.setBackground(Color.GRAY);
 		levelBar = new JProgressBar();
-		levelBar.setFocusable(true);
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
 		updateLevel(0D);
@@ -284,10 +286,8 @@ public class Interface extends JFrame
 		levelUserPanel.add(levelBar, constraint);
 		/***************** TRACK PANEL ********************/
 		JPanel trackUserPanel = new JPanel(new GridBagLayout());
-		trackUserPanel.setFocusable(true);
 		trackUserPanel.setBackground(Color.GRAY);
 		track = new JCheckBox();
-		track.setFocusable(true);
 		track.setText(Main.resourceBundle.getString("track_user"));
 		track.setEnabled(false);
 		track.addActionListener(new ActionListener()
@@ -320,57 +320,47 @@ public class Interface extends JFrame
 		trackUserPanel.add(track, constraint);
 		/***************** HITS PANEL ********************/
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
-		hitCountPanel.setFocusable(true);
 		hitCountPanel.setBackground(Color.GRAY);
 		float picturesSize = 40f;
 		// 300
 		JPanel count300Panel = new JPanel();
-		count300Panel.setFocusable(true);
 		count300Panel.setBackground(Color.GRAY);
 		final ImagePanel count300Picture = new ImagePanel();
-		count300Picture.setFocusable(true);
 		count300Picture.setBackground(Color.GRAY);
 		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")), picturesSize, picturesSize));
 		hitCount300 = new JLabel();
-		hitCount300.setFocusable(true);
 		hitCount300.setHorizontalAlignment(JLabel.CENTER);
 		hitCount300.setVerticalAlignment(JLabel.CENTER);
 		count300Panel.add(count300Picture);
 		count300Panel.add(hitCount300);
 		// 100
 		JPanel count100Panel = new JPanel();
-		count100Panel.setFocusable(true);
 		count100Panel.setBackground(Color.GRAY);
 		final ImagePanel count100Picture = new ImagePanel();
-		count100Picture.setFocusable(true);
 		count100Picture.setBackground(Color.GRAY);
 		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")), picturesSize, picturesSize));
 		hitCount100 = new JLabel();
-		hitCount100.setFocusable(true);
 		hitCount100.setHorizontalAlignment(JLabel.CENTER);
 		hitCount100.setVerticalAlignment(JLabel.CENTER);
 		count100Panel.add(count100Picture);
 		count100Panel.add(hitCount100);
 		// 50
 		JPanel count50Panel = new JPanel();
-		count50Panel.setFocusable(true);
 		count50Panel.setBackground(Color.GRAY);
 		picturesSize = 30f;
 		final ImagePanel count50Picture = new ImagePanel();
-		count50Picture.setFocusable(true);
 		count50Picture.setBackground(Color.GRAY);
 		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")), picturesSize, picturesSize));
 		hitCount50 = new JLabel();
-		hitCount50.setFocusable(true);
 		hitCount50.setHorizontalAlignment(JLabel.CENTER);
 		hitCount50.setVerticalAlignment(JLabel.CENTER);
 		count50Panel.add(count50Picture);
@@ -391,56 +381,46 @@ public class Interface extends JFrame
 		hitCountPanel.add(count50Panel, constraint);
 		/***************** RANK PANEL ********************/
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
-		ranksUserPanel.setFocusable(true);
 		ranksUserPanel.setBackground(Color.GRAY);
 		picturesSize = 40f;
 		// SS
 		JPanel ssPanel = new JPanel();
-		ssPanel.setFocusable(true);
 		ssPanel.setBackground(Color.GRAY);
 		final ImagePanel ssPicture = new ImagePanel();
-		ssPicture.setFocusable(true);
 		ssPicture.setBackground(Color.GRAY);
 		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")), picturesSize, picturesSize));
 		countSS = new JLabel();
-		countSS.setFocusable(true);
 		countSS.setHorizontalAlignment(JLabel.CENTER);
 		countSS.setVerticalAlignment(JLabel.CENTER);
 		ssPanel.add(ssPicture);
 		ssPanel.add(countSS);
 		// S
 		JPanel sPanel = new JPanel();
-		sPanel.setFocusable(true);
 		sPanel.setBackground(Color.GRAY);
 		final ImagePanel sPicture = new ImagePanel();
-		sPicture.setFocusable(true);
 		sPicture.setBackground(Color.GRAY);
 		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")), picturesSize, picturesSize));
 		countS = new JLabel();
-		countS.setFocusable(true);
 		countS.setHorizontalAlignment(JLabel.CENTER);
 		countS.setVerticalAlignment(JLabel.CENTER);
 		sPanel.add(sPicture);
 		sPanel.add(countS);
 		// A
 		JPanel aPanel = new JPanel();
-		aPanel.setFocusable(true);
 		aPanel.setBackground(Color.GRAY);
 		final ImagePanel aPicture = new ImagePanel();
-		aPicture.setFocusable(true);
 		aPicture.setBackground(Color.GRAY);
 		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")), picturesSize, picturesSize));
 		countA = new JLabel();
-		countA.setFocusable(true);
 		countA.setHorizontalAlignment(JLabel.CENTER);
 		countA.setVerticalAlignment(JLabel.CENTER);
 		aPanel.add(aPicture);
@@ -461,11 +441,9 @@ public class Interface extends JFrame
 		ranksUserPanel.add(aPanel, constraint);
 		/******************** USER PANEL *****************/
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
-		avatarPanel.setFocusable(true);
 		avatarPanel.setBackground(Color.GRAY);
 		int avatarSize = 128;
 		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png")), 128, 128));
-		avatar.setFocusable(true);
 		avatar.setBackground(Color.GRAY);
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
@@ -508,7 +486,6 @@ public class Interface extends JFrame
 			{}
 		});
 		username = new JLabel(" ");
-		username.setFocusable(true);
 		username.setFont(new Font(username.getFont().getName(), Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
@@ -525,68 +502,53 @@ public class Interface extends JFrame
 		/**************** OTHERS PANEL *********************/
 		JPanel otherPanel = new JPanel(new MigLayout());
 		otherPanel.setBackground(Color.GRAY);
-		otherPanel.setFocusable(true);
 		// PlayCount
 		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
-		playCountLabel.setFocusable(true);
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		playCountLabel.setVerticalAlignment(JLabel.CENTER);
 		playCount = new JLabel();
-		playCount.setFocusable(true);
 		playCount.setHorizontalAlignment(JLabel.LEFT);
 		playCount.setVerticalAlignment(JLabel.CENTER);
 		// RankedScore
 		JLabel rankedScoreLabel = new JLabel(Main.resourceBundle.getString("ranked_score") + " : ");
-		rankedScoreLabel.setFocusable(true);
 		rankedScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		rankedScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		rankedScore = new JLabel();
-		rankedScore.setFocusable(true);
 		rankedScore.setHorizontalAlignment(JLabel.LEFT);
 		rankedScore.setVerticalAlignment(JLabel.CENTER);
 		// TotalScore
 		JLabel totalScoreLabel = new JLabel(Main.resourceBundle.getString("total_score") + " : ");
-		totalScoreLabel.setFocusable(true);
 		totalScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		totalScore = new JLabel();
-		totalScore.setFocusable(true);
 		totalScore.setHorizontalAlignment(JLabel.LEFT);
 		totalScore.setVerticalAlignment(JLabel.CENTER);
 		// PP
 		JLabel ppCountLabel = new JLabel("PP : ");
-		ppCountLabel.setFocusable(true);
 		ppCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		ppCountLabel.setVerticalAlignment(JLabel.CENTER);
 		ppCount = new JLabel();
-		ppCount.setFocusable(true);
 		ppCount.setHorizontalAlignment(JLabel.LEFT);
 		ppCount.setVerticalAlignment(JLabel.CENTER);
 		// Accuracy
 		JLabel accuracyLabel = new JLabel(Main.resourceBundle.getString("accuracy") + " : ");
-		accuracyLabel.setFocusable(true);
 		accuracyLabel.setHorizontalAlignment(JLabel.RIGHT);
 		accuracyLabel.setVerticalAlignment(JLabel.CENTER);
 		accuracy = new JLabel();
-		accuracy.setFocusable(true);
 		accuracy.setHorizontalAlignment(JLabel.LEFT);
 		accuracy.setVerticalAlignment(JLabel.CENTER);
 		// Country
 		JLabel countryLabel = new JLabel(Main.resourceBundle.getString("country") + " : ");
-		countryLabel.setFocusable(true);
 		countryLabel.setHorizontalAlignment(JLabel.RIGHT);
 		countryLabel.setVerticalAlignment(JLabel.CENTER);
 		country = new JLabel();
-		country.setFocusable(true);
 		country.setHorizontalAlignment(JLabel.LEFT);
 		country.setVerticalAlignment(JLabel.CENTER);
 		// Total hits
 		JLabel totalHitsLabel = new JLabel(Main.resourceBundle.getString("total_hits") + " : ");
-		totalHitsLabel.setFocusable(true);
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalHitsLabel.setVerticalAlignment(JLabel.CENTER);
 		totalHits = new JLabel();
-		totalHits.setFocusable(true);
 		totalHits.setHorizontalAlignment(JLabel.LEFT);
 		totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
@@ -615,26 +577,26 @@ public class Interface extends JFrame
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
-		frame.add(searchPanel, constraint);
+		getFrame().add(searchPanel, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
-		frame.add(avatarPanel, constraint);
+		getFrame().add(avatarPanel, constraint);
 		constraint.insets = new Insets(0, 0, 0, 0);
 		constraint.gridy = line++;
-		frame.add(levelUserPanel, constraint);
+		getFrame().add(levelUserPanel, constraint);
 		constraint.gridy = line++;
-		frame.add(otherPanel, constraint);
+		getFrame().add(otherPanel, constraint);
 		constraint.gridy = line++;
-		frame.add(hitCountPanel, constraint);
+		getFrame().add(hitCountPanel, constraint);
 		constraint.gridy = line++;
-		frame.add(ranksUserPanel, constraint);
+		getFrame().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
-		frame.add(trackUserPanel, constraint);
+		getFrame().add(trackUserPanel, constraint);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
-		frame.pack();
-		frame.setVisible(true);
-		frame.toFront();
+		getFrame().setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
+		getFrame().pack();
+		getFrame().setVisible(true);
+		getFrame().toFront();
 	}
 
 	private void trackNewUser(User user) throws IOException
@@ -909,26 +871,41 @@ public class Interface extends JFrame
 
 	public static void hideFrame()
 	{
-		frame.setEnabled(false);
-		frame.setFocusable(false);
+		getFrame().setEnabled(false);
+		getFrame().setFocusable(false);
 	}
 
 	public static void showFrame()
 	{
-		frame.setEnabled(true);
-		frame.setFocusable(true);
-		frame.setVisible(true);
+		getFrame().setEnabled(true);
+		getFrame().setFocusable(true);
+		getFrame().setVisible(true);
 	}
 
 	public static void exit()
 	{
-		frame.dispose();
+		getFrame().dispose();
 	}
 
 	public static void backFromTray()
 	{
-		frame.setState(JFrame.NORMAL);
+		getFrame().setState(JFrame.NORMAL);
 		showFrame();
-		frame.toFront();
+		getFrame().toFront();
+	}
+
+	public static JFrame getFrame()
+	{
+		return frame;
+	}
+
+	public static void setFrame(JFrame frame)
+	{
+		Interface.frame = frame;
+	}
+
+	public static void updateAutoCompletion(boolean status)
+	{
+		userNameField.setAutoCompletion(status);
 	}
 }
