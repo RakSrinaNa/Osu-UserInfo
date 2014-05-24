@@ -18,6 +18,6 @@ Number of SS, S, A
 How to help that project?
 -----------------------
 
-[If you find any bugs, please report them here](https://github.com/MrCraftCod/Osu-UserInfo/issues)
+[If you find any bugs, please report them here](https://bitbucket.org/MrCraftCod/osuuserinfo/issues)
 
-If you want, you can translate this project. [Fork the repository](https://github.com/MrCraftCod/Osu-UserInfo/fork) and add your language file in src/resources/lang/
+If you want, you can translate this project. [Fork the repository](https://bitbucket.org/MrCraftCod/osuuserinfo/fork) and add your language file in src/resources/lang/
