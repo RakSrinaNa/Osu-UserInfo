@@ -43,6 +43,7 @@ public class AutoComplete extends JComboBox<String> implements JComboBox.KeySele
 		return null;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public int selectionForKey(char aKey, ComboBoxModel aModel)
 	{
