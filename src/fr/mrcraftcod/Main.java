@@ -5,7 +5,6 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -31,7 +30,7 @@ public class Main
 			for(File file : Configuration.appData.listFiles())
 				if(file.getName() != config.getConfigFile().getName())
 					file.delete();
-		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", Locale.getDefault());
+		resourceBundle = ResourceBundle.getBundle("resources/lang/lang");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
