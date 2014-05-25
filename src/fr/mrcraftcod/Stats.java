@@ -183,7 +183,7 @@ public class Stats implements Serializable
 		if(previousStats == null)
 			return "";
 		long lastDate = previousStats.getDate();
-		if(lastDate < 0)
+		if(lastDate <= 0)
 			return "";
 		return String.format(Main.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault()).format(new Date(lastDate)));
 	}
