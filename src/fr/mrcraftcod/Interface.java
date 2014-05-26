@@ -63,6 +63,7 @@ public class Interface extends JFrame
 	private JTextComponent userNameFieldTextComponent;
 	private DefaultComboBoxModel<String> userNameFieldModel;
 	private ImageIcon iconRefresh, iconSearch;
+	private BufferedImage avatarDefaultImage;
 	private static AutoComboBox userNameField;
 	private ImagePanel avatar;
 	private JComboBox<String> mode;
@@ -95,6 +96,7 @@ public class Interface extends JFrame
 		int pictureButtonSize = 18;
 		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
 		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
+		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		/************** FRAME INFOS ********************/
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
 		getFrame().setFocusable(true);
@@ -447,7 +449,7 @@ public class Interface extends JFrame
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		avatarPanel.setBackground(Color.GRAY);
 		int avatarSize = 128;
-		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png")), 128, 128));
+		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), 128, 128));
 		avatar.setBackground(Color.GRAY);
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
@@ -788,7 +790,7 @@ public class Interface extends JFrame
 		}
 		catch(Exception e)
 		{}
-		return null;
+		return avatarDefaultImage;
 	}
 
 	private double getScoreToNextLevel(int currentLevel, double currentScore)
