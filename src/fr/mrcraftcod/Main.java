@@ -2,7 +2,6 @@ package fr.mrcraftcod;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -67,12 +66,7 @@ public class Main
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		getPreviousConfigFolder();
 		config = new Configuration();
-		if(config.getDouble("last_version", -1D) < 1.2D)
-			for(File file : Configuration.appData.listFiles())
-				if(file.getName() != config.getConfigFile().getName())
-					file.delete();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
@@ -104,24 +98,6 @@ public class Main
 			exception.printStackTrace();
 		}
 		startup.exit();
-	}
-
-	/**
-	 * Used to get the previous config folder (when the app was called "Osu!Stats") to rename it to the new config folder.
-	 * 
-	 * @since 1.3
-	 */
-	private static void getPreviousConfigFolder() // Will be removed shortly
-	{
-		if(new File(System.getenv("APPDATA"), "Osu!Stats").exists())
-			try
-			{
-				new File(System.getenv("APPDATA"), "Osu!Stats").renameTo(new File(System.getenv("APPDATA"), Main.APPNAME));
-			}
-			catch(Exception exception)
-			{
-				exception.printStackTrace();
-			}
 	}
 
 	/**
