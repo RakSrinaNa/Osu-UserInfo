@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Configuration object, used to store and get variables
+ * Configuration object, used to store and get variables.
  * 
  * @author MrCraftCod
  */
@@ -22,8 +22,8 @@ public class Configuration
 	private List<String> lastConfigFile;
 
 	/**
-	 * Constructor
-	 * Will create a new file in %appdata%/APPNAME/vars.ors
+	 * Constructor.
+	 * Will create a new file in %appdata%/APPNAME/vars.ors.
 	 */
 	public Configuration()
 	{
@@ -31,10 +31,10 @@ public class Configuration
 	}
 
 	/**
-	 * Constructor
-	 * Will create a new file in %appdata%/[APPNAME]/[filename]
+	 * Constructor.
+	 * Will create a new file in %appdata%/[APPNAME]/[filename].
 	 * 
-	 * @param fileName The name of the config file
+	 * @param fileName The name of the config file.
 	 */
 	public Configuration(String fileName)
 	{
@@ -51,10 +51,10 @@ public class Configuration
 	}
 
 	/**
-	 * Used to get the string associated with the given key in the config file
+	 * Used to get the string associated with the given key in the config file.
 	 * 
-	 * @param key The key of what to get
-	 * @return The String associated with the given key, null if the key doesn't exist
+	 * @param key The key of what to get.
+	 * @return The String associated with the given key, null if the key doesn't exist.
 	 */
 	public String getVar(String key)
 	{
@@ -71,11 +71,11 @@ public class Configuration
 	}
 
 	/**
-	 * Used to get the boolean associated with the given key in the config file
+	 * Used to get the boolean associated with the given key in the config file.
 	 * 
-	 * @param key The key of what to get
-	 * @param defaultValue The value to return if the key wasn't found
-	 * @return The boolean associated with the given key, defaultValue if the key doesn't exist
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The boolean associated with the given key, defaultValue if the key doesn't exist.
 	 */
 	public boolean getBoolean(String key, boolean defaultValue)
 	{
@@ -89,11 +89,11 @@ public class Configuration
 	}
 
 	/**
-	 * Used to write an object to the config file
+	 * Used to write an object to the config file.
 	 * 
-	 * @param key The key to store the value
-	 * @param obj The object to save (as string)
-	 * @return A boolean showing if the operation has been done or not
+	 * @param key The key to store the value.
+	 * @param obj The object to save (as string).
+	 * @return A boolean showing if the operation has been done or not.
 	 */
 	public synchronized boolean writeVar(String key, Object obj)
 	{
@@ -135,10 +135,10 @@ public class Configuration
 	}
 
 	/**
-	 * Used to delete a key in the config file
+	 * Used to delete a key in the config file.
 	 * 
-	 * @param key The key to delete
-	 * @return A boolean showing if the action has been done or not
+	 * @param key The key to delete.
+	 * @return A boolean showing if the action has been done or not.
 	 */
 	public synchronized boolean deleteVar(String key)
 	{
@@ -174,11 +174,11 @@ public class Configuration
 	}
 
 	/**
-	 * Used to read the config file
+	 * Used to read the config file.
 	 * 
-	 * @param configFile The File object pointing to the config file
-	 * @return A list representing the read file
-	 * @throws IOException If the file cannot be read or is not found
+	 * @param configFile The File object pointing to the config file.
+	 * @return A list representing the read file.
+	 * @throws IOException If the file cannot be read or is not found.
 	 */
 	public List<String> readSmallTextFile(final File configFile) throws IOException
 	{
@@ -205,11 +205,11 @@ public class Configuration
 	}
 
 	/**
-	 * Used to get the double associated with the given key in the config file
+	 * Used to get the double associated with the given key in the config file.
 	 * 
-	 * @param key The key of what to get
-	 * @param defaultValue The value to return if the key wasn't found
-	 * @return The double associated with the given key, defaultValue if the key doesn't exist
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The double associated with the given key, defaultValue if the key doesn't exist.
 	 */
 	public double getDouble(String key, double defaultValue)
 	{
@@ -223,11 +223,11 @@ public class Configuration
 	}
 
 	/**
-	 * Used to get the long associated with the given key in the config file
+	 * Used to get the long associated with the given key in the config file.
 	 * 
-	 * @param key The key of what to get
-	 * @param defaultValue The value to return if the key wasn't found
-	 * @return The long associated with the given key, defaultValue if the key doesn't exist
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The long associated with the given key, defaultValue if the key doesn't exist.
 	 */
 	public long getLong(String key, long defaultValue)
 	{
@@ -241,11 +241,11 @@ public class Configuration
 	}
 
 	/**
-	 * Used to get the integer associated with the given key in the config file
+	 * Used to get the integer associated with the given key in the config file.
 	 * 
-	 * @param key The key of what to get
-	 * @param defaultValue The value to return if the key wasn't found
-	 * @return The integer associated with the given key, defaultValue if the key doesn't exist
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The integer associated with the given key, defaultValue if the key doesn't exist.
 	 */
 	public int getInt(String key, int defaultValue)
 	{
@@ -259,9 +259,9 @@ public class Configuration
 	}
 
 	/**
-	 * Used to get config file
+	 * Used to get config file.
 	 * 
-	 * @return The config file currently used by this object
+	 * @return The config file currently used by this object.
 	 */
 	public File getConfigFile()
 	{

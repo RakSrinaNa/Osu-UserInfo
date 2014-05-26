@@ -60,10 +60,10 @@ public class Main
 	public static ResourceBundle resourceBundle;
 
 	/**
-	 * Start the program
+	 * Start the program.
 	 * 
-	 * @param args Not used
-	 * @throws IOException If there were an error during startup
+	 * @param args Not used.
+	 * @throws IOException If there were an error during startup.
 	 */
 	public static void main(String[] args) throws IOException
 	{
@@ -107,7 +107,7 @@ public class Main
 	}
 
 	/**
-	 * Used to get the previous config folder (when the app was called "Osu!Stats") to rename it to the new config folder
+	 * Used to get the previous config folder (when the app was called "Osu!Stats") to rename it to the new config folder.
 	 * 
 	 * @since 1.3
 	 */
@@ -125,10 +125,10 @@ public class Main
 	}
 
 	/**
-	 * Function to know if the given api key is valid or not
+	 * Function to know if the given api key is valid or not.
 	 * 
-	 * @param apiKey The api key to test
-	 * @return A boolean representing the validity of the key
+	 * @param apiKey The api key to test.
+	 * @return A boolean representing the validity of the key.
 	 */
 	private static boolean verifyApiKey(String apiKey)
 	{
@@ -150,7 +150,7 @@ public class Main
 	}
 
 	/**
-	 * Used to set a better look and feel to the frames
+	 * Used to set a better look and feel to the frames.
 	 */
 	private static void setLookAndFeel()
 	{
