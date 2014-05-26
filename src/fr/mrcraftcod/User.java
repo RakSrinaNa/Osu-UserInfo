@@ -19,6 +19,7 @@ public class User implements Serializable
 	private static final long serialVersionUID = 9114477464694621621L;
 	private Stats stats_normal, stats_taiko, stats_ctb, stats_mania;
 	private String username = "";
+	private transient int userID;
 
 	/**
 	 * Used to serialize the object to a file.
@@ -232,5 +233,25 @@ public class User implements Serializable
 	public void setStatsOsuMania(Stats stats)
 	{
 		this.stats_mania = stats;
+	}
+
+	/**
+	 * Used to get the user ID.
+	 * 
+	 * @return The user ID.
+	 */
+	public int getUserID()
+	{
+		return userID;
+	}
+
+	/**
+	 * Used to set the user ID.
+	 * 
+	 * @param userID The ID to set.
+	 */
+	public void setUserID(int userID)
+	{
+		this.userID = userID;
 	}
 }

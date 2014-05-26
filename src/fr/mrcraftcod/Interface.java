@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
@@ -470,6 +469,7 @@ public class Interface extends JFrame
 			@Override
 			public void mousePressed(MouseEvent arg0)
 			{
+				System.out.println(arg0.getClickCount());
 				if(arg0.getClickCount() > 1)
 				{
 					final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -479,10 +479,12 @@ public class Interface extends JFrame
 							String user_id = username.getText();
 							if(user_id.equalsIgnoreCase(""))
 								return;
-							desktop.browse(new URL("https://osu.ppy.sh/u/" + user_id).toURI());
+							desktop.browse(new URL("https://osu.ppy.sh/u/" + lastUser.getUserID()).toURI());
 						}
 						catch(final Exception e)
-						{}
+						{
+							e.printStackTrace();
+						}
 				}
 			}
 
@@ -641,7 +643,7 @@ public class Interface extends JFrame
 	private ArrayList<String> getTrackedUsers()
 	{
 		ArrayList<String> trackedList = new ArrayList<String>();
-		String tracked = Main.config.getVar("tracked_users");
+		String tracked = Main.config.getString("tracked_users", "");
 		for(String user : tracked.split(","))
 			trackedList.add(user);
 		return trackedList;
@@ -649,6 +651,8 @@ public class Interface extends JFrame
 
 	private BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
 	{
+		if(image == null)
+			return image;
 		int baseWidth = image.getWidth(), baseHeight = image.getHeight();
 		float ratio = (baseWidth > baseHeight) ? (width / baseWidth) : (height / baseHeight);
 		Image tmp = image.getScaledInstance((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.SCALE_SMOOTH);
@@ -696,49 +700,50 @@ public class Interface extends JFrame
 			User currentUser = new User();
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
-			final JSONObject obj = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
-			boolean tracked = isUserTracked(obj.getString("username"));
+			final JSONObject jsonResponse = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
+			boolean tracked = isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
 				{
-					currentUser = User.deserialize(new File(Configuration.appData, obj.getString("username")));
+					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
 				}
 				catch(Exception e)
 				{}
 			Stats previousStats = currentUser.getStats(mode.getSelectedIndex());
 			track.setEnabled(true);
 			track.setSelected(tracked);
-			if(!lastUser.getUsername().equals(obj.getString("username")))
+			if(!lastUser.getUsername().equals(jsonResponse.getString("username")))
 				avatar.setImage(null);
 			Random r = new Random();
-			currentUser.setUsername(obj.getString("username"));
-			statsUser.setRank(obj.getDouble("pp_rank"));
-			statsUser.setPlaycount(obj.getInt("playcount"));
-			statsUser.setRankedScore(obj.getLong("ranked_score"));
-			statsUser.setTotalScore(obj.getLong("total_score"));
-			statsUser.setAccuracy(obj.getDouble("accuracy"));
-			statsUser.setPp(obj.getDouble("pp_raw"));
-			statsUser.setTotalHits(obj.getLong("count300") + obj.getLong("count100") + obj.getLong("count50"));
+			currentUser.setUsername(jsonResponse.getString("username"));
+			currentUser.setUserID(jsonResponse.getInt("user_id"));
+			statsUser.setRank(jsonResponse.getDouble("pp_rank"));
+			statsUser.setPlaycount(jsonResponse.getInt("playcount"));
+			statsUser.setRankedScore(jsonResponse.getLong("ranked_score"));
+			statsUser.setTotalScore(jsonResponse.getLong("total_score"));
+			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
+			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
+			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
 			username.setText(currentUser.getUsername() + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRank()) + ")" + statsUser.compareRank(previousStats));
 			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
-			updateLevel(obj.getDouble("level"));
-			countSS.setText(String.valueOf(obj.getInt("count_rank_ss")));
-			countS.setText(String.valueOf(obj.getInt("count_rank_s")));
-			countA.setText(String.valueOf(obj.getInt("count_rank_a")));
+			updateLevel(jsonResponse.getDouble("level"));
+			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
+			countS.setText(String.valueOf(jsonResponse.getInt("count_rank_s")));
+			countA.setText(String.valueOf(jsonResponse.getInt("count_rank_a")));
 			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPlaycount()) + statsUser.comparePlayCount(previousStats));
 			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRankedScore()) + statsUser.compareRankedScore(previousStats));
-			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(obj.getDouble("level")), statsUser.getTotalScore())), getLevel(obj.getDouble("level")) + 1));
+			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(jsonResponse.getDouble("level")), statsUser.getTotalScore())), getLevel(jsonResponse.getDouble("level")) + 1));
 			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPp()) + statsUser.comparePP(previousStats));
 			accuracy.setText(String.valueOf(round(statsUser.getAccuracy(), 2)) + "%" + statsUser.compareAccuracy(previousStats));
-			country.setText(CountryCode.getByCode(obj.getString("country")).getName());
+			country.setText(CountryCode.getByCode(jsonResponse.getString("country")).getName());
 			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalHits()) + statsUser.compareTotalHits(previousStats));
 			DecimalFormat decimalFormat = new DecimalFormat();
 			decimalFormat.setMaximumFractionDigits(2);
-			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count300")) + " (" + decimalFormat.format((obj.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
-			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count100")) + " (" + decimalFormat.format((obj.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
-			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(obj.getLong("count50")) + " (" + decimalFormat.format((obj.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
+			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count300")) + " (" + decimalFormat.format((jsonResponse.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
+			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count100")) + " (" + decimalFormat.format((jsonResponse.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
+			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count50")) + " (" + decimalFormat.format((jsonResponse.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
 			lastStatsDate.setText(statsUser.getLastStatsDate(previousStats));
-			if(!lastUser.equals(obj.get("username")))
+			if(!lastUser.equals(jsonResponse.get("username")))
 			{
 				SwingUtilities.invokeLater(new Runnable()
 				{
@@ -747,7 +752,7 @@ public class Interface extends JFrame
 					{
 						try
 						{
-							avatar.setImage(resizeBufferedImage(getAvatar(obj.getString("user_id")), 128, 128));
+							avatar.setImage(resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
 						}
 						catch(Exception e)
 						{
@@ -775,9 +780,15 @@ public class Interface extends JFrame
 		}
 	}
 
-	private synchronized BufferedImage getAvatar(String user_id) throws MalformedURLException, IOException, Exception
+	private synchronized BufferedImage getAvatar(String user_id) throws Exception
 	{
-		return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + user_id, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+		try
+		{
+			return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + user_id, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+		}
+		catch(Exception e)
+		{}
+		return null;
 	}
 
 	private double getScoreToNextLevel(int currentLevel, double currentScore)
