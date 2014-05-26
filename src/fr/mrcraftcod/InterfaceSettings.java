@@ -12,6 +12,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ * Show a frame to modify settings.
+ * 
+ * @author MrCraftCod
+ *
+ * @since 1.4
+ */
 public class InterfaceSettings extends JFrame
 {
 	private static final long serialVersionUID = -5030788972447533004L;
@@ -19,6 +26,9 @@ public class InterfaceSettings extends JFrame
 	private static JCheckBox autoCompletionCheck;
 	private static JButton buttonReturn;
 
+	/**
+	 * Constructor.
+	 */
 	public InterfaceSettings()
 	{
 		int lines = 0;
@@ -107,12 +117,18 @@ public class InterfaceSettings extends JFrame
 		frame.pack();
 	}
 
+	/**
+	 * Used to hide the frame.
+	 */
 	public void hideFrame()
 	{
 		frame.setFocusable(false);
 		frame.setEnabled(false);
 	}
 
+	/**
+	 * Used to show the frame.
+	 */
 	public void showFrame()
 	{
 		frame.setFocusable(true);
@@ -120,13 +136,20 @@ public class InterfaceSettings extends JFrame
 		frame.toFront();
 	}
 
-	public boolean save()
+	/**
+	 * Used to save the choosen values.
+	 */
+	public void save()
 	{
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
 		Interface.updateAutoCompletion(autoCompletionCheck.isSelected());
-		return true;
 	}
 
+	/**
+	 * Used to exit the settings.
+	 * 
+	 * @param save Indicate the need to save or not the settings.
+	 */
 	public void returnMain(boolean save)
 	{
 		if(save)
@@ -135,6 +158,11 @@ public class InterfaceSettings extends JFrame
 		frame.dispose();
 	}
 
+	/**
+	 * Used to know if a settings have been modified.
+	 * 
+	 * @return A boolean representing the modification or not.
+	 */
 	public boolean isSettingsModified()
 	{
 		return !(Main.config.getBoolean("autoCompletion", true) == autoCompletionCheck.isSelected());
