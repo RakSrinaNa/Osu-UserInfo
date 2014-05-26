@@ -23,6 +23,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+/**
+ * Will show a frame containing a text and the traducers.
+ * 
+ * @author MrCraftCod
+ */
 public class InterfaceAbout extends JFrame
 {
 	private static final long serialVersionUID = 6055795212223739508L;
@@ -34,6 +39,11 @@ public class InterfaceAbout extends JFrame
 	private JTableUneditableModel model;
 	private TableColumnAdjuster tca;
 
+	/**
+	 * Constructor. Will show a frame containing a text and the traducers.
+	 * 
+	 * @param parent The parent component.
+	 */
 	public InterfaceAbout(Component parent)
 	{
 		traducers = new HashMap<String, String>();
@@ -143,6 +153,15 @@ public class InterfaceAbout extends JFrame
 		Interface.hideFrame();
 	}
 
+	/**
+	 * Used to open the profile of a traducer.
+	 * 
+	 * @param selectedRow The row selected.
+	 * 
+	 * @throws MalformedURLException If the profile URL isn't correct.
+	 * @throws IOException If the browser can't be opened.
+	 * @throws URISyntaxException If the profile URL isn't correct.
+	 */
 	protected void openProfile(int selectedRow) throws MalformedURLException, IOException, URISyntaxException
 	{
 		String url = "";
@@ -157,6 +176,11 @@ public class InterfaceAbout extends JFrame
 		Desktop.getDesktop().browse(new URL(url).toURI());
 	}
 
+	/**
+	 * Used to get all traducers with their language.
+	 * 
+	 * @return A two dimensional array with language at position [i][0] and the name at [i][1].
+	 */
 	private String[][] getTraducers()
 	{
 		int i = 0;
