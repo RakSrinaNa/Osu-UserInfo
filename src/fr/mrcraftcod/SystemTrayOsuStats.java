@@ -14,15 +14,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The system tray icon of the app.
+ * 
+ * @author MrCraftCod
+ */
 public class SystemTrayOsuStats
 {
 	public static SystemTray tray = null;
 	public static TrayIcon trayIcon = null;
 
 	/**
-	 * Called when need to add the SystemTray
-	 * 
-	 * @return Nothing.
+	 * Called when need to add the system tray icon.
 	 */
 	public static void add() throws AWTException
 	{
@@ -32,8 +35,7 @@ public class SystemTrayOsuStats
 	/**
 	 * Initalize the SystemTray object.
 	 * 
-	 * @return Nothing.
-	 * @throws IOException
+	 * @throws IOException if the system tray object cannot be initialized.
 	 */
 	public static void init() throws IOException
 	{
@@ -105,18 +107,20 @@ public class SystemTrayOsuStats
 		});
 	}
 
+	/**
+	 * Used to show the main app frame.
+	 */
 	public static void showUpFrame()
 	{
 		Interface.backFromTray();
 	}
 
 	/**
-	 * Called when need to notify by the SystemTray.
+	 * Called when need to notify by the system tray.
 	 * 
 	 * @param title The title of the notification.
 	 * @param message The message of the notification.
 	 * @param messageType The type of the notification.
-	 * @return Nothing.
 	 */
 	public static void notify(final String title, final String message, final TrayIcon.MessageType messageType)
 	{
@@ -129,9 +133,7 @@ public class SystemTrayOsuStats
 	}
 
 	/**
-	 * Called when need to remove the SystemTray
-	 * 
-	 * @return Nothing.
+	 * Called when need to remove the system tray
 	 */
 	public static void remove()
 	{
