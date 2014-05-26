@@ -6,16 +6,31 @@ import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import javax.swing.JPanel;
 
+/**
+ * A panel which is transparent.
+ * 
+ * @author MrCraftCod
+ */
 public class TransparentPane extends JPanel
 {
 	private static final long serialVersionUID = -7146200793705779333L;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param layout The LayoutManager of the panel.
+	 * 
+	 * @see JPanel#JPanel(LayoutManager)
+	 */
 	public TransparentPane(LayoutManager layout)
 	{
 		this.setOpaque(false);
 		this.setLayout(layout);
 	}
 
+	/**
+	 * Used to draw the components with a transparent background.
+	 */
 	@Override
 	protected void paintComponent(Graphics g)
 	{
