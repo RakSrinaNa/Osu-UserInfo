@@ -84,7 +84,7 @@ public class Main
 		try
 		{
 			startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));
-			String tempApiKey = config.getVar("api_key");
+			String tempApiKey = config.getString("api_key", "");
 			if(tempApiKey.equals(""))
 				tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
 			startup.setStartupText(resourceBundle.getString("startup_verify_api_key"));

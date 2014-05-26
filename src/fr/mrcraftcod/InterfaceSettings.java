@@ -85,7 +85,7 @@ public class InterfaceSettings extends JFrame
 		});
 		autoCompletionCheck = new JCheckBox();
 		autoCompletionCheck.setText(Main.resourceBundle.getString("settings_auto_completion"));
-		autoCompletionCheck.setSelected("true".equals(Main.config.getVar("autoCompletion")));
+		autoCompletionCheck.setSelected("true".equals(Main.config.getString("autoCompletion", "")));
 		buttonReturn = new JButton(Main.resourceBundle.getString("settings_confirm"));
 		buttonReturn.addActionListener(new ActionListener()
 		{
