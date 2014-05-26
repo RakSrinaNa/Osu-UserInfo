@@ -65,7 +65,7 @@ public class Interface extends JFrame
 	private ImageIcon iconRefresh, iconSearch;
 	private BufferedImage avatarDefaultImage;
 	private static AutoComboBox userNameField;
-	private ImagePanel avatar;
+	private ImagePanel avatar, countryFlag;
 	private JComboBox<String> mode;
 	private JButton validButon;
 	private User lastUser = new User();
@@ -547,12 +547,23 @@ public class Interface extends JFrame
 		accuracy.setHorizontalAlignment(JLabel.LEFT);
 		accuracy.setVerticalAlignment(JLabel.CENTER);
 		// Country
+		picturesSize = 16;
 		JLabel countryLabel = new JLabel(Main.resourceBundle.getString("country") + " : ");
 		countryLabel.setHorizontalAlignment(JLabel.RIGHT);
 		countryLabel.setVerticalAlignment(JLabel.CENTER);
 		country = new JLabel();
 		country.setHorizontalAlignment(JLabel.LEFT);
 		country.setVerticalAlignment(JLabel.CENTER);
+		countryFlag = new ImagePanel();
+		countryFlag.setPrintLoading(false);
+		countryFlag.setBackground(Color.GRAY);
+		countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		country = new JLabel();
+		country.setHorizontalAlignment(JLabel.LEFT);
+		country.setVerticalAlignment(JLabel.CENTER);
+		// Construct
 		// Total hits
 		JLabel totalHitsLabel = new JLabel(Main.resourceBundle.getString("total_hits") + " : ");
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -573,7 +584,8 @@ public class Interface extends JFrame
 		otherPanel.add(accuracyLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(accuracy, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(countryLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(country, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(countryFlag, new CC().cell(1, lign).alignX("left").gapLeft("5"));
+		otherPanel.add(country, new CC().cell(2, lign++, 2, 1).alignX("left").gapLeft("2"));
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
@@ -715,7 +727,10 @@ public class Interface extends JFrame
 			track.setEnabled(true);
 			track.setSelected(tracked);
 			if(!lastUser.getUsername().equals(jsonResponse.getString("username")))
+			{
 				avatar.setImage(null);
+				countryFlag.setImage(null);
+			}
 			Random r = new Random();
 			currentUser.setUsername(jsonResponse.getString("username"));
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
@@ -755,6 +770,7 @@ public class Interface extends JFrame
 						try
 						{
 							avatar.setImage(resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
+							countryFlag.setImage(resizeBufferedImage(getFlag(jsonResponse.getString("country")), 16, 16));
 						}
 						catch(Exception e)
 						{
@@ -782,11 +798,22 @@ public class Interface extends JFrame
 		}
 	}
 
-	private synchronized BufferedImage getAvatar(String user_id) throws Exception
+	private synchronized BufferedImage getAvatar(String userID) throws Exception
 	{
 		try
 		{
-			return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + user_id, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+			return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+		}
+		catch(Exception e)
+		{}
+		return avatarDefaultImage;
+	}
+
+	private synchronized BufferedImage getFlag(String country) throws Exception
+	{
+		try
+		{
+			return ImageIO.read(new URL("http://s.ppy.sh/images/flags/" + country.toLowerCase() + ".gif"));
 		}
 		catch(Exception e)
 		{}
@@ -817,21 +844,21 @@ public class Interface extends JFrame
 		return round(result - currentScore, 0);
 	}
 
-	private int getLevel(double d)
+	private int getLevel(double level)
 	{
-		return (int) d;
+		return (int) level;
 	}
 
-	private double getProgressLevel(double d)
+	private double getProgressLevel(double level)
 	{
-		return d - ((int) d);
+		return level - ((int) level);
 	}
 
-	private void updateLevel(double d)
+	private void updateLevel(double level)
 	{
-		double progress = round(getProgressLevel(d) * 100, 2);
+		double progress = round(getProgressLevel(level) * 100, 2);
 		levelBar.setValue((int) progress);
-		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(d), progress));
+		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(level), progress));
 	}
 
 	synchronized public static String sendPost(String key, String user, int selectedMode) throws Exception

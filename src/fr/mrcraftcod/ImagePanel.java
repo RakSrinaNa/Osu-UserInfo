@@ -13,6 +13,7 @@ public class ImagePanel extends JPanel
 {
 	private static final long serialVersionUID = -6952599309580686281L;
 	private BufferedImage image;
+	private boolean printLoading;
 
 	/**
 	 * Constructor.
@@ -40,6 +41,8 @@ public class ImagePanel extends JPanel
 		super.paintComponent(g);
 		if(image == null)
 		{
+			if(!isPrintLoading())
+				return;
 			String string = Main.resourceBundle.getString("loading");
 			g.drawString(string, (this.getWidth() / 2) - (g.getFontMetrics().stringWidth(string) / 2), this.getHeight() / 2);
 			return;
@@ -58,5 +61,15 @@ public class ImagePanel extends JPanel
 		this.image = image;
 		this.repaint();
 		this.invalidate();
+	}
+
+	public boolean isPrintLoading()
+	{
+		return printLoading;
+	}
+
+	public void setPrintLoading(boolean printLoading)
+	{
+		this.printLoading = printLoading;
 	}
 }
