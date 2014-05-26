@@ -71,6 +71,19 @@ public class Configuration
 	}
 
 	/**
+	 * Used to get the String associated with the given key in the config file.
+	 * 
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The String associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public String getString(String key, String defaultValue)
+	{
+		String value = getVar(key);
+		return value == null ? defaultValue : value;
+	}
+
+	/**
 	 * Used to get the boolean associated with the given key in the config file.
 	 * 
 	 * @param key The key of what to get.
