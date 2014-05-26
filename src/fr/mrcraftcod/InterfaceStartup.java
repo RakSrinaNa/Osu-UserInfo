@@ -8,6 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
+/**
+ * Used to show a startup frame with a progress bar.
+ * 
+ * @author MrCraftCod
+ */
 public class InterfaceStartup
 {
 	private JFrame frame;
@@ -15,6 +20,11 @@ public class InterfaceStartup
 	private JProgressBar progressBar;
 	private int step = 0;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param maxStep How many steps are in the startup.
+	 */
 	public InterfaceStartup(int maxStep)
 	{
 		frame = new JFrame();
@@ -30,7 +40,7 @@ public class InterfaceStartup
 		label.setVerticalAlignment(JLabel.CENTER);
 		progressBar = new JProgressBar(0, maxStep);
 		progressBar.setStringPainted(true);
-		setProgressBar();
+		refreshProgressBarStep();
 		frame.getContentPane().add(progressBar, BorderLayout.NORTH);
 		frame.getContentPane().add(label, BorderLayout.SOUTH);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -42,31 +52,50 @@ public class InterfaceStartup
 		frame.pack();
 	}
 
-	private void setProgressBar()
+	/**
+	 * Used to refresh the current step showed by the progress bar.
+	 */
+	private void refreshProgressBarStep()
 	{
 		progressBar.setValue(step);
 	}
 
+	/**
+	 * Used to reset the current step.
+	 */
 	public void reset()
 	{
 		step = 0;
+		label.setText("");
+		refreshProgressBarStep();
 	}
 
+	/**
+	 * Used to get to a new step.
+	 * 
+	 * @param text The text printed to indicate what step is currently processed.
+	 */
 	public void setStartupText(String text)
 	{
 		if(label != null)
 		{
 			label.setText(text);
 			step++;
-			setProgressBar();
+			refreshProgressBarStep();
 		}
 	}
 
+	/**
+	 * Used to skip a step.
+	 */
 	public void skipStep()
 	{
 		step++;
 	}
 
+	/**
+	 * Used to close the frame
+	 */
 	public void exit()
 	{
 		frame.dispose();
