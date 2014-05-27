@@ -110,7 +110,7 @@ public class Main
 	{
 		try
 		{
-			new JSONObject(Interface.sendPost(apiKey, "peppy", 0));
+			new JSONObject(Interface.sendPost("get_user", apiKey, "peppy", 0));
 		}
 		catch(IOException exception)
 		{

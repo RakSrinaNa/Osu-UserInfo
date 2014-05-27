@@ -714,7 +714,7 @@ public class Interface extends JFrame
 			User currentUser = new User();
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
-			final JSONObject jsonResponse = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
+			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
@@ -861,10 +861,10 @@ public class Interface extends JFrame
 		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(level), progress));
 	}
 
-	synchronized public static String sendPost(String key, String user, int selectedMode) throws Exception
+	synchronized public static String sendPost(String type, String key, String user, int selectedMode) throws Exception
 	{
 		String urlParameters = "k=" + key + "&u=" + user + "&m=" + selectedMode + "&type=string&event_days=1";
-		URL url = new URL("https://osu.ppy.sh/api/get_user?" + urlParameters);
+		URL url = new URL("https://osu.ppy.sh/api/" + type + "?" + urlParameters);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
