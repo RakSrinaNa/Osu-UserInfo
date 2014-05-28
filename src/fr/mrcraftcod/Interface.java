@@ -13,6 +13,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -27,8 +29,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -53,6 +57,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,10 +75,13 @@ public class Interface extends JFrame
 	private JComboBox<String> mode;
 	private JButton validButon;
 	private User lastUser = new User();
-	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
+	private JComboBox<String> lastStatsDateBox;
+	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track;
 	private Date lastPost = new Date(0);
+	private JLabel lastStatsDate;
+	private DefaultComboBoxModel<String> statsDateModel;
 
 	public enum Mods
 	{
@@ -144,7 +153,7 @@ public class Interface extends JFrame
 		});
 		getFrame().setLayout(new GridBagLayout());
 		getFrame().setMinimumSize(new Dimension(350, 450));
-		getFrame().setPreferredSize(new Dimension(550, 550));
+		getFrame().setPreferredSize(new Dimension(550, 600));
 		getFrame().setAlwaysOnTop(false);
 		getFrame().setIconImages(Main.icons);
 		getFrame().getContentPane().setBackground(Color.GRAY);
@@ -286,7 +295,7 @@ public class Interface extends JFrame
 		constraint.gridy = 0;
 		levelUserPanel.add(levelBar, constraint);
 		/***************** TRACK PANEL ********************/
-		JPanel trackUserPanel = new JPanel(new GridBagLayout());
+		JPanel trackUserPanel = new JPanel(new MigLayout());
 		trackUserPanel.setBackground(Color.GRAY);
 		track = new JCheckBox();
 		track.setText(Main.resourceBundle.getString("track_user"));
@@ -309,21 +318,28 @@ public class Interface extends JFrame
 					unTrackUser(lastUser);
 			}
 		});
-		lastStatsDate = new JLabel();
-		lastStatsDate.setHorizontalAlignment(JLabel.RIGHT);
-		lastStatsDate.setVerticalAlignment(JLabel.CENTER);
+		lastStatsDate = new JLabel(Main.resourceBundle.getString("last_stats_date"));
+		lastStatsDate.setEnabled(track.isSelected());
+		statsDateModel = new DefaultComboBoxModel<String>(new String[] {"TEMP"});
+		lastStatsDateBox = new JComboBox<String>(statsDateModel);
+		lastStatsDateBox.setEnabled(track.isEnabled());
+		lastStatsDateBox.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				if(e.getStateChange() != 1)
+					return;
+				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+				SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
+				DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
+				updateInfos(lastUser.getStats(mode.getSelectedIndex()), lastUser.getStatsByModeAndDate(mode.getSelectedIndex(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
+			}
+		});
 		// Construct
-		constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.CENTER;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		constraint.gridwidth = 3;
-		constraint.weightx = 1;
-		constraint.weighty = 1;
-		constraint.gridx = 0;
-		constraint.gridy = 0;
-		trackUserPanel.add(track, constraint);
-		constraint.gridx = 1;
-		trackUserPanel.add(lastStatsDate, constraint);
+		trackUserPanel.add(track, new CC().cell(0, 0).alignX("left"));
+		trackUserPanel.add(lastStatsDate, new CC().cell(0, 1).alignX("right"));
+		trackUserPanel.add(lastStatsDateBox, new CC().cell(1, 1).alignX("right"));
 		/***************** HITS PANEL ********************/
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
 		hitCountPanel.setBackground(Color.GRAY);
@@ -626,6 +642,8 @@ public class Interface extends JFrame
 		users.add(user.getUsername());
 		userNameFieldModel.addElement(user.getUsername());
 		user.serialize(new File(Configuration.appData, user.getUsername()));
+		lastStatsDate.setEnabled(track.isSelected());
+		lastStatsDateBox.setEnabled(track.isSelected());
 		setTrackedUser(users);
 	}
 
@@ -636,6 +654,8 @@ public class Interface extends JFrame
 		userNameFieldModel.removeElement(user.getUsername());
 		userNameField.setSelectedItem(null);
 		new File(Configuration.appData, user.getUsername()).delete();
+		lastStatsDate.setEnabled(track.isSelected());
+		lastStatsDateBox.setEnabled(track.isSelected());
 		setTrackedUser(users);
 	}
 
@@ -747,20 +767,15 @@ public class Interface extends JFrame
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(jsonResponse.getInt("count_rank_s")));
 			countA.setText(String.valueOf(jsonResponse.getInt("count_rank_a")));
-			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPlaycount()) + statsUser.comparePlayCount(previousStats));
-			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRankedScore()) + statsUser.compareRankedScore(previousStats));
 			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(jsonResponse.getDouble("level")), statsUser.getTotalScore())), getLevel(jsonResponse.getDouble("level")) + 1));
-			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPp()) + statsUser.comparePP(previousStats));
-			accuracy.setText(String.valueOf(round(statsUser.getAccuracy(), 2)) + "%" + statsUser.compareAccuracy(previousStats));
 			country.setText(CountryCode.getByCode(jsonResponse.getString("country")).getName());
-			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalHits()) + statsUser.compareTotalHits(previousStats));
 			DecimalFormat decimalFormat = new DecimalFormat();
 			decimalFormat.setMaximumFractionDigits(2);
 			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count300")) + " (" + decimalFormat.format((jsonResponse.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count100")) + " (" + decimalFormat.format((jsonResponse.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count50")) + " (" + decimalFormat.format((jsonResponse.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
-			lastStatsDate.setText(statsUser.getLastStatsDate(previousStats));
-			if(!lastUser.equals(jsonResponse.get("username")))
+			updateInfos(statsUser, previousStats);
+			if(!lastUser.getUsername().equals(jsonResponse.get("username")))
 			{
 				SwingUtilities.invokeLater(new Runnable()
 				{
@@ -783,8 +798,16 @@ public class Interface extends JFrame
 			validButon.setIcon(iconRefresh);
 			currentUser.setStats(statsUser, mode.getSelectedIndex());
 			if(tracked)
+			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
+				lastStatsDate.setEnabled(track.isSelected());
+				lastStatsDateBox.setEnabled(track.isSelected());
+			}
 			lastUser = currentUser;
+			statsDateModel.removeAllElements();
+			for(String date : currentUser.getAvalidbleStatsDates(mode.getSelectedIndex()))
+				statsDateModel.addElement(date);
+			lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
 		}
 		catch(JSONException | IOException e)
 		{
@@ -796,6 +819,15 @@ public class Interface extends JFrame
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private void updateInfos(Stats currentStats, Stats previousStats)
+	{
+		accuracy.setText(String.valueOf(round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
+		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
+		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
+		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
+		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 	}
 
 	private synchronized BufferedImage getAvatar(String userID) throws Exception

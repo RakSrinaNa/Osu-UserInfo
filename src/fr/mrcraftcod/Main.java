@@ -53,6 +53,7 @@ public class Main
 	public final static String APPNAME = "Osu!UserInfo";
 	public final static String VERSION = "1.5";
 	public static String API_KEY = "";
+	public static int trackedStats = 10;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
