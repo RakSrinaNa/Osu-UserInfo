@@ -14,6 +14,7 @@ import java.util.Locale;
 public class Stats implements Serializable
 {
 	private static final long serialVersionUID = -3548705459172185871L;
+	private int mode;
 	private int playcount;
 	private long rankedScore;
 	private long totalScore;
@@ -338,5 +339,25 @@ public class Stats implements Serializable
 		if(lastDate <= 0)
 			return "";
 		return String.format(Main.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault()).format(new Date(lastDate)));
+	}
+
+	/**
+	 * Used to get the mode of the stats.
+	 * 
+	 * @return The number of the mode.
+	 */
+	public int getMode()
+	{
+		return mode;
+	}
+
+	/**
+	 * Used to set the mode of the stats.
+	 * 
+	 * @param mode The mode to set.
+	 */
+	public void setMode(int mode)
+	{
+		this.mode = mode;
 	}
 }
