@@ -133,6 +133,7 @@ public class Updater // TODO Javadoc
 	private static int update(File newFile, int version)
 	{
 		int reply;
+		boolean result = true;
 		try
 		{
 			switch(version)
@@ -140,23 +141,29 @@ public class Updater // TODO Javadoc
 				case DEVELOPER:
 					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_dev") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
 					if(reply == JOptionPane.YES_OPTION)
-						getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKDEV);
+						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKDEV);
 					else
 						return NOUPDATE;
+					if(!result)
+						return UPDATEERROR;
 					return UPDATEDDEV;
 				case PUBLIC:
 					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
 					if(reply == JOptionPane.YES_OPTION)
-						getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
+						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
 						return NOUPDATE;
+					if(!result)
+						return UPDATEERROR;
 					return UPDATEDPUBLIC;
 				case PUBLICFDEV:
 					reply = JOptionPane.showConfirmDialog(context, "What are you doing here?! O_o", Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
 					if(reply == JOptionPane.YES_OPTION)
-						getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
+						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
 						return NOUPDATE;
+					if(!result)
+						return UPDATEERROR;
 					return UPDATEDPUBLIC;
 				default:
 					return UPDATEERROR;
