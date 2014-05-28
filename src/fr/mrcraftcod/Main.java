@@ -51,7 +51,7 @@ import org.json.JSONObject;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static double VERSION = 1.4D;
+	public final static double VERSION = 1.0D;
 	public static String API_KEY = "";
 	public static Configuration config;
 	public static ArrayList<Image> icons;
@@ -73,8 +73,9 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		setLookAndFeel();
-		startup = new InterfaceStartup(3);
+		startup = new InterfaceStartup(4);
 		config.writeVar("last_version", VERSION);
+		Updater.update();
 		try
 		{
 			startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));
