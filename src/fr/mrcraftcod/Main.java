@@ -51,7 +51,7 @@ import org.json.JSONObject;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static double VERSION = 1.0D;
+	public final static String VERSION = "1.5";
 	public static String API_KEY = "";
 	public static Configuration config;
 	public static ArrayList<Image> icons;

@@ -192,14 +192,16 @@ public class Updater // TODO Javadoc
 		}
 		catch(SAXException | IOException | ParserConfigurationException e)
 		{
+			updateFile.delete();
 			return UPDATEERROR;
 		}
+		updateFile.delete();
 		int result = NOUPDATE;
 		if(versionsUTD == null)
 			result = UPDATEERROR;
 		else if(versionsUTD.size() < 1)
 			result = UPDATEERROR;
-		if(!Main.devMode && String.valueOf(Main.VERSION).contains("b"))
+		if(!Main.devMode && Main.VERSION.contains("b"))
 			result = update(jarFile, PUBLICFDEV);
 		if(Main.devMode && !isDevUpToDate())
 			result = update(jarFile, DEVELOPER);
@@ -221,7 +223,6 @@ public class Updater // TODO Javadoc
 			catch(final IOException e)
 			{}
 		}
-		updateFile.delete();
 		return result;
 	}
 
@@ -235,11 +236,11 @@ public class Updater // TODO Javadoc
 		try
 		{
 			String upToDateVersion = versionsUTD.get(PUBLICTAG);
-			int actualGlobalVersion = Integer.parseInt(String.valueOf(Main.VERSION).split("\\.")[0]);
+			int actualGlobalVersion = Integer.parseInt(Main.VERSION.split("\\.")[0]);
 			int upToDateGlobalVersion = Integer.parseInt(upToDateVersion.split("\\.")[0]);
 			int actualSubVersion = -1;
 			int upToDateSubVersion = -1;
-			String actualSubVersionS = String.valueOf(Main.VERSION).split("\\.")[1];
+			String actualSubVersionS = Main.VERSION.split("\\.")[1];
 			String upToDateSubVersionS = upToDateVersion.split("\\.")[1];
 			if(actualSubVersionS.contains("b"))
 				actualSubVersionS = actualSubVersionS.substring(0, actualSubVersionS.indexOf("b"));
@@ -271,11 +272,11 @@ public class Updater // TODO Javadoc
 		try
 		{
 			String upToDateVersion = versionsUTD.get(DEVELOPERTAG);
-			int actualGlobalVersion = Integer.parseInt(String.valueOf(Main.VERSION).split("\\.")[0]);
+			int actualGlobalVersion = Integer.parseInt(Main.VERSION.split("\\.")[0]);
 			int upToDateGlobalVersion = Integer.parseInt(upToDateVersion.split("\\.")[0]);
 			int actualSubVersion = -1;
 			int upToDateSubVersion = -1;
-			String actualSubVersionS = String.valueOf(Main.VERSION).split("\\.")[1];
+			String actualSubVersionS = Main.VERSION.split("\\.")[1];
 			String upToDateSubVersionS = upToDateVersion.split("\\.")[1];
 			if(actualSubVersionS.contains("b"))
 				actualSubVersionS = actualSubVersionS.substring(0, actualSubVersionS.indexOf("b"));
@@ -283,13 +284,13 @@ public class Updater // TODO Javadoc
 				upToDateSubVersionS = upToDateSubVersionS.substring(0, upToDateSubVersionS.indexOf("b"));
 			actualSubVersion = Integer.parseInt(actualSubVersionS);
 			upToDateSubVersion = Integer.parseInt(upToDateSubVersionS);
-			int actualBetaVersion = String.valueOf(Main.VERSION).contains("b") ? Integer.parseInt(String.valueOf(Main.VERSION).split("b")[1]) : -1;
+			int actualBetaVersion = Main.VERSION.contains("b") ? Integer.parseInt(Main.VERSION.split("b")[1]) : -1;
 			int upToDateBetaVersion = upToDateVersion.contains("b") ? Integer.parseInt(upToDateVersion.split("b")[1]) : -1;
 			if(actualGlobalVersion < upToDateGlobalVersion)
 				return false;
 			else if(actualSubVersion < upToDateSubVersion)
 				return false;
-			if(!String.valueOf(Main.VERSION).contains("b"))
+			if(!Main.VERSION.contains("b"))
 				return false;
 			if(actualBetaVersion < upToDateBetaVersion)
 				return false;
