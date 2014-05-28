@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,6 +29,7 @@ public class Updater // TODO Javadoc
 	public final static int DEVELOPER = 1, PUBLIC = 2, PUBLICFDEV = 3, NOUPDATE = 0, UPDATEDDEV = 1, UPDATEDPUBLIC = 2, UPDATEERROR = 3;
 	private final static String DEVELOPERTAG = "DEVELOPER", PUBLICTAG = "PUBLIC", LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/lastVersion.xml", LINKPUBLIC = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Public/public.jar", LINKDEV = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Developer/developer.jar";
 	private static HashMap<String, String> versionsUTD;
+	private static JFrame context;
 
 	/**
 	 * Used to get the XML file containing the versions up to date.
@@ -78,9 +80,12 @@ public class Updater // TODO Javadoc
 	 * 
 	 * @param newFile The file where to save the new JAR.
 	 * @param link The link of the JAR file.
+	 * @return True if the file has been downloaded, false if there were an error.
 	 */
-	public static void getLastJAR(File newFile, String link)
+	public static boolean getLastJAR(File newFile, String link)
 	{
+		Main.startup.addStartupText(Main.resourceBundle.getString("downloading"));
+		boolean result = false;
 		HttpURLConnection request = null;
 		ReadableByteChannel rbc = null;
 		FileOutputStream fos = null;
@@ -94,7 +99,7 @@ public class Updater // TODO Javadoc
 			rbc = Channels.newChannel(request.getInputStream());
 			fos = new FileOutputStream(newFile);
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-			JOptionPane.showMessageDialog(null, "La nouvelle version \340 \351t\351 t\351l\351charg\351e avec le nom " + newFile.getName() + "\net va maintenant \352tre lanc\351e.");
+			result = true;
 		}
 		catch(IOException e)
 		{}
@@ -116,6 +121,7 @@ public class Updater // TODO Javadoc
 		}
 		catch(Exception e)
 		{}
+		return result;
 	}
 
 	/**
@@ -124,7 +130,7 @@ public class Updater // TODO Javadoc
 	 * @param version The type of version to update.
 	 * @return Which version the user updated.
 	 */
-	private static int update(int version)
+	private static int update(File newFile, int version)
 	{
 		int reply;
 		try
@@ -132,21 +138,21 @@ public class Updater // TODO Javadoc
 			switch(version)
 			{
 				case DEVELOPER:
-					reply = JOptionPane.showConfirmDialog(null, "Nouvelle version developeur disponible!\n\nVoulez-vous mettre à jour?", "Nouvelle version", JOptionPane.YES_NO_OPTION);
+					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_dev") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
 					if(reply == JOptionPane.YES_OPTION)
 						getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKDEV);
 					else
 						return NOUPDATE;
 					return UPDATEDDEV;
 				case PUBLIC:
-					reply = JOptionPane.showConfirmDialog(null, "Nouvelle version disponible!\n\nVoulez-vous mettre à jour?", "Nouvelle version", JOptionPane.YES_NO_OPTION);
+					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
 					if(reply == JOptionPane.YES_OPTION)
 						getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
 						return NOUPDATE;
 					return UPDATEDPUBLIC;
 				case PUBLICFDEV:
-					reply = JOptionPane.showConfirmDialog(null, "Vous utilisez actuellement une version d\351velopeur.\nCependant vous n'avez pas activ\351 cette option dans les pr\351f\351rences.\nVoulez-vous mettre \340 jour vers la derni\350re version publique disponible?", "Nouvelle version", JOptionPane.YES_NO_OPTION);
+					reply = JOptionPane.showConfirmDialog(context, "What are you doing here?! O_o", Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
 					if(reply == JOptionPane.YES_OPTION)
 						getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
@@ -167,10 +173,11 @@ public class Updater // TODO Javadoc
 	 * 
 	 * @return The type of version to download.
 	 */
-	public static int update()
+	public static int update(JFrame con)
 	{
-		Main.startup.setStartupText(Main.resourceBundle.getString("startup_fecth_updates"));
+		context = con;
 		File updateFile = new File(".", "updates.xml");
+		File jarFile = new File(".", Main.APPNAME + ".jar");
 		getLastVersionBitbucket(updateFile, LINKXML);
 		try
 		{
@@ -180,13 +187,35 @@ public class Updater // TODO Javadoc
 		{
 			return UPDATEERROR;
 		}
+		int result = NOUPDATE;
 		if(versionsUTD == null)
-			return UPDATEERROR;
+			result = UPDATEERROR;
 		else if(versionsUTD.size() < 1)
-			return UPDATEERROR;
+			result = UPDATEERROR;
+		if(!Main.devMode && String.valueOf(Main.VERSION).contains("b"))
+			result = update(jarFile, PUBLICFDEV);
+		if(Main.devMode && !isDevUpToDate())
+			result = update(jarFile, DEVELOPER);
 		else if(!isPublicUpToDate())
-			return update(PUBLIC);
-		return NOUPDATE;
+			result = update(jarFile, PUBLIC);
+		else
+			result = NOUPDATE;
+		if(result == UPDATEDPUBLIC || result == UPDATEDDEV)
+		{
+			try
+			{
+				JOptionPane.showMessageDialog(context, String.format(Main.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
+				String javaHome = System.getProperty("java.home");
+				File f = new File(javaHome);
+				f = new File(f, "bin");
+				f = new File(f, "javaw.exe");
+				Runtime.getRuntime().exec(f.getAbsolutePath() + " -jar " + jarFile.getAbsolutePath());
+			}
+			catch(final IOException e)
+			{}
+		}
+		updateFile.delete();
+		return result;
 	}
 
 	/**
@@ -229,7 +258,6 @@ public class Updater // TODO Javadoc
 	 * 
 	 * @deprecated Use {@link #isPublicUpToDate()} instead.
 	 */
-	@SuppressWarnings("unused")
 	@Deprecated
 	private static boolean isDevUpToDate()
 	{

@@ -57,6 +57,7 @@ public class Main
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
 	public static ResourceBundle resourceBundle;
+	public static boolean devMode = false;
 
 	/**
 	 * Start the program.
@@ -73,30 +74,35 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		setLookAndFeel();
+		int currentStep = 0;
 		startup = new InterfaceStartup(4);
 		config.writeVar("last_version", VERSION);
-		Updater.update();
-		try
+		Main.startup.setStartupText(currentStep++, Main.resourceBundle.getString("startup_fecth_updates"));
+		int result = Updater.update(startup.getFrame());
+		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 		{
-			startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));
-			String tempApiKey = config.getString("api_key", "");
-			if(tempApiKey.equals(""))
-				tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
-			startup.setStartupText(resourceBundle.getString("startup_verify_api_key"));
-			if(!verifyApiKey(tempApiKey))
+			try
 			{
-				JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
-				config.deleteVar("api_key");
-				System.exit(0);
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
+				String tempApiKey = config.getString("api_key", "");
+				if(tempApiKey.equals(""))
+					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
+				if(!verifyApiKey(tempApiKey))
+				{
+					JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
+					config.deleteVar("api_key");
+					System.exit(0);
+				}
+				config.writeVar("api_key", tempApiKey);
+				API_KEY = tempApiKey;
+				SystemTrayOsuStats.init();
+				new Interface();
 			}
-			config.writeVar("api_key", tempApiKey);
-			API_KEY = tempApiKey;
-			SystemTrayOsuStats.init();
-			new Interface();
-		}
-		catch(Exception exception)
-		{
-			exception.printStackTrace();
+			catch(Exception exception)
+			{
+				exception.printStackTrace();
+			}
 		}
 		startup.exit();
 	}
