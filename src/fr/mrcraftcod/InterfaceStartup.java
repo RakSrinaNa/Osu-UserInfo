@@ -27,13 +27,13 @@ public class InterfaceStartup
 	 */
 	public InterfaceStartup(int maxStep)
 	{
-		frame = new JFrame();
-		frame.setUndecorated(true);
-		frame.setContentPane(new TransparentPane(new BorderLayout()));
-		frame.getContentPane().setBackground(Color.BLACK);
-		frame.setTitle("Starting " + Main.APPNAME);
-		frame.setIconImages(Main.icons);
-		frame.setBackground(new Color(0, 255, 0, 0));
+		setFrame(new JFrame());
+		getFrame().setUndecorated(true);
+		getFrame().setContentPane(new TransparentPane(new BorderLayout()));
+		getFrame().getContentPane().setBackground(Color.BLACK);
+		getFrame().setTitle("Starting " + Main.APPNAME);
+		getFrame().setIconImages(Main.icons);
+		getFrame().setBackground(new Color(0, 255, 0, 0));
 		label = new JLabel();
 		label.setForeground(new Color(191, 98, 4));
 		label.setHorizontalAlignment(JLabel.CENTER);
@@ -41,15 +41,15 @@ public class InterfaceStartup
 		progressBar = new JProgressBar(0, maxStep);
 		progressBar.setStringPainted(true);
 		refreshProgressBarStep();
-		frame.getContentPane().add(progressBar, BorderLayout.NORTH);
-		frame.getContentPane().add(label, BorderLayout.SOUTH);
+		getFrame().getContentPane().add(progressBar, BorderLayout.NORTH);
+		getFrame().getContentPane().add(label, BorderLayout.SOUTH);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setLocation((dim.width - 500) / 2, (dim.height - 50) / 2);
-		frame.setPreferredSize(new Dimension(500, 50));
-		frame.setVisible(true);
-		frame.toFront();
-		frame.pack();
+		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		getFrame().setLocation((dim.width - 500) / 2, (dim.height - 50) / 2);
+		getFrame().setPreferredSize(new Dimension(500, 50));
+		getFrame().setVisible(true);
+		getFrame().toFront();
+		getFrame().pack();
 	}
 
 	/**
@@ -71,11 +71,27 @@ public class InterfaceStartup
 	}
 
 	/**
-	 * Used to get to a new step.
+	 * Used to set a new step.
+	 * 
+	 * @param step The current step.
+	 * @param text The text printed to indicate what step is currently processed.
+	 */
+	public void setStartupText(int step, String text)
+	{
+		if(label != null)
+		{
+			label.setText(text);
+			this.step = step;
+			refreshProgressBarStep();
+		}
+	}
+
+	/**
+	 * Used to add a new step.
 	 * 
 	 * @param text The text printed to indicate what step is currently processed.
 	 */
-	public void setStartupText(String text)
+	public void addStartupText(String text)
 	{
 		if(label != null)
 		{
@@ -98,6 +114,16 @@ public class InterfaceStartup
 	 */
 	public void exit()
 	{
-		frame.dispose();
+		getFrame().dispose();
+	}
+
+	public JFrame getFrame()
+	{
+		return frame;
+	}
+
+	public void setFrame(JFrame frame)
+	{
+		this.frame = frame;
 	}
 }
