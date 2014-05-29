@@ -11,10 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import fr.mrcraftcod.Main;
-import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 
 /**
  * Show a frame to modify settings.
@@ -145,7 +145,7 @@ public class InterfaceSettings extends JFrame
 	public void save()
 	{
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
-		if(!numberKeepStats.getText().equals(""))
+		if(!numberKeepStats.getText().equals("") && !numberKeepStats.getText().equals("0"))
 		{
 			Main.config.writeVar("statsToKeep", numberKeepStats.getText());
 			Main.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
