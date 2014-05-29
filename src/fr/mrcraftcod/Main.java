@@ -51,7 +51,7 @@ import org.json.JSONObject;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.5b1";
+	public final static String VERSION = "1.5b2";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;

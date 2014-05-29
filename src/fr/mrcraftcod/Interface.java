@@ -333,7 +333,7 @@ public class Interface extends JFrame
 				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 				SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
 				DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
-				updateInfos(lastUser.getStats(mode.getSelectedIndex()), lastUser.getStatsByModeAndDate(mode.getSelectedIndex(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
+				updateInfos(lastUser.getUsername(), lastUser.getStats(mode.getSelectedIndex()), lastUser.getStatsByModeAndDate(mode.getSelectedIndex(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
 			}
 		});
 		// Construct
@@ -761,7 +761,6 @@ public class Interface extends JFrame
 			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
-			username.setText(currentUser.getUsername() + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRank()) + ")" + statsUser.compareRank(previousStats));
 			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
 			updateLevel(jsonResponse.getDouble("level"));
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
@@ -774,7 +773,7 @@ public class Interface extends JFrame
 			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count300")) + " (" + decimalFormat.format((jsonResponse.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count100")) + " (" + decimalFormat.format((jsonResponse.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count50")) + " (" + decimalFormat.format((jsonResponse.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
-			updateInfos(statsUser, previousStats);
+			updateInfos(currentUser.getUsername(), statsUser, previousStats);
 			if(!lastUser.getUsername().equals(jsonResponse.get("username")))
 			{
 				SwingUtilities.invokeLater(new Runnable()
@@ -821,8 +820,9 @@ public class Interface extends JFrame
 		}
 	}
 
-	private void updateInfos(Stats currentStats, Stats previousStats)
+	private void updateInfos(String user, Stats currentStats, Stats previousStats)
 	{
+		username.setText(user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats));
 		accuracy.setText(String.valueOf(round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
