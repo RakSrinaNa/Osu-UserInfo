@@ -1,8 +1,6 @@
 package fr.mrcraftcod;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -10,7 +8,11 @@ import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import net.miginfocom.layout.CC;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Show a frame to modify settings.
@@ -22,20 +24,21 @@ import javax.swing.JOptionPane;
 public class InterfaceSettings extends JFrame
 {
 	private static final long serialVersionUID = -5030788972447533004L;
-	public static JFrame frame;
-	private static JCheckBox autoCompletionCheck;
-	private static JButton buttonReturn;
+	public JFrame frame;
+	private JCheckBox autoCompletionCheck;
+	private JButton buttonReturn;
+	private JLabel textNumberKeepStats;
+	private JTextField numberKeepStats;
 
 	/**
 	 * Constructor.
 	 */
 	public InterfaceSettings()
 	{
-		int lines = 0;
-		int frameWidth = 600;
+		int frameWidth = 400;
 		frame = new JFrame(Main.resourceBundle.getString("settings"));
 		frame.setIconImages(Main.icons);
-		frame.setLayout(new GridBagLayout());
+		frame.setLayout(new MigLayout());
 		frame.setResizable(true);
 		frame.setAlwaysOnTop(false);
 		frame.setVisible(true);
@@ -95,20 +98,18 @@ public class InterfaceSettings extends JFrame
 				returnMain(true);
 			}
 		});
-		GridBagConstraints constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.PAGE_START;
-		constraint.fill = GridBagConstraints.BOTH;
-		constraint.gridwidth = 2;
-		constraint.gridx = 0;
-		constraint.gridy = lines++;
-		constraint.ipadx = frameWidth;
-		constraint.weightx = 1;
-		constraint.weighty = 1;
-		constraint.gridy = lines++;
-		frame.add(autoCompletionCheck, constraint);
-		constraint.gridy = lines++;
-		frame.add(buttonReturn, constraint);
-		int frameHeight = lines * 30;
+		textNumberKeepStats = new JLabel(Main.resourceBundle.getString("settings_number_stats_to_keep"));
+		textNumberKeepStats.setHorizontalAlignment(JLabel.RIGHT);
+		textNumberKeepStats.setVerticalAlignment(JLabel.CENTER);
+		numberKeepStats = new JTextField();
+		numberKeepStats.setDocument(new JTextFieldLimitNumbers(3));
+		numberKeepStats.setText(String.valueOf(Main.numberTrackedStatsToKeep));
+		int lign = 0;
+		frame.add(autoCompletionCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
+		frame.add(textNumberKeepStats, new CC().cell(0, lign, 1, 1).alignX("left"));
+		frame.add(numberKeepStats, new CC().cell(1, lign++, 1, 1).alignX("left").gapLeft("5").grow());
+		frame.add(buttonReturn, new CC().cell(0, lign++, 2, 1).alignX("center").grow());
+		int frameHeight = lign * 40 + 20;
 		frame.setPreferredSize(new Dimension(frameWidth, frameHeight));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setLocationRelativeTo(Interface.getFrame());
@@ -137,11 +138,13 @@ public class InterfaceSettings extends JFrame
 	}
 
 	/**
-	 * Used to save the choosen values.
+	 * Used to save the chosen values.
 	 */
 	public void save()
 	{
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
+		Main.config.writeVar("statsToKeep", numberKeepStats.getText());
+		Main.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
 		Interface.updateAutoCompletion(autoCompletionCheck.isSelected());
 	}
 
@@ -165,6 +168,6 @@ public class InterfaceSettings extends JFrame
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Main.config.getBoolean("autoCompletion", true) == autoCompletionCheck.isSelected());
+		return !(Main.config.getBoolean("autoCompletion", true) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
 	}
 }
