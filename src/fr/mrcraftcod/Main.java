@@ -51,9 +51,9 @@ import org.json.JSONObject;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.5b2";
+	public final static String VERSION = "1.5b1";
 	public static String API_KEY = "";
-	public static int trackedStats = 10;
+	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
@@ -98,6 +98,7 @@ public class Main
 				config.writeVar("api_key", tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
+				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
 				new Interface();
 			}
 			catch(Exception exception)

@@ -217,7 +217,7 @@ public class User implements Serializable
 	 */
 	public void setStatsOsuStandard(Stats stats)
 	{
-		while(this.stats_normal.size() > Main.trackedStats)
+		while(this.stats_normal.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_normal.remove(0);
 		if(hasStatsChanged(this.getStats(0), stats))
 			this.stats_normal.add(stats);
@@ -258,7 +258,7 @@ public class User implements Serializable
 	 */
 	public void setStatsTaiko(Stats stats)
 	{
-		while(this.stats_taiko.size() > Main.trackedStats)
+		while(this.stats_taiko.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_taiko.remove(0);
 		if(hasStatsChanged(this.getStats(1), stats))
 			this.stats_taiko.add(stats);
@@ -299,7 +299,7 @@ public class User implements Serializable
 	 */
 	public void setStatsCTB(Stats stats)
 	{
-		while(this.stats_ctb.size() > Main.trackedStats)
+		while(this.stats_ctb.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_ctb.remove(0);
 		if(hasStatsChanged(this.getStats(2), stats))
 			this.stats_ctb.add(stats);
@@ -340,7 +340,7 @@ public class User implements Serializable
 	 */
 	public void setStatsOsuMania(Stats stats)
 	{
-		while(this.stats_mania.size() > Main.trackedStats)
+		while(this.stats_mania.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_mania.remove(0);
 		if(hasStatsChanged(this.getStats(3), stats))
 			this.stats_mania.add(stats);

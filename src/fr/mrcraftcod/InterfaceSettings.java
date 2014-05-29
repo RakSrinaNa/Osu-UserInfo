@@ -143,8 +143,11 @@ public class InterfaceSettings extends JFrame
 	public void save()
 	{
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
-		Main.config.writeVar("statsToKeep", numberKeepStats.getText());
-		Main.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
+		if(!numberKeepStats.getText().equals(""))
+		{
+			Main.config.writeVar("statsToKeep", numberKeepStats.getText());
+			Main.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
+		}
 		Interface.updateAutoCompletion(autoCompletionCheck.isSelected());
 	}
 
