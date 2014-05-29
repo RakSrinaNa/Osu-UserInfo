@@ -228,7 +228,6 @@ public class User implements Serializable
 			this.stats_normal.remove(this.stats_normal.size() - 1);
 			this.stats_normal.add(newStats);
 		}
-		System.out.println("");
 	}
 
 	/**
@@ -388,9 +387,10 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
+	@SuppressWarnings("unchecked")
 	public String[] getAvalidbleStatsDates(int mode)
 	{
-		ArrayList<Stats> stats = getAllStats(mode);
+		ArrayList<Stats> stats = (ArrayList<Stats>) getAllStats(mode).clone();
 		if(stats == null)
 			return null;
 		stats.remove(stats.size() - 1);
