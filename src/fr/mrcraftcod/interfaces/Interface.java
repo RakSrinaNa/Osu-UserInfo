@@ -329,7 +329,7 @@ public class Interface extends JFrame
 		});
 		lastStatsDate = new JLabel(Main.resourceBundle.getString("last_stats_date"));
 		lastStatsDate.setEnabled(track.isSelected());
-		statsDateModel = new DefaultComboBoxModel<String>(new String[] {"TEMP"});
+		statsDateModel = new DefaultComboBoxModel<String>(new String[] {});
 		lastStatsDateBox = new JComboBox<String>(statsDateModel);
 		lastStatsDateBox.setEnabled(track.isEnabled());
 		lastStatsDateBox.addItemListener(new ItemListener()
