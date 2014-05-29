@@ -51,14 +51,14 @@ import org.json.JSONObject;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.5";
+	public final static String VERSION = "1.5b1";
 	public static String API_KEY = "";
 	public static int trackedStats = 10;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
 	public static ResourceBundle resourceBundle;
-	public static boolean devMode = false;
+	public static boolean devMode = true;
 
 	/**
 	 * Start the program.
