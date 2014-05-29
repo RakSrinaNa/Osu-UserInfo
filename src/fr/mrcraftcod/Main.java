@@ -10,6 +10,11 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import org.json.JSONObject;
+import fr.mrcraftcod.interfaces.Interface;
+import fr.mrcraftcod.interfaces.InterfaceStartup;
+import fr.mrcraftcod.objects.SystemTrayOsuStats;
+import fr.mrcraftcod.utils.Configuration;
+import fr.mrcraftcod.utils.Updater;
 
 /**
  * <h1>Osu!UserInfo</h1>

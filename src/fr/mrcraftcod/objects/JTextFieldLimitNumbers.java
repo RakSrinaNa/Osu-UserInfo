@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

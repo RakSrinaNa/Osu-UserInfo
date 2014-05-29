@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.awt.AWTException;
 import java.awt.MenuItem;
@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.interfaces.Interface;
 
 /**
  * The system tray icon of the app.

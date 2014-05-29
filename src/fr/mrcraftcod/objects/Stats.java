@@ -1,10 +1,12 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.interfaces.Interface;
 
 /**
  * Object to store stats.

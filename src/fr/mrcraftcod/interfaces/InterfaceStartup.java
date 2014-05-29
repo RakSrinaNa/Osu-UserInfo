@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.TransparentPane;
 
 /**
  * Used to show a startup frame with a progress bar.

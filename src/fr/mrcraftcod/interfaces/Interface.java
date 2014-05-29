@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.interfaces;
 
 import java.awt.AWTException;
 import java.awt.Color;
@@ -61,6 +61,15 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.AutoComboBox;
+import fr.mrcraftcod.objects.GhostText;
+import fr.mrcraftcod.objects.ImagePanel;
+import fr.mrcraftcod.objects.Stats;
+import fr.mrcraftcod.objects.SystemTrayOsuStats;
+import fr.mrcraftcod.objects.User;
+import fr.mrcraftcod.utils.Configuration;
+import fr.mrcraftcod.utils.CountryCode;
 
 public class Interface extends JFrame
 {
@@ -722,6 +731,12 @@ public class Interface extends JFrame
 		throw new Exception("Cannot get code from link");
 	}
 
+	private Color getColorUser()
+	{
+		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.CYAN, Color.RED, Color.WHITE, Color.YELLOW, Color.DARK_GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
+		return colors[new Random().nextInt(colors.length)];
+	}
+
 	private void getInfos(String user)
 	{
 		if(new Date().getTime() - lastPost.getTime() < 1000)
@@ -751,7 +766,6 @@ public class Interface extends JFrame
 				avatar.setImage(null);
 				countryFlag.setImage(null);
 			}
-			Random r = new Random();
 			currentUser.setUsername(jsonResponse.getString("username"));
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
 			statsUser.setRank(jsonResponse.getDouble("pp_rank"));
@@ -761,7 +775,7 @@ public class Interface extends JFrame
 			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
-			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
+			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(jsonResponse.getInt("count_rank_s")));

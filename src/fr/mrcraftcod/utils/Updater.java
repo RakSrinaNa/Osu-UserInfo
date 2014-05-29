@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,13 +18,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import fr.mrcraftcod.Main;
 
 /**
  * Used to fetch and download new versions.
  * 
  * @author MrCraftCod
  */
-public class Updater // TODO Javadoc
+public class Updater
 {
 	public final static int DEVELOPER = 1, PUBLIC = 2, PUBLICFDEV = 3, NOUPDATE = 0, UPDATEDDEV = 1, UPDATEDPUBLIC = 2, UPDATEERROR = 3;
 	private final static String DEVELOPERTAG = "DEVELOPER", PUBLICTAG = "PUBLIC", LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/lastVersion.xml", LINKPUBLIC = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Public/public.jar", LINKDEV = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Developer/developer.jar";
@@ -263,10 +264,7 @@ public class Updater // TODO Javadoc
 	 * Used to know if the developer version is up to date.
 	 * 
 	 * @return True if up to date, false if not.
-	 * 
-	 * @deprecated Use {@link #isPublicUpToDate()} instead.
 	 */
-	@Deprecated
 	private static boolean isDevUpToDate()
 	{
 		try
@@ -300,6 +298,15 @@ public class Updater // TODO Javadoc
 		return true;
 	}
 
+	/**
+	 * Used to parse an XML file to versionsUTD.
+	 * 
+	 * @param file The XML file.
+	 * 
+	 * @throws SAXException
+	 * @throws IOException If the file can't be read.
+	 * @throws ParserConfigurationException
+	 */
 	private static void parseVersions(File file) throws SAXException, IOException, ParserConfigurationException
 	{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();

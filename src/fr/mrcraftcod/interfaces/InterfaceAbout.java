@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +22,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.JTableUneditableModel;
+import fr.mrcraftcod.objects.TableColumnAdjuster;
 
 /**
  * Will show a frame containing a text and the traducers.

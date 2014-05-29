@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.utils;
 
 /*
  * Copyright (C) 2012 Neo Visionaries Inc.

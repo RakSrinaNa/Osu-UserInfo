@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.interfaces;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 

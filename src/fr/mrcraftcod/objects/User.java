@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import fr.mrcraftcod.Main;
 
 /**
  * User object. Used to store stats of a given user.
@@ -129,7 +130,15 @@ public class User implements Serializable
 		throw new IllegalArgumentException("Mode must be between 0 and 3!");
 	}
 
-	// TODO JAVADOC
+	/**
+	 * Used to get a Stats object by its date.
+	 * 
+	 * @param mode The mode of the Stats.
+	 * @param date The date of the Stats.
+	 * @return The wanted Stats object, null if it doesn't exists.
+	 * 
+	 * @see Stats
+	 */
 	public Stats getStatsByModeAndDate(int mode, long date)
 	{
 		ArrayList<Stats> stats = getAllStats(mode);
@@ -143,7 +152,12 @@ public class User implements Serializable
 		return null;
 	}
 
-	// TODO JAVADOC
+	/**
+	 * Used to get all the saved stats for a given mode.
+	 * 
+	 * @param mode The mode to get the stats.
+	 * @return An ArrayList with the stats.
+	 */
 	public ArrayList<Stats> getAllStats(int mode)
 	{
 		switch(mode)
@@ -160,12 +174,20 @@ public class User implements Serializable
 		throw new IllegalArgumentException("Mode must be between 0 and 3!");
 	}
 
-	// TODO JAVADOC
-	private boolean hasStatsChanged(Stats p, Stats n)
+	/**
+	 * Used to know if the stats have changed.
+	 * 
+	 * @param previousStats The old Stats.
+	 * @param newStats The new Stats.
+	 * @return True is there is a modification, false if not.
+	 * 
+	 * @see Stats
+	 */
+	private boolean hasStatsChanged(Stats previousStats, Stats newStats)
 	{
-		if(p == null)
+		if(previousStats == null)
 			return true;
-		boolean b = !(n.compareAccuracy(p).equals("") && n.comparePlayCount(p).equals("") && n.comparePP(p).equals("") && n.compareRank(p).equals("") && n.compareRankedScore(p).equals("") && n.compareTotalHits(p).equals(""));
+		boolean b = !(newStats.compareAccuracy(previousStats).equals("") && newStats.comparePlayCount(previousStats).equals("") && newStats.comparePP(previousStats).equals("") && newStats.compareRank(previousStats).equals("") && newStats.compareRankedScore(previousStats).equals("") && newStats.compareTotalHits(previousStats).equals(""));
 		return b;
 	}
 
