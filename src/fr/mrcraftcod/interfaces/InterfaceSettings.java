@@ -28,6 +28,7 @@ public class InterfaceSettings extends JFrame
 	private static final long serialVersionUID = -5030788972447533004L;
 	public JFrame frame;
 	private JCheckBox autoCompletionCheck;
+	private JCheckBox devModeCheck;
 	private JButton buttonReturn;
 	private JLabel textNumberKeepStats;
 	private JTextField numberKeepStats;
@@ -90,7 +91,10 @@ public class InterfaceSettings extends JFrame
 		});
 		autoCompletionCheck = new JCheckBox();
 		autoCompletionCheck.setText(Main.resourceBundle.getString("settings_auto_completion"));
-		autoCompletionCheck.setSelected("true".equals(Main.config.getString("autoCompletion", "")));
+		autoCompletionCheck.setSelected(Main.config.getBoolean("autoCompletion", false));
+		devModeCheck = new JCheckBox();
+		devModeCheck.setText(Main.resourceBundle.getString("settings_dev_mode"));
+		devModeCheck.setSelected(Main.config.getBoolean("devMode", false));
 		buttonReturn = new JButton(Main.resourceBundle.getString("settings_confirm"));
 		buttonReturn.addActionListener(new ActionListener()
 		{
@@ -107,7 +111,9 @@ public class InterfaceSettings extends JFrame
 		numberKeepStats.setDocument(new JTextFieldLimitNumbers(3));
 		numberKeepStats.setText(String.valueOf(Main.numberTrackedStatsToKeep));
 		int lign = 0;
+		// TODO better layout
 		frame.add(autoCompletionCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
+		frame.add(devModeCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
 		frame.add(textNumberKeepStats, new CC().cell(0, lign, 1, 1).alignX("left"));
 		frame.add(numberKeepStats, new CC().cell(1, lign++, 1, 1).alignX("left").gapLeft("5").grow());
 		frame.add(buttonReturn, new CC().cell(0, lign++, 2, 1).alignX("center").grow());
@@ -145,6 +151,7 @@ public class InterfaceSettings extends JFrame
 	public void save()
 	{
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
+		Main.config.writeVar("devMode", String.valueOf(devModeCheck.isSelected()));
 		if(!numberKeepStats.getText().equals("") && !numberKeepStats.getText().equals("0"))
 		{
 			Main.config.writeVar("statsToKeep", numberKeepStats.getText());
@@ -173,6 +180,6 @@ public class InterfaceSettings extends JFrame
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Main.config.getBoolean("autoCompletion", true) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
+		return !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
 	}
 }

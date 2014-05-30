@@ -140,7 +140,7 @@ public class Updater
 			switch(version)
 			{
 				case DEVELOPER:
-					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_dev") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
+					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_dev") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKDEV);
 					else
@@ -149,7 +149,7 @@ public class Updater
 						return UPDATEERROR;
 					return UPDATEDDEV;
 				case PUBLIC:
-					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
+					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
@@ -158,7 +158,7 @@ public class Updater
 						return UPDATEERROR;
 					return UPDATEDPUBLIC;
 				case PUBLICFDEV:
-					reply = JOptionPane.showConfirmDialog(context, "What are you doing here?! O_o", Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION);
+					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public_dev"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
@@ -197,14 +197,15 @@ public class Updater
 			return UPDATEERROR;
 		}
 		updateFile.delete();
+		boolean devMode = Main.config.getBoolean("devMode", false);
 		int result = NOUPDATE;
 		if(versionsUTD == null)
 			result = UPDATEERROR;
 		else if(versionsUTD.size() < 1)
 			result = UPDATEERROR;
-		if(!Main.devMode && Main.VERSION.contains("b"))
+		if(!devMode && Main.VERSION.contains("b"))
 			result = update(jarFile, PUBLICFDEV);
-		if(Main.devMode && !isDevUpToDate())
+		if(devMode && !isDevUpToDate())
 			result = update(jarFile, DEVELOPER);
 		else if(!isPublicUpToDate())
 			result = update(jarFile, PUBLIC);

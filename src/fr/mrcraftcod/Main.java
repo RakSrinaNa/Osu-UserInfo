@@ -56,14 +56,13 @@ import fr.mrcraftcod.utils.Updater;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.5b2";
+	public final static String VERSION = "1.5b3";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
 	public static ResourceBundle resourceBundle;
-	public static boolean devMode = true;
 
 	/**
 	 * Start the program.
@@ -92,7 +91,9 @@ public class Main
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
 				String tempApiKey = config.getString("api_key", "");
 				if(tempApiKey.equals(""))
+				{
 					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+				}
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
 				if(!verifyApiKey(tempApiKey))
 				{
