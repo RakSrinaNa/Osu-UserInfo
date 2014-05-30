@@ -262,7 +262,7 @@ public class Updater
 				upToDateSubVersionS = upToDateSubVersionS.substring(0, upToDateSubVersionS.indexOf("b"));
 			actualSubVersion = Integer.parseInt(actualSubVersionS);
 			upToDateSubVersion = Integer.parseInt(upToDateSubVersionS);
-			if(actualGlobalVersion < upToDateGlobalVersion)
+			if(actualGlobalVersion <= upToDateGlobalVersion)
 				return false;
 			else if(actualSubVersion < upToDateSubVersion)
 				return false;
