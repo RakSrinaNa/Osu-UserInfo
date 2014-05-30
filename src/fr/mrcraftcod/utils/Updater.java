@@ -217,7 +217,7 @@ public class Updater
 			result = update(jarFile, PUBLICFDEV);
 		if(devMode && !isDevUpToDate())
 			result = update(jarFile, DEVELOPER);
-		else if(!isPublicUpToDate())
+		else if(!isPublicUpToDate(devMode))
 			result = update(jarFile, PUBLIC);
 		else
 			result = NOUPDATE;
@@ -245,7 +245,7 @@ public class Updater
 	 * 
 	 * @return True if up to date, false if not.
 	 */
-	private static boolean isPublicUpToDate()
+	private static boolean isPublicUpToDate(boolean devMode)
 	{
 		try
 		{
@@ -262,9 +262,9 @@ public class Updater
 				upToDateSubVersionS = upToDateSubVersionS.substring(0, upToDateSubVersionS.indexOf("b"));
 			actualSubVersion = Integer.parseInt(actualSubVersionS);
 			upToDateSubVersion = Integer.parseInt(upToDateSubVersionS);
-			if(actualGlobalVersion <= upToDateGlobalVersion)
+			if(actualGlobalVersion < upToDateGlobalVersion)
 				return false;
-			else if(actualSubVersion < upToDateSubVersion)
+			else if(actualSubVersion < upToDateSubVersion || (devMode && (actualSubVersion <= upToDateSubVersion)))
 				return false;
 		}
 		catch(Exception e)
