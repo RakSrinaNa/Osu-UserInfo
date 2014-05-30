@@ -1,6 +1,7 @@
 package fr.mrcraftcod.interfaces;
 
 import java.awt.AWTException;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -354,26 +355,17 @@ public class Interface extends JFrame // TODO Javadoc
 		searchPanel.add(validButon, constraint);
 		/***************** LEVEL PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating level panel...");
-		JPanel levelUserPanel = new JPanel(new GridBagLayout());
+		JPanel levelUserPanel = new JPanel(new BorderLayout());
 		levelUserPanel.setBackground(Main.backColor);
 		levelBar = new JProgressBar();
 		Dimension dim = levelBar.getPreferredSize();
-		dim.width += 50;
+		dim.height += 3;
 		levelBar.setPreferredSize(dim);
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
 		updateLevel(0D);
 		// Construct
-		constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.CENTER;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		constraint.gridwidth = 3;
-		constraint.weightx = 1;
-		constraint.weighty = 1;
-		constraint.gridx = 0;
-		constraint.gridy = 0;
-		constraint.insets = new Insets(0, 2, 0, 2);
-		levelUserPanel.add(levelBar, constraint);
+		levelUserPanel.add(levelBar, BorderLayout.NORTH);
 		/***************** TRACK PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating track panel...");
 		JPanel trackUserPanel = new JPanel(new MigLayout());
