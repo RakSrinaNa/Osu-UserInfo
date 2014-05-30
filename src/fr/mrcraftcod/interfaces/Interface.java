@@ -114,7 +114,7 @@ public class Interface extends JFrame // TODO Javadoc
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
 	{
-		int pictureButtonSize = 18;
+		int pictureButtonSize = 24;
 		Main.logger.log(Level.FINE, "Loading icons...");
 		try
 		{

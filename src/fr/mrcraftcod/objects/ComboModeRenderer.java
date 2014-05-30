@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.border.EmptyBorder;
 import fr.mrcraftcod.Main;
 
 @SuppressWarnings("rawtypes")
@@ -21,43 +22,39 @@ public class ComboModeRenderer implements ListCellRenderer
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 	{
 		list.setSelectionBackground(Color.PINK);
-		JLabel label = new JLabel();
+		JLabel label = new JLabel(value.toString());
+		try
+		{
+			if(index == -1)
+			{
+				switch(value.toString())
+				{
+					case "osu!":
+						label = new JLabel(value.toString(), icons[0], JLabel.LEFT);
+					break;
+					case "Taiko":
+						label = new JLabel(value.toString(), icons[1], JLabel.LEFT);
+					break;
+					case "CTB":
+						label = new JLabel(value.toString(), icons[2], JLabel.LEFT);
+					break;
+					case "Osu!Mania":
+						label = new JLabel(value.toString(), icons[3], JLabel.LEFT);
+					break;
+				}
+			}
+			else if(icons[index] != null)
+				label = new JLabel(value.toString(), icons[index], JLabel.LEFT);
+		}
+		catch(Exception e)
+		{}
+		label.setBorder(new EmptyBorder(2, 2, 2, 0));
 		label.setOpaque(true);
 		label.setBackground(Main.searchBarColor);
 		if(list != null)
 			isSelected = list.isSelectedIndex(index);
 		if(list.isSelectedIndex(index))
 			label.setBackground(Color.PINK);
-		try
-		{
-			if(index == -1)
-			{
-				String text = value.toString();
-				label.setText(text);
-				switch(text)
-				{
-					case "osu!":
-						label.setIcon(icons[0]);
-					break;
-					case "Taiko":
-						label.setIcon(icons[1]);
-					break;
-					case "CTB":
-						label.setIcon(icons[2]);
-					break;
-					case "Osu!Mania":
-						label.setIcon(icons[3]);
-					break;
-				}
-			}
-			else if(icons[index] != null)
-			{
-				label.setText(value.toString());
-				label.setIcon(icons[index]);
-			}
-		}
-		catch(Exception e)
-		{}
 		return label;
 	}
 }
