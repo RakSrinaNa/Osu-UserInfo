@@ -39,6 +39,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -330,6 +331,7 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
+		constraint.insets = new Insets(0, 2, 0, 2);
 		levelUserPanel.add(levelBar, constraint);
 		/***************** TRACK PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating track panel...");
@@ -552,6 +554,8 @@ public class Interface extends JFrame // TODO Javadoc
 			{}
 		});
 		username = new JLabel(" ");
+		username.setOpaque(true);
+		username.setBackground(Main.backColor);
 		username.setFont(new Font(username.getFont().getName(), Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
@@ -564,11 +568,13 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.gridy = 0;
 		avatarPanel.add(avatar, constraint);
 		constraint.gridy = 1;
+		constraint.insets = new Insets(5, 0, 3, 0);
 		avatarPanel.add(username, constraint);
 		/**************** OTHERS PANEL *********************/
 		Main.logger.log(Level.FINE, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
-		otherPanel.setBackground(Main.backColor);
+		otherPanel.setBackground(Main.noticeColor);
+		otherPanel.setBorder(BorderFactory.createLineBorder(Main.noticeBorderColor));
 		// PlayCount
 		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -614,7 +620,7 @@ public class Interface extends JFrame // TODO Javadoc
 		country.setVerticalAlignment(JLabel.CENTER);
 		countryFlag = new ImagePanel();
 		countryFlag.setPrintLoading(false);
-		countryFlag.setBackground(Main.backColor);
+		countryFlag.setBackground(Main.noticeColor);
 		countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -665,8 +671,10 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.gridy = line++;
 		getFrame().add(levelUserPanel, constraint);
 		constraint.gridy = line++;
+		constraint.insets = new Insets(0, 4, 0, 4);
 		getFrame().add(otherPanel, constraint);
 		constraint.gridy = line++;
+		constraint.insets = new Insets(0, 0, 0, 0);
 		getFrame().add(hitCountPanel, constraint);
 		constraint.gridy = line++;
 		getFrame().add(ranksUserPanel, constraint);
@@ -787,6 +795,8 @@ public class Interface extends JFrame // TODO Javadoc
 			User currentUser = new User();
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
+			username.setBackground(Main.noticeColor);
+			username.setBorder(BorderFactory.createLineBorder(Main.noticeBorderColor));
 			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
@@ -875,7 +885,7 @@ public class Interface extends JFrame // TODO Javadoc
 	private void updateInfos(String user, Stats currentStats, Stats previousStats)
 	{
 		Main.logger.log(Level.INFO, "Updating tracked infos...");
-		username.setText(user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats));
+		username.setText("  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  ");
 		accuracy.setText(String.valueOf(round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));

@@ -61,7 +61,7 @@ import fr.mrcraftcod.utils.Updater;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.5b4";
+	public final static String VERSION = "1.5b5";
 	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
@@ -71,7 +71,7 @@ public class Main
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static boolean testMode = true;
-	public static Color backColor, searchBarColor;
+	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
 
 	/**
 	 * Start the program.
@@ -143,6 +143,8 @@ public class Main
 				Main.logger.log(Level.INFO, "Launching interface...");
 				backColor = new Color(240, 236, 250);
 				searchBarColor = Color.WHITE;
+				noticeColor = Color.WHITE;
+				noticeBorderColor = new Color(221, 221, 221);
 				new Interface();
 			}
 			catch(Exception exception)
