@@ -54,6 +54,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -187,8 +188,8 @@ public class Interface extends JFrame // TODO Javadoc
 			{}
 		});
 		getFrame().setLayout(new GridBagLayout());
-		getFrame().setMinimumSize(new Dimension(550, 450));
-		getFrame().setPreferredSize(new Dimension(550, 600));
+		getFrame().setMinimumSize(new Dimension(550, 700));
+		getFrame().setPreferredSize(new Dimension(550, 700));
 		getFrame().setAlwaysOnTop(false);
 		getFrame().setIconImages(Main.icons);
 		getFrame().getContentPane().setBackground(Main.backColor);
@@ -356,6 +357,9 @@ public class Interface extends JFrame // TODO Javadoc
 		JPanel levelUserPanel = new JPanel(new GridBagLayout());
 		levelUserPanel.setBackground(Main.backColor);
 		levelBar = new JProgressBar();
+		Dimension dim = levelBar.getPreferredSize();
+		dim.width += 50;
+		levelBar.setPreferredSize(dim);
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
 		updateLevel(0D);
@@ -420,13 +424,17 @@ public class Interface extends JFrame // TODO Javadoc
 		/***************** HITS PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
-		hitCountPanel.setBackground(Main.backColor);
+		hitCountPanel.setBackground(Main.noticeColor);
+		TitledBorder borderHits = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("hits"));
+		borderHits.setTitleJustification(TitledBorder.CENTER);
+		borderHits.setTitlePosition(TitledBorder.CENTER);
+		hitCountPanel.setBorder(borderHits);
 		float picturesSize = 40f;
 		// 300
 		JPanel count300Panel = new JPanel();
-		count300Panel.setBackground(Main.backColor);
+		count300Panel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel count300Picture = new ImagePanel();
-		count300Picture.setBackground(Main.backColor);
+		count300Picture.setBackground(hitCountPanel.getBackground());
 		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -438,9 +446,9 @@ public class Interface extends JFrame // TODO Javadoc
 		count300Panel.add(hitCount300);
 		// 100
 		JPanel count100Panel = new JPanel();
-		count100Panel.setBackground(Main.backColor);
+		count100Panel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel count100Picture = new ImagePanel();
-		count100Picture.setBackground(Main.backColor);
+		count100Picture.setBackground(hitCountPanel.getBackground());
 		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -452,10 +460,10 @@ public class Interface extends JFrame // TODO Javadoc
 		count100Panel.add(hitCount100);
 		// 50
 		JPanel count50Panel = new JPanel();
-		count50Panel.setBackground(Main.backColor);
+		count50Panel.setBackground(hitCountPanel.getBackground());
 		picturesSize = 30f;
 		final ImagePanel count50Picture = new ImagePanel();
-		count50Picture.setBackground(Main.backColor);
+		count50Picture.setBackground(hitCountPanel.getBackground());
 		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -483,12 +491,16 @@ public class Interface extends JFrame // TODO Javadoc
 		Main.logger.log(Level.FINE, "Creating rank panel...");
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
 		ranksUserPanel.setBackground(Main.backColor);
+		TitledBorder borderRanks = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("ranks"));
+		borderRanks.setTitleJustification(TitledBorder.CENTER);
+		borderRanks.setTitlePosition(TitledBorder.CENTER);
+		ranksUserPanel.setBorder(borderRanks);
 		picturesSize = 40f;
 		// SS
 		JPanel ssPanel = new JPanel();
-		ssPanel.setBackground(Main.backColor);
+		ssPanel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel ssPicture = new ImagePanel();
-		ssPicture.setBackground(Main.backColor);
+		ssPicture.setBackground(hitCountPanel.getBackground());
 		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -500,9 +512,9 @@ public class Interface extends JFrame // TODO Javadoc
 		ssPanel.add(countSS);
 		// S
 		JPanel sPanel = new JPanel();
-		sPanel.setBackground(Main.backColor);
+		sPanel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel sPicture = new ImagePanel();
-		sPicture.setBackground(Main.backColor);
+		sPicture.setBackground(hitCountPanel.getBackground());
 		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -514,9 +526,9 @@ public class Interface extends JFrame // TODO Javadoc
 		sPanel.add(countS);
 		// A
 		JPanel aPanel = new JPanel();
-		aPanel.setBackground(Main.backColor);
+		aPanel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel aPicture = new ImagePanel();
-		aPicture.setBackground(Main.backColor);
+		aPicture.setBackground(hitCountPanel.getBackground());
 		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -596,7 +608,7 @@ public class Interface extends JFrame // TODO Javadoc
 		username.setFont(new Font(username.getFont().getName(), Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
-		constraint.fill = GridBagConstraints.NONE;
+		constraint.fill = GridBagConstraints.PAGE_START;
 		constraint.anchor = GridBagConstraints.CENTER;
 		constraint.gridwidth = 3;
 		constraint.weightx = 0.1;
@@ -611,7 +623,11 @@ public class Interface extends JFrame // TODO Javadoc
 		Main.logger.log(Level.FINE, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
 		otherPanel.setBackground(Main.noticeColor);
-		otherPanel.setBorder(BorderFactory.createLineBorder(Main.noticeBorderColor));
+		otherPanel.setBackground(Main.noticeColor);
+		TitledBorder borderOther = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("stats"));
+		borderOther.setTitleJustification(TitledBorder.CENTER);
+		borderOther.setTitlePosition(TitledBorder.CENTER);
+		otherPanel.setBorder(borderOther);
 		// PlayCount
 		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -708,14 +724,14 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.gridy = line++;
 		getFrame().add(levelUserPanel, constraint);
 		constraint.gridy = line++;
-		constraint.insets = new Insets(0, 4, 0, 4);
+		constraint.insets = new Insets(2, 4, 2, 4);
 		getFrame().add(otherPanel, constraint);
 		constraint.gridy = line++;
-		constraint.insets = new Insets(0, 0, 0, 0);
 		getFrame().add(hitCountPanel, constraint);
 		constraint.gridy = line++;
 		getFrame().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
+		constraint.insets = new Insets(0, 0, 0, 0);
 		getFrame().add(trackUserPanel, constraint);
 		Main.logger.log(Level.FINE, "Packing frame...");
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -833,7 +849,7 @@ public class Interface extends JFrame // TODO Javadoc
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
 			username.setBackground(Main.noticeColor);
-			username.setBorder(BorderFactory.createLineBorder(Main.noticeBorderColor));
+			username.setBorder(Main.noticeBorder);
 			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(jsonResponse.getString("username"));
 			if(tracked)

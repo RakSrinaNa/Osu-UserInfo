@@ -10,9 +10,11 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.Border;
 import org.json.JSONObject;
 import fr.mrcraftcod.interfaces.Interface;
 import fr.mrcraftcod.interfaces.InterfaceStartup;
@@ -72,6 +74,7 @@ public class Main
 	public static Logger logger;
 	public static boolean testMode = true;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
+	public static Border noticeBorder;
 
 	/**
 	 * Start the program.
@@ -145,6 +148,7 @@ public class Main
 				searchBarColor = Color.WHITE;
 				noticeColor = Color.WHITE;
 				noticeBorderColor = new Color(221, 221, 221);
+				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
 				new Interface();
 			}
 			catch(Exception exception)
