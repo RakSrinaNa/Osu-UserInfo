@@ -2,10 +2,10 @@
 <versions>
 	<version>
 		<name>PUBLIC</name>
-		<number>1.5</number>
+		<number>1.4</number>
 	</version>
 	<version>
 		<name>DEVELOPER</name>
-		<number>1.5b5</number>
+		<number>1.5b6</number>
 	</version>
 </versions>
