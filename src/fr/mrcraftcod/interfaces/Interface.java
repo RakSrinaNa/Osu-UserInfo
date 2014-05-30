@@ -490,7 +490,7 @@ public class Interface extends JFrame // TODO Javadoc
 		/***************** RANK PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating rank panel...");
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
-		ranksUserPanel.setBackground(Main.backColor);
+		ranksUserPanel.setBackground(Main.noticeColor);
 		TitledBorder borderRanks = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("ranks"));
 		borderRanks.setTitleJustification(TitledBorder.CENTER);
 		borderRanks.setTitlePosition(TitledBorder.CENTER);
@@ -680,7 +680,6 @@ public class Interface extends JFrame // TODO Javadoc
 		country = new JLabel();
 		country.setHorizontalAlignment(JLabel.LEFT);
 		country.setVerticalAlignment(JLabel.CENTER);
-		// Construct
 		// Total hits
 		JLabel totalHitsLabel = new JLabel(Main.resourceBundle.getString("total_hits") + " : ");
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
