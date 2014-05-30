@@ -187,7 +187,7 @@ public class Interface extends JFrame // TODO Javadoc
 			{}
 		});
 		getFrame().setLayout(new GridBagLayout());
-		getFrame().setMinimumSize(new Dimension(350, 450));
+		getFrame().setMinimumSize(new Dimension(550, 450));
 		getFrame().setPreferredSize(new Dimension(550, 600));
 		getFrame().setAlwaysOnTop(false);
 		getFrame().setIconImages(Main.icons);
