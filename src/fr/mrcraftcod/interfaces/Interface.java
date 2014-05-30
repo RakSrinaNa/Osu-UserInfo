@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -71,7 +72,7 @@ import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
 
-public class Interface extends JFrame
+public class Interface extends JFrame // TODO Javadoc
 {
 	private static final long serialVersionUID = 2629819156905465351L;
 	private static JFrame frame;
@@ -112,10 +113,33 @@ public class Interface extends JFrame
 	public Interface() throws IOException
 	{
 		int pictureButtonSize = 18;
-		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
-		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
-		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
+		Main.logger.log(Level.FINE, "Loading icons...");
+		try
+		{
+			iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.SEVERE, "", e);
+		}
+		try
+		{
+			iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.SEVERE, "", e);
+		}
+		try
+		{
+			avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.SEVERE, "", e);
+		}
 		/************** FRAME INFOS ********************/
+		Main.logger.log(Level.FINE, "Setting frame options...");
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
 		getFrame().setFocusable(true);
 		getFrame().setVisible(false);
@@ -165,9 +189,10 @@ public class Interface extends JFrame
 		getFrame().setPreferredSize(new Dimension(550, 600));
 		getFrame().setAlwaysOnTop(false);
 		getFrame().setIconImages(Main.icons);
-		getFrame().getContentPane().setBackground(Color.GRAY);
+		getFrame().getContentPane().setBackground(Main.backColor);
 		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
+		Main.logger.log(Level.FINE, "Creating frame bar...");
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuFile = new JMenu(Main.resourceBundle.getString("menu_bar_file"));
 		JMenu menuHelp = new JMenu(Main.resourceBundle.getString("menu_bar_help"));
@@ -195,8 +220,10 @@ public class Interface extends JFrame
 		menuBar.add(menuHelp);
 		getFrame().setJMenuBar(menuBar);
 		/*************** SEARCH PANEL **********************/
+		Main.logger.log(Level.FINE, "Creating search panel...");
 		JPanel searchPanel = new JPanel(new GridBagLayout());
-		// searchPanel.setBackground(Color.GRAY);
+		searchPanel.setBackground(Main.searchBarColor);
+		// searchPanel.setBackground(Main.backColor);
 		JLabel usernameAsk = new JLabel(Main.resourceBundle.getString("username") + " : ");
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
@@ -255,7 +282,7 @@ public class Interface extends JFrame
 			public void keyTyped(KeyEvent arg0)
 			{}
 		});
-		mode = new JComboBox<String>(new String[] {"Osu!", "Taiko", "CTB", "Osu!Mania"});
+		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "Osu!Mania"});
 		mode.setSelectedIndex(0);
 		validButon = new JButton(iconSearch);
 		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
@@ -287,8 +314,9 @@ public class Interface extends JFrame
 		constraint.weightx = 0.1;
 		searchPanel.add(validButon, constraint);
 		/***************** LEVEL PANEL ********************/
+		Main.logger.log(Level.FINE, "Creating level panel...");
 		JPanel levelUserPanel = new JPanel(new GridBagLayout());
-		levelUserPanel.setBackground(Color.GRAY);
+		levelUserPanel.setBackground(Main.backColor);
 		levelBar = new JProgressBar();
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
@@ -304,8 +332,9 @@ public class Interface extends JFrame
 		constraint.gridy = 0;
 		levelUserPanel.add(levelBar, constraint);
 		/***************** TRACK PANEL ********************/
+		Main.logger.log(Level.FINE, "Creating track panel...");
 		JPanel trackUserPanel = new JPanel(new MigLayout());
-		trackUserPanel.setBackground(Color.GRAY);
+		trackUserPanel.setBackground(Main.backColor);
 		track = new JCheckBox();
 		track.setText(Main.resourceBundle.getString("track_user"));
 		track.setEnabled(false);
@@ -350,14 +379,15 @@ public class Interface extends JFrame
 		trackUserPanel.add(lastStatsDate, new CC().cell(0, 1).alignX("right"));
 		trackUserPanel.add(lastStatsDateBox, new CC().cell(1, 1).alignX("right"));
 		/***************** HITS PANEL ********************/
+		Main.logger.log(Level.FINE, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
-		hitCountPanel.setBackground(Color.GRAY);
+		hitCountPanel.setBackground(Main.backColor);
 		float picturesSize = 40f;
 		// 300
 		JPanel count300Panel = new JPanel();
-		count300Panel.setBackground(Color.GRAY);
+		count300Panel.setBackground(Main.backColor);
 		final ImagePanel count300Picture = new ImagePanel();
-		count300Picture.setBackground(Color.GRAY);
+		count300Picture.setBackground(Main.backColor);
 		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -369,9 +399,9 @@ public class Interface extends JFrame
 		count300Panel.add(hitCount300);
 		// 100
 		JPanel count100Panel = new JPanel();
-		count100Panel.setBackground(Color.GRAY);
+		count100Panel.setBackground(Main.backColor);
 		final ImagePanel count100Picture = new ImagePanel();
-		count100Picture.setBackground(Color.GRAY);
+		count100Picture.setBackground(Main.backColor);
 		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -383,10 +413,10 @@ public class Interface extends JFrame
 		count100Panel.add(hitCount100);
 		// 50
 		JPanel count50Panel = new JPanel();
-		count50Panel.setBackground(Color.GRAY);
+		count50Panel.setBackground(Main.backColor);
 		picturesSize = 30f;
 		final ImagePanel count50Picture = new ImagePanel();
-		count50Picture.setBackground(Color.GRAY);
+		count50Picture.setBackground(Main.backColor);
 		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -411,14 +441,15 @@ public class Interface extends JFrame
 		constraint.gridx = 2;
 		hitCountPanel.add(count50Panel, constraint);
 		/***************** RANK PANEL ********************/
+		Main.logger.log(Level.FINE, "Creating rank panel...");
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
-		ranksUserPanel.setBackground(Color.GRAY);
+		ranksUserPanel.setBackground(Main.backColor);
 		picturesSize = 40f;
 		// SS
 		JPanel ssPanel = new JPanel();
-		ssPanel.setBackground(Color.GRAY);
+		ssPanel.setBackground(Main.backColor);
 		final ImagePanel ssPicture = new ImagePanel();
-		ssPicture.setBackground(Color.GRAY);
+		ssPicture.setBackground(Main.backColor);
 		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -430,9 +461,9 @@ public class Interface extends JFrame
 		ssPanel.add(countSS);
 		// S
 		JPanel sPanel = new JPanel();
-		sPanel.setBackground(Color.GRAY);
+		sPanel.setBackground(Main.backColor);
 		final ImagePanel sPicture = new ImagePanel();
-		sPicture.setBackground(Color.GRAY);
+		sPicture.setBackground(Main.backColor);
 		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -444,9 +475,9 @@ public class Interface extends JFrame
 		sPanel.add(countS);
 		// A
 		JPanel aPanel = new JPanel();
-		aPanel.setBackground(Color.GRAY);
+		aPanel.setBackground(Main.backColor);
 		final ImagePanel aPicture = new ImagePanel();
-		aPicture.setBackground(Color.GRAY);
+		aPicture.setBackground(Main.backColor);
 		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -471,11 +502,12 @@ public class Interface extends JFrame
 		constraint.gridx = 2;
 		ranksUserPanel.add(aPanel, constraint);
 		/******************** USER PANEL *****************/
+		Main.logger.log(Level.FINE, "Creating user panel...");
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
-		avatarPanel.setBackground(Color.GRAY);
+		avatarPanel.setBackground(Main.backColor);
 		int avatarSize = 128;
 		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), 128, 128));
-		avatar.setBackground(Color.GRAY);
+		avatar.setBackground(Main.backColor);
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
@@ -534,8 +566,9 @@ public class Interface extends JFrame
 		constraint.gridy = 1;
 		avatarPanel.add(username, constraint);
 		/**************** OTHERS PANEL *********************/
+		Main.logger.log(Level.FINE, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
-		otherPanel.setBackground(Color.GRAY);
+		otherPanel.setBackground(Main.backColor);
 		// PlayCount
 		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -581,7 +614,7 @@ public class Interface extends JFrame
 		country.setVerticalAlignment(JLabel.CENTER);
 		countryFlag = new ImagePanel();
 		countryFlag.setPrintLoading(false);
-		countryFlag.setBackground(Color.GRAY);
+		countryFlag.setBackground(Main.backColor);
 		countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -614,6 +647,7 @@ public class Interface extends JFrame
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
+		Main.logger.log(Level.FINE, "Creating frame panel...");
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
@@ -638,6 +672,7 @@ public class Interface extends JFrame
 		getFrame().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
 		getFrame().add(trackUserPanel, constraint);
+		Main.logger.log(Level.FINE, "Packing frame...");
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		getFrame().setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		getFrame().pack();
@@ -647,6 +682,7 @@ public class Interface extends JFrame
 
 	private void trackNewUser(User user) throws IOException
 	{
+		Main.logger.log(Level.FINE, "Trcking user " + user.getUsername());
 		ArrayList<String> users = getTrackedUsers();
 		users.add(user.getUsername());
 		userNameFieldModel.addElement(user.getUsername());
@@ -658,6 +694,7 @@ public class Interface extends JFrame
 
 	private void unTrackUser(User user)
 	{
+		Main.logger.log(Level.FINE, "Untrcking user " + user.getUsername());
 		ArrayList<String> users = getTrackedUsers();
 		users.remove(user.getUsername());
 		userNameFieldModel.removeElement(user.getUsername());
@@ -733,7 +770,7 @@ public class Interface extends JFrame
 
 	private Color getColorUser()
 	{
-		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.CYAN, Color.RED, Color.WHITE, Color.YELLOW, Color.DARK_GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
+		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.WHITE, Color.YELLOW, Color.DARK_GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
 		return colors[new Random().nextInt(colors.length)];
 	}
 
@@ -741,6 +778,7 @@ public class Interface extends JFrame
 	{
 		if(new Date().getTime() - lastPost.getTime() < 1000)
 			return;
+		Main.logger.log(Level.FINE, "TGetting user infos " + user);
 		lastPost = new Date();
 		userNameField.setBackground(null);
 		userNameFieldTextComponent.setBackground(null);
@@ -824,18 +862,19 @@ public class Interface extends JFrame
 		}
 		catch(JSONException | IOException e)
 		{
-			e.printStackTrace();
+			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
 			userNameField.setBackground(Color.RED);
 			userNameFieldTextComponent.setBackground(Color.RED);
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
 		}
 	}
 
 	private void updateInfos(String user, Stats currentStats, Stats previousStats)
 	{
+		Main.logger.log(Level.INFO, "Updating tracked infos...");
 		username.setText(user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats));
 		accuracy.setText(String.valueOf(round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
@@ -851,7 +890,9 @@ public class Interface extends JFrame
 			return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
 		}
 		catch(Exception e)
-		{}
+		{
+			Main.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
+		}
 		return avatarDefaultImage;
 	}
 
@@ -902,6 +943,7 @@ public class Interface extends JFrame
 
 	private void updateLevel(double level)
 	{
+		Main.logger.log(Level.FINE, "Setting level to " + level);
 		double progress = round(getProgressLevel(level) * 100, 2);
 		levelBar.setValue((int) progress);
 		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(level), progress));
@@ -909,10 +951,13 @@ public class Interface extends JFrame
 
 	synchronized public static String sendPost(String type, String key, String user, int selectedMode) throws Exception
 	{
+		Main.logger.log(Level.INFO, "Sending post request...");
 		String urlParameters = "k=" + key + "&u=" + user + "&m=" + selectedMode + "&type=string&event_days=1";
 		URL url = new URL("https://osu.ppy.sh/api/" + type + "?" + urlParameters);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
+		connection.setConnectTimeout(15000);
+		connection.setReadTimeout(15000);
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		connection.setRequestProperty("charset", "utf-8");
@@ -977,6 +1022,7 @@ public class Interface extends JFrame
 
 	public static void exit()
 	{
+		Main.logger.log(Level.INFO, "Exiting main frame...");
 		getFrame().dispose();
 	}
 

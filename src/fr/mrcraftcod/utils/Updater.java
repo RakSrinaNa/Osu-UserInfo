@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
+import java.util.logging.Level;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
@@ -40,6 +41,7 @@ public class Updater
 	 */
 	private static void getLastVersionBitbucket(File updateFile, String link)
 	{
+		Main.logger.log(Level.INFO, "Getting last version...");
 		HttpURLConnection request = null;
 		ReadableByteChannel rbc = null;
 		FileOutputStream fos = null;
@@ -55,7 +57,9 @@ public class Updater
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
 		catch(IOException e)
-		{}
+		{
+			Main.logger.log(Level.WARNING, "Error writting XML file", e);
+		}
 		try
 		{
 			request.disconnect();
@@ -85,6 +89,7 @@ public class Updater
 	 */
 	public static boolean getLastJAR(File newFile, String link)
 	{
+		Main.logger.log(Level.INFO, "Getting last JAR...");
 		Main.startup.addStartupText(Main.resourceBundle.getString("downloading"));
 		boolean result = false;
 		HttpURLConnection request = null;
@@ -103,7 +108,9 @@ public class Updater
 			result = true;
 		}
 		catch(IOException e)
-		{}
+		{
+			Main.logger.log(Level.WARNING, "Error writting JAR file", e);
+		}
 		try
 		{
 			request.disconnect();
@@ -183,6 +190,7 @@ public class Updater
 	 */
 	public static int update(JFrame con)
 	{
+		Main.logger.log(Level.INFO, "Checking updates...");
 		context = con;
 		File updateFile = new File(".", "updates.xml");
 		File jarFile = new File(".", Main.APPNAME + ".jar");
@@ -203,6 +211,8 @@ public class Updater
 			result = UPDATEERROR;
 		else if(versionsUTD.size() < 1)
 			result = UPDATEERROR;
+		for(String key : versionsUTD.keySet())
+			Main.logger.log(Level.INFO, "Version " + key + " latest is " + versionsUTD.get(key) + ", you are in " + Main.VERSION);
 		if(!devMode && Main.VERSION.contains("b"))
 			result = update(jarFile, PUBLICFDEV);
 		if(devMode && !isDevUpToDate())
@@ -223,7 +233,9 @@ public class Updater
 				Runtime.getRuntime().exec(f.getAbsolutePath() + " -jar " + jarFile.getAbsolutePath());
 			}
 			catch(final IOException e)
-			{}
+			{
+				Main.logger.log(Level.SEVERE, "Error launching new version", e);
+			}
 		}
 		return result;
 	}

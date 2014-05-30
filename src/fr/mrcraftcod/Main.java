@@ -2,9 +2,13 @@ package fr.mrcraftcod;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -14,6 +18,7 @@ import fr.mrcraftcod.interfaces.Interface;
 import fr.mrcraftcod.interfaces.InterfaceStartup;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.utils.Configuration;
+import fr.mrcraftcod.utils.LogFormatter;
 import fr.mrcraftcod.utils.Updater;
 
 /**
@@ -57,12 +62,16 @@ public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
 	public final static String VERSION = "1.5b3";
+	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
 	public static ResourceBundle resourceBundle;
+	public static Logger logger;
+	public static boolean testMode = true;
+	public static Color backColor, searchBarColor;
 
 	/**
 	 * Start the program.
@@ -72,8 +81,32 @@ public class Main
 	 */
 	public static void main(String[] args) throws IOException
 	{
+		logger = Logger.getLogger(APPNAME);
+		if(testMode)
+			logger.setLevel(Level.FINEST);
+		else
+			logger.setLevel(Level.INFO);
+		boolean resetedLog = false;
+		File confFolder = new File(System.getenv("APPDATA"), Main.APPNAME);
+		File logFile = new File(confFolder, logFileName);
+		if(!confFolder.exists())
+			confFolder.mkdirs();
+		if(logFile.length() > 2500000)
+		{
+			resetedLog = true;
+			logFile.delete();
+		}
+		final FileHandler fileTxt = new FileHandler(logFile.getAbsolutePath(), true);
+		fileTxt.setFormatter(new LogFormatter());
+		fileTxt.setEncoding("UTF-8");
+		logger.addHandler(fileTxt);
+		logger.log(Level.INFO, "\n\n---------- Starting program ----------\n\nRunning version " + VERSION + "\n");
+		if(resetedLog)
+			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
+		Main.logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang");
+		Main.logger.log(Level.INFO, "Loading icons...");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
@@ -94,9 +127,11 @@ public class Main
 				{
 					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
 				}
+				Main.logger.log(Level.INFO, "Verifying API key...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
 				if(!verifyApiKey(tempApiKey))
 				{
+					Main.logger.log(Level.WARNING, "Wrong API key!");
 					JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
 					config.deleteVar("api_key");
 					System.exit(0);
@@ -105,6 +140,9 @@ public class Main
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
 				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
+				Main.logger.log(Level.INFO, "Launching interface...");
+				backColor = new Color(240, 236, 250);
+				searchBarColor = Color.WHITE;
 				new Interface();
 			}
 			catch(Exception exception)
@@ -129,14 +167,17 @@ public class Main
 		}
 		catch(IOException exception)
 		{
+			Main.logger.log(Level.SEVERE, "Connexion error?", exception);
 			JOptionPane.showMessageDialog(null, "Couldn't connect to osu.ppy.sh!", "Internet problem", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 		catch(Exception exception)
 		{
-			exception.printStackTrace();
+			Main.logger.log(Level.SEVERE, "Error verifyng API Key", exception);
+			JOptionPane.showMessageDialog(null, exception.getStackTrace(), "Internet problem", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
+		Main.logger.log(Level.INFO, "API Key valid");
 		return true;
 	}
 
@@ -145,6 +186,7 @@ public class Main
 	 */
 	private static void setLookAndFeel()
 	{
+		Main.logger.log(Level.INFO, "Setting look and feel...");
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -152,6 +194,7 @@ public class Main
 			{
 				if("Nimbus".equals(info.getName()))
 				{
+					Main.logger.log(Level.INFO, "Nimbus found, using it...");
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
 				}
@@ -159,6 +202,8 @@ public class Main
 			UIManager.put("nimbusOrange", new Color(255, 200, 0));
 		}
 		catch(final Exception exception)
-		{}
+		{
+			Main.logger.log(Level.WARNING, "Error loading look and feel", exception);
+		}
 	}
 }

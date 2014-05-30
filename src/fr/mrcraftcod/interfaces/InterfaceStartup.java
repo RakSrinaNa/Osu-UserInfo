@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.logging.Level;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -29,6 +30,7 @@ public class InterfaceStartup
 	 */
 	public InterfaceStartup(int maxStep)
 	{
+		Main.logger.log(Level.INFO, "Creating startup frame...");
 		setFrame(new JFrame());
 		getFrame().setUndecorated(true);
 		getFrame().setContentPane(new TransparentPane(new BorderLayout()));
@@ -67,6 +69,7 @@ public class InterfaceStartup
 	 */
 	public void reset()
 	{
+		Main.logger.log(Level.INFO, "Resetting startup frame...");
 		step = 0;
 		label.setText("");
 		refreshProgressBarStep();
@@ -80,6 +83,7 @@ public class InterfaceStartup
 	 */
 	public void setStartupText(int step, String text)
 	{
+		Main.logger.log(Level.INFO, "Settign startup (" + step + ") text to " + text);
 		if(label != null)
 		{
 			label.setText(text);
@@ -95,6 +99,7 @@ public class InterfaceStartup
 	 */
 	public void addStartupText(String text)
 	{
+		Main.logger.log(Level.INFO, "Add startup text to " + text);
 		if(label != null)
 		{
 			label.setText(text);
@@ -108,6 +113,7 @@ public class InterfaceStartup
 	 */
 	public void skipStep()
 	{
+		Main.logger.log(Level.INFO, "Skipping startup step...");
 		step++;
 	}
 
@@ -116,6 +122,7 @@ public class InterfaceStartup
 	 */
 	public void exit()
 	{
+		Main.logger.log(Level.INFO, "Exitting startup frame...");
 		getFrame().dispose();
 	}
 
