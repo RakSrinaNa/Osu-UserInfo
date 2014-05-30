@@ -65,6 +65,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.AutoComboBox;
+import fr.mrcraftcod.objects.ComboModeRenderer;
 import fr.mrcraftcod.objects.GhostText;
 import fr.mrcraftcod.objects.ImagePanel;
 import fr.mrcraftcod.objects.Stats;
@@ -285,6 +286,42 @@ public class Interface extends JFrame // TODO Javadoc
 		});
 		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "Osu!Mania"});
 		mode.setSelectedIndex(0);
+		mode.setBackground(Main.searchBarColor);
+		ImageIcon iconStandard = null, iconTaiko = null, iconCTB = null, iconMania = null;
+		pictureButtonSize = 24;
+		try
+		{
+			iconStandard = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		try
+		{
+			iconTaiko = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		try
+		{
+			iconCTB = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		try
+		{
+			iconMania = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		mode.setRenderer(new ComboModeRenderer(new ImageIcon[] {iconStandard, iconTaiko, iconCTB, iconMania}));
 		validButon = new JButton(iconSearch);
 		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
 		validButon.addActionListener(new ActionListener()
