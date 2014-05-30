@@ -770,7 +770,7 @@ public class Interface extends JFrame // TODO Javadoc
 
 	private Color getColorUser()
 	{
-		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.WHITE, Color.YELLOW, Color.DARK_GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
+		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
 		return colors[new Random().nextInt(colors.length)];
 	}
 
