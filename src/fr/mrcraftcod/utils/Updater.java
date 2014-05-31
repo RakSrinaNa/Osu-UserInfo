@@ -149,7 +149,7 @@ public class Updater
 				case DEVELOPER:
 					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_dev") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
-						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKDEV);
+						result = getLastJAR(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath(), Main.APPNAME + ".jar"), LINKDEV);
 					else
 						return NOUPDATE;
 					if(!result)
@@ -158,7 +158,7 @@ public class Updater
 				case PUBLIC:
 					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
-						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
+						result = getLastJAR(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath(), Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
 						return NOUPDATE;
 					if(!result)
@@ -167,7 +167,7 @@ public class Updater
 				case PUBLICFDEV:
 					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public_dev"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
-						result = getLastJAR(new File(".", Main.APPNAME + ".jar"), LINKPUBLIC);
+						result = getLastJAR(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath(), Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
 						return NOUPDATE;
 					if(!result)
