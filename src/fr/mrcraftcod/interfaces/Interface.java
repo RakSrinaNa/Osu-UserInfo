@@ -285,7 +285,7 @@ public class Interface // TODO Javadoc
 			public void keyTyped(KeyEvent arg0)
 			{}
 		});
-		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "Osu!Mania"});
+		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "osu!mania"});
 		mode.setSelectedIndex(0);
 		mode.setBackground(Main.searchBarColor);
 		ImageIcon iconStandard = null, iconTaiko = null, iconCTB = null, iconMania = null;
