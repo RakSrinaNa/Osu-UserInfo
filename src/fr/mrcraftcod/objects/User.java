@@ -187,6 +187,8 @@ public class User implements Serializable
 	{
 		if(previousStats == null)
 			return true;
+		if(true)
+			return true;
 		boolean b = !(newStats.compareAccuracy(previousStats).equals("") && newStats.comparePlayCount(previousStats).equals("") && newStats.comparePP(previousStats).equals("") && newStats.compareRank(previousStats).equals("") && newStats.compareRankedScore(previousStats).equals("") && newStats.compareTotalHits(previousStats).equals(""));
 		return b;
 	}
