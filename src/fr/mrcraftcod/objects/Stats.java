@@ -281,7 +281,7 @@ public class Stats implements Serializable
 		double delta = previousStats.getRank() - this.getRank();
 		if(delta == 0D)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getArrow(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -295,6 +295,19 @@ public class Stats implements Serializable
 		if(number >= 0)
 			return "+";
 		return "-";
+	}
+
+	/**
+	 * Used to get the arrow of a number.
+	 * 
+	 * @param number The number to get the sign.
+	 * @return A String of the arrow.
+	 */
+	private String getArrow(double number)
+	{
+		if(number >= 0)
+			return "\u2191";
+		return "\u2193";
 	}
 
 	/**
