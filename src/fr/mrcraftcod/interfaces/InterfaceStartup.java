@@ -135,4 +135,11 @@ public class InterfaceStartup
 	{
 		this.frame = frame;
 	}
+
+	public void setPercent(int i)
+	{
+		float percent = i / 100f;
+		this.step = (int) (percent * this.progressBar.getMaximum());
+		this.refreshProgressBarStep();
+	}
 }

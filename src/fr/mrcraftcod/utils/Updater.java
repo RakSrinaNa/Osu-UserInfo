@@ -29,7 +29,7 @@ import fr.mrcraftcod.Main;
 public class Updater
 {
 	public final static int DEVELOPER = 1, PUBLIC = 2, PUBLICFDEV = 3, NOUPDATE = 0, UPDATEDDEV = 1, UPDATEDPUBLIC = 2, UPDATEERROR = 3;
-	private final static String DEVELOPERTAG = "DEVELOPER", PUBLICTAG = "PUBLIC", LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/lastVersion.xml", LINKPUBLIC = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Public/public.jar", LINKDEV = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Developer/developer.jar";
+	private final static String DEVELOPERTAG = "DEVELOPER", PUBLICTAG = "PUBLIC", LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/lastVersion.xml", LINKPUBLIC = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Public/Osu!UserInfo.jar", LINKDEV = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Developer/Osu!UserInfo.jar";
 	private static HashMap<String, String> versionsUTD;
 	private static JFrame context;
 
@@ -225,6 +225,7 @@ public class Updater
 		{
 			try
 			{
+				Main.startup.setPercent(100);
 				JOptionPane.showMessageDialog(context, String.format(Main.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
 				String javaHome = System.getProperty("java.home");
 				File f = new File(javaHome);

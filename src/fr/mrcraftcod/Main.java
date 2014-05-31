@@ -63,7 +63,7 @@ import fr.mrcraftcod.utils.Updater;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.5b7";
+	public final static String VERSION = "1.5";
 	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
@@ -118,7 +118,7 @@ public class Main
 		int currentStep = 0;
 		startup = new InterfaceStartup(4);
 		config.writeVar("last_version", VERSION);
-		Main.startup.setStartupText(currentStep++, Main.resourceBundle.getString("startup_fecth_updates"));
+		startup.setStartupText(currentStep++, Main.resourceBundle.getString("startup_fecth_updates"));
 		int result = Updater.update(startup.getFrame());
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 		{
@@ -144,6 +144,7 @@ public class Main
 				SystemTrayOsuStats.init();
 				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
 				Main.logger.log(Level.INFO, "Launching interface...");
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
 				backColor = new Color(240, 236, 250);
 				searchBarColor = Color.WHITE;
 				noticeColor = Color.WHITE;
