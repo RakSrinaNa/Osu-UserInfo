@@ -31,9 +31,8 @@ import fr.mrcraftcod.objects.TableColumnAdjuster;
  * 
  * @author MrCraftCod
  */
-public class InterfaceAbout extends JFrame
+public class InterfaceAbout
 {
-	private static final long serialVersionUID = 6055795212223739508L;
 	private HashMap<String, String> traducers;
 	private String[][] valuesTable;
 	private JFrame frame;

@@ -76,9 +76,8 @@ import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
 
-public class Interface extends JFrame // TODO Javadoc
+public class Interface // TODO Javadoc
 {
-	private static final long serialVersionUID = 2629819156905465351L;
 	private static JFrame frame;
 	private JTextComponent userNameFieldTextComponent;
 	private DefaultComboBoxModel<String> userNameFieldModel;

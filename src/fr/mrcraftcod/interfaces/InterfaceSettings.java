@@ -23,9 +23,8 @@ import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
  *
  * @since 1.4
  */
-public class InterfaceSettings extends JFrame
+public class InterfaceSettings
 {
-	private static final long serialVersionUID = -5030788972447533004L;
 	public JFrame frame;
 	private JCheckBox autoCompletionCheck;
 	private JCheckBox devModeCheck;
