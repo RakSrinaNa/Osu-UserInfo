@@ -302,8 +302,8 @@ public class Updater
 				return false;
 			else if(actualSubVersion < upToDateSubVersion)
 				return false;
-			if(!Main.VERSION.contains("b"))
-				return false;
+			if(actualGlobalVersion == upToDateGlobalVersion && actualSubVersion == upToDateSubVersion)
+				return true;
 			if(actualBetaVersion < upToDateBetaVersion)
 				return false;
 		}
