@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
@@ -75,6 +78,7 @@ public class Main
 	public static boolean testMode = true;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
 	public static Border noticeBorder;
+	private static ServerSocket socket;
 
 	/**
 	 * Start the program.
@@ -109,6 +113,20 @@ public class Main
 		config = new Configuration();
 		Main.logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang");
+		try
+		{
+			setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
+		}
+		catch(BindException e)
+		{
+			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+		catch(IOException e)
+		{
+			logger.log(Level.SEVERE, "Unexpected error", e);
+			System.exit(2);
+		}
 		Main.logger.log(Level.INFO, "Loading icons...");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
@@ -127,9 +145,7 @@ public class Main
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
 				String tempApiKey = config.getString("api_key", "");
 				if(tempApiKey.equals(""))
-				{
 					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
-				}
 				Main.logger.log(Level.INFO, "Verifying API key...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
 				if(!verifyApiKey(tempApiKey))
@@ -213,5 +229,15 @@ public class Main
 		{
 			Main.logger.log(Level.WARNING, "Error loading look and feel", exception);
 		}
+	}
+
+	public static ServerSocket getSocket()
+	{
+		return socket;
+	}
+
+	public static void setSocket(ServerSocket socket)
+	{
+		Main.socket = socket;
 	}
 }
