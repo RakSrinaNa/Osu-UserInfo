@@ -265,7 +265,7 @@ public class Updater
 			upToDateSubVersion = Integer.parseInt(upToDateSubVersionS);
 			if(actualGlobalVersion < upToDateGlobalVersion)
 				return false;
-			else if(actualSubVersion < upToDateSubVersion || (devMode && (actualSubVersion <= upToDateSubVersion)))
+			else if(actualSubVersion < upToDateSubVersion)
 				return false;
 		}
 		catch(Exception e)
