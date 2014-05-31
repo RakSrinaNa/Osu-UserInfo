@@ -39,7 +39,7 @@ public class InterfaceStartup
 		getFrame().setIconImages(Main.icons);
 		getFrame().setBackground(new Color(0, 255, 0, 0));
 		label = new JLabel();
-		label.setForeground(new Color(191, 98, 4));
+		label.setForeground(new Color(255, 255, 255));
 		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setVerticalAlignment(JLabel.CENTER);
 		progressBar = new JProgressBar(0, maxStep);
