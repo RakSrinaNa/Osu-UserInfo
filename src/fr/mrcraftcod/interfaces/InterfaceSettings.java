@@ -28,6 +28,7 @@ public class InterfaceSettings
 	public JFrame frame;
 	private JCheckBox autoCompletionCheck;
 	private JCheckBox devModeCheck;
+	private JCheckBox systemTrayCheck;
 	private JButton buttonReturn;
 	private JLabel textNumberKeepStats;
 	private JTextField numberKeepStats;
@@ -94,6 +95,9 @@ public class InterfaceSettings
 		devModeCheck = new JCheckBox();
 		devModeCheck.setText(Main.resourceBundle.getString("settings_dev_mode"));
 		devModeCheck.setSelected(Main.config.getBoolean("devMode", false));
+		systemTrayCheck = new JCheckBox();
+		systemTrayCheck.setText(Main.resourceBundle.getString("settings_reduce_tray"));
+		systemTrayCheck.setSelected(Main.config.getBoolean("reduceTray", false));
 		buttonReturn = new JButton(Main.resourceBundle.getString("settings_confirm"));
 		buttonReturn.addActionListener(new ActionListener()
 		{
@@ -113,6 +117,7 @@ public class InterfaceSettings
 		// TODO better layout
 		frame.add(autoCompletionCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
 		frame.add(devModeCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
+		frame.add(systemTrayCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
 		frame.add(textNumberKeepStats, new CC().cell(0, lign, 1, 1).alignX("left"));
 		frame.add(numberKeepStats, new CC().cell(1, lign++, 1, 1).alignX("left").gapLeft("5").grow());
 		frame.add(buttonReturn, new CC().cell(0, lign++, 2, 1).alignX("center").grow());
@@ -151,6 +156,7 @@ public class InterfaceSettings
 	{
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
 		Main.config.writeVar("devMode", String.valueOf(devModeCheck.isSelected()));
+		Main.config.writeVar("reduceTray", String.valueOf(systemTrayCheck.isSelected()));
 		if(!numberKeepStats.getText().equals("") && !numberKeepStats.getText().equals("0"))
 		{
 			Main.config.writeVar("statsToKeep", numberKeepStats.getText());
@@ -179,6 +185,6 @@ public class InterfaceSettings
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
+		return !(Main.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
 	}
 }

@@ -175,9 +175,12 @@ public class Interface // TODO Javadoc
 			{
 				try
 				{
-					SystemTrayOsuStats.add();
-					hideFrame();
-					getFrame().setVisible(false);
+					if(Main.config.getBoolean("reduceTray", false))
+					{
+						SystemTrayOsuStats.add();
+						hideFrame();
+						getFrame().setVisible(false);
+					}
 				}
 				catch(final AWTException exception)
 				{}
