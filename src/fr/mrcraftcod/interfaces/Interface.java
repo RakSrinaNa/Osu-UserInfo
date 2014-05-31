@@ -76,6 +76,7 @@ import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
 
+//TODO icon en bas, langue choix
 public class Interface // TODO Javadoc
 {
 	private static JFrame frame;
