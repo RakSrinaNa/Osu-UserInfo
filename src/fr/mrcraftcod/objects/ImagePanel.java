@@ -1,8 +1,9 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+import fr.mrcraftcod.Main;
 
 /**
  * A panel containing a buffered image

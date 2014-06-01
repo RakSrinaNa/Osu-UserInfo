@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,21 +16,26 @@ import java.net.URL;
 import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import org.swingplus.JHyperlink;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.JTableUneditableModel;
+import fr.mrcraftcod.objects.TableColumnAdjuster;
 
 /**
  * Will show a frame containing a text and the traducers.
  * 
  * @author MrCraftCod
  */
-public class InterfaceAbout extends JFrame
+public class InterfaceAbout
 {
-	private static final long serialVersionUID = 6055795212223739508L;
 	private HashMap<String, String> traducers;
 	private String[][] valuesTable;
 	private JFrame frame;
@@ -51,10 +56,10 @@ public class InterfaceAbout extends JFrame
 		frame = new JFrame("About");
 		frame.setVisible(false);
 		frame.setLayout(new BorderLayout());
-		frame.setPreferredSize(new Dimension(550, 175));
+		frame.setPreferredSize(new Dimension(550, 200));
 		frame.setAlwaysOnTop(false);
 		frame.setIconImages(Main.icons);
-		// frame.setBackground(Color.GRAY);
+		// frame.setBackground(Main.backColor);
 		frame.addWindowListener(new WindowListener()
 		{
 			@Override
@@ -90,11 +95,11 @@ public class InterfaceAbout extends JFrame
 			{}
 		});
 		JLabel text = new JLabel(Main.resourceBundle.getString("about_text"));
-		// text.setBackground(Color.GRAY);
+		// text.setBackground(Main.backColor);
 		frame.add(text, BorderLayout.NORTH);
 		model = new JTableUneditableModel(valuesTable = getTraducers(), new String[] {Main.resourceBundle.getString("language"), Main.resourceBundle.getString("traducer")});
 		table = new JTable(model);
-		// table.setBackground(Color.GRAY);
+		// table.setBackground(Main.backColor);
 		table.addMouseListener(new MouseListener()
 		{
 			@Override
@@ -140,11 +145,19 @@ public class InterfaceAbout extends JFrame
 		tca = new TableColumnAdjuster(table);
 		tca.adjustColumns();
 		scrollPane = new JScrollPane(table);
-		// scrollPane.setBackground(Color.GRAY);
+		// scrollPane.setBackground(Main.backColor);
 		scrollPane.setAutoscrolls(false);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JPanel footer = new JPanel(new BorderLayout());
+		JHyperlink linkAuthor = new JHyperlink(String.format(Main.resourceBundle.getString("about_app_by"), "MrCraftCod"), "https://osu.ppy.sh/u/2313737");
+		linkAuthor.setBorder(new EmptyBorder(3, 3, 3, 3));
+		JHyperlink linkOsu = new JHyperlink(Main.resourceBundle.getString("about_game_osu"), "https://osu.ppy.sh/");
+		linkOsu.setBorder(new EmptyBorder(3, 3, 3, 3));
+		footer.add(linkAuthor, BorderLayout.WEST);
+		footer.add(linkOsu, BorderLayout.EAST);
 		frame.add(scrollPane, BorderLayout.CENTER);
-		// frame.getContentPane().setBackground(Color.GRAY);
+		frame.add(footer, BorderLayout.SOUTH);
+		// frame.getContentPane().setBackground(Main.backColor);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLocationRelativeTo(parent);
 		frame.pack();

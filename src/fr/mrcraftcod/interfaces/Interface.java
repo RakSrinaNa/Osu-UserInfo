@@ -1,6 +1,7 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.interfaces;
 
 import java.awt.AWTException;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -13,6 +14,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -27,13 +30,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -48,17 +55,30 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.AutoComboBox;
+import fr.mrcraftcod.objects.ComboModeRenderer;
+import fr.mrcraftcod.objects.GhostText;
+import fr.mrcraftcod.objects.ImagePanel;
+import fr.mrcraftcod.objects.Stats;
+import fr.mrcraftcod.objects.SystemTrayOsuStats;
+import fr.mrcraftcod.objects.User;
+import fr.mrcraftcod.utils.Configuration;
+import fr.mrcraftcod.utils.CountryCode;
 
-public class Interface extends JFrame
+//TODO icon en bas, langue choix
+public class Interface // TODO Javadoc
 {
-	private static final long serialVersionUID = 2629819156905465351L;
 	private static JFrame frame;
 	private JTextComponent userNameFieldTextComponent;
 	private DefaultComboBoxModel<String> userNameFieldModel;
@@ -69,10 +89,13 @@ public class Interface extends JFrame
 	private JComboBox<String> mode;
 	private JButton validButon;
 	private User lastUser = new User();
-	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
+	private JComboBox<String> lastStatsDateBox;
+	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track;
 	private Date lastPost = new Date(0);
+	private JLabel lastStatsDate;
+	private DefaultComboBoxModel<String> statsDateModel;
 
 	public enum Mods
 	{
@@ -93,11 +116,34 @@ public class Interface extends JFrame
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
 	{
-		int pictureButtonSize = 18;
-		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
-		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
-		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
+		int pictureButtonSize = 24;
+		Main.logger.log(Level.FINE, "Loading icons...");
+		try
+		{
+			iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.SEVERE, "", e);
+		}
+		try
+		{
+			iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.SEVERE, "", e);
+		}
+		try
+		{
+			avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.SEVERE, "", e);
+		}
 		/************** FRAME INFOS ********************/
+		Main.logger.log(Level.FINE, "Setting frame options...");
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
 		getFrame().setFocusable(true);
 		getFrame().setVisible(false);
@@ -130,9 +176,12 @@ public class Interface extends JFrame
 			{
 				try
 				{
-					SystemTrayOsuStats.add();
-					hideFrame();
-					getFrame().setVisible(false);
+					if(Main.config.getBoolean("reduceTray", false))
+					{
+						SystemTrayOsuStats.add();
+						hideFrame();
+						getFrame().setVisible(false);
+					}
 				}
 				catch(final AWTException exception)
 				{}
@@ -143,13 +192,14 @@ public class Interface extends JFrame
 			{}
 		});
 		getFrame().setLayout(new GridBagLayout());
-		getFrame().setMinimumSize(new Dimension(350, 450));
-		getFrame().setPreferredSize(new Dimension(550, 550));
+		getFrame().setMinimumSize(new Dimension(550, 700));
+		getFrame().setPreferredSize(new Dimension(550, 700));
 		getFrame().setAlwaysOnTop(false);
 		getFrame().setIconImages(Main.icons);
-		getFrame().getContentPane().setBackground(Color.GRAY);
+		getFrame().getContentPane().setBackground(Main.backColor);
 		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
+		Main.logger.log(Level.FINE, "Creating frame bar...");
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuFile = new JMenu(Main.resourceBundle.getString("menu_bar_file"));
 		JMenu menuHelp = new JMenu(Main.resourceBundle.getString("menu_bar_help"));
@@ -177,8 +227,10 @@ public class Interface extends JFrame
 		menuBar.add(menuHelp);
 		getFrame().setJMenuBar(menuBar);
 		/*************** SEARCH PANEL **********************/
+		Main.logger.log(Level.FINE, "Creating search panel...");
 		JPanel searchPanel = new JPanel(new GridBagLayout());
-		// searchPanel.setBackground(Color.GRAY);
+		searchPanel.setBackground(Main.searchBarColor);
+		// searchPanel.setBackground(Main.backColor);
 		JLabel usernameAsk = new JLabel(Main.resourceBundle.getString("username") + " : ");
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
@@ -237,8 +289,44 @@ public class Interface extends JFrame
 			public void keyTyped(KeyEvent arg0)
 			{}
 		});
-		mode = new JComboBox<String>(new String[] {"Osu!", "Taiko", "CTB", "Osu!Mania"});
+		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "osu!mania"});
 		mode.setSelectedIndex(0);
+		mode.setBackground(Main.searchBarColor);
+		ImageIcon iconStandard = null, iconTaiko = null, iconCTB = null, iconMania = null;
+		pictureButtonSize = 24;
+		try
+		{
+			iconStandard = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		try
+		{
+			iconTaiko = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		try
+		{
+			iconCTB = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		try
+		{
+			iconMania = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), pictureButtonSize, pictureButtonSize));
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
+		}
+		mode.setRenderer(new ComboModeRenderer(new ImageIcon[] {iconStandard, iconTaiko, iconCTB, iconMania}));
 		validButon = new JButton(iconSearch);
 		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
 		validButon.addActionListener(new ActionListener()
@@ -269,25 +357,22 @@ public class Interface extends JFrame
 		constraint.weightx = 0.1;
 		searchPanel.add(validButon, constraint);
 		/***************** LEVEL PANEL ********************/
-		JPanel levelUserPanel = new JPanel(new GridBagLayout());
-		levelUserPanel.setBackground(Color.GRAY);
+		Main.logger.log(Level.FINE, "Creating level panel...");
+		JPanel levelUserPanel = new JPanel(new BorderLayout());
+		levelUserPanel.setBackground(Main.backColor);
 		levelBar = new JProgressBar();
+		Dimension dim = levelBar.getPreferredSize();
+		dim.height += 3;
+		levelBar.setPreferredSize(dim);
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
 		updateLevel(0D);
 		// Construct
-		constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.CENTER;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		constraint.gridwidth = 3;
-		constraint.weightx = 1;
-		constraint.weighty = 1;
-		constraint.gridx = 0;
-		constraint.gridy = 0;
-		levelUserPanel.add(levelBar, constraint);
+		levelUserPanel.add(levelBar, BorderLayout.NORTH);
 		/***************** TRACK PANEL ********************/
-		JPanel trackUserPanel = new JPanel(new GridBagLayout());
-		trackUserPanel.setBackground(Color.GRAY);
+		Main.logger.log(Level.FINE, "Creating track panel...");
+		JPanel trackUserPanel = new JPanel(new MigLayout());
+		trackUserPanel.setBackground(Main.backColor);
 		track = new JCheckBox();
 		track.setText(Main.resourceBundle.getString("track_user"));
 		track.setEnabled(false);
@@ -309,30 +394,42 @@ public class Interface extends JFrame
 					unTrackUser(lastUser);
 			}
 		});
-		lastStatsDate = new JLabel();
-		lastStatsDate.setHorizontalAlignment(JLabel.RIGHT);
-		lastStatsDate.setVerticalAlignment(JLabel.CENTER);
+		lastStatsDate = new JLabel(Main.resourceBundle.getString("last_stats_date"));
+		lastStatsDate.setEnabled(track.isSelected());
+		statsDateModel = new DefaultComboBoxModel<String>(new String[] {});
+		lastStatsDateBox = new JComboBox<String>(statsDateModel);
+		lastStatsDateBox.setEnabled(track.isEnabled());
+		lastStatsDateBox.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				if(e.getStateChange() != 1)
+					return;
+				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+				SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
+				DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
+				updateInfos(lastUser.getUsername(), lastUser.getStats(mode.getSelectedIndex()), lastUser.getStatsByModeAndDate(mode.getSelectedIndex(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
+			}
+		});
 		// Construct
-		constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.CENTER;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
-		constraint.gridwidth = 3;
-		constraint.weightx = 1;
-		constraint.weighty = 1;
-		constraint.gridx = 0;
-		constraint.gridy = 0;
-		trackUserPanel.add(track, constraint);
-		constraint.gridx = 1;
-		trackUserPanel.add(lastStatsDate, constraint);
+		trackUserPanel.add(track, new CC().cell(0, 0).alignX("left"));
+		trackUserPanel.add(lastStatsDate, new CC().cell(0, 1).alignX("right"));
+		trackUserPanel.add(lastStatsDateBox, new CC().cell(1, 1).alignX("right"));
 		/***************** HITS PANEL ********************/
+		Main.logger.log(Level.FINE, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
-		hitCountPanel.setBackground(Color.GRAY);
+		hitCountPanel.setBackground(Main.noticeColor);
+		TitledBorder borderHits = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("hits"));
+		borderHits.setTitleJustification(TitledBorder.CENTER);
+		borderHits.setTitlePosition(TitledBorder.CENTER);
+		hitCountPanel.setBorder(borderHits);
 		float picturesSize = 40f;
 		// 300
 		JPanel count300Panel = new JPanel();
-		count300Panel.setBackground(Color.GRAY);
+		count300Panel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel count300Picture = new ImagePanel();
-		count300Picture.setBackground(Color.GRAY);
+		count300Picture.setBackground(hitCountPanel.getBackground());
 		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -344,9 +441,9 @@ public class Interface extends JFrame
 		count300Panel.add(hitCount300);
 		// 100
 		JPanel count100Panel = new JPanel();
-		count100Panel.setBackground(Color.GRAY);
+		count100Panel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel count100Picture = new ImagePanel();
-		count100Picture.setBackground(Color.GRAY);
+		count100Picture.setBackground(hitCountPanel.getBackground());
 		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -358,10 +455,10 @@ public class Interface extends JFrame
 		count100Panel.add(hitCount100);
 		// 50
 		JPanel count50Panel = new JPanel();
-		count50Panel.setBackground(Color.GRAY);
+		count50Panel.setBackground(hitCountPanel.getBackground());
 		picturesSize = 30f;
 		final ImagePanel count50Picture = new ImagePanel();
-		count50Picture.setBackground(Color.GRAY);
+		count50Picture.setBackground(hitCountPanel.getBackground());
 		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -386,14 +483,19 @@ public class Interface extends JFrame
 		constraint.gridx = 2;
 		hitCountPanel.add(count50Panel, constraint);
 		/***************** RANK PANEL ********************/
+		Main.logger.log(Level.FINE, "Creating rank panel...");
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
-		ranksUserPanel.setBackground(Color.GRAY);
+		ranksUserPanel.setBackground(Main.noticeColor);
+		TitledBorder borderRanks = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("ranks"));
+		borderRanks.setTitleJustification(TitledBorder.CENTER);
+		borderRanks.setTitlePosition(TitledBorder.CENTER);
+		ranksUserPanel.setBorder(borderRanks);
 		picturesSize = 40f;
 		// SS
 		JPanel ssPanel = new JPanel();
-		ssPanel.setBackground(Color.GRAY);
+		ssPanel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel ssPicture = new ImagePanel();
-		ssPicture.setBackground(Color.GRAY);
+		ssPicture.setBackground(hitCountPanel.getBackground());
 		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -405,9 +507,9 @@ public class Interface extends JFrame
 		ssPanel.add(countSS);
 		// S
 		JPanel sPanel = new JPanel();
-		sPanel.setBackground(Color.GRAY);
+		sPanel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel sPicture = new ImagePanel();
-		sPicture.setBackground(Color.GRAY);
+		sPicture.setBackground(hitCountPanel.getBackground());
 		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -419,9 +521,9 @@ public class Interface extends JFrame
 		sPanel.add(countS);
 		// A
 		JPanel aPanel = new JPanel();
-		aPanel.setBackground(Color.GRAY);
+		aPanel.setBackground(hitCountPanel.getBackground());
 		final ImagePanel aPicture = new ImagePanel();
-		aPicture.setBackground(Color.GRAY);
+		aPicture.setBackground(hitCountPanel.getBackground());
 		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -446,11 +548,12 @@ public class Interface extends JFrame
 		constraint.gridx = 2;
 		ranksUserPanel.add(aPanel, constraint);
 		/******************** USER PANEL *****************/
+		Main.logger.log(Level.FINE, "Creating user panel...");
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
-		avatarPanel.setBackground(Color.GRAY);
+		avatarPanel.setBackground(Main.backColor);
 		int avatarSize = 128;
 		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), 128, 128));
-		avatar.setBackground(Color.GRAY);
+		avatar.setBackground(Main.backColor);
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
@@ -495,10 +598,12 @@ public class Interface extends JFrame
 			{}
 		});
 		username = new JLabel(" ");
+		username.setOpaque(true);
+		username.setBackground(Main.backColor);
 		username.setFont(new Font(username.getFont().getName(), Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
-		constraint.fill = GridBagConstraints.NONE;
+		constraint.fill = GridBagConstraints.PAGE_START;
 		constraint.anchor = GridBagConstraints.CENTER;
 		constraint.gridwidth = 3;
 		constraint.weightx = 0.1;
@@ -507,10 +612,17 @@ public class Interface extends JFrame
 		constraint.gridy = 0;
 		avatarPanel.add(avatar, constraint);
 		constraint.gridy = 1;
+		constraint.insets = new Insets(5, 0, 3, 0);
 		avatarPanel.add(username, constraint);
 		/**************** OTHERS PANEL *********************/
+		Main.logger.log(Level.FINE, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
-		otherPanel.setBackground(Color.GRAY);
+		otherPanel.setBackground(Main.noticeColor);
+		otherPanel.setBackground(Main.noticeColor);
+		TitledBorder borderOther = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("stats"));
+		borderOther.setTitleJustification(TitledBorder.CENTER);
+		borderOther.setTitlePosition(TitledBorder.CENTER);
+		otherPanel.setBorder(borderOther);
 		// PlayCount
 		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -556,14 +668,13 @@ public class Interface extends JFrame
 		country.setVerticalAlignment(JLabel.CENTER);
 		countryFlag = new ImagePanel();
 		countryFlag.setPrintLoading(false);
-		countryFlag.setBackground(Color.GRAY);
+		countryFlag.setBackground(Main.noticeColor);
 		countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		country = new JLabel();
 		country.setHorizontalAlignment(JLabel.LEFT);
 		country.setVerticalAlignment(JLabel.CENTER);
-		// Construct
 		// Total hits
 		JLabel totalHitsLabel = new JLabel(Main.resourceBundle.getString("total_hits") + " : ");
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -589,6 +700,7 @@ public class Interface extends JFrame
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
+		Main.logger.log(Level.FINE, "Creating frame panel...");
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
@@ -606,13 +718,16 @@ public class Interface extends JFrame
 		constraint.gridy = line++;
 		getFrame().add(levelUserPanel, constraint);
 		constraint.gridy = line++;
+		constraint.insets = new Insets(2, 4, 2, 4);
 		getFrame().add(otherPanel, constraint);
 		constraint.gridy = line++;
 		getFrame().add(hitCountPanel, constraint);
 		constraint.gridy = line++;
 		getFrame().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
+		constraint.insets = new Insets(0, 0, 0, 0);
 		getFrame().add(trackUserPanel, constraint);
+		Main.logger.log(Level.FINE, "Packing frame...");
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		getFrame().setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		getFrame().pack();
@@ -622,20 +737,26 @@ public class Interface extends JFrame
 
 	private void trackNewUser(User user) throws IOException
 	{
+		Main.logger.log(Level.FINE, "Trcking user " + user.getUsername());
 		ArrayList<String> users = getTrackedUsers();
 		users.add(user.getUsername());
 		userNameFieldModel.addElement(user.getUsername());
 		user.serialize(new File(Configuration.appData, user.getUsername()));
+		lastStatsDate.setEnabled(track.isSelected());
+		lastStatsDateBox.setEnabled(track.isSelected());
 		setTrackedUser(users);
 	}
 
 	private void unTrackUser(User user)
 	{
+		Main.logger.log(Level.FINE, "Untrcking user " + user.getUsername());
 		ArrayList<String> users = getTrackedUsers();
 		users.remove(user.getUsername());
 		userNameFieldModel.removeElement(user.getUsername());
 		userNameField.setSelectedItem(null);
 		new File(Configuration.appData, user.getUsername()).delete();
+		lastStatsDate.setEnabled(track.isSelected());
+		lastStatsDateBox.setEnabled(track.isSelected());
 		setTrackedUser(users);
 	}
 
@@ -702,10 +823,17 @@ public class Interface extends JFrame
 		throw new Exception("Cannot get code from link");
 	}
 
+	private Color getColorUser()
+	{
+		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
+		return colors[new Random().nextInt(colors.length)];
+	}
+
 	private void getInfos(String user)
 	{
 		if(new Date().getTime() - lastPost.getTime() < 1000)
 			return;
+		Main.logger.log(Level.FINE, "TGetting user infos " + user);
 		lastPost = new Date();
 		userNameField.setBackground(null);
 		userNameFieldTextComponent.setBackground(null);
@@ -714,7 +842,9 @@ public class Interface extends JFrame
 			User currentUser = new User();
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
-			final JSONObject jsonResponse = new JSONObject(sendPost(Main.API_KEY, user, mode.getSelectedIndex()));
+			username.setBackground(Main.noticeColor);
+			username.setBorder(Main.noticeBorder);
+			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
@@ -731,7 +861,6 @@ public class Interface extends JFrame
 				avatar.setImage(null);
 				countryFlag.setImage(null);
 			}
-			Random r = new Random();
 			currentUser.setUsername(jsonResponse.getString("username"));
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
 			statsUser.setRank(jsonResponse.getDouble("pp_rank"));
@@ -741,26 +870,20 @@ public class Interface extends JFrame
 			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
-			username.setText(currentUser.getUsername() + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRank()) + ")" + statsUser.compareRank(previousStats));
-			username.setForeground(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
+			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(jsonResponse.getInt("count_rank_s")));
 			countA.setText(String.valueOf(jsonResponse.getInt("count_rank_a")));
-			playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPlaycount()) + statsUser.comparePlayCount(previousStats));
-			rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getRankedScore()) + statsUser.compareRankedScore(previousStats));
 			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(jsonResponse.getDouble("level")), statsUser.getTotalScore())), getLevel(jsonResponse.getDouble("level")) + 1));
-			ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getPp()) + statsUser.comparePP(previousStats));
-			accuracy.setText(String.valueOf(round(statsUser.getAccuracy(), 2)) + "%" + statsUser.compareAccuracy(previousStats));
 			country.setText(CountryCode.getByCode(jsonResponse.getString("country")).getName());
-			totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalHits()) + statsUser.compareTotalHits(previousStats));
 			DecimalFormat decimalFormat = new DecimalFormat();
 			decimalFormat.setMaximumFractionDigits(2);
 			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count300")) + " (" + decimalFormat.format((jsonResponse.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count100")) + " (" + decimalFormat.format((jsonResponse.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count50")) + " (" + decimalFormat.format((jsonResponse.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
-			lastStatsDate.setText(statsUser.getLastStatsDate(previousStats));
-			if(!lastUser.equals(jsonResponse.get("username")))
+			updateInfos(currentUser.getUsername(), statsUser, previousStats);
+			if(!lastUser.getUsername().equals(jsonResponse.get("username")))
 			{
 				SwingUtilities.invokeLater(new Runnable()
 				{
@@ -783,19 +906,38 @@ public class Interface extends JFrame
 			validButon.setIcon(iconRefresh);
 			currentUser.setStats(statsUser, mode.getSelectedIndex());
 			if(tracked)
+			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
+				lastStatsDate.setEnabled(track.isSelected());
+				lastStatsDateBox.setEnabled(track.isSelected());
+			}
 			lastUser = currentUser;
+			statsDateModel.removeAllElements();
+			for(String date : currentUser.getAvalidbleStatsDates(mode.getSelectedIndex()))
+				statsDateModel.addElement(date);
+			lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
 		}
 		catch(JSONException | IOException e)
 		{
-			e.printStackTrace();
+			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
 			userNameField.setBackground(Color.RED);
 			userNameFieldTextComponent.setBackground(Color.RED);
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
 		}
+	}
+
+	private void updateInfos(String user, Stats currentStats, Stats previousStats)
+	{
+		Main.logger.log(Level.INFO, "Updating tracked infos...");
+		username.setText("  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  ");
+		accuracy.setText(String.valueOf(round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
+		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
+		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
+		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
+		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 	}
 
 	private synchronized BufferedImage getAvatar(String userID) throws Exception
@@ -805,7 +947,9 @@ public class Interface extends JFrame
 			return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
 		}
 		catch(Exception e)
-		{}
+		{
+			Main.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
+		}
 		return avatarDefaultImage;
 	}
 
@@ -856,17 +1000,21 @@ public class Interface extends JFrame
 
 	private void updateLevel(double level)
 	{
+		Main.logger.log(Level.FINE, "Setting level to " + level);
 		double progress = round(getProgressLevel(level) * 100, 2);
 		levelBar.setValue((int) progress);
 		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(level), progress));
 	}
 
-	synchronized public static String sendPost(String key, String user, int selectedMode) throws Exception
+	synchronized public static String sendPost(String type, String key, String user, int selectedMode) throws Exception
 	{
+		Main.logger.log(Level.INFO, "Sending post request...");
 		String urlParameters = "k=" + key + "&u=" + user + "&m=" + selectedMode + "&type=string&event_days=1";
-		URL url = new URL("https://osu.ppy.sh/api/get_user?" + urlParameters);
+		URL url = new URL("https://osu.ppy.sh/api/" + type + "?" + urlParameters);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
+		connection.setConnectTimeout(15000);
+		connection.setReadTimeout(15000);
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		connection.setRequestProperty("charset", "utf-8");
@@ -931,6 +1079,7 @@ public class Interface extends JFrame
 
 	public static void exit()
 	{
+		Main.logger.log(Level.INFO, "Exiting main frame...");
 		getFrame().dispose();
 	}
 

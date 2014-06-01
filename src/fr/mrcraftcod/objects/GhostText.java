@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.awt.Color;
 import java.awt.event.FocusEvent;
@@ -17,7 +17,7 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 	private Color foregroundColor;
 	private final String ghostText;
 
-	protected GhostText(final JTextField textfield, String ghostText)
+	public GhostText(final JTextField textfield, String ghostText)
 	{
 		super();
 		this.textfield = textfield;

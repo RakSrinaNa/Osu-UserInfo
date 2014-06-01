@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics;

@@ -4,13 +4,27 @@ import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.Border;
 import org.json.JSONObject;
+import fr.mrcraftcod.interfaces.Interface;
+import fr.mrcraftcod.interfaces.InterfaceStartup;
+import fr.mrcraftcod.objects.SystemTrayOsuStats;
+import fr.mrcraftcod.utils.Configuration;
+import fr.mrcraftcod.utils.LogFormatter;
+import fr.mrcraftcod.utils.Updater;
 
 /**
  * <h1>Osu!UserInfo</h1>
@@ -52,12 +66,19 @@ import org.json.JSONObject;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static double VERSION = 1.4D;
+	public final static String VERSION = "1.6b1";
+	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
+	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
 	public static ResourceBundle resourceBundle;
+	public static Logger logger;
+	public static boolean testMode = true;
+	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
+	public static Border noticeBorder;
+	private static ServerSocket socket;
 
 	/**
 	 * Start the program.
@@ -67,61 +88,92 @@ public class Main
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		getPreviousConfigFolder();
+		logger = Logger.getLogger(APPNAME);
+		if(testMode)
+			logger.setLevel(Level.FINEST);
+		else
+			logger.setLevel(Level.INFO);
+		boolean resetedLog = false;
+		File confFolder = new File(System.getenv("APPDATA"), Main.APPNAME);
+		File logFile = new File(confFolder, logFileName);
+		if(!confFolder.exists())
+			confFolder.mkdirs();
+		if(logFile.length() > 2500000)
+		{
+			resetedLog = true;
+			logFile.delete();
+		}
+		final FileHandler fileTxt = new FileHandler(logFile.getAbsolutePath(), true);
+		fileTxt.setFormatter(new LogFormatter());
+		fileTxt.setEncoding("UTF-8");
+		logger.addHandler(fileTxt);
+		logger.log(Level.INFO, "\n\n---------- Starting program ----------\n\nRunning version " + VERSION + "\n");
+		if(resetedLog)
+			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
-		if(config.getDouble("last_version", -1D) < 1.2D)
-			for(File file : Configuration.appData.listFiles())
-				if(file.getName() != config.getConfigFile().getName())
-					file.delete();
+		Main.logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang");
+		try
+		{
+			setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
+		}
+		catch(BindException e)
+		{
+			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+		catch(IOException e)
+		{
+			logger.log(Level.SEVERE, "Unexpected error", e);
+			System.exit(2);
+		}
+		Main.logger.log(Level.INFO, "Loading icons...");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		setLookAndFeel();
-		startup = new InterfaceStartup(3);
+		int currentStep = 0;
+		startup = new InterfaceStartup(4);
 		config.writeVar("last_version", VERSION);
-		try
+		startup.setStartupText(currentStep++, Main.resourceBundle.getString("startup_fecth_updates"));
+		int result = Updater.update(startup.getFrame());
+		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 		{
-			startup.setStartupText(resourceBundle.getString("startup_getting_api_key"));
-			String tempApiKey = config.getString("api_key", "");
-			if(tempApiKey.equals(""))
-				tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
-			startup.setStartupText(resourceBundle.getString("startup_verify_api_key"));
-			if(!verifyApiKey(tempApiKey))
-			{
-				JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
-				config.deleteVar("api_key");
-				System.exit(0);
-			}
-			config.writeVar("api_key", tempApiKey);
-			API_KEY = tempApiKey;
-			SystemTrayOsuStats.init();
-			new Interface();
-		}
-		catch(Exception exception)
-		{
-			exception.printStackTrace();
-		}
-		startup.exit();
-	}
-
-	/**
-	 * Used to get the previous config folder (when the app was called "Osu!Stats") to rename it to the new config folder.
-	 * 
-	 * @since 1.3
-	 */
-	private static void getPreviousConfigFolder() // Will be removed shortly
-	{
-		if(new File(System.getenv("APPDATA"), "Osu!Stats").exists())
 			try
 			{
-				new File(System.getenv("APPDATA"), "Osu!Stats").renameTo(new File(System.getenv("APPDATA"), Main.APPNAME));
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
+				String tempApiKey = config.getString("api_key", "");
+				if(tempApiKey.equals(""))
+					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+				Main.logger.log(Level.INFO, "Verifying API key...");
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
+				if(!verifyApiKey(tempApiKey))
+				{
+					Main.logger.log(Level.WARNING, "Wrong API key!");
+					JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
+					config.deleteVar("api_key");
+					System.exit(0);
+				}
+				config.writeVar("api_key", tempApiKey);
+				API_KEY = tempApiKey;
+				SystemTrayOsuStats.init();
+				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
+				Main.logger.log(Level.INFO, "Launching interface...");
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
+				backColor = new Color(240, 236, 250);
+				searchBarColor = Color.WHITE;
+				noticeColor = Color.WHITE;
+				noticeBorderColor = new Color(221, 221, 221);
+				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
+				new Interface();
 			}
 			catch(Exception exception)
 			{
 				exception.printStackTrace();
 			}
+		}
+		startup.exit();
 	}
 
 	/**
@@ -134,18 +186,21 @@ public class Main
 	{
 		try
 		{
-			new JSONObject(Interface.sendPost(apiKey, "peppy", 0));
+			new JSONObject(Interface.sendPost("get_user", apiKey, "peppy", 0));
 		}
 		catch(IOException exception)
 		{
+			Main.logger.log(Level.SEVERE, "Connexion error?", exception);
 			JOptionPane.showMessageDialog(null, "Couldn't connect to osu.ppy.sh!", "Internet problem", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 		catch(Exception exception)
 		{
-			exception.printStackTrace();
+			Main.logger.log(Level.SEVERE, "Error verifyng API Key", exception);
+			JOptionPane.showMessageDialog(null, exception.getStackTrace(), "Internet problem", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
+		Main.logger.log(Level.INFO, "API Key valid");
 		return true;
 	}
 
@@ -154,6 +209,7 @@ public class Main
 	 */
 	private static void setLookAndFeel()
 	{
+		Main.logger.log(Level.INFO, "Setting look and feel...");
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -161,13 +217,27 @@ public class Main
 			{
 				if("Nimbus".equals(info.getName()))
 				{
+					Main.logger.log(Level.INFO, "Nimbus found, using it...");
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
 				}
 			}
 			UIManager.put("nimbusOrange", new Color(255, 200, 0));
+			UIManager.put("nimbusOrange", new Color(255, 200, 0));
 		}
 		catch(final Exception exception)
-		{}
+		{
+			Main.logger.log(Level.WARNING, "Error loading look and feel", exception);
+		}
+	}
+
+	public static ServerSocket getSocket()
+	{
+		return socket;
+	}
+
+	public static void setSocket(ServerSocket socket)
+	{
+		Main.socket = socket;
 	}
 }

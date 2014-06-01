@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.awt.AWTException;
 import java.awt.MenuItem;
@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import fr.mrcraftcod.Main;
+import fr.mrcraftcod.interfaces.Interface;
 
 /**
  * The system tray icon of the app.
@@ -35,14 +38,18 @@ public class SystemTrayOsuStats
 	/**
 	 * Initalize the SystemTray object.
 	 * 
-	 * @throws IOException if the system tray object cannot be initialized.
+	 * @throws IOException if the system tray object cannot be initialised.
 	 */
 	public static void init() throws IOException
 	{
+		Main.logger.log(Level.INFO, "Initialising system tray...");
 		if(SystemTray.isSupported())
 			tray = SystemTray.getSystemTray();
 		else
+		{
+			Main.logger.log(Level.WARNING, "Tray not supported!");
 			return;
+		}
 		final PopupMenu popup = new PopupMenu();
 		final MenuItem openItem = new MenuItem(Main.resourceBundle.getString("system_tray_open"));
 		openItem.addActionListener(new ActionListener()
@@ -129,7 +136,9 @@ public class SystemTrayOsuStats
 			trayIcon.displayMessage(title, message, messageType);
 		}
 		catch(final Exception e)
-		{}
+		{
+			Main.logger.log(Level.WARNING, "Error displaying message in tray!", e);
+		}
 	}
 
 	/**
@@ -137,6 +146,13 @@ public class SystemTrayOsuStats
 	 */
 	public static void remove()
 	{
-		tray.remove(trayIcon);
+		try
+		{
+			tray.remove(trayIcon);
+		}
+		catch(Exception e)
+		{
+			Main.logger.log(Level.WARNING, "Error removing tray icon!", e);
+		}
 	}
 }

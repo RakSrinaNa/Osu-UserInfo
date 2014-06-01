@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<versions>
+	<version>
+		<name>PUBLIC</name>
+		<number>1.5</number>
+	</version>
+	<version>
+		<name>DEVELOPER</name>
+		<number>1.6b1</number>
+	</version>
+</versions>

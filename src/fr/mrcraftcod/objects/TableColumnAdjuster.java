@@ -1,4 +1,4 @@
-package fr.mrcraftcod;
+package fr.mrcraftcod.objects;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
