@@ -100,7 +100,7 @@ public class InterfaceAbout
 		frame.add(text, BorderLayout.NORTH);
 		model = new JTableUneditableModel(valuesTable = getTraducers(), new String[] {Main.resourceBundle.getString("language"), Main.resourceBundle.getString("traducer")});
 		table = new JTable(model);
-		table.setBackground(Main.backColor);
+		table.setBackground(Color.WHITE);
 		table.addMouseListener(new MouseListener()
 		{
 			@Override
@@ -138,6 +138,7 @@ public class InterfaceAbout
 		table.setDefaultRenderer(String.class, centerRenderer);
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getTableHeader().setResizingAllowed(true);
+		table.getTableHeader().setBackground(Main.backColor);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.setRowHeight(0, 40);
 		table.setShowGrid(true);
@@ -146,6 +147,7 @@ public class InterfaceAbout
 		tca = new TableColumnAdjuster(table);
 		tca.adjustColumns();
 		scrollPane = new JScrollPane(table);
+		scrollPane.getViewport().setBackground(Main.backColor);
 		scrollPane.setBackground(Main.backColor);
 		scrollPane.setAutoscrolls(false);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
