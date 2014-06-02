@@ -5,8 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,6 +32,8 @@ public class InterfaceSettings
 	private JCheckBox autoCompletionCheck;
 	private JCheckBox devModeCheck;
 	private JCheckBox systemTrayCheck;
+	private JComboBox<String> languageBox;
+	private LinkedHashMap<String, String> languages;
 	private JButton buttonReturn;
 	private JLabel textNumberKeepStats;
 	private JTextField numberKeepStats;
@@ -38,6 +43,7 @@ public class InterfaceSettings
 	 */
 	public InterfaceSettings()
 	{
+		languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
 		frame = new JFrame(Main.resourceBundle.getString("settings"));
 		frame.setIconImages(Main.icons);
@@ -89,6 +95,9 @@ public class InterfaceSettings
 			public void windowDeactivated(WindowEvent e)
 			{}
 		});
+		languageBox = new JComboBox<String>(getLanguages());
+		languageBox.setSelectedItem(getLang(Main.config.getString("locale", null)));
+		JLabel languageText = new JLabel("Prefered language : ");
 		autoCompletionCheck = new JCheckBox();
 		autoCompletionCheck.setText(Main.resourceBundle.getString("settings_auto_completion"));
 		autoCompletionCheck.setSelected(Main.config.getBoolean("autoCompletion", false));
@@ -120,6 +129,8 @@ public class InterfaceSettings
 		frame.add(systemTrayCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
 		frame.add(textNumberKeepStats, new CC().cell(0, lign, 1, 1).alignX("left"));
 		frame.add(numberKeepStats, new CC().cell(1, lign++, 1, 1).alignX("left").gapLeft("5").grow());
+		frame.add(languageText, new CC().cell(0, lign, 1, 1).alignX("left").grow());
+		frame.add(languageBox, new CC().cell(1, lign++, 1, 1).alignX("left").grow());
 		frame.add(buttonReturn, new CC().cell(0, lign++, 2, 1).alignX("center").grow());
 		int frameHeight = lign * 40 + 20;
 		frame.setPreferredSize(new Dimension(frameWidth, frameHeight));
@@ -128,6 +139,24 @@ public class InterfaceSettings
 		Interface.hideFrame();
 		frame.toFront();
 		frame.pack();
+	}
+
+	private String getLang(String string)
+	{
+		for(Entry<String, String> s : languages.entrySet())
+			if(s.getValue() != null)
+				if(s.getValue().equals(string))
+					return s.getKey();
+		return "System language";
+	}
+
+	private String[] getLanguages()
+	{
+		languages.put("System language", null);
+		languages.put("English", "en");
+		languages.put("French", "fr");
+		languages.put("Italian", "it");
+		return languages.keySet().toArray(new String[languages.keySet().size()]);
 	}
 
 	/**
@@ -157,6 +186,7 @@ public class InterfaceSettings
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
 		Main.config.writeVar("devMode", String.valueOf(devModeCheck.isSelected()));
 		Main.config.writeVar("reduceTray", String.valueOf(systemTrayCheck.isSelected()));
+		Main.config.writeVar("locale", languages.get(languageBox.getSelectedItem()));
 		if(!numberKeepStats.getText().equals("") && !numberKeepStats.getText().equals("0"))
 		{
 			Main.config.writeVar("statsToKeep", numberKeepStats.getText());
@@ -185,6 +215,6 @@ public class InterfaceSettings
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Main.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
+		return !(Main.config.getString("locale", null) != languages.get(languageBox.getSelectedItem())) || !(Main.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
 	}
 }

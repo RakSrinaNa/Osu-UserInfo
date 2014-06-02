@@ -8,6 +8,7 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -112,7 +113,8 @@ public class Main
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
 		Main.logger.log(Level.INFO, "Opening resource bundle...");
-		resourceBundle = ResourceBundle.getBundle("resources/lang/lang");
+		Locale l = getLocale(config.getString("locale", null));
+		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", getLocale(config.getString("locale", null)));
 		try
 		{
 			setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
@@ -174,6 +176,23 @@ public class Main
 			}
 		}
 		startup.exit();
+	}
+
+	private static Locale getLocale(String string)
+	{
+		if(string == null)
+			return Locale.getDefault();
+		switch(string)
+		{
+			case "fr":
+				return Locale.FRENCH;
+			case "it":
+				return Locale.ITALIAN;
+			case "en":
+				return Locale.ENGLISH;
+			default:
+				return Locale.getDefault();
+		}
 	}
 
 	/**
