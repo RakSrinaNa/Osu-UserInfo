@@ -56,10 +56,11 @@ public class InterfaceAbout
 		frame = new JFrame("About");
 		frame.setVisible(false);
 		frame.setLayout(new BorderLayout());
-		frame.setPreferredSize(new Dimension(550, 200));
+		frame.setPreferredSize(new Dimension(400, 200));
+		frame.setMinimumSize(new Dimension(400, 200));
 		frame.setAlwaysOnTop(false);
 		frame.setIconImages(Main.icons);
-		// frame.setBackground(Main.backColor);
+		frame.getContentPane().setBackground(Main.backColor);
 		frame.addWindowListener(new WindowListener()
 		{
 			@Override
@@ -95,11 +96,11 @@ public class InterfaceAbout
 			{}
 		});
 		JLabel text = new JLabel(Main.resourceBundle.getString("about_text"));
-		// text.setBackground(Main.backColor);
+		text.setBackground(Main.backColor);
 		frame.add(text, BorderLayout.NORTH);
 		model = new JTableUneditableModel(valuesTable = getTraducers(), new String[] {Main.resourceBundle.getString("language"), Main.resourceBundle.getString("traducer")});
 		table = new JTable(model);
-		// table.setBackground(Main.backColor);
+		table.setBackground(Main.backColor);
 		table.addMouseListener(new MouseListener()
 		{
 			@Override
@@ -145,10 +146,11 @@ public class InterfaceAbout
 		tca = new TableColumnAdjuster(table);
 		tca.adjustColumns();
 		scrollPane = new JScrollPane(table);
-		// scrollPane.setBackground(Main.backColor);
+		scrollPane.setBackground(Main.backColor);
 		scrollPane.setAutoscrolls(false);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JPanel footer = new JPanel(new BorderLayout());
+		footer.setBackground(Main.backColor);
 		JHyperlink linkAuthor = new JHyperlink(String.format(Main.resourceBundle.getString("about_app_by"), "MrCraftCod"), "https://osu.ppy.sh/u/2313737");
 		linkAuthor.setBorder(new EmptyBorder(3, 3, 3, 3));
 		JHyperlink linkOsu = new JHyperlink(Main.resourceBundle.getString("about_game_osu"), "https://osu.ppy.sh/");
@@ -157,7 +159,6 @@ public class InterfaceAbout
 		footer.add(linkOsu, BorderLayout.EAST);
 		frame.add(scrollPane, BorderLayout.CENTER);
 		frame.add(footer, BorderLayout.SOUTH);
-		// frame.getContentPane().setBackground(Main.backColor);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLocationRelativeTo(parent);
 		frame.pack();
