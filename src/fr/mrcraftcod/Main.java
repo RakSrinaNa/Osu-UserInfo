@@ -70,7 +70,7 @@ import fr.mrcraftcod.utils.Updater;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.6b4";
+	public final static String VERSION = "1.6b5";
 	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
@@ -139,7 +139,7 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
-		fontMain = new JLabel().getFont();
+		fontMain = new JLabel().getFont(); // TODO font
 		setLookAndFeel();
 		int currentStep = 0;
 		startup = new InterfaceStartup(4);
