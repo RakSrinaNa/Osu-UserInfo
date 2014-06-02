@@ -96,6 +96,7 @@ public class Interface // TODO Javadoc
 	private JCheckBox track, autoUpdateCheck;
 	private Date lastPost = new Date(0);
 	private User lastUser = new User();
+	private Stats lastStats = new Stats();
 
 	public enum Mods
 	{
@@ -988,6 +989,8 @@ public class Interface // TODO Javadoc
 	{
 		if(new Date().getTime() - lastPost.getTime() < 1000)
 			return;
+		if(user.length() < 1)
+			return;
 		Main.logger.log(Level.FINE, "TGetting user infos " + user);
 		lastPost = new Date();
 		userNameField.setBackground(null);
@@ -1027,8 +1030,9 @@ public class Interface // TODO Javadoc
 			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
-			if(!currentUser.hasStatsChanged(!showerror, currentUser.getStats(getSelectedMode()), statsUser))
+			if(statsUser.equals(lastStats))
 				return;
+			lastStats = statsUser;
 			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
@@ -1299,6 +1303,7 @@ public class Interface // TODO Javadoc
 		buttonTaiko.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
 		buttonCTB.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
 		buttonMania.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
+		getInfos(lastUser.getUsername(), false);
 	}
 
 	private int getSelectedMode()
