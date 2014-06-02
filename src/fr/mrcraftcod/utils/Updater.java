@@ -227,6 +227,7 @@ public class Updater
 			{
 				Main.startup.setPercent(100);
 				JOptionPane.showMessageDialog(context, String.format(Main.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
+				Main.exit();
 				String javaHome = System.getProperty("java.home");
 				File f = new File(javaHome);
 				f = new File(f, "bin");

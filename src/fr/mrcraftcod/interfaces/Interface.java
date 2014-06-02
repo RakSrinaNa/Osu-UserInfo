@@ -1116,6 +1116,7 @@ public class Interface // TODO Javadoc
 		Main.logger.log(Level.INFO, "Exiting main frame...");
 		Main.setThreadUpdater(false);
 		getFrame().dispose();
+		Main.exit();
 	}
 
 	public void backFromTray()

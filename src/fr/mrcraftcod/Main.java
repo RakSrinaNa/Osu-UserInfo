@@ -275,4 +275,17 @@ public class Main
 	{
 		Main.socket = socket;
 	}
+
+	public static void exit()
+	{
+		try
+		{
+			socket.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		socket = null;
+	}
 }
