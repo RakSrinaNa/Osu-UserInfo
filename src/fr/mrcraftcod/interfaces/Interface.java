@@ -56,6 +56,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -71,7 +72,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.AutoComboBox;
-import fr.mrcraftcod.objects.ComboModeRenderer;
 import fr.mrcraftcod.objects.GhostText;
 import fr.mrcraftcod.objects.ImagePanel;
 import fr.mrcraftcod.objects.Stats;
@@ -88,9 +88,9 @@ public class Interface // TODO Javadoc
 	private BufferedImage avatarDefaultImage;
 	private ImagePanel avatar, countryFlag;
 	private AutoComboBox userNameField;
-	private JComboBox<String> mode, lastStatsDateBox;
+	private JComboBox<String> lastStatsDateBox;
 	private DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
-	private JButton validButon;
+	private JButton validButon, buttonStandard, buttonTaiko, buttonCTB, buttonMania;
 	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track, autoUpdateCheck;
@@ -182,8 +182,8 @@ public class Interface // TODO Javadoc
 			{}
 		});
 		getFrame().setLayout(new GridBagLayout());
-		getFrame().setMinimumSize(new Dimension(575, 700));
-		getFrame().setPreferredSize(new Dimension(575, 700));
+		getFrame().setMinimumSize(new Dimension(575, 725));
+		getFrame().setPreferredSize(new Dimension(575, 725));
 		getFrame().setAlwaysOnTop(false);
 		getFrame().setIconImages(Main.icons);
 		getFrame().getContentPane().setBackground(Main.backColor);
@@ -286,12 +286,6 @@ public class Interface // TODO Javadoc
 			public void keyTyped(KeyEvent arg0)
 			{}
 		});
-		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "osu!mania"});
-		mode.setFont(Main.fontMain);
-		mode.setSelectedIndex(0);
-		mode.setBackground(Main.searchBarColor);
-		pictureButtonSize = 24;
-		mode.setRenderer(new ComboModeRenderer(new ImageIcon[] {new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), pictureButtonSize, pictureButtonSize))}));
 		validButon = new JButton(iconSearch);
 		validButon.setFont(Main.fontMain);
 		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
@@ -317,13 +311,74 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 1;
 		searchPanel.add(userNameField, constraint);
 		constraint.gridx = 2;
-		constraint.weightx = 0.2;
-		searchPanel.add(mode, constraint);
-		constraint.gridx = 3;
 		constraint.weightx = 0.1;
 		searchPanel.add(validButon, constraint);
 		/*************** MODE PANEL **********************/
+		Main.logger.log(Level.FINE, "Creating mode panel...");
+		int iconSize = 16;
+		JPanel modePanel = new JPanel(new GridBagLayout());
+		modePanel.setBackground(Main.searchBarColor);
+		buttonStandard = new JButton("osu!");
+		buttonStandard.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
+		buttonStandard.setFocusPainted(false);
+		buttonStandard.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				switchMode(0);
+			}
+		});
+		buttonTaiko = new JButton("Taiko");
+		buttonTaiko.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
+		buttonTaiko.setFocusPainted(false);
+		buttonTaiko.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				switchMode(1);
+			}
+		});
+		buttonCTB = new JButton("Catch The Beat");
+		buttonCTB.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
+		buttonCTB.setFocusPainted(false);
+		buttonCTB.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				switchMode(2);
+			}
+		});
+		buttonMania = new JButton("osu!mania");
+		buttonMania.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
+		buttonMania.setFocusPainted(false);
+		buttonMania.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				switchMode(3);
+			}
+		});
+		switchMode(0);
 		// Construct
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridwidth = 1;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		modePanel.add(buttonStandard, constraint);
+		constraint.gridx = 1;
+		modePanel.add(buttonTaiko, constraint);
+		constraint.gridx = 2;
+		modePanel.add(buttonCTB, constraint);
+		constraint.gridx = 3;
+		modePanel.add(buttonMania, constraint);
 		/***************** LEVEL PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating level panel...");
 		JPanel levelUserPanel = new JPanel(new BorderLayout());
@@ -381,7 +436,7 @@ public class Interface // TODO Javadoc
 				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 				SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
 				DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
-				updateInfos(lastUser.getUsername(), lastUser.getStats(mode.getSelectedIndex()), lastUser.getStatsByModeAndDate(mode.getSelectedIndex(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
+				updateInfos(lastUser.getUsername(), lastUser.getStats(getSelectedMode()), lastUser.getStatsByModeAndDate(getSelectedMode(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
 			}
 		});
 		autoUpdateCheck = new JCheckBox();
@@ -775,6 +830,11 @@ public class Interface // TODO Javadoc
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
+		JSeparator separator = new JSeparator();
+		JPanel topPanel = new JPanel(new BorderLayout());
+		topPanel.setBackground(Main.searchBarColor);
+		topPanel.add(searchPanel, BorderLayout.NORTH);
+		topPanel.add(modePanel, BorderLayout.SOUTH);
 		Main.logger.log(Level.FINE, "Creating frame panel...");
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
@@ -785,7 +845,9 @@ public class Interface // TODO Javadoc
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(searchPanel, constraint);
+		getFrame().getContentPane().add(topPanel, constraint);
+		constraint.gridy = line++;
+		getFrame().getContentPane().add(separator, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
 		getFrame().getContentPane().add(avatarPanel, constraint);
@@ -935,7 +997,7 @@ public class Interface // TODO Javadoc
 			User currentUser = new User();
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
-			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, mode.getSelectedIndex()));
+			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, getSelectedMode()));
 			username.setBackground(Main.noticeColor);
 			username.setBorder(Main.noticeBorder);
 			boolean tracked = isUserTracked(jsonResponse.getString("username"));
@@ -946,7 +1008,7 @@ public class Interface // TODO Javadoc
 				}
 				catch(Exception e)
 				{}
-			Stats previousStats = currentUser.getStats(mode.getSelectedIndex());
+			Stats previousStats = currentUser.getStats(getSelectedMode());
 			track.setEnabled(true);
 			track.setSelected(tracked);
 			autoUpdateCheck.setEnabled(track.isSelected());
@@ -965,7 +1027,7 @@ public class Interface // TODO Javadoc
 			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
-			if(!currentUser.hasStatsChanged(!showerror, currentUser.getStats(mode.getSelectedIndex()), statsUser))
+			if(!currentUser.hasStatsChanged(!showerror, currentUser.getStats(getSelectedMode()), statsUser))
 				return;
 			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
@@ -1001,7 +1063,7 @@ public class Interface // TODO Javadoc
 			}
 			userNameFieldTextComponent.setText(currentUser.getUsername());
 			validButon.setIcon(iconRefresh);
-			currentUser.setStats(!showerror, statsUser, mode.getSelectedIndex());
+			currentUser.setStats(!showerror, statsUser, getSelectedMode());
 			if(tracked)
 			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
@@ -1010,7 +1072,7 @@ public class Interface // TODO Javadoc
 			}
 			lastUser = currentUser;
 			statsDateModel.removeAllElements();
-			for(String date : currentUser.getAvalidbleStatsDates(mode.getSelectedIndex()))
+			for(String date : currentUser.getAvalidbleStatsDates(getSelectedMode()))
 				statsDateModel.addElement(date);
 			lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
 		}
@@ -1210,5 +1272,57 @@ public class Interface // TODO Javadoc
 	public void refreshStats(boolean showerror)
 	{
 		getInfos(userNameFieldTextComponent.getText(), showerror);
+	}
+
+	private void switchMode(int mode)
+	{
+		buttonStandard.setEnabled(true);
+		buttonTaiko.setEnabled(true);
+		buttonCTB.setEnabled(true);
+		buttonMania.setEnabled(true);
+		switch(mode)
+		{
+			case 0:
+				buttonStandard.setEnabled(false);
+			break;
+			case 1:
+				buttonTaiko.setEnabled(false);
+			break;
+			case 2:
+				buttonCTB.setEnabled(false);
+			break;
+			case 3:
+				buttonMania.setEnabled(false);
+			break;
+		}
+		buttonStandard.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
+		buttonTaiko.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
+		buttonCTB.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
+		buttonMania.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
+	}
+
+	private int getSelectedMode()
+	{
+		if(!buttonTaiko.isEnabled())
+			return 1;
+		if(!buttonCTB.isEnabled())
+			return 2;
+		if(!buttonMania.isEnabled())
+			return 3;
+		return 0;
+	}
+
+	private String getModeName(int mode)
+	{
+		switch(mode)
+		{
+			case 1:
+				return "Taiko";
+			case 2:
+				return "Catch The Beat";
+			case 3:
+				return "osu!mania";
+		}
+		return "osu!";
 	}
 }
