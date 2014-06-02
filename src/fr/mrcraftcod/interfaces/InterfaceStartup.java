@@ -83,7 +83,7 @@ public class InterfaceStartup
 	 */
 	public void setStartupText(int step, String text)
 	{
-		Main.logger.log(Level.INFO, "Settign startup (" + step + ") text to " + text);
+		Main.logger.log(Level.INFO, "Setting startup (" + step + ") text to " + text);
 		if(label != null)
 		{
 			label.setText(text);
