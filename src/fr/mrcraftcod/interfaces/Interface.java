@@ -1027,8 +1027,8 @@ public class Interface // TODO Javadoc
 		URL url = new URL("https://osu.ppy.sh/api/" + type + "?" + urlParameters);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
-		connection.setConnectTimeout(15000);
-		connection.setReadTimeout(15000);
+		connection.setConnectTimeout(5000);
+		connection.setReadTimeout(5000);
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		connection.setRequestProperty("charset", "utf-8");
