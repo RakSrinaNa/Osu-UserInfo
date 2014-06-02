@@ -3,6 +3,7 @@ package fr.mrcraftcod.interfaces;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -115,7 +116,7 @@ public class Interface // TODO Javadoc
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
 	{
-		int pictureButtonSize = 24;
+		int pictureButtonSize = 20;
 		Main.logger.log(Level.FINE, "Loading icons...");
 		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
 		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
@@ -181,18 +182,23 @@ public class Interface // TODO Javadoc
 			{}
 		});
 		getFrame().setLayout(new GridBagLayout());
-		getFrame().setMinimumSize(new Dimension(550, 700));
-		getFrame().setPreferredSize(new Dimension(550, 700));
+		getFrame().setMinimumSize(new Dimension(575, 700));
+		getFrame().setPreferredSize(new Dimension(575, 700));
 		getFrame().setAlwaysOnTop(false);
 		getFrame().setIconImages(Main.icons);
 		getFrame().getContentPane().setBackground(Main.backColor);
 		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
 		Main.logger.log(Level.FINE, "Creating frame bar...");
+		Font menuBarFont = Main.fontMain.deriveFont(Font.PLAIN, 13);
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setFont(menuBarFont);
 		JMenu menuFile = new JMenu(Main.resourceBundle.getString("menu_bar_file"));
+		menuFile.setFont(menuBarFont);
 		JMenu menuHelp = new JMenu(Main.resourceBundle.getString("menu_bar_help"));
+		menuHelp.setFont(menuBarFont);
 		JMenuItem itemSettings = new JMenuItem(Main.resourceBundle.getString("settings"));
+		itemSettings.setFont(menuBarFont);
 		itemSettings.addActionListener(new ActionListener()
 		{
 			@Override
@@ -202,6 +208,7 @@ public class Interface // TODO Javadoc
 			}
 		});
 		JMenuItem itemAbout = new JMenuItem(Main.resourceBundle.getString("menu_bar_help_about"));
+		itemAbout.setFont(menuBarFont);
 		itemAbout.addActionListener(new ActionListener()
 		{
 			@Override
@@ -220,9 +227,11 @@ public class Interface // TODO Javadoc
 		JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBackground(Main.searchBarColor);
 		JLabel usernameAsk = new JLabel(Main.resourceBundle.getString("username") + " : ");
+		usernameAsk.setFont(Main.fontMain);
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
 		userNameField = new AutoComboBox(getTrackedUsers(), Main.config.getBoolean("autoCompletion", false));
+		userNameField.setFont(Main.fontMain);
 		userNameFieldModel = userNameField.getDefModel();
 		userNameField.setEditable(true);
 		userNameField.setPreferredSize(new Dimension(200, 30));
@@ -278,11 +287,13 @@ public class Interface // TODO Javadoc
 			{}
 		});
 		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "osu!mania"});
+		mode.setFont(Main.fontMain);
 		mode.setSelectedIndex(0);
 		mode.setBackground(Main.searchBarColor);
 		pictureButtonSize = 24;
 		mode.setRenderer(new ComboModeRenderer(new ImageIcon[] {new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), pictureButtonSize, pictureButtonSize))}));
 		validButon = new JButton(iconSearch);
+		validButon.setFont(Main.fontMain);
 		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
 		validButon.addActionListener(new ActionListener()
 		{
@@ -311,6 +322,8 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 3;
 		constraint.weightx = 0.1;
 		searchPanel.add(validButon, constraint);
+		/*************** MODE PANEL **********************/
+		// Construct
 		/***************** LEVEL PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating level panel...");
 		JPanel levelUserPanel = new JPanel(new BorderLayout());
@@ -321,6 +334,7 @@ public class Interface // TODO Javadoc
 		levelBar.setPreferredSize(dim);
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
+		levelBar.setFont(Main.fontMain.deriveFont(Font.BOLD, Main.fontMain.getSize()));
 		updateLevel(0D);
 		// Construct
 		levelUserPanel.add(levelBar, BorderLayout.NORTH);
@@ -330,6 +344,7 @@ public class Interface // TODO Javadoc
 		trackUserPanel.setBackground(Main.backColor);
 		track = new JCheckBox();
 		track.setText(Main.resourceBundle.getString("track_user"));
+		track.setFont(Main.fontMain);
 		track.setEnabled(false);
 		track.addActionListener(new ActionListener()
 		{
@@ -351,8 +366,10 @@ public class Interface // TODO Javadoc
 		});
 		lastStatsDate = new JLabel(Main.resourceBundle.getString("last_stats_date"));
 		lastStatsDate.setEnabled(track.isSelected());
+		lastStatsDate.setFont(Main.fontMain);
 		statsDateModel = new DefaultComboBoxModel<String>(new String[] {});
 		lastStatsDateBox = new JComboBox<String>(statsDateModel);
+		lastStatsDateBox.setFont(Main.fontMain);
 		lastStatsDateBox.setEnabled(track.isEnabled());
 		lastStatsDateBox.addItemListener(new ItemListener()
 		{
@@ -368,6 +385,7 @@ public class Interface // TODO Javadoc
 			}
 		});
 		autoUpdateCheck = new JCheckBox();
+		autoUpdateCheck.setFont(Main.fontMain);
 		autoUpdateCheck.setText(Main.resourceBundle.getString("settings_auto_update"));
 		autoUpdateCheck.setEnabled(false);
 		autoUpdateCheck.setSelected(false);
@@ -428,7 +446,7 @@ public class Interface // TODO Javadoc
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = lign++;
-		c.gridwidth = 3;
+		c.gridwidth = 2;
 		c.weightx = 1;
 		c.weighty = 1;
 		trackUserPanel.add(track, c);
@@ -461,6 +479,7 @@ public class Interface // TODO Javadoc
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")), picturesSize, picturesSize));
 		hitCount300 = new JLabel();
+		hitCount300.setFont(Main.fontMain);
 		hitCount300.setHorizontalAlignment(JLabel.CENTER);
 		hitCount300.setVerticalAlignment(JLabel.CENTER);
 		count300Panel.add(count300Picture);
@@ -475,6 +494,7 @@ public class Interface // TODO Javadoc
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")), picturesSize, picturesSize));
 		hitCount100 = new JLabel();
+		hitCount100.setFont(Main.fontMain);
 		hitCount100.setHorizontalAlignment(JLabel.CENTER);
 		hitCount100.setVerticalAlignment(JLabel.CENTER);
 		count100Panel.add(count100Picture);
@@ -490,6 +510,7 @@ public class Interface // TODO Javadoc
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")), picturesSize, picturesSize));
 		hitCount50 = new JLabel();
+		hitCount50.setFont(Main.fontMain);
 		hitCount50.setHorizontalAlignment(JLabel.CENTER);
 		hitCount50.setVerticalAlignment(JLabel.CENTER);
 		count50Panel.add(count50Picture);
@@ -527,6 +548,7 @@ public class Interface // TODO Javadoc
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")), picturesSize, picturesSize));
 		countSS = new JLabel();
+		countSS.setFont(Main.fontMain);
 		countSS.setHorizontalAlignment(JLabel.CENTER);
 		countSS.setVerticalAlignment(JLabel.CENTER);
 		ssPanel.add(ssPicture);
@@ -541,6 +563,7 @@ public class Interface // TODO Javadoc
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")), picturesSize, picturesSize));
 		countS = new JLabel();
+		countS.setFont(Main.fontMain);
 		countS.setHorizontalAlignment(JLabel.CENTER);
 		countS.setVerticalAlignment(JLabel.CENTER);
 		sPanel.add(sPicture);
@@ -555,6 +578,7 @@ public class Interface // TODO Javadoc
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")), picturesSize, picturesSize));
 		countA = new JLabel();
+		countA.setFont(Main.fontMain);
 		countA.setHorizontalAlignment(JLabel.CENTER);
 		countA.setVerticalAlignment(JLabel.CENTER);
 		aPanel.add(aPicture);
@@ -579,7 +603,9 @@ public class Interface // TODO Javadoc
 		avatarPanel.setBackground(Main.backColor);
 		int avatarSize = 128;
 		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize));
+		avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		avatar.setBackground(Main.backColor);
+		avatar.setToolTipText(Main.resourceBundle.getString("open_profile"));
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
@@ -601,21 +627,7 @@ public class Interface // TODO Javadoc
 			public void mousePressed(MouseEvent arg0)
 			{
 				if(arg0.getClickCount() > 1)
-				{
-					final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-					if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
-						try
-						{
-							String user_id = username.getText();
-							if(user_id.equalsIgnoreCase(""))
-								return;
-							desktop.browse(new URL("https://osu.ppy.sh/u/" + lastUser.getUserID()).toURI());
-						}
-						catch(final Exception e)
-						{
-							e.printStackTrace();
-						}
-				}
+					openUserProfile();
 			}
 
 			@Override
@@ -623,9 +635,36 @@ public class Interface // TODO Javadoc
 			{}
 		});
 		username = new JLabel(" ");
+		username.setToolTipText(Main.resourceBundle.getString("open_profile"));
+		username.addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseClicked(MouseEvent arg0)
+			{}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0)
+			{}
+
+			@Override
+			public void mouseExited(MouseEvent arg0)
+			{}
+
+			@Override
+			public void mousePressed(MouseEvent arg0)
+			{
+				if(arg0.getClickCount() > 1)
+					openUserProfile();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0)
+			{}
+		});
 		username.setOpaque(true);
+		username.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		username.setBackground(Main.backColor);
-		username.setFont(new Font(username.getFont().getName(), Font.PLAIN, 25));
+		username.setFont(Main.fontMain.deriveFont(Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.fill = GridBagConstraints.PAGE_START;
@@ -650,45 +689,57 @@ public class Interface // TODO Javadoc
 		otherPanel.setBorder(borderOther);
 		// PlayCount
 		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
+		playCountLabel.setFont(Main.fontMain);
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		playCountLabel.setVerticalAlignment(JLabel.CENTER);
 		playCount = new JLabel();
+		playCount.setFont(Main.fontMain);
 		playCount.setHorizontalAlignment(JLabel.LEFT);
 		playCount.setVerticalAlignment(JLabel.CENTER);
 		// RankedScore
 		JLabel rankedScoreLabel = new JLabel(Main.resourceBundle.getString("ranked_score") + " : ");
+		rankedScoreLabel.setFont(Main.fontMain);
 		rankedScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		rankedScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		rankedScore = new JLabel();
+		rankedScore.setFont(Main.fontMain);
 		rankedScore.setHorizontalAlignment(JLabel.LEFT);
 		rankedScore.setVerticalAlignment(JLabel.CENTER);
 		// TotalScore
 		JLabel totalScoreLabel = new JLabel(Main.resourceBundle.getString("total_score") + " : ");
+		totalScoreLabel.setFont(Main.fontMain);
 		totalScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		totalScore = new JLabel();
+		totalScore.setFont(Main.fontMain);
 		totalScore.setHorizontalAlignment(JLabel.LEFT);
 		totalScore.setVerticalAlignment(JLabel.CENTER);
 		// PP
 		JLabel ppCountLabel = new JLabel("PP : ");
+		ppCountLabel.setFont(Main.fontMain);
 		ppCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		ppCountLabel.setVerticalAlignment(JLabel.CENTER);
 		ppCount = new JLabel();
+		ppCount.setFont(Main.fontMain);
 		ppCount.setHorizontalAlignment(JLabel.LEFT);
 		ppCount.setVerticalAlignment(JLabel.CENTER);
 		// Accuracy
 		JLabel accuracyLabel = new JLabel(Main.resourceBundle.getString("accuracy") + " : ");
+		accuracyLabel.setFont(Main.fontMain);
 		accuracyLabel.setHorizontalAlignment(JLabel.RIGHT);
 		accuracyLabel.setVerticalAlignment(JLabel.CENTER);
 		accuracy = new JLabel();
+		accuracy.setFont(Main.fontMain);
 		accuracy.setHorizontalAlignment(JLabel.LEFT);
 		accuracy.setVerticalAlignment(JLabel.CENTER);
 		// Country
 		picturesSize = 16;
 		JLabel countryLabel = new JLabel(Main.resourceBundle.getString("country") + " : ");
+		countryLabel.setFont(Main.fontMain);
 		countryLabel.setHorizontalAlignment(JLabel.RIGHT);
 		countryLabel.setVerticalAlignment(JLabel.CENTER);
 		country = new JLabel();
+		country.setFont(Main.fontMain);
 		country.setHorizontalAlignment(JLabel.LEFT);
 		country.setVerticalAlignment(JLabel.CENTER);
 		countryFlag = new ImagePanel();
@@ -697,14 +748,13 @@ public class Interface // TODO Javadoc
 		countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		country = new JLabel();
-		country.setHorizontalAlignment(JLabel.LEFT);
-		country.setVerticalAlignment(JLabel.CENTER);
 		// Total hits
 		JLabel totalHitsLabel = new JLabel(Main.resourceBundle.getString("total_hits") + " : ");
+		totalHitsLabel.setFont(Main.fontMain);
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalHitsLabel.setVerticalAlignment(JLabel.CENTER);
 		totalHits = new JLabel();
+		totalHits.setFont(Main.fontMain);
 		totalHits.setHorizontalAlignment(JLabel.LEFT);
 		totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
@@ -750,7 +800,6 @@ public class Interface // TODO Javadoc
 		constraint.gridy = line++;
 		getFrame().getContentPane().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
-		constraint.insets = new Insets(0, 0, 0, 0);
 		getFrame().getContentPane().add(trackUserPanel, constraint);
 		Main.logger.log(Level.FINE, "Packing frame...");
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -758,6 +807,23 @@ public class Interface // TODO Javadoc
 		getFrame().pack();
 		getFrame().setVisible(true);
 		getFrame().toFront();
+	}
+
+	private void openUserProfile()
+	{
+		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+			try
+			{
+				String user_id = username.getText();
+				if(user_id.equalsIgnoreCase(""))
+					return;
+				desktop.browse(new URL("https://osu.ppy.sh/u/" + lastUser.getUserID()).toURI());
+			}
+			catch(final Exception e)
+			{
+				e.printStackTrace();
+			}
 	}
 
 	private void trackNewUser(User user) throws IOException

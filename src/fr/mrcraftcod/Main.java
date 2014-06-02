@@ -1,6 +1,7 @@
 package fr.mrcraftcod;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -81,6 +83,7 @@ public class Main
 	public static boolean testMode = true;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
 	public static Border noticeBorder;
+	public static Font fontMain;
 	private static ServerSocket socket;
 	private static ThreadUpdater threadUpdater;
 
@@ -136,6 +139,7 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
+		fontMain = new JLabel().getFont();
 		setLookAndFeel();
 		int currentStep = 0;
 		startup = new InterfaceStartup(4);

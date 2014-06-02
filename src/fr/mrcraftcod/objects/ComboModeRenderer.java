@@ -48,6 +48,7 @@ public class ComboModeRenderer implements ListCellRenderer
 		}
 		catch(Exception e)
 		{}
+		label.setFont(Main.fontMain);
 		label.setBorder(new EmptyBorder(2, 2, 2, 0));
 		label.setOpaque(true);
 		label.setBackground(Main.searchBarColor);
