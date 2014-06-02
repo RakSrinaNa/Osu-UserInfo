@@ -40,12 +40,14 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -54,6 +56,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
@@ -147,6 +150,17 @@ public class Interface // TODO Javadoc
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
 		getFrame().setFocusable(true);
 		getFrame().setVisible(false);
+		getFrame().getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "getInfos");
+		getFrame().getRootPane().getActionMap().put("getInfos", new AbstractAction()
+		{
+			private static final long serialVersionUID = -3422845002112474989L;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				getInfos(userNameFieldTextComponent.getText());
+			}
+		});
 		getFrame().addWindowListener(new WindowListener()
 		{
 			@Override
@@ -710,23 +724,23 @@ public class Interface // TODO Javadoc
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
-		getFrame().add(searchPanel, constraint);
+		getFrame().getContentPane().add(searchPanel, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
-		getFrame().add(avatarPanel, constraint);
+		getFrame().getContentPane().add(avatarPanel, constraint);
 		constraint.insets = new Insets(0, 0, 0, 0);
 		constraint.gridy = line++;
-		getFrame().add(levelUserPanel, constraint);
+		getFrame().getContentPane().add(levelUserPanel, constraint);
 		constraint.gridy = line++;
 		constraint.insets = new Insets(2, 4, 2, 4);
-		getFrame().add(otherPanel, constraint);
+		getFrame().getContentPane().add(otherPanel, constraint);
 		constraint.gridy = line++;
-		getFrame().add(hitCountPanel, constraint);
+		getFrame().getContentPane().add(hitCountPanel, constraint);
 		constraint.gridy = line++;
-		getFrame().add(ranksUserPanel, constraint);
+		getFrame().getContentPane().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
 		constraint.insets = new Insets(0, 0, 0, 0);
-		getFrame().add(trackUserPanel, constraint);
+		getFrame().getContentPane().add(trackUserPanel, constraint);
 		Main.logger.log(Level.FINE, "Packing frame...");
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		getFrame().setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
