@@ -25,6 +25,7 @@ import fr.mrcraftcod.interfaces.InterfaceStartup;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.LogFormatter;
+import fr.mrcraftcod.utils.ThreadUpdater;
 import fr.mrcraftcod.utils.Updater;
 
 /**
@@ -62,24 +63,26 @@ import fr.mrcraftcod.utils.Updater;
  * </p>
  * 
  * @author MrCraftCod
- * @version 1.4
+ * @version 1.6
  */
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.6b2";
+	public final static String VERSION = "1.6b3";
 	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
+	public static Interface frame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static boolean testMode = true;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
 	public static Border noticeBorder;
 	private static ServerSocket socket;
+	private static ThreadUpdater threadUpdater;
 
 	/**
 	 * Start the program.
@@ -167,7 +170,7 @@ public class Main
 				noticeColor = Color.WHITE;
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
-				new Interface();
+				frame = new Interface();
 			}
 			catch(Exception exception)
 			{
@@ -191,6 +194,20 @@ public class Main
 				return Locale.ENGLISH;
 			default:
 				return Locale.getDefault();
+		}
+	}
+
+	public static void setThreadUpdater(boolean state)
+	{
+		if(state)
+		{
+			if(threadUpdater == null)
+				threadUpdater = new ThreadUpdater();
+		}
+		else if(threadUpdater != null)
+		{
+			threadUpdater.stop();
+			threadUpdater = null;
 		}
 	}
 

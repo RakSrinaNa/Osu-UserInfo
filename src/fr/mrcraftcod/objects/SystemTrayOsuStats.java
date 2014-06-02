@@ -15,7 +15,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.interfaces.Interface;
 
 /**
  * The system tray icon of the app.
@@ -68,7 +67,7 @@ public class SystemTrayOsuStats
 			@Override
 			public void actionPerformed(final ActionEvent e)
 			{
-				Interface.exit();
+				Main.frame.exit();
 				remove();
 			}
 		});
@@ -119,7 +118,7 @@ public class SystemTrayOsuStats
 	 */
 	public static void showUpFrame()
 	{
-		Interface.backFromTray();
+		Main.frame.backFromTray();
 	}
 
 	/**

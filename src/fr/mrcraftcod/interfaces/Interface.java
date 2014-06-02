@@ -81,23 +81,20 @@ import fr.mrcraftcod.utils.CountryCode;
 
 public class Interface // TODO Javadoc
 {
-	private static JFrame frame;
+	private JFrame frame;
 	private JTextComponent userNameFieldTextComponent;
-	private DefaultComboBoxModel<String> userNameFieldModel;
 	private ImageIcon iconRefresh, iconSearch;
 	private BufferedImage avatarDefaultImage;
-	private static AutoComboBox userNameField;
 	private ImagePanel avatar, countryFlag;
-	private JComboBox<String> mode;
+	private AutoComboBox userNameField;
+	private JComboBox<String> mode, lastStatsDateBox;
+	private DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
 	private JButton validButon;
-	private User lastUser = new User();
-	private JComboBox<String> lastStatsDateBox;
-	private JLabel totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
+	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
-	private JCheckBox track;
+	private JCheckBox track, autoUpdateCheck;
 	private Date lastPost = new Date(0);
-	private JLabel lastStatsDate;
-	private DefaultComboBoxModel<String> statsDateModel;
+	private User lastUser = new User();
 
 	public enum Mods
 	{
@@ -136,7 +133,7 @@ public class Interface // TODO Javadoc
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				getInfos(userNameFieldTextComponent.getText());
+				refreshStats(true);
 			}
 		});
 		getFrame().addWindowListener(new WindowListener()
@@ -269,7 +266,7 @@ public class Interface // TODO Javadoc
 			public void keyPressed(KeyEvent arg0)
 			{
 				if(KeyEvent.VK_ENTER == arg0.getExtendedKeyCode())
-					getInfos(userNameFieldTextComponent.getText());
+					refreshStats(true);
 			}
 
 			@Override
@@ -292,7 +289,7 @@ public class Interface // TODO Javadoc
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				getInfos(userNameFieldTextComponent.getText());
+				refreshStats(true);
 			}
 		});
 		// Construct panel
@@ -370,6 +367,18 @@ public class Interface // TODO Javadoc
 				updateInfos(lastUser.getUsername(), lastUser.getStats(mode.getSelectedIndex()), lastUser.getStatsByModeAndDate(mode.getSelectedIndex(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
 			}
 		});
+		autoUpdateCheck = new JCheckBox();
+		autoUpdateCheck.setText(Main.resourceBundle.getString("settings_auto_update"));
+		autoUpdateCheck.setEnabled(false);
+		autoUpdateCheck.setSelected(false);
+		autoUpdateCheck.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				Main.setThreadUpdater(autoUpdateCheck.isSelected());
+			}
+		});
 		int logoSize = 28;
 		ImagePanel forumLink = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), logoSize, logoSize));
 		forumLink.setBackground(Main.backColor);
@@ -423,6 +432,8 @@ public class Interface // TODO Javadoc
 		c.weightx = 1;
 		c.weighty = 1;
 		trackUserPanel.add(track, c);
+		c.gridy = lign++;
+		trackUserPanel.add(autoUpdateCheck, c);
 		c.gridwidth = 1;
 		c.gridy = lign++;
 		c.weightx = 0.1;
@@ -431,9 +442,6 @@ public class Interface // TODO Javadoc
 		c.weightx = 1;
 		trackUserPanel.add(lastStatsDateBox, c);
 		c.anchor = GridBagConstraints.LINE_END;
-		c.gridx = 2;
-		c.weightx = 5;
-		trackUserPanel.add(forumLink, c);
 		/***************** HITS PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
@@ -761,6 +769,7 @@ public class Interface // TODO Javadoc
 		user.serialize(new File(Configuration.appData, user.getUsername()));
 		lastStatsDate.setEnabled(track.isSelected());
 		lastStatsDateBox.setEnabled(track.isSelected());
+		autoUpdateCheck.setEnabled(track.isSelected());
 		setTrackedUser(users);
 	}
 
@@ -774,6 +783,7 @@ public class Interface // TODO Javadoc
 		new File(Configuration.appData, user.getUsername()).delete();
 		lastStatsDate.setEnabled(track.isSelected());
 		lastStatsDateBox.setEnabled(track.isSelected());
+		autoUpdateCheck.setEnabled(track.isSelected());
 		setTrackedUser(users);
 	}
 
@@ -813,7 +823,7 @@ public class Interface // TODO Javadoc
 		return buffered;
 	}
 
-	private static String[] getCode(String link) throws IOException
+	private String[] getCode(String link) throws IOException
 	{
 		final URL url = new URL(link);
 		StringBuilder page = new StringBuilder();
@@ -830,7 +840,7 @@ public class Interface // TODO Javadoc
 		return page.toString().split("\n");
 	}
 
-	public static String getLineCodeFromLink(final String link, final String... gets) throws Exception
+	public String getLineCodeFromLink(final String link, final String... gets) throws Exception
 	{
 		final String[] lines = getCode(link);
 		for(final String get : gets)
@@ -846,7 +856,7 @@ public class Interface // TODO Javadoc
 		return colors[new Random().nextInt(colors.length)];
 	}
 
-	private void getInfos(String user)
+	private void getInfos(String user, boolean showerror)
 	{
 		if(new Date().getTime() - lastPost.getTime() < 1000)
 			return;
@@ -859,9 +869,9 @@ public class Interface // TODO Javadoc
 			User currentUser = new User();
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
+			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, mode.getSelectedIndex()));
 			username.setBackground(Main.noticeColor);
 			username.setBorder(Main.noticeBorder);
-			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, mode.getSelectedIndex()));
 			boolean tracked = isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
@@ -873,10 +883,12 @@ public class Interface // TODO Javadoc
 			Stats previousStats = currentUser.getStats(mode.getSelectedIndex());
 			track.setEnabled(true);
 			track.setSelected(tracked);
+			autoUpdateCheck.setEnabled(track.isSelected());
 			if(!lastUser.getUsername().equals(jsonResponse.getString("username")))
 			{
 				avatar.setImage(null);
 				countryFlag.setImage(null);
+				autoUpdateCheck.setSelected(false);
 			}
 			currentUser.setUsername(jsonResponse.getString("username"));
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
@@ -887,6 +899,8 @@ public class Interface // TODO Javadoc
 			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
+			if(!currentUser.hasStatsChanged(!showerror, currentUser.getStats(mode.getSelectedIndex()), statsUser))
+				return;
 			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
@@ -921,7 +935,7 @@ public class Interface // TODO Javadoc
 			}
 			userNameFieldTextComponent.setText(currentUser.getUsername());
 			validButon.setIcon(iconRefresh);
-			currentUser.setStats(statsUser, mode.getSelectedIndex());
+			currentUser.setStats(!showerror, statsUser, mode.getSelectedIndex());
 			if(tracked)
 			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
@@ -936,9 +950,12 @@ public class Interface // TODO Javadoc
 		}
 		catch(JSONException | IOException e)
 		{
-			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
-			userNameField.setBackground(Color.RED);
-			userNameFieldTextComponent.setBackground(Color.RED);
+			if(showerror)
+			{
+				Main.logger.log(Level.SEVERE, "Error reading infos!", e);
+				userNameField.setBackground(Color.RED);
+				userNameFieldTextComponent.setBackground(Color.RED);
+			}
 		}
 		catch(Exception e)
 		{
@@ -1023,7 +1040,7 @@ public class Interface // TODO Javadoc
 		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(level), progress));
 	}
 
-	synchronized public static String sendPost(String type, String key, String user, int selectedMode) throws Exception
+	public synchronized static String sendPost(String type, String key, String user, int selectedMode) throws Exception
 	{
 		Main.logger.log(Level.INFO, "Sending post request...");
 		String urlParameters = "k=" + key + "&u=" + user + "&m=" + selectedMode + "&type=string&event_days=1";
@@ -1081,44 +1098,50 @@ public class Interface // TODO Javadoc
 		return result;
 	}
 
-	public static void hideFrame()
+	public void hideFrame()
 	{
 		getFrame().setEnabled(false);
 		getFrame().setFocusable(false);
 	}
 
-	public static void showFrame()
+	public void showFrame()
 	{
 		getFrame().setEnabled(true);
 		getFrame().setFocusable(true);
 		getFrame().setVisible(true);
 	}
 
-	public static void exit()
+	public void exit()
 	{
 		Main.logger.log(Level.INFO, "Exiting main frame...");
+		Main.setThreadUpdater(false);
 		getFrame().dispose();
 	}
 
-	public static void backFromTray()
+	public void backFromTray()
 	{
 		getFrame().setState(JFrame.NORMAL);
 		showFrame();
 		getFrame().toFront();
 	}
 
-	public static JFrame getFrame()
+	public JFrame getFrame()
 	{
 		return frame;
 	}
 
-	public static void setFrame(JFrame frame)
+	public void setFrame(JFrame frame)
 	{
-		Interface.frame = frame;
+		this.frame = frame;
 	}
 
-	public static void updateAutoCompletion(boolean status)
+	public void updateAutoCompletion(boolean status)
 	{
 		userNameField.setAutoCompletion(status);
+	}
+
+	public void refreshStats(boolean showerror)
+	{
+		getInfos(userNameFieldTextComponent.getText(), showerror);
 	}
 }

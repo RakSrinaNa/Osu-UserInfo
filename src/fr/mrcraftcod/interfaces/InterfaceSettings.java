@@ -154,8 +154,8 @@ public class InterfaceSettings
 		frame.setPreferredSize(new Dimension(frameWidth, frameHeight));
 		frame.setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setLocationRelativeTo(Interface.getFrame());
-		Interface.hideFrame();
+		frame.setLocationRelativeTo(Main.frame.getFrame());
+		Main.frame.hideFrame();
 		frame.toFront();
 		frame.pack();
 	}
@@ -211,7 +211,7 @@ public class InterfaceSettings
 			Main.config.writeVar("statsToKeep", numberKeepStats.getText());
 			Main.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
 		}
-		Interface.updateAutoCompletion(autoCompletionCheck.isSelected());
+		Main.frame.updateAutoCompletion(autoCompletionCheck.isSelected());
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class InterfaceSettings
 	{
 		if(save)
 			save();
-		Interface.showFrame();
+		Main.frame.showFrame();
 		frame.dispose();
 	}
 

@@ -70,13 +70,13 @@ public class InterfaceAbout
 			@Override
 			public void windowClosed(WindowEvent arg0)
 			{
-				Interface.showFrame();
+				Main.frame.showFrame();
 			}
 
 			@Override
 			public void windowClosing(WindowEvent arg0)
 			{
-				Interface.showFrame();
+				Main.frame.showFrame();
 			}
 
 			@Override
@@ -166,7 +166,7 @@ public class InterfaceAbout
 		frame.pack();
 		frame.setVisible(true);
 		frame.toFront();
-		Interface.hideFrame();
+		Main.frame.hideFrame();
 	}
 
 	/**
