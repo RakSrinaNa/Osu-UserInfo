@@ -79,7 +79,6 @@ import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
 
-//TODO icon en bas, langue choix
 public class Interface // TODO Javadoc
 {
 	private static JFrame frame;
@@ -121,30 +120,9 @@ public class Interface // TODO Javadoc
 	{
 		int pictureButtonSize = 24;
 		Main.logger.log(Level.FINE, "Loading icons...");
-		try
-		{
-			iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
-		}
-		catch(Exception e)
-		{
-			Main.logger.log(Level.SEVERE, "", e);
-		}
-		try
-		{
-			iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
-		}
-		catch(Exception e)
-		{
-			Main.logger.log(Level.SEVERE, "", e);
-		}
-		try
-		{
-			avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
-		}
-		catch(Exception e)
-		{
-			Main.logger.log(Level.SEVERE, "", e);
-		}
+		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
+		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
+		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		/************** FRAME INFOS ********************/
 		Main.logger.log(Level.FINE, "Setting frame options...");
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
@@ -244,7 +222,6 @@ public class Interface // TODO Javadoc
 		Main.logger.log(Level.FINE, "Creating search panel...");
 		JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBackground(Main.searchBarColor);
-		// searchPanel.setBackground(Main.backColor);
 		JLabel usernameAsk = new JLabel(Main.resourceBundle.getString("username") + " : ");
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
@@ -306,41 +283,8 @@ public class Interface // TODO Javadoc
 		mode = new JComboBox<String>(new String[] {"osu!", "Taiko", "CTB", "osu!mania"});
 		mode.setSelectedIndex(0);
 		mode.setBackground(Main.searchBarColor);
-		ImageIcon iconStandard = null, iconTaiko = null, iconCTB = null, iconMania = null;
 		pictureButtonSize = 24;
-		try
-		{
-			iconStandard = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), pictureButtonSize, pictureButtonSize));
-		}
-		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
-		}
-		try
-		{
-			iconTaiko = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), pictureButtonSize, pictureButtonSize));
-		}
-		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
-		}
-		try
-		{
-			iconCTB = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), pictureButtonSize, pictureButtonSize));
-		}
-		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
-		}
-		try
-		{
-			iconMania = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), pictureButtonSize, pictureButtonSize));
-		}
-		catch(Exception e)
-		{
-			Main.logger.log(Level.WARNING, "Failed to load mode image", e);
-		}
-		mode.setRenderer(new ComboModeRenderer(new ImageIcon[] {iconStandard, iconTaiko, iconCTB, iconMania}));
+		mode.setRenderer(new ComboModeRenderer(new ImageIcon[] {new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), pictureButtonSize, pictureButtonSize)), new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), pictureButtonSize, pictureButtonSize))}));
 		validButon = new JButton(iconSearch);
 		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
 		validButon.addActionListener(new ActionListener()
@@ -385,7 +329,7 @@ public class Interface // TODO Javadoc
 		levelUserPanel.add(levelBar, BorderLayout.NORTH);
 		/***************** TRACK PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating track panel...");
-		JPanel trackUserPanel = new JPanel(new MigLayout());
+		JPanel trackUserPanel = new JPanel(new GridBagLayout());
 		trackUserPanel.setBackground(Main.backColor);
 		track = new JCheckBox();
 		track.setText(Main.resourceBundle.getString("track_user"));
@@ -426,10 +370,70 @@ public class Interface // TODO Javadoc
 				updateInfos(lastUser.getUsername(), lastUser.getStats(mode.getSelectedIndex()), lastUser.getStatsByModeAndDate(mode.getSelectedIndex(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
 			}
 		});
+		int logoSize = 28;
+		ImagePanel forumLink = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), logoSize, logoSize));
+		forumLink.setBackground(Main.backColor);
+		forumLink.setMinimumSize(new Dimension(logoSize, logoSize));
+		forumLink.setPreferredSize(new Dimension(logoSize, logoSize));
+		forumLink.setMaximumSize(new Dimension(logoSize, logoSize));
+		forumLink.addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseClicked(MouseEvent arg0)
+			{}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0)
+			{}
+
+			@Override
+			public void mouseExited(MouseEvent arg0)
+			{}
+
+			@Override
+			public void mousePressed(MouseEvent arg0)
+			{
+				if(arg0.getClickCount() > 1)
+				{
+					final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+					if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+						try
+						{
+							desktop.browse(new URL("https://osu.ppy.sh/forum/p/3094583").toURI());
+						}
+						catch(final Exception e)
+						{
+							e.printStackTrace();
+						}
+				}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0)
+			{}
+		});
 		// Construct
-		trackUserPanel.add(track, new CC().cell(0, 0).alignX("left"));
-		trackUserPanel.add(lastStatsDate, new CC().cell(0, 1).alignX("right"));
-		trackUserPanel.add(lastStatsDateBox, new CC().cell(1, 1).alignX("right"));
+		int lign = 0;
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = lign++;
+		c.gridwidth = 3;
+		c.weightx = 1;
+		c.weighty = 1;
+		trackUserPanel.add(track, c);
+		c.gridwidth = 1;
+		c.gridy = lign++;
+		c.weightx = 0.1;
+		trackUserPanel.add(lastStatsDate, c);
+		c.gridx = 1;
+		c.weightx = 1;
+		trackUserPanel.add(lastStatsDateBox, c);
+		c.anchor = GridBagConstraints.LINE_END;
+		c.gridx = 2;
+		c.weightx = 5;
+		trackUserPanel.add(forumLink, c);
 		/***************** HITS PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
@@ -566,7 +570,7 @@ public class Interface // TODO Javadoc
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		avatarPanel.setBackground(Main.backColor);
 		int avatarSize = 128;
-		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), 128, 128));
+		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize));
 		avatar.setBackground(Main.backColor);
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
@@ -588,7 +592,6 @@ public class Interface // TODO Javadoc
 			@Override
 			public void mousePressed(MouseEvent arg0)
 			{
-				System.out.println(arg0.getClickCount());
 				if(arg0.getClickCount() > 1)
 				{
 					final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -697,7 +700,7 @@ public class Interface // TODO Javadoc
 		totalHits.setHorizontalAlignment(JLabel.LEFT);
 		totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
-		int lign = 0;
+		lign = 0;
 		otherPanel.add(playCountLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(playCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(rankedScoreLabel, new CC().cell(0, lign).alignX("right"));
