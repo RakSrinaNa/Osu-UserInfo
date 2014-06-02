@@ -52,7 +52,7 @@ public class InterfaceAbout
 	public InterfaceAbout(Component parent)
 	{
 		traducers = new HashMap<String, String>();
-		traducers.put("Italian", "TheHowl");
+		traducers.put(Main.resourceBundle.getString("italian"), "TheHowl");
 		frame = new JFrame("About");
 		frame.setVisible(false);
 		frame.setLayout(new BorderLayout());

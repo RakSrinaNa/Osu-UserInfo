@@ -113,7 +113,6 @@ public class Main
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
 		Main.logger.log(Level.INFO, "Opening resource bundle...");
-		Locale l = getLocale(config.getString("locale", null));
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", getLocale(config.getString("locale", null)));
 		try
 		{

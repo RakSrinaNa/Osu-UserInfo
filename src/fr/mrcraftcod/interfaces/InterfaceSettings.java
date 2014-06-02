@@ -97,7 +97,7 @@ public class InterfaceSettings
 		});
 		languageBox = new JComboBox<String>(getLanguages());
 		languageBox.setSelectedItem(getLang(Main.config.getString("locale", null)));
-		JLabel languageText = new JLabel("Prefered language : ");
+		JLabel languageText = new JLabel(Main.resourceBundle.getString("pref_language"));
 		autoCompletionCheck = new JCheckBox();
 		autoCompletionCheck.setText(Main.resourceBundle.getString("settings_auto_completion"));
 		autoCompletionCheck.setSelected(Main.config.getBoolean("autoCompletion", false));
@@ -152,10 +152,10 @@ public class InterfaceSettings
 
 	private String[] getLanguages()
 	{
-		languages.put("System language", null);
-		languages.put("English", "en");
-		languages.put("French", "fr");
-		languages.put("Italian", "it");
+		languages.put(Main.resourceBundle.getString("system_language"), null);
+		languages.put(Main.resourceBundle.getString("english"), "en");
+		languages.put(Main.resourceBundle.getString("french"), "fr");
+		languages.put(Main.resourceBundle.getString("italian"), "it");
 		return languages.keySet().toArray(new String[languages.keySet().size()]);
 	}
 
