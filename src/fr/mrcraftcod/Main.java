@@ -67,7 +67,7 @@ import fr.mrcraftcod.utils.Updater;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.6b1";
+	public final static String VERSION = "1.6b2";
 	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
