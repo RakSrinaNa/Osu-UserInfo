@@ -290,6 +290,22 @@ public class Main
 		{
 			e.printStackTrace();
 		}
+		try
+		{
+			Thread.sleep(250);
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 		socket = null;
+		try
+		{
+			Thread.sleep(250);
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
