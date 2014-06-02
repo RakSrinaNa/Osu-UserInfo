@@ -1,6 +1,8 @@
 package fr.mrcraftcod.interfaces;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -14,8 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import net.miginfocom.layout.CC;
-import net.miginfocom.swing.MigLayout;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 
@@ -47,10 +47,11 @@ public class InterfaceSettings
 		int frameWidth = 400;
 		frame = new JFrame(Main.resourceBundle.getString("settings"));
 		frame.setIconImages(Main.icons);
-		frame.setLayout(new MigLayout());
+		frame.setLayout(new GridBagLayout());
 		frame.setResizable(true);
 		frame.setAlwaysOnTop(false);
 		frame.setVisible(true);
+		frame.getContentPane().setBackground(Main.backColor);
 		frame.addWindowListener(new WindowListener()
 		{
 			@Override
@@ -117,23 +118,41 @@ public class InterfaceSettings
 			}
 		});
 		textNumberKeepStats = new JLabel(Main.resourceBundle.getString("settings_number_stats_to_keep"));
-		textNumberKeepStats.setHorizontalAlignment(JLabel.RIGHT);
-		textNumberKeepStats.setVerticalAlignment(JLabel.CENTER);
 		numberKeepStats = new JTextField();
 		numberKeepStats.setDocument(new JTextFieldLimitNumbers(3));
 		numberKeepStats.setText(String.valueOf(Main.numberTrackedStatsToKeep));
 		int lign = 0;
-		// TODO better layout
-		frame.add(autoCompletionCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
-		frame.add(devModeCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
-		frame.add(systemTrayCheck, new CC().cell(0, lign++, 2, 1).alignX("left").grow());
-		frame.add(textNumberKeepStats, new CC().cell(0, lign, 1, 1).alignX("left"));
-		frame.add(numberKeepStats, new CC().cell(1, lign++, 1, 1).alignX("left").gapLeft("5").grow());
-		frame.add(languageText, new CC().cell(0, lign, 1, 1).alignX("left").grow());
-		frame.add(languageBox, new CC().cell(1, lign++, 1, 1).alignX("left").grow());
-		frame.add(buttonReturn, new CC().cell(0, lign++, 2, 1).alignX("center").grow());
-		int frameHeight = lign * 40 + 20;
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.PAGE_START;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = lign++;
+		c.gridwidth = 2;
+		c.weightx = 1;
+		c.weighty = 1;
+		frame.add(autoCompletionCheck, c);
+		c.gridy = lign++;
+		frame.add(devModeCheck, c);
+		c.gridy = lign++;
+		frame.add(systemTrayCheck, c);
+		c.gridwidth = 1;
+		c.gridx = 0;
+		c.gridy = lign++;
+		frame.add(textNumberKeepStats, c);
+		c.gridx = 1;
+		frame.add(numberKeepStats, c);
+		c.gridy = lign++;
+		c.gridx = 0;
+		frame.add(languageText, c);
+		c.gridx = 1;
+		frame.add(languageBox, c);
+		c.gridwidth = 2;
+		c.gridy = lign++;
+		c.gridx = 0;
+		frame.add(buttonReturn, c);
+		int frameHeight = lign * 30 + 20;
 		frame.setPreferredSize(new Dimension(frameWidth, frameHeight));
+		frame.setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setLocationRelativeTo(Interface.getFrame());
 		Interface.hideFrame();
