@@ -74,7 +74,7 @@ import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.AutoComboBox;
 import fr.mrcraftcod.objects.GhostText;
 import fr.mrcraftcod.objects.ImagePanel;
-import fr.mrcraftcod.objects.JButtonMenu;
+import fr.mrcraftcod.objects.JButtonMode;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
@@ -92,7 +92,7 @@ public class Interface // TODO Javadoc
 	private JComboBox<String> lastStatsDateBox;
 	private DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
 	private JButton validButon;
-	private JButtonMenu buttonStandard, buttonTaiko, buttonCTB, buttonMania;
+	private JButtonMode buttonStandard, buttonTaiko, buttonCTB, buttonMania;
 	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track, autoUpdateCheck;
@@ -319,10 +319,21 @@ public class Interface // TODO Javadoc
 		/*************** MODE PANEL **********************/
 		Main.logger.log(Level.FINE, "Creating mode panel...");
 		int iconSize = 16;
+		Color colorButtonModeSelected = new Color(231, 228, 252);
+		Color colorButtonModeUnselected = new Color(190, 168, 244);
+		Color colorButtonBorder = new Color(151, 140, 208);
+		Color colorTextSelected = new Color(55, 67, 166);
+		Color colorTextUnselected = new Color(255, 255, 255);
 		JPanel modePanel = new JPanel(new GridBagLayout());
 		modePanel.setBackground(Main.searchBarColor);
-		buttonStandard = new JButtonMenu("osu!");
-		buttonStandard.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
+		buttonStandard = new JButtonMode("osu!");
+		buttonStandard.setBackground(colorButtonModeSelected);
+		buttonStandard.setDisabledBackground(colorButtonModeUnselected);
+		buttonStandard.setBorderColor(colorButtonBorder);
+		buttonStandard.setDisabledTextColor(colorTextUnselected);
+		buttonStandard.setForeground(colorTextSelected);
+		buttonStandard.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
+		buttonStandard.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
 		buttonStandard.setFocusPainted(false);
 		buttonStandard.addActionListener(new ActionListener()
 		{
@@ -332,8 +343,14 @@ public class Interface // TODO Javadoc
 				switchMode(0);
 			}
 		});
-		buttonTaiko = new JButtonMenu("Taiko");
-		buttonTaiko.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
+		buttonTaiko = new JButtonMode("Taiko");
+		buttonTaiko.setBackground(colorButtonModeSelected);
+		buttonTaiko.setDisabledBackground(colorButtonModeUnselected);
+		buttonTaiko.setBorderColor(colorButtonBorder);
+		buttonTaiko.setDisabledTextColor(colorTextUnselected);
+		buttonTaiko.setForeground(colorTextSelected);
+		buttonTaiko.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
+		buttonTaiko.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
 		buttonTaiko.setFocusPainted(false);
 		buttonTaiko.addActionListener(new ActionListener()
 		{
@@ -343,8 +360,14 @@ public class Interface // TODO Javadoc
 				switchMode(1);
 			}
 		});
-		buttonCTB = new JButtonMenu("Catch The Beat");
-		buttonCTB.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
+		buttonCTB = new JButtonMode("Catch The Beat");
+		buttonCTB.setBackground(colorButtonModeSelected);
+		buttonCTB.setDisabledBackground(colorButtonModeUnselected);
+		buttonCTB.setBorderColor(colorButtonBorder);
+		buttonCTB.setDisabledTextColor(colorTextUnselected);
+		buttonCTB.setForeground(colorTextSelected);
+		buttonCTB.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
+		buttonCTB.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
 		buttonCTB.setFocusPainted(false);
 		buttonCTB.addActionListener(new ActionListener()
 		{
@@ -354,8 +377,14 @@ public class Interface // TODO Javadoc
 				switchMode(2);
 			}
 		});
-		buttonMania = new JButtonMenu("osu!mania");
-		buttonMania.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
+		buttonMania = new JButtonMode("osu!mania");
+		buttonMania.setBackground(colorButtonModeSelected);
+		buttonMania.setDisabledBackground(colorButtonModeUnselected);
+		buttonMania.setBorderColor(colorButtonBorder);
+		buttonMania.setDisabledTextColor(colorTextUnselected);
+		buttonMania.setForeground(colorTextSelected);
+		buttonMania.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
+		buttonMania.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
 		buttonMania.setFocusPainted(false);
 		buttonMania.addActionListener(new ActionListener()
 		{
