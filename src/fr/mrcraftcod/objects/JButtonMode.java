@@ -50,7 +50,7 @@ public class JButtonMode extends JButton
 			g2.setColor(this.disabledTextColor);
 		}
 		FontMetrics fm = g2.getFontMetrics();
-		int x = (d.width - fm.stringWidth(this.getText())) / 2;
+		int x = (d.width - fm.stringWidth(this.getText()) + iconMode.getIconWidth()) / 2;
 		int y = (fm.getAscent() + (d.height - (fm.getAscent() + fm.getDescent())) / 2);
 		g2.drawString(this.getText(), x, y);
 		if(this.isEnabled())
