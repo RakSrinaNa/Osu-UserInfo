@@ -74,6 +74,7 @@ import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.AutoComboBox;
 import fr.mrcraftcod.objects.GhostText;
 import fr.mrcraftcod.objects.ImagePanel;
+import fr.mrcraftcod.objects.JButtonMenu;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
@@ -90,7 +91,8 @@ public class Interface // TODO Javadoc
 	private AutoComboBox userNameField;
 	private JComboBox<String> lastStatsDateBox;
 	private DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
-	private JButton validButon, buttonStandard, buttonTaiko, buttonCTB, buttonMania;
+	private JButton validButon;
+	private JButtonMenu buttonStandard, buttonTaiko, buttonCTB, buttonMania;
 	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track, autoUpdateCheck;
@@ -319,7 +321,7 @@ public class Interface // TODO Javadoc
 		int iconSize = 16;
 		JPanel modePanel = new JPanel(new GridBagLayout());
 		modePanel.setBackground(Main.searchBarColor);
-		buttonStandard = new JButton("osu!");
+		buttonStandard = new JButtonMenu("osu!");
 		buttonStandard.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
 		buttonStandard.setFocusPainted(false);
 		buttonStandard.addActionListener(new ActionListener()
@@ -330,7 +332,7 @@ public class Interface // TODO Javadoc
 				switchMode(0);
 			}
 		});
-		buttonTaiko = new JButton("Taiko");
+		buttonTaiko = new JButtonMenu("Taiko");
 		buttonTaiko.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
 		buttonTaiko.setFocusPainted(false);
 		buttonTaiko.addActionListener(new ActionListener()
@@ -341,7 +343,7 @@ public class Interface // TODO Javadoc
 				switchMode(1);
 			}
 		});
-		buttonCTB = new JButton("Catch The Beat");
+		buttonCTB = new JButtonMenu("Catch The Beat");
 		buttonCTB.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
 		buttonCTB.setFocusPainted(false);
 		buttonCTB.addActionListener(new ActionListener()
@@ -352,7 +354,7 @@ public class Interface // TODO Javadoc
 				switchMode(2);
 			}
 		});
-		buttonMania = new JButton("osu!mania");
+		buttonMania = new JButtonMenu("osu!mania");
 		buttonMania.setIcon(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
 		buttonMania.setFocusPainted(false);
 		buttonMania.addActionListener(new ActionListener()
