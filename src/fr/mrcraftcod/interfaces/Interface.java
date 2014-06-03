@@ -319,8 +319,8 @@ public class Interface // TODO Javadoc
 		/*************** MODE PANEL **********************/
 		Main.logger.log(Level.FINE, "Creating mode panel...");
 		int iconSize = 16;
-		Color colorButtonModeSelected = new Color(190, 168, 244);
-		Color colorButtonModeUnselected = new Color(231, 228, 252);
+		Color colorButtonModeSelected = new Color(231, 228, 252);
+		Color colorButtonModeUnselected = new Color(190, 168, 244);
 		Color colorButtonBorder = new Color(151, 140, 208);
 		JPanel modePanel = new JPanel(new GridBagLayout());
 		modePanel.setBackground(Main.searchBarColor);
