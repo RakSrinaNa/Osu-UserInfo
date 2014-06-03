@@ -21,6 +21,12 @@ public class JButtonMode extends JButton
 	public JButtonMode(String string)
 	{
 		super(string);
+		Dimension dim = this.getPreferredSize();
+		dim.setSize(dim.getWidth(), dim.getHeight() + 3);
+		this.setSize(dim);
+		this.setMinimumSize(dim);
+		this.setPreferredSize(dim);
+		this.setMaximumSize(dim);
 		borderSize = 2;
 	}
 
