@@ -332,7 +332,8 @@ public class Interface // TODO Javadoc
 		buttonStandard.setBorderColor(colorButtonBorder);
 		buttonStandard.setDisabledTextColor(colorTextUnselected);
 		buttonStandard.setForeground(colorTextSelected);
-		buttonStandard.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
+		buttonStandard.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
+		buttonStandard.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
 		buttonStandard.setFocusPainted(false);
 		buttonStandard.addActionListener(new ActionListener()
 		{
@@ -348,7 +349,8 @@ public class Interface // TODO Javadoc
 		buttonTaiko.setBorderColor(colorButtonBorder);
 		buttonTaiko.setDisabledTextColor(colorTextUnselected);
 		buttonTaiko.setForeground(colorTextSelected);
-		buttonTaiko.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
+		buttonTaiko.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
+		buttonTaiko.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
 		buttonTaiko.setFocusPainted(false);
 		buttonTaiko.addActionListener(new ActionListener()
 		{
@@ -364,7 +366,8 @@ public class Interface // TODO Javadoc
 		buttonCTB.setBorderColor(colorButtonBorder);
 		buttonCTB.setDisabledTextColor(colorTextUnselected);
 		buttonCTB.setForeground(colorTextSelected);
-		buttonCTB.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
+		buttonCTB.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
+		buttonCTB.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
 		buttonCTB.setFocusPainted(false);
 		buttonCTB.addActionListener(new ActionListener()
 		{
@@ -378,8 +381,10 @@ public class Interface // TODO Javadoc
 		buttonMania.setBackground(colorButtonModeSelected);
 		buttonMania.setDisabledBackground(colorButtonModeUnselected);
 		buttonMania.setBorderColor(colorButtonBorder);
+		buttonMania.setDisabledTextColor(colorTextUnselected);
 		buttonMania.setForeground(colorTextSelected);
-		buttonMania.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
+		buttonMania.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
+		buttonMania.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
 		buttonMania.setFocusPainted(false);
 		buttonMania.addActionListener(new ActionListener()
 		{
