@@ -239,7 +239,6 @@ public class Interface // TODO Javadoc
 		userNameField.setEditable(true);
 		userNameField.setPreferredSize(new Dimension(200, 30));
 		userNameField.setSelectedItem(null);
-		userNameField.setToolTipText(Main.resourceBundle.getString("ghost_username_field"));
 		userNameFieldTextComponent = (JTextComponent) userNameField.getEditor().getEditorComponent();
 		userNameFieldTextComponent.getDocument().addDocumentListener(new DocumentListener()
 		{
@@ -1330,10 +1329,6 @@ public class Interface // TODO Javadoc
 				buttonMania.setEnabled(false);
 			break;
 		}
-		buttonStandard.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
-		buttonTaiko.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
-		buttonCTB.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
-		buttonMania.setToolTipText(String.format(Main.resourceBundle.getString("mode_selected"), getModeName(getSelectedMode())));
 		getInfos(lastUser.getUsername(), false);
 	}
 
@@ -1348,6 +1343,7 @@ public class Interface // TODO Javadoc
 		return 0;
 	}
 
+	@SuppressWarnings("unused")
 	private String getModeName(int mode)
 	{
 		switch(mode)
