@@ -39,11 +39,13 @@ public class InterfaceStartup
 		getFrame().setIconImages(Main.icons);
 		getFrame().setBackground(new Color(0, 255, 0, 0));
 		label = new JLabel();
+		label.setFont(Main.fontMain);
 		label.setForeground(new Color(255, 255, 255));
 		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setVerticalAlignment(JLabel.CENTER);
 		progressBar = new JProgressBar(0, maxStep);
 		progressBar.setStringPainted(true);
+		progressBar.setFont(Main.fontMain);
 		refreshProgressBarStep();
 		getFrame().getContentPane().add(progressBar, BorderLayout.NORTH);
 		getFrame().getContentPane().add(label, BorderLayout.SOUTH);
@@ -83,7 +85,7 @@ public class InterfaceStartup
 	 */
 	public void setStartupText(int step, String text)
 	{
-		Main.logger.log(Level.INFO, "Settign startup (" + step + ") text to " + text);
+		Main.logger.log(Level.INFO, "Setting startup (" + step + ") text to " + text);
 		if(label != null)
 		{
 			label.setText(text);

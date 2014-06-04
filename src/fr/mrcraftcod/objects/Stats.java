@@ -13,7 +13,7 @@ import fr.mrcraftcod.interfaces.Interface;
  * 
  * @author MrCraftCod
  */
-public class Stats implements Serializable
+public class Stats implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -3548705459172185871L;
 	private int mode;
@@ -40,6 +40,24 @@ public class Stats implements Serializable
 	public double getRank()
 	{
 		return rank;
+	}
+
+	public Stats clone()
+	{
+		return this;
+	}
+
+	public boolean equals(Stats stats)
+	{
+		if(stats == null)
+			return false;
+		if(this.getPlaycount() != stats.getPlaycount())
+			return false;
+		if(this.getTotalHits() != stats.getTotalHits())
+			return false;
+		if(this.getTotalScore() != stats.getTotalScore())
+			return false;
+		return true;
 	}
 
 	/**

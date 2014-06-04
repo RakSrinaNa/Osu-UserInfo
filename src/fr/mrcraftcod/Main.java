@@ -1,6 +1,7 @@
 package fr.mrcraftcod;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -24,6 +26,7 @@ import fr.mrcraftcod.interfaces.InterfaceStartup;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.LogFormatter;
+import fr.mrcraftcod.utils.ThreadUpdater;
 import fr.mrcraftcod.utils.Updater;
 
 /**
@@ -61,24 +64,27 @@ import fr.mrcraftcod.utils.Updater;
  * </p>
  * 
  * @author MrCraftCod
- * @version 1.4
+ * @version 1.6
  */
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.6b1";
+	public final static String VERSION = "1.6b7";
 	private final static String logFileName = "log.log";
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
 	public static InterfaceStartup startup;
+	public static Interface frame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static boolean testMode = true;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
 	public static Border noticeBorder;
+	public static Font fontMain;
 	private static ServerSocket socket;
+	private static ThreadUpdater threadUpdater;
 
 	/**
 	 * Start the program.
@@ -112,7 +118,7 @@ public class Main
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
 		Main.logger.log(Level.INFO, "Opening resource bundle...");
-		resourceBundle = ResourceBundle.getBundle("resources/lang/lang");
+		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", getLocale(config.getString("locale", null)));
 		try
 		{
 			setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
@@ -132,6 +138,7 @@ public class Main
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
+		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
 		setLookAndFeel();
 		int currentStep = 0;
 		startup = new InterfaceStartup(4);
@@ -166,7 +173,7 @@ public class Main
 				noticeColor = Color.WHITE;
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
-				new Interface();
+				frame = new Interface();
 			}
 			catch(Exception exception)
 			{
@@ -174,6 +181,37 @@ public class Main
 			}
 		}
 		startup.exit();
+	}
+
+	private static Locale getLocale(String string)
+	{
+		if(string == null)
+			return Locale.getDefault();
+		switch(string)
+		{
+			case "fr":
+				return Locale.FRENCH;
+			case "it":
+				return Locale.ITALIAN;
+			case "en":
+				return Locale.ENGLISH;
+			default:
+				return Locale.getDefault();
+		}
+	}
+
+	public static void setThreadUpdater(boolean state)
+	{
+		if(state)
+		{
+			if(threadUpdater == null)
+				threadUpdater = new ThreadUpdater();
+		}
+		else if(threadUpdater != null)
+		{
+			threadUpdater.stop();
+			threadUpdater = null;
+		}
 	}
 
 	/**
@@ -239,5 +277,34 @@ public class Main
 	public static void setSocket(ServerSocket socket)
 	{
 		Main.socket = socket;
+	}
+
+	public static void exit()
+	{
+		try
+		{
+			socket.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+			Thread.sleep(250);
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		socket = null;
+		try
+		{
+			Thread.sleep(250);
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

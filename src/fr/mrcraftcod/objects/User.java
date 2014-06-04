@@ -80,21 +80,21 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
-	public void setStats(Stats stats, int mode)
+	public void setStats(boolean hard, Stats stats, int mode)
 	{
 		switch(mode)
 		{
 			case 0:
-				setStatsOsuStandard(stats);
+				setStatsOsuStandard(hard, stats);
 				return;
 			case 1:
-				setStatsTaiko(stats);
+				setStatsTaiko(hard, stats);
 				return;
 			case 2:
-				setStatsCTB(stats);
+				setStatsCTB(hard, stats);
 				return;
 			case 3:
-				setStatsOsuMania(stats);
+				setStatsOsuMania(hard, stats);
 				return;
 		}
 		throw new IllegalArgumentException("Mode must be between 0 and 3!");
@@ -183,14 +183,13 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
-	private boolean hasStatsChanged(Stats previousStats, Stats newStats)
+	public boolean hasStatsChanged(boolean hard, Stats previousStats, Stats newStats)
 	{
 		if(previousStats == null)
 			return true;
-		if(true)
+		if(!hard)
 			return true;
-		boolean b = !(newStats.compareAccuracy(previousStats).equals("") && newStats.comparePlayCount(previousStats).equals("") && newStats.comparePP(previousStats).equals("") && newStats.compareRank(previousStats).equals("") && newStats.compareRankedScore(previousStats).equals("") && newStats.compareTotalHits(previousStats).equals(""));
-		return b;
+		return !(newStats.compareAccuracy(previousStats).equals("") && newStats.comparePlayCount(previousStats).equals("") && newStats.comparePP(previousStats).equals("") && newStats.compareRank(previousStats).equals("") && newStats.compareRankedScore(previousStats).equals("") && newStats.compareTotalHits(previousStats).equals(""));
 	}
 
 	/**
@@ -239,11 +238,11 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
-	public void setStatsOsuStandard(Stats stats)
+	public void setStatsOsuStandard(boolean hard, Stats stats)
 	{
 		while(this.stats_normal.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_normal.remove(0);
-		if(hasStatsChanged(this.getStats(0), stats))
+		if(hasStatsChanged(hard, this.getStats(0), stats))
 			this.stats_normal.add(stats);
 		else
 		{
@@ -280,11 +279,11 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
-	public void setStatsTaiko(Stats stats)
+	public void setStatsTaiko(boolean hard, Stats stats)
 	{
 		while(this.stats_taiko.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_taiko.remove(0);
-		if(hasStatsChanged(this.getStats(1), stats))
+		if(hasStatsChanged(hard, this.getStats(1), stats))
 			this.stats_taiko.add(stats);
 		else
 		{
@@ -321,11 +320,11 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
-	public void setStatsCTB(Stats stats)
+	public void setStatsCTB(boolean hard, Stats stats)
 	{
 		while(this.stats_ctb.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_ctb.remove(0);
-		if(hasStatsChanged(this.getStats(2), stats))
+		if(hasStatsChanged(hard, this.getStats(2), stats))
 			this.stats_ctb.add(stats);
 		else
 		{
@@ -362,11 +361,11 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
-	public void setStatsOsuMania(Stats stats)
+	public void setStatsOsuMania(boolean hard, Stats stats)
 	{
 		while(this.stats_mania.size() > Main.numberTrackedStatsToKeep + 1)
 			this.stats_mania.remove(0);
-		if(hasStatsChanged(this.getStats(3), stats))
+		if(hasStatsChanged(hard, this.getStats(3), stats))
 			this.stats_mania.add(stats);
 		else
 		{

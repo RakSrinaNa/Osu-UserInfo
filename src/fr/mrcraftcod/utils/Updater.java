@@ -49,9 +49,9 @@ public class Updater
 		{
 			URL url = new URL(link);
 			request = (HttpURLConnection) url.openConnection();
+			request.setReadTimeout(5000);
+			request.setConnectTimeout(5000);
 			request.connect();
-			request.setReadTimeout(60000);
-			request.setConnectTimeout(60000);
 			rbc = Channels.newChannel(request.getInputStream());
 			fos = new FileOutputStream(updateFile);
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -99,9 +99,9 @@ public class Updater
 		{
 			URL url = new URL(link);
 			request = (HttpURLConnection) url.openConnection();
+			request.setReadTimeout(30000);
+			request.setConnectTimeout(30000);
 			request.connect();
-			request.setReadTimeout(60000);
-			request.setConnectTimeout(60000);
 			rbc = Channels.newChannel(request.getInputStream());
 			fos = new FileOutputStream(newFile);
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -227,6 +227,7 @@ public class Updater
 			{
 				Main.startup.setPercent(100);
 				JOptionPane.showMessageDialog(context, String.format(Main.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
+				Main.exit();
 				String javaHome = System.getProperty("java.home");
 				File f = new File(javaHome);
 				f = new File(f, "bin");
@@ -302,8 +303,6 @@ public class Updater
 				return false;
 			else if(actualSubVersion < upToDateSubVersion)
 				return false;
-			if(actualGlobalVersion == upToDateGlobalVersion && actualSubVersion == upToDateSubVersion)
-				return true;
 			if(actualBetaVersion < upToDateBetaVersion)
 				return false;
 		}
