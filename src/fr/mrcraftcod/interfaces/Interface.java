@@ -62,7 +62,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -1116,7 +1115,7 @@ public class Interface // TODO Javadoc
 			updateInfos(currentUser.getUsername(), statsUser, previousStats);
 			if(!lastUser.getUsername().equals(jsonResponse.get("username")))
 			{
-				SwingUtilities.invokeLater(new Runnable()
+				Runnable task = new Runnable()
 				{
 					@Override
 					public void run()
@@ -1131,7 +1130,8 @@ public class Interface // TODO Javadoc
 							e.printStackTrace();
 						}
 					}
-				});
+				};
+				new Thread(task, "ThreadImages").start();
 			}
 			userNameFieldTextComponent.setText(currentUser.getUsername());
 			validButon.setIcon(iconRefresh);
