@@ -129,6 +129,7 @@ public class Interface // TODO Javadoc
 		/************** FRAME INFOS ********************/
 		Main.logger.log(Level.FINE, "Setting frame options...");
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
+		getFrame().setBackground(Main.backColor);
 		getFrame().setFocusable(true);
 		getFrame().setVisible(false);
 		getFrame().getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "getInfos");
@@ -301,6 +302,8 @@ public class Interface // TODO Javadoc
 				refreshStats(true);
 			}
 		});
+		JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
+		separator.setPreferredSize(new Dimension(100, 100));
 		// Construct panel
 		GridBagConstraints constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.CENTER;
@@ -317,6 +320,12 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 2;
 		constraint.weightx = 0.1;
 		searchPanel.add(validButon, constraint);
+		constraint.insets = new Insets(1, 0, 0, 0);
+		constraint.gridy = 1;
+		constraint.gridx = 0;
+		constraint.weightx = 1;
+		constraint.gridwidth = 3;
+		searchPanel.add(separator, constraint);
 		/*************** MODE PANEL **********************/
 		Main.logger.log(Level.FINE, "Creating mode panel...");
 		int iconSize = 16;
@@ -326,7 +335,7 @@ public class Interface // TODO Javadoc
 		Color colorTextSelected = new Color(55, 67, 166);
 		Color colorTextUnselected = new Color(255, 255, 255);
 		JPanel modePanel = new JPanel(new GridBagLayout());
-		modePanel.setBackground(Main.searchBarColor);
+		modePanel.setBackground(Main.backColor);
 		modePanel.addComponentListener(new ComponentListener()
 		{
 			@Override
@@ -898,11 +907,6 @@ public class Interface // TODO Javadoc
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
-		JSeparator separator = new JSeparator();
-		JPanel topPanel = new JPanel(new BorderLayout());
-		topPanel.setBackground(Main.searchBarColor);
-		topPanel.add(searchPanel, BorderLayout.NORTH);
-		topPanel.add(modePanel, BorderLayout.SOUTH);
 		Main.logger.log(Level.FINE, "Creating frame panel...");
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
@@ -913,14 +917,16 @@ public class Interface // TODO Javadoc
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(topPanel, constraint);
+		getFrame().getContentPane().add(searchPanel, constraint);
+		constraint.insets = new Insets(1, 0, 2, 0);
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(separator, constraint);
+		getFrame().getContentPane().add(modePanel, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
 		getFrame().getContentPane().add(avatarPanel, constraint);
 		constraint.insets = new Insets(0, 0, 0, 0);
 		constraint.gridy = line++;
+		constraint.fill = GridBagConstraints.BOTH;
 		getFrame().getContentPane().add(levelUserPanel, constraint);
 		constraint.gridy = line++;
 		constraint.insets = new Insets(2, 4, 2, 4);
