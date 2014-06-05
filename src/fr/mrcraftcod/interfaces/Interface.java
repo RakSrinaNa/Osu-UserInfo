@@ -1040,7 +1040,7 @@ public class Interface // TODO Javadoc
 		return trackedList;
 	}
 
-	private BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
+	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
 	{
 		if(image == null)
 			return image;
@@ -1091,7 +1091,8 @@ public class Interface // TODO Javadoc
 			return;
 		if(user.length() < 1)
 			return;
-		Main.logger.log(Level.FINE, "TGetting user infos " + user);
+		Main.logger.log(Level.FINE, "Getting user infos " + user);
+		InterfaceLoading load = new InterfaceLoading(frame);
 		lastPost = new Date();
 		userNameField.setBackground(null);
 		userNameFieldTextComponent.setBackground(null);
@@ -1131,7 +1132,10 @@ public class Interface // TODO Javadoc
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
 			if(statsUser.equals(lastStats))
+			{
+				load.close();
 				return;
+			}
 			lastStats = statsUser;
 			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
@@ -1194,6 +1198,7 @@ public class Interface // TODO Javadoc
 		{
 			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
 		}
+		load.close();
 	}
 
 	private void updateInfos(String user, Stats currentStats, Stats previousStats)
@@ -1427,5 +1432,17 @@ public class Interface // TODO Javadoc
 				return "osu!mania";
 		}
 		return "osu!";
+	}
+
+	public void activate()
+	{
+		frame.setFocusable(true);
+		frame.setEnabled(true);
+	}
+
+	public void desactivate()
+	{
+		frame.setFocusable(false);
+		frame.setEnabled(false);
 	}
 }
