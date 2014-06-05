@@ -242,6 +242,7 @@ public class Interface // TODO Javadoc
 				{
 					JPanel p = (JPanel) e.getSource();
 					Dimension d = p.getSize();
+					System.out.println(d);
 					d.height = 36;
 					p.setSize(d);
 				}
@@ -333,7 +334,7 @@ public class Interface // TODO Javadoc
 		separator.setPreferredSize(new Dimension(100, 100));
 		// Construct panel
 		GridBagConstraints constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.anchor = GridBagConstraints.LINE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.gridwidth = 1;
 		constraint.weightx = 0.1;
@@ -469,8 +470,8 @@ public class Interface // TODO Javadoc
 		switchMode(0);
 		// Construct
 		constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.CENTER;
-		constraint.fill = GridBagConstraints.BOTH;
+		constraint.anchor = GridBagConstraints.LINE_START;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.gridwidth = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
@@ -496,7 +497,7 @@ public class Interface // TODO Javadoc
 		levelBar.setFont(Main.fontMain.deriveFont(Font.BOLD, Main.fontMain.getSize()));
 		updateLevel(0D);
 		// Construct
-		levelUserPanel.add(levelBar, BorderLayout.NORTH);
+		levelUserPanel.add(levelBar, BorderLayout.CENTER);
 		/***************** TRACK PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating track panel...");
 		JPanel trackUserPanel = new JPanel(new GridBagLayout());
@@ -618,7 +619,6 @@ public class Interface // TODO Javadoc
 		c.gridx = 1;
 		c.weightx = 1;
 		trackUserPanel.add(lastStatsDateBox, c);
-		c.anchor = GridBagConstraints.LINE_END;
 		/***************** HITS PANEL ********************/
 		Main.logger.log(Level.FINE, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
@@ -744,7 +744,7 @@ public class Interface // TODO Javadoc
 		aPanel.add(countA);
 		// Construct
 		constraint = new GridBagConstraints();
-		constraint.anchor = GridBagConstraints.CENTER;
+		constraint.anchor = GridBagConstraints.LINE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.gridwidth = 1;
 		constraint.weightx = 1;
@@ -826,7 +826,7 @@ public class Interface // TODO Javadoc
 		username.setFont(Main.fontMain.deriveFont(Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
-		constraint.fill = GridBagConstraints.PAGE_START;
+		constraint.fill = GridBagConstraints.LINE_START;
 		constraint.anchor = GridBagConstraints.CENTER;
 		constraint.gridwidth = 3;
 		constraint.weightx = 0.1;
