@@ -1085,14 +1085,20 @@ public class Interface // TODO Javadoc
 		return colors[new Random().nextInt(colors.length)];
 	}
 
-	private void getInfos(String user, boolean showerror)
+	private boolean getInfos(String user, boolean showerror)
+	{
+		InterfaceLoading load = new InterfaceLoading(frame, user, showerror);
+		load.execute();
+		return true;
+	}
+
+	public boolean getInfosServer(String user, boolean showerror)
 	{
 		if(new Date().getTime() - lastPost.getTime() < 1000)
-			return;
+			return false;
 		if(user.length() < 1)
-			return;
+			return false;
 		Main.logger.log(Level.FINE, "Getting user infos " + user);
-		InterfaceLoading load = new InterfaceLoading(frame);
 		lastPost = new Date();
 		userNameField.setBackground(null);
 		userNameFieldTextComponent.setBackground(null);
@@ -1132,10 +1138,7 @@ public class Interface // TODO Javadoc
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
 			if(statsUser.equals(lastStats))
-			{
-				load.close();
-				return;
-			}
+				return false;
 			lastStats = statsUser;
 			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
@@ -1193,12 +1196,14 @@ public class Interface // TODO Javadoc
 				userNameField.setBackground(Color.RED);
 				userNameFieldTextComponent.setBackground(Color.RED);
 			}
+			return false;
 		}
 		catch(Exception e)
 		{
 			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
+			return false;
 		}
-		load.close();
+		return true;
 	}
 
 	private void updateInfos(String user, Stats currentStats, Stats previousStats)

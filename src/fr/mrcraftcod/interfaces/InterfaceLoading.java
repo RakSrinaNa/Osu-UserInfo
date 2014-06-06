@@ -2,23 +2,29 @@ package fr.mrcraftcod.interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.util.Date;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingWorker;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.TransparentPane;
 
-public class InterfaceLoading
+public class InterfaceLoading extends SwingWorker<Boolean, String>
 {
-	private JFrame frame;
+	private JDialog frame;
+	private String user;
+	private boolean hard;
 
-	public InterfaceLoading(Component parent)
+	public InterfaceLoading(Frame parent, String user, boolean hard)
 	{
 		System.out.println(new Date().getTime());
-		frame = new JFrame();
+		this.user = user;
+		this.hard = hard;
+		frame = new JDialog(parent);
 		frame.setUndecorated(true);
 		frame.setContentPane(new TransparentPane(new BorderLayout()));
 		frame.setTitle(Main.resourceBundle.getString("loading"));
@@ -36,13 +42,30 @@ public class InterfaceLoading
 		frame.setVisible(true);
 		frame.toFront();
 		frame.pack();
-		Main.frame.desactivate();
+		try
+		{
+			Main.frame.desactivate();
+		}
+		catch(Exception e)
+		{}
 	}
 
-	public void close()
+	@Override
+	protected Boolean doInBackground() throws Exception
+	{
+		return Main.frame.getInfosServer(user, hard);
+	}
+
+	@Override
+	protected void done()
 	{
 		System.out.println(new Date().getTime());
-		Main.frame.activate();
+		try
+		{
+			Main.frame.activate();
+		}
+		catch(Exception e)
+		{}
 		frame.dispose();
 	}
 }
