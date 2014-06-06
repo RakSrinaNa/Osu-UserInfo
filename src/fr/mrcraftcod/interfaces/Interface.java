@@ -412,7 +412,7 @@ public class Interface // TODO Javadoc
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				switchMode(0);
+				switchMode(0, true);
 			}
 		});
 		buttonTaiko = new JButtonMode("Taiko");
@@ -429,7 +429,7 @@ public class Interface // TODO Javadoc
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				switchMode(1);
+				switchMode(1, true);
 			}
 		});
 		buttonCTB = new JButtonMode("Catch The Beat");
@@ -446,7 +446,7 @@ public class Interface // TODO Javadoc
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				switchMode(2);
+				switchMode(2, true);
 			}
 		});
 		buttonMania = new JButtonMode("osu!mania");
@@ -463,10 +463,10 @@ public class Interface // TODO Javadoc
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				switchMode(3);
+				switchMode(3, true);
 			}
 		});
-		switchMode(0);
+		switchMode(0, false);
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.CENTER;
@@ -1389,7 +1389,7 @@ public class Interface // TODO Javadoc
 		getInfos(userNameFieldTextComponent.getText(), showerror);
 	}
 
-	private void switchMode(int mode)
+	private void switchMode(int mode, boolean checkInfos)
 	{
 		buttonStandard.setEnabled(true);
 		buttonTaiko.setEnabled(true);
@@ -1410,7 +1410,8 @@ public class Interface // TODO Javadoc
 				buttonMania.setEnabled(false);
 			break;
 		}
-		getInfos(lastUser.getUsername(), false);
+		if(checkInfos)
+			getInfos(lastUser.getUsername(), false);
 	}
 
 	private int getSelectedMode()

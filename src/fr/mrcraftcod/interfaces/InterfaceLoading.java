@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.util.Date;
+import java.awt.Point;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -21,9 +21,13 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 
 	public InterfaceLoading(Frame parent, String user, boolean hard)
 	{
-		System.out.println(new Date().getTime());
 		this.user = user;
 		this.hard = hard;
+		initFrame(parent);
+	}
+
+	private void initFrame(Frame parent)
+	{
 		frame = new JDialog(parent);
 		frame.setUndecorated(true);
 		frame.setContentPane(new TransparentPane(new BorderLayout()));
@@ -37,8 +41,11 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 		icon.setImageObserver(label);
 		frame.getContentPane().add(label, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setLocationRelativeTo(parent);
 		frame.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+		Point p = parent.getLocation();
+		System.out.println(p);
+		p.setLocation(p.getX() + (parent.getSize().getWidth() / 2) - (icon.getIconWidth() / 2), p.getY() + (parent.getSize().getHeight() / 2) - (icon.getIconHeight() / 2));
+		frame.setLocation(p);
 		frame.setVisible(true);
 		frame.toFront();
 		frame.pack();
@@ -59,7 +66,6 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 	@Override
 	protected void done()
 	{
-		System.out.println(new Date().getTime());
 		try
 		{
 			Main.frame.activate();
