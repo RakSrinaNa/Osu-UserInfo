@@ -1087,7 +1087,7 @@ public class Interface // TODO Javadoc
 
 	private boolean getInfos(String user, boolean showerror)
 	{
-		InterfaceLoading load = new InterfaceLoading(frame, user, showerror);
+		InterfaceLoading load = new InterfaceLoading(frame, user, showerror, Main.config.getBoolean("loadingScreen", true));
 		load.execute();
 		return true;
 	}

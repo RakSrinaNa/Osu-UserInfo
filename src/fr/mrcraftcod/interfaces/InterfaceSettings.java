@@ -29,9 +29,7 @@ import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 public class InterfaceSettings
 {
 	public JFrame frame;
-	private JCheckBox autoCompletionCheck;
-	private JCheckBox devModeCheck;
-	private JCheckBox systemTrayCheck;
+	private JCheckBox autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
 	private JComboBox<String> languageBox;
 	private LinkedHashMap<String, String> languages;
 	private JButton buttonReturn;
@@ -99,6 +97,9 @@ public class InterfaceSettings
 		languageBox = new JComboBox<String>(getLanguages());
 		languageBox.setSelectedItem(getLang(Main.config.getString("locale", null)));
 		JLabel languageText = new JLabel(Main.resourceBundle.getString("pref_language"));
+		loadingCheck = new JCheckBox();
+		loadingCheck.setText(Main.resourceBundle.getString("settings_loading_screen"));
+		loadingCheck.setSelected(Main.config.getBoolean("loadingScreen", true));
 		autoCompletionCheck = new JCheckBox();
 		autoCompletionCheck.setText(Main.resourceBundle.getString("settings_auto_completion"));
 		autoCompletionCheck.setSelected(Main.config.getBoolean("autoCompletion", false));
@@ -133,6 +134,8 @@ public class InterfaceSettings
 		frame.add(autoCompletionCheck, c);
 		c.gridy = lign++;
 		frame.add(devModeCheck, c);
+		c.gridy = lign++;
+		frame.add(loadingCheck, c);
 		c.gridy = lign++;
 		frame.add(systemTrayCheck, c);
 		c.gridwidth = 1;
@@ -205,6 +208,7 @@ public class InterfaceSettings
 		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
 		Main.config.writeVar("devMode", String.valueOf(devModeCheck.isSelected()));
 		Main.config.writeVar("reduceTray", String.valueOf(systemTrayCheck.isSelected()));
+		Main.config.writeVar("loadingScreen", String.valueOf(loadingCheck.isSelected()));
 		Main.config.writeVar("locale", languages.get(languageBox.getSelectedItem()));
 		if(!numberKeepStats.getText().equals("") && !numberKeepStats.getText().equals("0"))
 		{
@@ -234,6 +238,6 @@ public class InterfaceSettings
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Main.config.getString("locale", null) != languages.get(languageBox.getSelectedItem())) || !(Main.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
+		return !(Main.config.getBoolean("loadingScreen", true) == loadingCheck.isSelected()) || !(Main.config.getString("locale", null) != languages.get(languageBox.getSelectedItem())) || !(Main.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
 	}
 }

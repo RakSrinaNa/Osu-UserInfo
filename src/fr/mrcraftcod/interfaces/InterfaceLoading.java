@@ -19,11 +19,12 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 	private String user;
 	private boolean hard;
 
-	public InterfaceLoading(Frame parent, String user, boolean hard)
+	public InterfaceLoading(Frame parent, String user, boolean hard, boolean openFrame)
 	{
 		this.user = user;
 		this.hard = hard;
-		initFrame(parent);
+		if(openFrame)
+			initFrame(parent);
 	}
 
 	private void initFrame(Frame parent)
@@ -71,6 +72,7 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 		}
 		catch(Exception e)
 		{}
-		frame.dispose();
+		if(frame != null)
+			frame.dispose();
 	}
 }
