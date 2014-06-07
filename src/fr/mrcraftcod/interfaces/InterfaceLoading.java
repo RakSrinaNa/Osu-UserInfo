@@ -47,7 +47,6 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 		p.setLocation(p.getX() + (parent.getSize().getWidth() / 2) - (icon.getIconWidth() / 2), p.getY() + (parent.getSize().getHeight() / 2) - (icon.getIconHeight() / 2));
 		frame.setLocation(p);
 		frame.setVisible(true);
-		frame.toFront();
 		frame.pack();
 		try
 		{
