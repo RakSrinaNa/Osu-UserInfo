@@ -757,7 +757,7 @@ public class Interface // TODO Javadoc
 			username.setForeground(getColorUser());
 			updateStatsDates(currentUser);
 			displayStats(currentUser, currentStats);
-			updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats);
+			updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats, true);
 			setValidButonIcon("R");
 			userNameFieldTextComponent.setText(currentUser.getUsername());
 			currentUser.setStats(!showerror, currentStats, getSelectedMode());
@@ -800,10 +800,10 @@ public class Interface // TODO Javadoc
 
 	public void updateTrackedInfos()
 	{
-		updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate()));
+		updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate()), true);
 	}
 
-	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats)
+	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		username.setText("<html><div>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </div></html>");
@@ -812,6 +812,10 @@ public class Interface // TODO Javadoc
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
+		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
+		{
+			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), currentStats.getDiffRank(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
+		}
 	}
 
 	private void updateLevel(double level)

@@ -474,4 +474,25 @@ public class Stats implements Serializable, Cloneable
 	{
 		this.setTotalHits(this.getCount300() + this.getCount100() + this.getCount50());
 	}
+
+	public double getDiffRank(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return Math.abs(previousStats.getRank() - this.getRank());
+	}
+
+	public int getDiffPlayCount(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return this.getPlaycount() - previousStats.getPlaycount();
+	}
+
+	public long getDiffTotalHits(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return this.getTotalHits() - previousStats.getTotalHits();
+	}
 }
