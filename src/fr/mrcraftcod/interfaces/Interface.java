@@ -242,7 +242,6 @@ public class Interface // TODO Javadoc
 				{
 					JPanel p = (JPanel) e.getSource();
 					Dimension d = p.getSize();
-					System.out.println(d);
 					d.height = 36;
 					p.setSize(d);
 				}
@@ -536,12 +535,12 @@ public class Interface // TODO Javadoc
 			@Override
 			public void itemStateChanged(ItemEvent e)
 			{
-				if(e.getStateChange() != 1)
+				if(e.getStateChange() != ItemEvent.SELECTED)
 					return;
 				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 				SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
 				DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
-				updateInfos(lastUser.getUsername(), lastUser.getStats(getSelectedMode()), lastUser.getStatsByModeAndDate(getSelectedMode(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
+				updateInfos(lastUser.getUsername(), lastUser.getStats(getSelectedMode()), lastUser.getStatsByModeAndDate(getSelectedMode(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()), true, "b");
 			}
 		});
 		autoUpdateCheck = new JCheckBox();
@@ -1152,7 +1151,7 @@ public class Interface // TODO Javadoc
 			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count300")) + " (" + decimalFormat.format((jsonResponse.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count100")) + " (" + decimalFormat.format((jsonResponse.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count50")) + " (" + decimalFormat.format((jsonResponse.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
-			updateInfos(currentUser.getUsername(), statsUser, previousStats);
+			updateInfos(currentUser.getUsername(), statsUser, previousStats, true, "a");
 			if(!lastUser.getUsername().equals(jsonResponse.get("username")))
 			{
 				Runnable task = new Runnable()
@@ -1206,7 +1205,7 @@ public class Interface // TODO Javadoc
 		return true;
 	}
 
-	private void updateInfos(String user, Stats currentStats, Stats previousStats)
+	private void updateInfos(String user, Stats currentStats, Stats previousStats, boolean showNotification, String s)
 	{
 		Main.logger.log(Level.INFO, "Updating tracked infos...");
 		username.setText("  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  ");
@@ -1215,6 +1214,8 @@ public class Interface // TODO Javadoc
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
+		if(showNotification && !(currentStats.getDiffRank(previousStats) == 0))
+			new InterfaceNotification(String.format(Main.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Main.resourceBundle.getString("won") : Main.resourceBundle.getString("lost"), currentStats.getDiffRank(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
 	}
 
 	private synchronized BufferedImage getAvatar(String userID) throws Exception
