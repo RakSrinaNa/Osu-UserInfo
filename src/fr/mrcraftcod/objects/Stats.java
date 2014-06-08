@@ -299,7 +299,7 @@ public class Stats implements Serializable, Cloneable
 		double delta = previousStats.getRank() - this.getRank();
 		if(delta == 0D)
 			return "";
-		return " (" + getArrow(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return "<font color=" + (delta >= 0 ? "green" : "red") + ">(" + getArrow(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")</font>";
 	}
 
 	/**

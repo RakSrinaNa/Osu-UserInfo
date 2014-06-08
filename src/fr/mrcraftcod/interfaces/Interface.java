@@ -242,7 +242,6 @@ public class Interface // TODO Javadoc
 				{
 					JPanel p = (JPanel) e.getSource();
 					Dimension d = p.getSize();
-					System.out.println(d);
 					d.height = 36;
 					p.setSize(d);
 				}
@@ -1209,7 +1208,7 @@ public class Interface // TODO Javadoc
 	private void updateInfos(String user, Stats currentStats, Stats previousStats)
 	{
 		Main.logger.log(Level.INFO, "Updating tracked infos...");
-		username.setText("  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  ");
+		username.setText("<html><div>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </div></html>");
 		accuracy.setText(String.valueOf(round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));

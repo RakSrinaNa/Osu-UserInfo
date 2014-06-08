@@ -43,7 +43,6 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
 		Point p = parent.getLocation();
-		System.out.println(p);
 		p.setLocation(p.getX() + (parent.getSize().getWidth() / 2) - (icon.getIconWidth() / 2), p.getY() + (parent.getSize().getHeight() / 2) - (icon.getIconHeight() / 2));
 		frame.setLocation(p);
 		frame.setVisible(true);
