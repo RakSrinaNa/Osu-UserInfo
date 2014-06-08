@@ -672,6 +672,11 @@ public class Interface // TODO Javadoc
 		getInfos(userNameFieldTextComponent.getText(), showerror);
 	}
 
+	public void updateInfos(boolean showerror)
+	{
+		getInfos(Utils.lastUser.getUsername(), showerror);
+	}
+
 	private boolean getInfos(String user, boolean showerror)
 	{
 		LoadingWorker load = new LoadingWorker(frame, user, showerror, Utils.config.getBoolean("loadingScreen", true));

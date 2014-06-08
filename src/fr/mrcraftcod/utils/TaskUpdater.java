@@ -4,11 +4,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 
-public class ThreadUpdater extends TimerTask
+public class TaskUpdater extends TimerTask
 {
 	private Timer timer;
 
-	public ThreadUpdater()
+	public TaskUpdater()
 	{
 		try
 		{
@@ -25,7 +25,7 @@ public class ThreadUpdater extends TimerTask
 	@Override
 	public void run()
 	{
-		Utils.mainFrame.getInfos(false);
+		Utils.mainFrame.updateInfos(false);
 	}
 
 	public void stop()

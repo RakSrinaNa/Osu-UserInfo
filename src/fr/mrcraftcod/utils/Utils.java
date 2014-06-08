@@ -40,7 +40,7 @@ public class Utils
 {
 	private final static String logFileName = "log.log";
 	private static ServerSocket socket;
-	private static ThreadUpdater threadUpdater;
+	private static TaskUpdater threadUpdater;
 	public static String API_KEY = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
@@ -167,7 +167,7 @@ public class Utils
 		if(state)
 		{
 			if(threadUpdater == null)
-				threadUpdater = new ThreadUpdater();
+				threadUpdater = new TaskUpdater();
 		}
 		else if(threadUpdater != null)
 		{
