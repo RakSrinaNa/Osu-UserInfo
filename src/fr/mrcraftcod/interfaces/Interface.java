@@ -716,7 +716,7 @@ public class Interface // TODO Javadoc
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
 			currentUser.setCountry(jsonResponse.getString("country"));
 			currentStats.setRank(jsonResponse.getDouble("pp_rank"));
-			currentStats.setPlaycount(jsonResponse.getInt("playcount") + 1);
+			currentStats.setPlaycount(jsonResponse.getInt("playcount"));
 			currentStats.setRankedScore(jsonResponse.getLong("ranked_score"));
 			currentStats.setTotalScore(jsonResponse.getLong("total_score"));
 			currentStats.setAccuracy(jsonResponse.getDouble("accuracy"));
@@ -755,6 +755,7 @@ public class Interface // TODO Javadoc
 				new Thread(task, "ThreadImages").start();
 			}
 			username.setForeground(getColorUser());
+			updateStatsDates(currentUser);
 			displayStats(currentUser, currentStats);
 			updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats);
 			setValidButonIcon("R");
@@ -768,7 +769,6 @@ public class Interface // TODO Javadoc
 			}
 			Utils.lastStats = currentStats;
 			Utils.lastUser = currentUser;
-			updateStatsDates(currentUser);
 		}
 		catch(Exception e)
 		{
@@ -824,10 +824,14 @@ public class Interface // TODO Javadoc
 
 	private void updateStatsDates(User user)
 	{
+		String lastDate = (String) statsDateModel.getSelectedItem();
 		statsDateModel.removeAllElements();
 		for(String date : user.getAvalidbleStatsDates(getSelectedMode()))
 			statsDateModel.addElement(date);
-		lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
+		if(lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
+			lastStatsDateBox.setSelectedItem(lastDate);
+		else
+			lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
 	}
 
 	private boolean isValidUser(String username)
