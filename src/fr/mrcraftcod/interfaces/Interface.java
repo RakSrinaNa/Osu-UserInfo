@@ -241,7 +241,7 @@ public class Interface // TODO Javadoc
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.LINE_START;
-		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.fill = GridBagConstraints.BOTH;
 		constraint.gridwidth = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
@@ -800,13 +800,13 @@ public class Interface // TODO Javadoc
 
 	public void updateTrackedInfos()
 	{
-		updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate()), true);
+		updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate(), Utils.lastStats), true);
 	}
 
 	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
-		username.setText("<html><div>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </div></html>");
+		username.setText("<html><body><nobr>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
