@@ -93,6 +93,8 @@ public class InterfaceSettings
 		c.gridy = lign++;
 		frame.add(keepDateCheck, c);
 		c.gridy = lign++;
+		frame.add(notificationCheck, c);
+		c.gridy = lign++;
 		frame.add(systemTrayCheck, c);
 		c.gridwidth = 1;
 		c.gridx = 0;
