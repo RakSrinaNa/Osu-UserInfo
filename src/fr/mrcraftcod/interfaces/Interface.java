@@ -51,7 +51,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionRefreshStats;
-import fr.mrcraftcod.listeners.StatsDateItemListener;
 import fr.mrcraftcod.listeners.UserNameFieldDocumentListener;
 import fr.mrcraftcod.listeners.UserNameTextFieldKeyListener;
 import fr.mrcraftcod.listeners.actions.AutoUpdateActionListener;
@@ -61,6 +60,7 @@ import fr.mrcraftcod.listeners.actions.ModeCTBActionListener;
 import fr.mrcraftcod.listeners.actions.ModeManiaActionListener;
 import fr.mrcraftcod.listeners.actions.ModeStandardActionListener;
 import fr.mrcraftcod.listeners.actions.ModeTaikoActionListener;
+import fr.mrcraftcod.listeners.actions.StatsDateActionListener;
 import fr.mrcraftcod.listeners.actions.TrackUserActionListener;
 import fr.mrcraftcod.listeners.actions.ValidButtonActionListener;
 import fr.mrcraftcod.listeners.components.ModesComponentListener;
@@ -284,7 +284,7 @@ public class Interface // TODO Javadoc
 		lastStatsDateBox = new JComboBox<String>(statsDateModel);
 		lastStatsDateBox.setFont(Utils.fontMain);
 		lastStatsDateBox.setEnabled(track.isEnabled());
-		lastStatsDateBox.addItemListener(new StatsDateItemListener());
+		lastStatsDateBox.addActionListener(new StatsDateActionListener());
 		autoUpdateCheck = new JCheckBox();
 		autoUpdateCheck.setFont(Utils.fontMain);
 		autoUpdateCheck.setText(Utils.resourceBundle.getString("settings_auto_update"));
@@ -790,6 +790,11 @@ public class Interface // TODO Javadoc
 		hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount300()) + " (" + decimalFormat.format((stats.getCount300() * 100f) / stats.getTotalHits()) + "%)");
 		hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount100()) + " (" + decimalFormat.format((stats.getCount100() * 100f) / stats.getTotalHits()) + "%)");
 		hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount50()) + " (" + decimalFormat.format((stats.getCount50() * 100f) / stats.getTotalHits()) + "%)");
+	}
+
+	public void updateTrackedInfos()
+	{
+		updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate()));
 	}
 
 	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats)
