@@ -1,4 +1,4 @@
-package fr.mrcraftcod.listeners.actions;
+package fr.mrcraftcod.listeners.mouse;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

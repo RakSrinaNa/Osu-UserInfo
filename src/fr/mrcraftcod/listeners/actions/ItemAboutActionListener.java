@@ -12,6 +12,6 @@ public class ItemAboutActionListener extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		new InterfaceAbout(Utils.mainFrame.getFrame());
+		Utils.aboutFrame = new InterfaceAbout(Utils.mainFrame.getFrame());
 	}
 }

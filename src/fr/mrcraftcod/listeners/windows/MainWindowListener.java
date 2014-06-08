@@ -1,4 +1,4 @@
-package fr.mrcraftcod.listeners;
+package fr.mrcraftcod.listeners.windows;
 
 import java.awt.AWTException;
 import java.awt.event.WindowEvent;
