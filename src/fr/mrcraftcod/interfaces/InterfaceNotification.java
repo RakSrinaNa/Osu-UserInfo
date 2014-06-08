@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.geom.RoundRectangle2D;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -19,17 +20,18 @@ public class InterfaceNotification extends Thread
 
 	public InterfaceNotification(String text)
 	{
+		int offset = 0, arc = 15;
 		frame = new JFrame();
 		frame.setTitle("New stats!");
 		frame.setSize(400, 75);
 		frame.setUndecorated(true);
+		frame.setShape(new RoundRectangle2D.Double(offset, offset, offset + frame.getSize().getWidth(), offset + frame.getSize().getHeight(), arc, arc));
 		frame.setLayout(new GridBagLayout());
 		frame.setIconImages(Utils.icons);
 		frame.setBackground(Utils.backColor);
 		frame.getContentPane().setBackground(Utils.backColor);
 		JButton closeButton = new JButton("X");
 		closeButton.addActionListener(new CloseNotificationActionListener());
-		closeButton.setMargin(new Insets(1, 2, 1, 2));
 		closeButton.setFocusable(false);
 		JTextArea messageLabel = new JTextArea(text);
 		messageLabel.setBackground(Utils.backColor);
@@ -45,6 +47,7 @@ public class InterfaceNotification extends Thread
 		constraints.weighty = 0;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.insets = new Insets(-offset, 1, 1, -offset);
 		frame.add(closeButton, constraints);
 		constraints.gridx = 0;
 		constraints.gridy++;
@@ -65,7 +68,7 @@ public class InterfaceNotification extends Thread
 	{
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
-		int x = scrSize.width - frame.getWidth();
+		int x = scrSize.width - frame.getWidth() - 2;
 		int y = scrSize.height;
 		for(int i = 0; i < frame.getHeight() + toolHeight.bottom; i++)
 		{
