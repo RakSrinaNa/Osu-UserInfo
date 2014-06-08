@@ -98,12 +98,12 @@ public class Interface // TODO Javadoc
 	public Interface() throws IOException
 	{
 		int pictureButtonSize = 20;
-		Utils.logger.log(Level.FINE, "Loading icons...");
+		Utils.logger.log(Level.INFO, "Loading icons...");
 		iconRefresh = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
 		iconSearch = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
 		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		/************** FRAME INFOS ********************/
-		Utils.logger.log(Level.FINE, "Setting frame options...");
+		Utils.logger.log(Level.INFO, "Setting frame options...");
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
 		getFrame().setBackground(Utils.backColor);
 		getFrame().setFocusable(true);
@@ -119,7 +119,7 @@ public class Interface // TODO Javadoc
 		getFrame().getContentPane().setBackground(Utils.backColor);
 		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
-		Utils.logger.log(Level.FINE, "Creating frame bar...");
+		Utils.logger.log(Level.INFO, "Creating frame bar...");
 		Font menuBarFont = Utils.fontMain.deriveFont(Font.PLAIN, 13);
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setFont(menuBarFont);
@@ -139,7 +139,7 @@ public class Interface // TODO Javadoc
 		menuBar.add(menuHelp);
 		getFrame().setJMenuBar(menuBar);
 		/*************** SEARCH PANEL **********************/
-		Utils.logger.log(Level.FINE, "Creating search panel...");
+		Utils.logger.log(Level.INFO, "Creating search panel...");
 		JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBackground(Utils.searchBarColor);
 		searchPanel.setMaximumSize(new Dimension(9999, 36));
@@ -187,7 +187,7 @@ public class Interface // TODO Javadoc
 		constraint.gridwidth = 3;
 		searchPanel.add(separator, constraint);
 		/*************** MODE PANEL **********************/
-		Utils.logger.log(Level.FINE, "Creating mode panel...");
+		Utils.logger.log(Level.INFO, "Creating mode panel...");
 		int iconSize = 16;
 		Color colorButtonModeSelected = new Color(231, 228, 252);
 		Color colorButtonModeUnselected = new Color(190, 168, 244);
@@ -255,7 +255,7 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 3;
 		modePanel.add(buttonMania, constraint);
 		/***************** LEVEL PANEL ********************/
-		Utils.logger.log(Level.FINE, "Creating level panel...");
+		Utils.logger.log(Level.INFO, "Creating level panel...");
 		JPanel levelUserPanel = new JPanel(new BorderLayout());
 		levelUserPanel.setBackground(Utils.backColor);
 		levelBar = new JProgressBar();
@@ -269,7 +269,7 @@ public class Interface // TODO Javadoc
 		// Construct
 		levelUserPanel.add(levelBar, BorderLayout.CENTER);
 		/***************** TRACK PANEL ********************/
-		Utils.logger.log(Level.FINE, "Creating track panel...");
+		Utils.logger.log(Level.INFO, "Creating track panel...");
 		JPanel trackUserPanel = new JPanel(new GridBagLayout());
 		trackUserPanel.setBackground(Utils.backColor);
 		track = new JCheckBox();
@@ -312,7 +312,7 @@ public class Interface // TODO Javadoc
 		c.weightx = 1;
 		trackUserPanel.add(lastStatsDateBox, c);
 		/***************** HITS PANEL ********************/
-		Utils.logger.log(Level.FINE, "Creating hits panel...");
+		Utils.logger.log(Level.INFO, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
 		hitCountPanel.setBackground(Utils.noticeColor);
 		TitledBorder borderHits = BorderFactory.createTitledBorder(Utils.noticeBorder, Utils.resourceBundle.getString("hits"));
@@ -381,7 +381,7 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 2;
 		hitCountPanel.add(count50Panel, constraint);
 		/***************** RANK PANEL ********************/
-		Utils.logger.log(Level.FINE, "Creating rank panel...");
+		Utils.logger.log(Level.INFO, "Creating rank panel...");
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
 		ranksUserPanel.setBackground(Utils.noticeColor);
 		TitledBorder borderRanks = BorderFactory.createTitledBorder(Utils.noticeBorder, Utils.resourceBundle.getString("ranks"));
@@ -449,7 +449,7 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 2;
 		ranksUserPanel.add(aPanel, constraint);
 		/******************** USER PANEL *****************/
-		Utils.logger.log(Level.FINE, "Creating user panel...");
+		Utils.logger.log(Level.INFO, "Creating user panel...");
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		avatarPanel.setBackground(Utils.backColor);
 		int avatarSize = 128;
@@ -482,7 +482,7 @@ public class Interface // TODO Javadoc
 		constraint.insets = new Insets(5, 0, 3, 0);
 		avatarPanel.add(username, constraint);
 		/**************** OTHERS PANEL *********************/
-		Utils.logger.log(Level.FINE, "Creating other panel...");
+		Utils.logger.log(Level.INFO, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
 		otherPanel.setBackground(Utils.noticeColor);
 		otherPanel.setBackground(Utils.noticeColor);
@@ -578,7 +578,7 @@ public class Interface // TODO Javadoc
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
-		Utils.logger.log(Level.FINE, "Creating frame panel...");
+		Utils.logger.log(Level.INFO, "Creating frame panel...");
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
@@ -608,7 +608,7 @@ public class Interface // TODO Javadoc
 		getFrame().getContentPane().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
 		getFrame().getContentPane().add(trackUserPanel, constraint);
-		Utils.logger.log(Level.FINE, "Packing frame...");
+		Utils.logger.log(Level.INFO, "Packing frame...");
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		getFrame().setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		getFrame().pack();
@@ -635,7 +635,7 @@ public class Interface // TODO Javadoc
 
 	public void trackNewUser(User user) throws IOException
 	{
-		Utils.logger.log(Level.FINE, "Trcking user " + user.getUsername());
+		Utils.logger.log(Level.INFO, "Trcking user " + user.getUsername());
 		ArrayList<String> users = Utils.getTrackedUsers();
 		users.add(user.getUsername());
 		userNameFieldModel.addElement(user.getUsername());
@@ -648,7 +648,7 @@ public class Interface // TODO Javadoc
 
 	public void unTrackUser(User user)
 	{
-		Utils.logger.log(Level.FINE, "Untrcking user " + user.getUsername());
+		Utils.logger.log(Level.INFO, "Untrcking user " + user.getUsername());
 		ArrayList<String> users = Utils.getTrackedUsers();
 		users.remove(user.getUsername());
 		userNameFieldModel.removeElement(user.getUsername());
@@ -657,6 +657,7 @@ public class Interface // TODO Javadoc
 		lastStatsDate.setEnabled(track.isSelected());
 		lastStatsDateBox.setEnabled(track.isSelected());
 		autoUpdateCheck.setEnabled(track.isSelected());
+		autoUpdateCheck.setSelected(false);
 		Utils.setTrackedUser(users);
 	}
 
@@ -682,7 +683,7 @@ public class Interface // TODO Javadoc
 	{
 		if(!isValidTime() || !isValidUser(user))
 			return false;
-		Utils.logger.log(Level.FINE, "Getting user infos " + user);
+		Utils.logger.log(Level.INFO, "Getting user infos " + user);
 		Utils.lastPost = new Date();
 		userNameField.setBackground(null);
 		userNameFieldTextComponent.setBackground(null);
@@ -705,8 +706,7 @@ public class Interface // TODO Javadoc
 			Stats previousStats = currentUser.getLastStats(getSelectedMode());
 			track.setEnabled(true);
 			track.setSelected(tracked);
-			autoUpdateCheck.setEnabled(track.isSelected());
-			autoUpdateCheck.setSelected(false);
+			autoUpdateCheck.setEnabled(tracked);
 			currentUser.setUsername(jsonResponse.getString("username"));
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
 			currentUser.setCountry(jsonResponse.getString("country"));
@@ -730,6 +730,7 @@ public class Interface // TODO Javadoc
 			{
 				avatar.setImage(null);
 				countryFlag.setImage(null);
+				autoUpdateCheck.setSelected(false);
 				Runnable task = new Runnable()
 				{
 					@Override
@@ -810,7 +811,7 @@ public class Interface // TODO Javadoc
 
 	private void updateLevel(double level)
 	{
-		Utils.logger.log(Level.FINE, "Setting level to " + level);
+		Utils.logger.log(Level.INFO, "Setting level to " + level);
 		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
 		levelBar.setValue((int) progress);
 		levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));

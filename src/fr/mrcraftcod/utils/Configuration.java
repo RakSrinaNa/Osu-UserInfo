@@ -68,9 +68,9 @@ public class Configuration
 					if(string.startsWith(key + ":"))
 					{
 						if(key.equals("api_key"))
-							Utils.logger.log(Level.FINE, "Found key " + key);
+							Utils.logger.log(Level.INFO, "Found key " + key);
 						else
-							Utils.logger.log(Level.FINE, "Found key " + key + " in " + string);
+							Utils.logger.log(Level.INFO, "Found key " + key + " in " + string);
 						return string.substring((key + ":").length());
 					}
 			}
@@ -123,7 +123,7 @@ public class Configuration
 	 */
 	public synchronized boolean writeVar(String key, Object obj)
 	{
-		Utils.logger.log(Level.FINE, "Writting var " + key);
+		Utils.logger.log(Level.INFO, "Writting var " + key);
 		String value = obj == null ? "" : obj.toString();
 		List<String> oldConfiguration = null;
 		oldConfiguration = currentConfig;
@@ -159,7 +159,7 @@ public class Configuration
 		{
 			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
 		}
-		Utils.logger.log(Level.FINE, "Config file wrote");
+		Utils.logger.log(Level.INFO, "Config file wrote");
 		return true;
 	}
 
@@ -171,7 +171,7 @@ public class Configuration
 	 */
 	public synchronized boolean deleteVar(String key)
 	{
-		Utils.logger.log(Level.FINE, "Deletting var " + key);
+		Utils.logger.log(Level.INFO, "Deletting var " + key);
 		List<String> oldConfiguration = null;
 		oldConfiguration = currentConfig;
 		FileWriter fileWriter;
@@ -201,7 +201,7 @@ public class Configuration
 		{
 			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
 		}
-		Utils.logger.log(Level.FINE, "Config file wrote");
+		Utils.logger.log(Level.INFO, "Config file wrote");
 		return true;
 	}
 

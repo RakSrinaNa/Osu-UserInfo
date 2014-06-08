@@ -30,7 +30,7 @@ public class ThreadUpdater extends TimerTask
 
 	public void stop()
 	{
-		Utils.logger.log(Level.FINE, "Stopping updater Thread");
+		Utils.logger.log(Level.INFO, "Stopping updater Thread");
 		if(timer != null)
 		{
 			timer.cancel();
