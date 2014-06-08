@@ -15,6 +15,7 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
@@ -30,7 +31,9 @@ import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.interfaces.Interface;
 import fr.mrcraftcod.interfaces.InterfaceStartup;
+import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
+import fr.mrcraftcod.objects.User;
 
 public class Utils
 {
@@ -48,6 +51,9 @@ public class Utils
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
 	public static Border noticeBorder;
 	public static Font fontMain;
+	public static Date lastPost = new Date(0);
+	public static User lastUser = new User();
+	public static Stats lastStats = new Stats();
 
 	public static void init() throws IOException
 	{

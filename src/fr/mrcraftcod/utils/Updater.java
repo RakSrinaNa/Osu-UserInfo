@@ -275,7 +275,6 @@ public class Updater
 	}
 
 	/**
-	 * NOT CURENTLY USED.
 	 * Used to know if the developer version is up to date.
 	 * 
 	 * @return True if up to date, false if not.

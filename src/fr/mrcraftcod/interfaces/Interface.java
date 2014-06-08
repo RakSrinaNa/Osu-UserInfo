@@ -1,9 +1,7 @@
 package fr.mrcraftcod.interfaces;
 
-import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -13,18 +11,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +25,6 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -58,8 +43,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
@@ -68,12 +51,28 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
+import fr.mrcraftcod.actions.ActionRefreshStats;
+import fr.mrcraftcod.listeners.MainWindowListener;
+import fr.mrcraftcod.listeners.StatsDateItemListener;
+import fr.mrcraftcod.listeners.UserNameFieldDocumentListener;
+import fr.mrcraftcod.listeners.UserNameTextFieldKeyListener;
+import fr.mrcraftcod.listeners.actions.AutoUpdateActionListener;
+import fr.mrcraftcod.listeners.actions.OpenProfileMouseListener;
+import fr.mrcraftcod.listeners.actions.ItemAboutActionListener;
+import fr.mrcraftcod.listeners.actions.ItemSettingsActionListener;
+import fr.mrcraftcod.listeners.actions.ModeCTBActionListener;
+import fr.mrcraftcod.listeners.actions.ModeManiaActionListener;
+import fr.mrcraftcod.listeners.actions.ModeStandardActionListener;
+import fr.mrcraftcod.listeners.actions.ModeTaikoActionListener;
+import fr.mrcraftcod.listeners.actions.TrackUserActionListener;
+import fr.mrcraftcod.listeners.actions.ValidButtonActionListener;
+import fr.mrcraftcod.listeners.components.ModesComponentListener;
+import fr.mrcraftcod.listeners.components.SearchPanelComponentListener;
 import fr.mrcraftcod.objects.AutoComboBox;
 import fr.mrcraftcod.objects.GhostText;
 import fr.mrcraftcod.objects.ImagePanel;
 import fr.mrcraftcod.objects.JButtonMode;
 import fr.mrcraftcod.objects.Stats;
-import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
@@ -94,9 +93,6 @@ public class Interface // TODO Javadoc
 	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
 	private JProgressBar levelBar;
 	private JCheckBox track, autoUpdateCheck;
-	private Date lastPost = new Date(0);
-	private User lastUser = new User();
-	private Stats lastStats = new Stats();
 
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
@@ -113,60 +109,8 @@ public class Interface // TODO Javadoc
 		getFrame().setFocusable(true);
 		getFrame().setVisible(false);
 		getFrame().getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "getInfos");
-		getFrame().getRootPane().getActionMap().put("getInfos", new AbstractAction()
-		{
-			private static final long serialVersionUID = -3422845002112474989L;
-
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				refreshStats(true);
-			}
-		});
-		getFrame().addWindowListener(new WindowListener()
-		{
-			@Override
-			public void windowActivated(final WindowEvent event)
-			{}
-
-			@Override
-			public void windowClosed(final WindowEvent event)
-			{}
-
-			@Override
-			public void windowClosing(final WindowEvent event)
-			{
-				Utils.exit();
-			}
-
-			@Override
-			public void windowDeactivated(final WindowEvent event)
-			{}
-
-			@Override
-			public void windowDeiconified(final WindowEvent event)
-			{}
-
-			@Override
-			public void windowIconified(final WindowEvent event)
-			{
-				try
-				{
-					if(Utils.config.getBoolean("reduceTray", false))
-					{
-						SystemTrayOsuStats.add();
-						hideFrame();
-						getFrame().setVisible(false);
-					}
-				}
-				catch(final AWTException exception)
-				{}
-			}
-
-			@Override
-			public void windowOpened(final WindowEvent event)
-			{}
-		});
+		getFrame().getRootPane().getActionMap().put("getInfos", new ActionRefreshStats());
+		getFrame().addWindowListener(new MainWindowListener());
 		getFrame().setLayout(new GridBagLayout());
 		getFrame().setMinimumSize(new Dimension(575, 725));
 		getFrame().setPreferredSize(new Dimension(575, 725));
@@ -185,24 +129,10 @@ public class Interface // TODO Javadoc
 		menuHelp.setFont(menuBarFont);
 		JMenuItem itemSettings = new JMenuItem(Utils.resourceBundle.getString("settings"));
 		itemSettings.setFont(menuBarFont);
-		itemSettings.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				new InterfaceSettings();
-			}
-		});
+		itemSettings.addActionListener(new ItemSettingsActionListener());
 		JMenuItem itemAbout = new JMenuItem(Utils.resourceBundle.getString("menu_bar_help_about"));
 		itemAbout.setFont(menuBarFont);
-		itemAbout.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				new InterfaceAbout(getFrame());
-			}
-		});
+		itemAbout.addActionListener(new ItemAboutActionListener());
 		menuFile.add(itemSettings);
 		menuHelp.add(itemAbout);
 		menuBar.add(menuFile);
@@ -213,32 +143,7 @@ public class Interface // TODO Javadoc
 		JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBackground(Utils.searchBarColor);
 		searchPanel.setMaximumSize(new Dimension(9999, 36));
-		searchPanel.addComponentListener(new ComponentListener()
-		{
-			@Override
-			public void componentResized(ComponentEvent e)
-			{
-				if(e.getSource() instanceof JPanel)
-				{
-					JPanel p = (JPanel) e.getSource();
-					Dimension d = p.getSize();
-					d.height = 36;
-					p.setSize(d);
-				}
-			}
-
-			@Override
-			public void componentMoved(ComponentEvent e)
-			{}
-
-			@Override
-			public void componentShown(ComponentEvent e)
-			{}
-
-			@Override
-			public void componentHidden(ComponentEvent e)
-			{}
-		});
+		searchPanel.addComponentListener(new SearchPanelComponentListener());
 		JLabel usernameAsk = new JLabel(Utils.resourceBundle.getString("username") + " : ");
 		usernameAsk.setFont(Utils.fontMain);
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
@@ -250,65 +155,13 @@ public class Interface // TODO Javadoc
 		userNameField.setPreferredSize(new Dimension(200, 30));
 		userNameField.setSelectedItem(null);
 		userNameFieldTextComponent = (JTextComponent) userNameField.getEditor().getEditorComponent();
-		userNameFieldTextComponent.getDocument().addDocumentListener(new DocumentListener()
-		{
-			public void changedUpdate(DocumentEvent e)
-			{
-				update();
-			}
-
-			public void removeUpdate(DocumentEvent e)
-			{
-				update();
-			}
-
-			public void insertUpdate(DocumentEvent e)
-			{
-				update();
-			}
-
-			public void update()
-			{
-				try
-				{
-					if(userNameFieldTextComponent.getText().equalsIgnoreCase(lastUser.getUsername()) && !userNameFieldTextComponent.getText().equalsIgnoreCase(""))
-						validButon.setIcon(iconRefresh);
-					else
-						validButon.setIcon(iconSearch);
-				}
-				catch(Exception e)
-				{}
-			}
-		});
+		userNameFieldTextComponent.getDocument().addDocumentListener(new UserNameFieldDocumentListener());
 		new GhostText(((JTextField) userNameField.getEditor().getEditorComponent()), Utils.resourceBundle.getString("ghost_username_field"));
-		((JTextField) userNameField.getEditor().getEditorComponent()).addKeyListener(new KeyListener()
-		{
-			@Override
-			public void keyPressed(KeyEvent arg0)
-			{
-				if(KeyEvent.VK_ENTER == arg0.getExtendedKeyCode())
-					refreshStats(true);
-			}
-
-			@Override
-			public void keyReleased(KeyEvent arg0)
-			{}
-
-			@Override
-			public void keyTyped(KeyEvent arg0)
-			{}
-		});
+		((JTextField) userNameField.getEditor().getEditorComponent()).addKeyListener(new UserNameTextFieldKeyListener());
 		validButon = new JButton(iconSearch);
 		validButon.setFont(Utils.fontMain);
 		validButon.setToolTipText(Utils.resourceBundle.getString("button_search_tooltip_text"));
-		validButon.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				refreshStats(true);
-			}
-		});
+		validButon.addActionListener(new ValidButtonActionListener());
 		JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
 		separator.setPreferredSize(new Dimension(100, 100));
 		// Construct panel
@@ -343,41 +196,7 @@ public class Interface // TODO Javadoc
 		Color colorTextUnselected = new Color(255, 255, 255);
 		JPanel modePanel = new JPanel(new GridBagLayout());
 		modePanel.setBackground(Utils.backColor);
-		modePanel.addComponentListener(new ComponentListener()
-		{
-			@Override
-			public void componentResized(ComponentEvent e)
-			{
-				if(e.getComponent() instanceof JPanel)
-				{
-					int offset = 3;
-					JPanel panel = (JPanel) e.getComponent();
-					for(Component comp : panel.getComponents())
-						if(comp instanceof JButtonMode)
-						{
-							JButtonMode but = (JButtonMode) comp;
-							Dimension dim = but.getSize();
-							dim.setSize((panel.getSize().getWidth() / panel.getComponentCount()) - offset, dim.getHeight());
-							but.setSize(dim);
-							but.setMinimumSize(dim);
-							but.setPreferredSize(dim);
-							but.setMaximumSize(dim);
-						}
-				}
-			}
-
-			@Override
-			public void componentMoved(ComponentEvent e)
-			{}
-
-			@Override
-			public void componentShown(ComponentEvent e)
-			{}
-
-			@Override
-			public void componentHidden(ComponentEvent e)
-			{}
-		});
+		modePanel.addComponentListener(new ModesComponentListener());
 		buttonStandard = new JButtonMode("osu!");
 		buttonStandard.setBackground(colorButtonModeSelected);
 		buttonStandard.setDisabledBackground(colorButtonModeUnselected);
@@ -387,14 +206,7 @@ public class Interface // TODO Javadoc
 		buttonStandard.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
 		buttonStandard.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
 		buttonStandard.setFocusPainted(false);
-		buttonStandard.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				switchMode(0, true);
-			}
-		});
+		buttonStandard.addActionListener(new ModeStandardActionListener());
 		buttonTaiko = new JButtonMode("Taiko");
 		buttonTaiko.setBackground(colorButtonModeSelected);
 		buttonTaiko.setDisabledBackground(colorButtonModeUnselected);
@@ -404,14 +216,7 @@ public class Interface // TODO Javadoc
 		buttonTaiko.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
 		buttonTaiko.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
 		buttonTaiko.setFocusPainted(false);
-		buttonTaiko.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				switchMode(1, true);
-			}
-		});
+		buttonTaiko.addActionListener(new ModeTaikoActionListener());
 		buttonCTB = new JButtonMode("Catch The Beat");
 		buttonCTB.setBackground(colorButtonModeSelected);
 		buttonCTB.setDisabledBackground(colorButtonModeUnselected);
@@ -421,14 +226,7 @@ public class Interface // TODO Javadoc
 		buttonCTB.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
 		buttonCTB.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
 		buttonCTB.setFocusPainted(false);
-		buttonCTB.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				switchMode(2, true);
-			}
-		});
+		buttonCTB.addActionListener(new ModeCTBActionListener());
 		buttonMania = new JButtonMode("osu!mania");
 		buttonMania.setBackground(colorButtonModeSelected);
 		buttonMania.setDisabledBackground(colorButtonModeUnselected);
@@ -438,14 +236,7 @@ public class Interface // TODO Javadoc
 		buttonMania.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
 		buttonMania.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
 		buttonMania.setFocusPainted(false);
-		buttonMania.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				switchMode(3, true);
-			}
-		});
+		buttonMania.addActionListener(new ModeManiaActionListener());
 		switchMode(0, false);
 		// Construct
 		constraint = new GridBagConstraints();
@@ -485,24 +276,7 @@ public class Interface // TODO Javadoc
 		track.setText(Utils.resourceBundle.getString("track_user"));
 		track.setFont(Utils.fontMain);
 		track.setEnabled(false);
-		track.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				if(track.isSelected())
-					try
-					{
-						trackNewUser(lastUser);
-					}
-					catch(IOException e)
-					{
-						e.printStackTrace();
-					}
-				else
-					unTrackUser(lastUser);
-			}
-		});
+		track.addActionListener(new TrackUserActionListener());
 		lastStatsDate = new JLabel(Utils.resourceBundle.getString("last_stats_date"));
 		lastStatsDate.setEnabled(track.isSelected());
 		lastStatsDate.setFont(Utils.fontMain);
@@ -510,74 +284,13 @@ public class Interface // TODO Javadoc
 		lastStatsDateBox = new JComboBox<String>(statsDateModel);
 		lastStatsDateBox.setFont(Utils.fontMain);
 		lastStatsDateBox.setEnabled(track.isEnabled());
-		lastStatsDateBox.addItemListener(new ItemListener()
-		{
-			@Override
-			public void itemStateChanged(ItemEvent e)
-			{
-				if(e.getStateChange() != 1)
-					return;
-				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
-				SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
-				DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
-				updateInfos(lastUser.getUsername(), lastUser.getStats(getSelectedMode()), lastUser.getStatsByModeAndDate(getSelectedMode(), formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime()));
-			}
-		});
+		lastStatsDateBox.addItemListener(new StatsDateItemListener());
 		autoUpdateCheck = new JCheckBox();
 		autoUpdateCheck.setFont(Utils.fontMain);
 		autoUpdateCheck.setText(Utils.resourceBundle.getString("settings_auto_update"));
 		autoUpdateCheck.setEnabled(false);
 		autoUpdateCheck.setSelected(false);
-		autoUpdateCheck.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				Utils.setThreadUpdater(autoUpdateCheck.isSelected());
-			}
-		});
-		int logoSize = 28;
-		ImagePanel forumLink = new ImagePanel(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), logoSize, logoSize));
-		forumLink.setBackground(Utils.backColor);
-		forumLink.setMinimumSize(new Dimension(logoSize, logoSize));
-		forumLink.setPreferredSize(new Dimension(logoSize, logoSize));
-		forumLink.setMaximumSize(new Dimension(logoSize, logoSize));
-		forumLink.addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseClicked(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mouseExited(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mousePressed(MouseEvent arg0)
-			{
-				if(arg0.getClickCount() > 1)
-				{
-					final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-					if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
-						try
-						{
-							desktop.browse(new URL("https://osu.ppy.sh/forum/p/3094583").toURI());
-						}
-						catch(final Exception e)
-						{
-							e.printStackTrace();
-						}
-				}
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0)
-			{}
-		});
+		autoUpdateCheck.addActionListener(new AutoUpdateActionListener());
 		// Construct
 		int lign = 0;
 		GridBagConstraints c = new GridBagConstraints();
@@ -747,58 +460,10 @@ public class Interface // TODO Javadoc
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
-		avatar.addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseClicked(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mouseExited(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mousePressed(MouseEvent arg0)
-			{
-				if(arg0.getClickCount() > 1)
-					openUserProfile();
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0)
-			{}
-		});
+		avatar.addMouseListener(new OpenProfileMouseListener());
 		username = new JLabel(" ");
 		username.setToolTipText(Utils.resourceBundle.getString("open_profile"));
-		username.addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseClicked(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mouseExited(MouseEvent arg0)
-			{}
-
-			@Override
-			public void mousePressed(MouseEvent arg0)
-			{
-				if(arg0.getClickCount() > 1)
-					openUserProfile();
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0)
-			{}
-		});
+		username.addMouseListener(new OpenProfileMouseListener());
 		username.setOpaque(true);
 		username.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		username.setBackground(Utils.backColor);
@@ -954,7 +619,7 @@ public class Interface // TODO Javadoc
 	public void displayStats(Stats stats)
 	{}
 
-	private void openUserProfile()
+	public void openUserProfile()
 	{
 		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
@@ -963,7 +628,7 @@ public class Interface // TODO Javadoc
 				String user_id = username.getText();
 				if(user_id.equalsIgnoreCase(""))
 					return;
-				desktop.browse(new URL("https://osu.ppy.sh/u/" + lastUser.getUserID()).toURI());
+				desktop.browse(new URL("https://osu.ppy.sh/u/" + Utils.lastUser.getUserID()).toURI());
 			}
 			catch(final Exception e)
 			{
@@ -971,7 +636,7 @@ public class Interface // TODO Javadoc
 			}
 	}
 
-	private void trackNewUser(User user) throws IOException
+	public void trackNewUser(User user) throws IOException
 	{
 		Utils.logger.log(Level.FINE, "Trcking user " + user.getUsername());
 		ArrayList<String> users = Utils.getTrackedUsers();
@@ -984,7 +649,7 @@ public class Interface // TODO Javadoc
 		Utils.setTrackedUser(users);
 	}
 
-	private void unTrackUser(User user)
+	public void unTrackUser(User user)
 	{
 		Utils.logger.log(Level.FINE, "Untrcking user " + user.getUsername());
 		ArrayList<String> users = Utils.getTrackedUsers();
@@ -1013,12 +678,12 @@ public class Interface // TODO Javadoc
 
 	public boolean getInfosServer(String user, boolean showerror)
 	{
-		if(new Date().getTime() - lastPost.getTime() < 1000)
+		if(new Date().getTime() - Utils.lastPost.getTime() < 1000)
 			return false;
 		if(user.length() < 1)
 			return false;
 		Utils.logger.log(Level.FINE, "Getting user infos " + user);
-		lastPost = new Date();
+		Utils.lastPost = new Date();
 		userNameField.setBackground(null);
 		userNameFieldTextComponent.setBackground(null);
 		try
@@ -1037,11 +702,11 @@ public class Interface // TODO Javadoc
 				}
 				catch(Exception e)
 				{}
-			Stats previousStats = currentUser.getStats(getSelectedMode());
+			Stats previousStats = currentUser.getLastStats(getSelectedMode());
 			track.setEnabled(true);
 			track.setSelected(tracked);
 			autoUpdateCheck.setEnabled(track.isSelected());
-			if(!lastUser.getUsername().equals(jsonResponse.getString("username")))
+			if(!Utils.lastUser.getUsername().equals(jsonResponse.getString("username")))
 			{
 				avatar.setImage(null);
 				countryFlag.setImage(null);
@@ -1056,9 +721,9 @@ public class Interface // TODO Javadoc
 			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
 			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
 			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
-			if(statsUser.equals(lastStats))
+			if(statsUser.equals(Utils.lastStats))
 				return false;
-			lastStats = statsUser;
+			Utils.lastStats = statsUser;
 			username.setForeground(getColorUser());
 			updateLevel(jsonResponse.getDouble("level"));
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
@@ -1072,7 +737,7 @@ public class Interface // TODO Javadoc
 			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count100")) + " (" + decimalFormat.format((jsonResponse.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
 			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count50")) + " (" + decimalFormat.format((jsonResponse.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
 			updateInfos(currentUser.getUsername(), statsUser, previousStats);
-			if(!lastUser.getUsername().equals(jsonResponse.get("username")))
+			if(!Utils.lastUser.getUsername().equals(jsonResponse.get("username")))
 			{
 				Runnable task = new Runnable()
 				{
@@ -1101,7 +766,7 @@ public class Interface // TODO Javadoc
 				lastStatsDate.setEnabled(track.isSelected());
 				lastStatsDateBox.setEnabled(track.isSelected());
 			}
-			lastUser = currentUser;
+			Utils.lastUser = currentUser;
 			statsDateModel.removeAllElements();
 			for(String date : currentUser.getAvalidbleStatsDates(getSelectedMode()))
 				statsDateModel.addElement(date);
@@ -1125,7 +790,7 @@ public class Interface // TODO Javadoc
 		return true;
 	}
 
-	private void updateInfos(String user, Stats currentStats, Stats previousStats)
+	public void updateInfos(String user, Stats currentStats, Stats previousStats)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		username.setText("<html><div>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </div></html>");
@@ -1208,7 +873,7 @@ public class Interface // TODO Javadoc
 		getInfos(userNameFieldTextComponent.getText(), showerror);
 	}
 
-	private void switchMode(int mode, boolean checkInfos)
+	public void switchMode(int mode, boolean checkInfos)
 	{
 		buttonStandard.setEnabled(true);
 		buttonTaiko.setEnabled(true);
@@ -1230,10 +895,10 @@ public class Interface // TODO Javadoc
 			break;
 		}
 		if(checkInfos)
-			getInfos(lastUser.getUsername(), false);
+			getInfos(Utils.lastUser.getUsername(), false);
 	}
 
-	private int getSelectedMode()
+	public int getSelectedMode()
 	{
 		if(!buttonTaiko.isEnabled())
 			return 1;
@@ -1254,5 +919,21 @@ public class Interface // TODO Javadoc
 	{
 		frame.setFocusable(false);
 		frame.setEnabled(false);
+	}
+
+	public void setValidButonIcon(String string)
+	{
+		if(string.equalsIgnoreCase("R"))
+			this.validButon.setIcon(iconRefresh);
+		else
+			this.validButon.setIcon(iconSearch);
+	}
+
+	public long getSelectedDate()
+	{
+		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+		SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
+		return formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime();
 	}
 }

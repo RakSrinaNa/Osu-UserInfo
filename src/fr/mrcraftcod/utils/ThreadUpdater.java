@@ -3,7 +3,6 @@ package fr.mrcraftcod.utils;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
-import fr.mrcraftcod.Main;
 
 public class ThreadUpdater extends TimerTask
 {

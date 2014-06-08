@@ -21,7 +21,7 @@ public class Configuration
 {
 	public static File appData;
 	private File configFile;
-	private List<String> lastConfigFile;
+	private List<String> currentConfig;
 
 	/**
 	 * Constructor.
@@ -47,7 +47,7 @@ public class Configuration
 		Utils.logger.log(Level.INFO, "Opening config file " + configFile.getAbsolutePath());
 		try
 		{
-			lastConfigFile = readSmallTextFile(configFile);
+			currentConfig = readSmallTextFile(configFile);
 		}
 		catch(IOException e)
 		{}
@@ -64,7 +64,7 @@ public class Configuration
 		if(configFile.exists())
 			try
 			{
-				for(String string : lastConfigFile)
+				for(String string : currentConfig)
 					if(string.startsWith(key + ":"))
 					{
 						if(key.equals("api_key"))
@@ -126,7 +126,7 @@ public class Configuration
 		Utils.logger.log(Level.FINE, "Writting var " + key);
 		String value = obj == null ? "" : obj.toString();
 		List<String> oldConfiguration = null;
-		oldConfiguration = lastConfigFile;
+		oldConfiguration = currentConfig;
 		FileWriter fileWriter;
 		try
 		{
@@ -153,7 +153,7 @@ public class Configuration
 		printWriter.close();
 		try
 		{
-			lastConfigFile = readSmallTextFile(configFile);
+			currentConfig = readSmallTextFile(configFile);
 		}
 		catch(IOException e)
 		{
@@ -173,7 +173,7 @@ public class Configuration
 	{
 		Utils.logger.log(Level.FINE, "Deletting var " + key);
 		List<String> oldConfiguration = null;
-		oldConfiguration = lastConfigFile;
+		oldConfiguration = currentConfig;
 		FileWriter fileWriter;
 		try
 		{
@@ -195,7 +195,7 @@ public class Configuration
 		printWriter.close();
 		try
 		{
-			lastConfigFile = readSmallTextFile(configFile);
+			currentConfig = readSmallTextFile(configFile);
 		}
 		catch(IOException e)
 		{
@@ -232,7 +232,7 @@ public class Configuration
 		{
 			bufferedReader.close();
 		}
-		lastConfigFile = fileLines;
+		currentConfig = fileLines;
 		return fileLines;
 	}
 
