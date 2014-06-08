@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -143,13 +144,22 @@ public class User implements Serializable
 	 */
 	public Stats getStatsByModeAndDate(int mode, long date, Stats defaultStats)
 	{
-		ArrayList<Stats> stats = getAllStats(mode);
-		for(Stats stat : stats)
+		if(date < 0)
+			return defaultStats;
+		try
 		{
-			String temp = String.valueOf(stat.getDate());
-			String tempp = String.valueOf(date);
-			if(temp.substring(0, temp.length() - 4).equals(tempp.substring(0, tempp.length() - 4)))
-				return stat;
+			ArrayList<Stats> stats = getAllStats(mode);
+			for(Stats stat : stats)
+			{
+				String temp = String.valueOf(stat.getDate());
+				String tempp = String.valueOf(date);
+				if(temp.substring(0, temp.length() - 4).equals(tempp.substring(0, tempp.length() - 4)))
+					return stat;
+			}
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "", e);
 		}
 		return defaultStats;
 	}
@@ -418,7 +428,14 @@ public class User implements Serializable
 		ArrayList<Stats> stats = (ArrayList<Stats>) getAllStats(mode).clone();
 		if(stats == null)
 			return null;
-		stats.remove(stats.size() - 1);
+		try
+		{
+			stats.remove(stats.size() - 1);
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "", e);
+		}
 		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 		String[] dates = new String[stats.size()];
 		for(int i = 0; i < stats.size(); i++)
