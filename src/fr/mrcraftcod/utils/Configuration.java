@@ -103,7 +103,9 @@ public class Configuration
 	{
 		try
 		{
-			return Boolean.parseBoolean(getVar(key));
+			String s = getVar(key);
+			if(s != null)
+				return Boolean.parseBoolean(s);
 		}
 		catch(Exception e)
 		{
