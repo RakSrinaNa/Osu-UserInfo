@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.interfaces.Interface;
 import fr.mrcraftcod.interfaces.InterfaceAbout;
+import fr.mrcraftcod.interfaces.InterfaceSettings;
 import fr.mrcraftcod.interfaces.InterfaceStartup;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
@@ -56,6 +57,7 @@ public class Utils
 	public static User lastUser = new User();
 	public static Stats lastStats = new Stats();
 	public static InterfaceAbout aboutFrame;
+	public static InterfaceSettings configFrame;
 
 	public static void init() throws IOException
 	{

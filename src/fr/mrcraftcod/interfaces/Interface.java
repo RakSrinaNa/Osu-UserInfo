@@ -828,7 +828,7 @@ public class Interface // TODO Javadoc
 		statsDateModel.removeAllElements();
 		for(String date : user.getAvalidbleStatsDates(getSelectedMode()))
 			statsDateModel.addElement(date);
-		if(lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
+		if(Utils.config.getBoolean("keepDate", false) && lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
 			lastStatsDateBox.setSelectedItem(lastDate);
 		else
 			lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);

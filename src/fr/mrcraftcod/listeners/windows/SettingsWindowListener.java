@@ -2,7 +2,7 @@ package fr.mrcraftcod.listeners.windows;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import fr.mrcraftcod.interfaces.InterfaceSettings;
+import fr.mrcraftcod.utils.Utils;
 
 public class SettingsWindowListener implements WindowListener
 {
@@ -13,13 +13,14 @@ public class SettingsWindowListener implements WindowListener
 	@Override
 	public void windowClosing(final WindowEvent e)
 	{
-		if(e.getSource() instanceof InterfaceSettings)
-			((InterfaceSettings) e.getSource()).closeFrame();
+		Utils.configFrame.closeFrame();
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e)
-	{}
+	{
+		Utils.configFrame = null;
+	}
 
 	@Override
 	public void windowIconified(WindowEvent e)
