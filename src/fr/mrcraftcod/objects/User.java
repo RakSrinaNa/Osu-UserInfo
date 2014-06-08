@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import fr.mrcraftcod.Main;
+import fr.mrcraftcod.utils.Utils;
 
 /**
  * User object. Used to store stats of a given user.
@@ -23,6 +23,7 @@ public class User implements Serializable
 	private ArrayList<Stats> stats_normal, stats_taiko, stats_ctb, stats_mania;
 	private String username = "";
 	private transient int userID;
+	private transient String country;
 
 	public User()
 	{
@@ -114,7 +115,7 @@ public class User implements Serializable
 	 * 
 	 * @see Stats
 	 */
-	public Stats getStats(int mode)
+	public Stats getLastStats(int mode)
 	{
 		switch(mode)
 		{
@@ -240,13 +241,13 @@ public class User implements Serializable
 	 */
 	public void setStatsOsuStandard(boolean hard, Stats stats)
 	{
-		while(this.stats_normal.size() > Main.numberTrackedStatsToKeep + 1)
+		while(this.stats_normal.size() > Utils.numberTrackedStatsToKeep + 1)
 			this.stats_normal.remove(0);
-		if(hasStatsChanged(hard, this.getStats(0), stats))
+		if(hasStatsChanged(hard, this.getLastStats(0), stats))
 			this.stats_normal.add(stats);
 		else
 		{
-			Stats newStats = this.getStats(0);
+			Stats newStats = this.getLastStats(0);
 			newStats.setDate(stats.getDate());
 			this.stats_normal.remove(this.stats_normal.size() - 1);
 			this.stats_normal.add(newStats);
@@ -281,13 +282,13 @@ public class User implements Serializable
 	 */
 	public void setStatsTaiko(boolean hard, Stats stats)
 	{
-		while(this.stats_taiko.size() > Main.numberTrackedStatsToKeep + 1)
+		while(this.stats_taiko.size() > Utils.numberTrackedStatsToKeep + 1)
 			this.stats_taiko.remove(0);
-		if(hasStatsChanged(hard, this.getStats(1), stats))
+		if(hasStatsChanged(hard, this.getLastStats(1), stats))
 			this.stats_taiko.add(stats);
 		else
 		{
-			Stats newStats = this.getStats(1);
+			Stats newStats = this.getLastStats(1);
 			newStats.setDate(stats.getDate());
 			this.stats_taiko.remove(this.stats_taiko.size() - 1);
 			this.stats_taiko.add(newStats);
@@ -322,13 +323,13 @@ public class User implements Serializable
 	 */
 	public void setStatsCTB(boolean hard, Stats stats)
 	{
-		while(this.stats_ctb.size() > Main.numberTrackedStatsToKeep + 1)
+		while(this.stats_ctb.size() > Utils.numberTrackedStatsToKeep + 1)
 			this.stats_ctb.remove(0);
-		if(hasStatsChanged(hard, this.getStats(2), stats))
+		if(hasStatsChanged(hard, this.getLastStats(2), stats))
 			this.stats_ctb.add(stats);
 		else
 		{
-			Stats newStats = this.getStats(2);
+			Stats newStats = this.getLastStats(2);
 			newStats.setDate(stats.getDate());
 			this.stats_ctb.remove(this.stats_ctb.size() - 1);
 			this.stats_ctb.add(newStats);
@@ -363,13 +364,13 @@ public class User implements Serializable
 	 */
 	public void setStatsOsuMania(boolean hard, Stats stats)
 	{
-		while(this.stats_mania.size() > Main.numberTrackedStatsToKeep + 1)
+		while(this.stats_mania.size() > Utils.numberTrackedStatsToKeep + 1)
 			this.stats_mania.remove(0);
-		if(hasStatsChanged(hard, this.getStats(3), stats))
+		if(hasStatsChanged(hard, this.getLastStats(3), stats))
 			this.stats_mania.add(stats);
 		else
 		{
-			Stats newStats = this.getStats(3);
+			Stats newStats = this.getLastStats(3);
 			newStats.setDate(stats.getDate());
 			this.stats_mania.remove(this.stats_mania.size() - 1);
 			this.stats_mania.add(newStats);
@@ -422,5 +423,15 @@ public class User implements Serializable
 		for(int i = 0; i < stats.size(); i++)
 			dates[i] = formatter.format(stats.get(i).getDate());
 		return dates;
+	}
+
+	public String getCountry()
+	{
+		return country;
+	}
+
+	public void setCountry(String country)
+	{
+		this.country = country;
 	}
 }
