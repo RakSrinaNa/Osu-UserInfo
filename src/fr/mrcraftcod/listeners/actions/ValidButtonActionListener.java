@@ -9,6 +9,6 @@ public class ValidButtonActionListener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		Utils.mainFrame.refreshStats(true);
+		Utils.mainFrame.getInfos(true);
 	}
 }

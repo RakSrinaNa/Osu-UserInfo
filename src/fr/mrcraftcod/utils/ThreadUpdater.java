@@ -25,7 +25,7 @@ public class ThreadUpdater extends TimerTask
 	@Override
 	public void run()
 	{
-		Utils.mainFrame.refreshStats(false);
+		Utils.mainFrame.getInfos(false);
 	}
 
 	public void stop()

@@ -23,6 +23,7 @@ public class User implements Serializable
 	private ArrayList<Stats> stats_normal, stats_taiko, stats_ctb, stats_mania;
 	private String username = "";
 	private transient int userID;
+	private transient String country;
 
 	public User()
 	{
@@ -422,5 +423,15 @@ public class User implements Serializable
 		for(int i = 0; i < stats.size(); i++)
 			dates[i] = formatter.format(stats.get(i).getDate());
 		return dates;
+	}
+
+	public String getCountry()
+	{
+		return country;
+	}
+
+	public void setCountry(String country)
+	{
+		this.country = country;
 	}
 }

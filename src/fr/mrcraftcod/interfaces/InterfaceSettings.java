@@ -163,7 +163,7 @@ public class InterfaceSettings
 			Utils.config.writeVar("statsToKeep", numberKeepStats.getText());
 			Utils.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
 		}
-		Utils.mainFrame.updateAutoCompletion(autoCompletionCheck.isSelected());
+		Utils.mainFrame.updateAutoCompletionStatus(autoCompletionCheck.isSelected());
 	}
 
 	/**

@@ -48,7 +48,6 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.JSONException;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionRefreshStats;
@@ -617,9 +616,6 @@ public class Interface // TODO Javadoc
 		getFrame().toFront();
 	}
 
-	public void displayStats(Stats stats)
-	{}
-
 	public void openUserProfile()
 	{
 		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
@@ -670,6 +666,11 @@ public class Interface // TODO Javadoc
 		return colors[new Random().nextInt(colors.length)];
 	}
 
+	public void getInfos(boolean showerror)
+	{
+		getInfos(userNameFieldTextComponent.getText(), showerror);
+	}
+
 	private boolean getInfos(String user, boolean showerror)
 	{
 		LoadingWorker load = new LoadingWorker(frame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
@@ -679,9 +680,7 @@ public class Interface // TODO Javadoc
 
 	public boolean getInfosServer(String user, boolean showerror)
 	{
-		if(new Date().getTime() - Utils.lastPost.getTime() < 1000)
-			return false;
-		if(user.length() < 1)
+		if(!isValidTime() || !isValidUser(user))
 			return false;
 		Utils.logger.log(Level.FINE, "Getting user infos " + user);
 		Utils.lastPost = new Date();
@@ -690,8 +689,8 @@ public class Interface // TODO Javadoc
 		try
 		{
 			User currentUser = new User();
-			Stats statsUser = new Stats();
-			statsUser.setDate(new Date().getTime());
+			Stats currentStats = new Stats();
+			currentStats.setDate(new Date().getTime());
 			final JSONObject jsonResponse = new JSONObject(Utils.sendPost("get_user", Utils.API_KEY, user, getSelectedMode()));
 			username.setBackground(Utils.noticeColor);
 			username.setBorder(Utils.noticeBorder);
@@ -707,39 +706,30 @@ public class Interface // TODO Javadoc
 			track.setEnabled(true);
 			track.setSelected(tracked);
 			autoUpdateCheck.setEnabled(track.isSelected());
+			autoUpdateCheck.setSelected(false);
+			currentUser.setUsername(jsonResponse.getString("username"));
+			currentUser.setUserID(jsonResponse.getInt("user_id"));
+			currentUser.setCountry(jsonResponse.getString("country"));
+			currentStats.setRank(jsonResponse.getDouble("pp_rank"));
+			currentStats.setPlaycount(jsonResponse.getInt("playcount"));
+			currentStats.setRankedScore(jsonResponse.getLong("ranked_score"));
+			currentStats.setTotalScore(jsonResponse.getLong("total_score"));
+			currentStats.setAccuracy(jsonResponse.getDouble("accuracy"));
+			currentStats.setPp(jsonResponse.getDouble("pp_raw"));
+			currentStats.setLevel(jsonResponse.getDouble("level"));
+			currentStats.setCountSS(jsonResponse.getInt("count_rank_ss"));
+			currentStats.setCountS(jsonResponse.getInt("count_rank_s"));
+			currentStats.setCountA(jsonResponse.getInt("count_rank_a"));
+			currentStats.setCount300(jsonResponse.getLong("count300"));
+			currentStats.setCount100(jsonResponse.getLong("count100"));
+			currentStats.setCount50(jsonResponse.getLong("count50"));
+			currentStats.updateTotalHits();
+			if(currentStats.equals(Utils.lastStats))
+				return false;
 			if(!Utils.lastUser.getUsername().equals(jsonResponse.getString("username")))
 			{
 				avatar.setImage(null);
 				countryFlag.setImage(null);
-				autoUpdateCheck.setSelected(false);
-			}
-			currentUser.setUsername(jsonResponse.getString("username"));
-			currentUser.setUserID(jsonResponse.getInt("user_id"));
-			statsUser.setRank(jsonResponse.getDouble("pp_rank"));
-			statsUser.setPlaycount(jsonResponse.getInt("playcount"));
-			statsUser.setRankedScore(jsonResponse.getLong("ranked_score"));
-			statsUser.setTotalScore(jsonResponse.getLong("total_score"));
-			statsUser.setAccuracy(jsonResponse.getDouble("accuracy"));
-			statsUser.setPp(jsonResponse.getDouble("pp_raw"));
-			statsUser.setTotalHits(jsonResponse.getLong("count300") + jsonResponse.getLong("count100") + jsonResponse.getLong("count50"));
-			if(statsUser.equals(Utils.lastStats))
-				return false;
-			Utils.lastStats = statsUser;
-			username.setForeground(getColorUser());
-			updateLevel(jsonResponse.getDouble("level"));
-			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
-			countS.setText(String.valueOf(jsonResponse.getInt("count_rank_s")));
-			countA.setText(String.valueOf(jsonResponse.getInt("count_rank_a")));
-			totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(Utils.getScoreToNextLevel(Utils.getLevel(jsonResponse.getDouble("level")), statsUser.getTotalScore())), Utils.getLevel(jsonResponse.getDouble("level")) + 1));
-			country.setText(CountryCode.getByCode(jsonResponse.getString("country")).getName());
-			DecimalFormat decimalFormat = new DecimalFormat();
-			decimalFormat.setMaximumFractionDigits(2);
-			hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count300")) + " (" + decimalFormat.format((jsonResponse.getLong("count300") * 100f) / statsUser.getTotalHits()) + "%)");
-			hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count100")) + " (" + decimalFormat.format((jsonResponse.getLong("count100") * 100f) / statsUser.getTotalHits()) + "%)");
-			hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(jsonResponse.getLong("count50")) + " (" + decimalFormat.format((jsonResponse.getLong("count50") * 100f) / statsUser.getTotalHits()) + "%)");
-			updateInfos(currentUser.getUsername(), statsUser, previousStats);
-			if(!Utils.lastUser.getUsername().equals(jsonResponse.get("username")))
-			{
 				Runnable task = new Runnable()
 				{
 					@Override
@@ -748,7 +738,7 @@ public class Interface // TODO Javadoc
 						try
 						{
 							avatar.setImage(Utils.resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
-							countryFlag.setImage(Utils.resizeBufferedImage(getFlag(jsonResponse.getString("country")), 16, 16));
+							countryFlag.setImage(Utils.resizeBufferedImage(getCountryFlag(jsonResponse.getString("country")), 16, 16));
 						}
 						catch(Exception e)
 						{
@@ -758,22 +748,23 @@ public class Interface // TODO Javadoc
 				};
 				new Thread(task, "ThreadImages").start();
 			}
+			username.setForeground(getColorUser());
+			displayStats(currentUser, currentStats);
+			updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats);
+			setValidButonIcon("R");
 			userNameFieldTextComponent.setText(currentUser.getUsername());
-			validButon.setIcon(iconRefresh);
-			currentUser.setStats(!showerror, statsUser, getSelectedMode());
+			currentUser.setStats(!showerror, currentStats, getSelectedMode());
 			if(tracked)
 			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
 				lastStatsDate.setEnabled(track.isSelected());
 				lastStatsDateBox.setEnabled(track.isSelected());
 			}
+			Utils.lastStats = currentStats;
 			Utils.lastUser = currentUser;
-			statsDateModel.removeAllElements();
-			for(String date : currentUser.getAvalidbleStatsDates(getSelectedMode()))
-				statsDateModel.addElement(date);
-			lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
+			updateStatsDates(currentUser);
 		}
-		catch(JSONException | IOException e)
+		catch(Exception e)
 		{
 			if(showerror)
 			{
@@ -783,15 +774,25 @@ public class Interface // TODO Javadoc
 			}
 			return false;
 		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
-			return false;
-		}
 		return true;
 	}
 
-	public void updateInfos(String user, Stats currentStats, Stats previousStats)
+	public void displayStats(User user, Stats stats)
+	{
+		updateLevel(stats.getLevel());
+		countSS.setText(String.valueOf(stats.getCountSS()));
+		countS.setText(String.valueOf(stats.getCountS()));
+		countA.setText(String.valueOf(stats.getCountA()));
+		totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(stats.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
+		country.setText(CountryCode.getByCode(user.getCountry()).getName());
+		DecimalFormat decimalFormat = new DecimalFormat();
+		decimalFormat.setMaximumFractionDigits(2);
+		hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount300()) + " (" + decimalFormat.format((stats.getCount300() * 100f) / stats.getTotalHits()) + "%)");
+		hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount100()) + " (" + decimalFormat.format((stats.getCount100() * 100f) / stats.getTotalHits()) + "%)");
+		hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount50()) + " (" + decimalFormat.format((stats.getCount50() * 100f) / stats.getTotalHits()) + "%)");
+	}
+
+	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		username.setText("<html><div>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </div></html>");
@@ -800,6 +801,32 @@ public class Interface // TODO Javadoc
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
+	}
+
+	private void updateLevel(double level)
+	{
+		Utils.logger.log(Level.FINE, "Setting level to " + level);
+		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
+		levelBar.setValue((int) progress);
+		levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
+	}
+
+	private void updateStatsDates(User user)
+	{
+		statsDateModel.removeAllElements();
+		for(String date : user.getAvalidbleStatsDates(getSelectedMode()))
+			statsDateModel.addElement(date);
+		lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
+	}
+
+	private boolean isValidUser(String username)
+	{
+		return username.length() > 1;
+	}
+
+	private boolean isValidTime()
+	{
+		return new Date().getTime() - Utils.lastPost.getTime() > 1000;
 	}
 
 	private synchronized BufferedImage getAvatar(String userID) throws Exception
@@ -815,7 +842,7 @@ public class Interface // TODO Javadoc
 		return avatarDefaultImage;
 	}
 
-	private synchronized BufferedImage getFlag(String country) throws Exception
+	private synchronized BufferedImage getCountryFlag(String country) throws Exception
 	{
 		try
 		{
@@ -824,14 +851,6 @@ public class Interface // TODO Javadoc
 		catch(Exception e)
 		{}
 		return avatarDefaultImage;
-	}
-
-	private void updateLevel(double level)
-	{
-		Utils.logger.log(Level.FINE, "Setting level to " + level);
-		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
-		levelBar.setValue((int) progress);
-		levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
 	}
 
 	public void hideFrame()
@@ -864,14 +883,9 @@ public class Interface // TODO Javadoc
 		this.frame = frame;
 	}
 
-	public void updateAutoCompletion(boolean status)
+	public void updateAutoCompletionStatus(boolean status)
 	{
 		userNameField.setAutoCompletion(status);
-	}
-
-	public void refreshStats(boolean showerror)
-	{
-		getInfos(userNameFieldTextComponent.getText(), showerror);
 	}
 
 	public void switchMode(int mode, boolean checkInfos)

@@ -11,6 +11,6 @@ public class StatsDateItemListener implements ItemListener
 	{
 		if(e.getStateChange() != 1)
 			return;
-		Utils.mainFrame.updateInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate()));
+		Utils.mainFrame.updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate()));
 	}
 }

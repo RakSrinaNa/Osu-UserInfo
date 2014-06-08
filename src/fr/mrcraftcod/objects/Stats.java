@@ -24,6 +24,13 @@ public class Stats implements Serializable, Cloneable
 	private long totalHits;
 	private double rank;
 	private long date;
+	private transient double level;
+	private transient int countSS;
+	private transient int countS;
+	private transient int countA;
+	private transient long count300;
+	private transient long count100;
+	private transient long count50;
 
 	/**
 	 * Constructor.
@@ -391,5 +398,80 @@ public class Stats implements Serializable, Cloneable
 	public void setMode(int mode)
 	{
 		this.mode = mode;
+	}
+
+	public double getLevel()
+	{
+		return level;
+	}
+
+	public void setLevel(double level)
+	{
+		this.level = level;
+	}
+
+	public int getCountSS()
+	{
+		return countSS;
+	}
+
+	public void setCountSS(int countSS)
+	{
+		this.countSS = countSS;
+	}
+
+	public int getCountS()
+	{
+		return countS;
+	}
+
+	public void setCountS(int countS)
+	{
+		this.countS = countS;
+	}
+
+	public int getCountA()
+	{
+		return countA;
+	}
+
+	public void setCountA(int countA)
+	{
+		this.countA = countA;
+	}
+
+	public long getCount300()
+	{
+		return count300;
+	}
+
+	public void setCount300(long count300)
+	{
+		this.count300 = count300;
+	}
+
+	public long getCount100()
+	{
+		return count100;
+	}
+
+	public void setCount100(long count100)
+	{
+		this.count100 = count100;
+	}
+
+	public long getCount50()
+	{
+		return count50;
+	}
+
+	public void setCount50(long count50)
+	{
+		this.count50 = count50;
+	}
+
+	public void updateTotalHits()
+	{
+		this.setTotalHits(this.getCount300() + this.getCount100() + this.getCount50());
 	}
 }
