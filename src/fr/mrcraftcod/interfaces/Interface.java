@@ -51,9 +51,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionRefreshStats;
+import fr.mrcraftcod.listeners.AutoUpdateItemListener;
 import fr.mrcraftcod.listeners.UserNameFieldDocumentListener;
 import fr.mrcraftcod.listeners.UserNameTextFieldKeyListener;
-import fr.mrcraftcod.listeners.actions.AutoUpdateActionListener;
 import fr.mrcraftcod.listeners.actions.ItemAboutActionListener;
 import fr.mrcraftcod.listeners.actions.ItemSettingsActionListener;
 import fr.mrcraftcod.listeners.actions.ModeCTBActionListener;
@@ -290,7 +290,7 @@ public class Interface // TODO Javadoc
 		autoUpdateCheck.setText(Utils.resourceBundle.getString("settings_auto_update"));
 		autoUpdateCheck.setEnabled(false);
 		autoUpdateCheck.setSelected(false);
-		autoUpdateCheck.addActionListener(new AutoUpdateActionListener());
+		autoUpdateCheck.addItemListener(new AutoUpdateItemListener());
 		// Construct
 		int lign = 0;
 		GridBagConstraints c = new GridBagConstraints();
@@ -711,7 +711,7 @@ public class Interface // TODO Javadoc
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
 			currentUser.setCountry(jsonResponse.getString("country"));
 			currentStats.setRank(jsonResponse.getDouble("pp_rank"));
-			currentStats.setPlaycount(jsonResponse.getInt("playcount"));
+			currentStats.setPlaycount(jsonResponse.getInt("playcount") + 1);
 			currentStats.setRankedScore(jsonResponse.getLong("ranked_score"));
 			currentStats.setTotalScore(jsonResponse.getLong("total_score"));
 			currentStats.setAccuracy(jsonResponse.getDouble("accuracy"));
