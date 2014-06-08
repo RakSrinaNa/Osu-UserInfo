@@ -495,4 +495,11 @@ public class Stats implements Serializable, Cloneable
 			return 0;
 		return this.getTotalHits() - previousStats.getTotalHits();
 	}
+
+	public double getDiffPP(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return this.getPp() - previousStats.getPp();
+	}
 }

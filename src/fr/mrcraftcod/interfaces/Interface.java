@@ -813,9 +813,7 @@ public class Interface // TODO Javadoc
 		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-		{
-			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
-		}
+			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
 	}
 
 	private void updateLevel(double level)
