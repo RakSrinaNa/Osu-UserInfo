@@ -25,9 +25,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.swingplus.JHyperlink;
-import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.JTableUneditableModel;
 import fr.mrcraftcod.objects.TableColumnAdjuster;
+import fr.mrcraftcod.utils.Utils;
 
 /**
  * Will show a frame containing a text and the traducers.
@@ -52,15 +52,15 @@ public class InterfaceAbout
 	public InterfaceAbout(Component parent)
 	{
 		traducers = new HashMap<String, String>();
-		traducers.put(Main.resourceBundle.getString("italian"), "TheHowl");
+		traducers.put(Utils.resourceBundle.getString("italian"), "TheHowl");
 		frame = new JFrame("About");
 		frame.setVisible(false);
 		frame.setLayout(new BorderLayout());
 		frame.setPreferredSize(new Dimension(400, 200));
 		frame.setMinimumSize(new Dimension(400, 200));
 		frame.setAlwaysOnTop(false);
-		frame.setIconImages(Main.icons);
-		frame.getContentPane().setBackground(Main.backColor);
+		frame.setIconImages(Utils.icons);
+		frame.getContentPane().setBackground(Utils.backColor);
 		frame.addWindowListener(new WindowListener()
 		{
 			@Override
@@ -70,13 +70,13 @@ public class InterfaceAbout
 			@Override
 			public void windowClosed(WindowEvent arg0)
 			{
-				Main.frame.showFrame();
+				Utils.mainFrame.showFrame();
 			}
 
 			@Override
 			public void windowClosing(WindowEvent arg0)
 			{
-				Main.frame.showFrame();
+				Utils.mainFrame.showFrame();
 			}
 
 			@Override
@@ -95,10 +95,10 @@ public class InterfaceAbout
 			public void windowOpened(WindowEvent arg0)
 			{}
 		});
-		JLabel text = new JLabel(Main.resourceBundle.getString("about_text"));
-		text.setBackground(Main.backColor);
+		JLabel text = new JLabel(Utils.resourceBundle.getString("about_text"));
+		text.setBackground(Utils.backColor);
 		frame.add(text, BorderLayout.NORTH);
-		model = new JTableUneditableModel(valuesTable = getTraducers(), new String[] {Main.resourceBundle.getString("language"), Main.resourceBundle.getString("traducer")});
+		model = new JTableUneditableModel(valuesTable = getTraducers(), new String[] {Utils.resourceBundle.getString("language"), Utils.resourceBundle.getString("traducer")});
 		table = new JTable(model);
 		table.setBackground(Color.WHITE);
 		table.addMouseListener(new MouseListener()
@@ -138,7 +138,7 @@ public class InterfaceAbout
 		table.setDefaultRenderer(String.class, centerRenderer);
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getTableHeader().setResizingAllowed(true);
-		table.getTableHeader().setBackground(Main.backColor);
+		table.getTableHeader().setBackground(Utils.backColor);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.setRowHeight(0, 40);
 		table.setShowGrid(true);
@@ -147,15 +147,15 @@ public class InterfaceAbout
 		tca = new TableColumnAdjuster(table);
 		tca.adjustColumns();
 		scrollPane = new JScrollPane(table);
-		scrollPane.getViewport().setBackground(Main.backColor);
-		scrollPane.setBackground(Main.backColor);
+		scrollPane.getViewport().setBackground(Utils.backColor);
+		scrollPane.setBackground(Utils.backColor);
 		scrollPane.setAutoscrolls(false);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JPanel footer = new JPanel(new BorderLayout());
-		footer.setBackground(Main.backColor);
-		JHyperlink linkAuthor = new JHyperlink(String.format(Main.resourceBundle.getString("about_app_by"), "MrCraftCod"), "https://osu.ppy.sh/u/2313737");
+		footer.setBackground(Utils.backColor);
+		JHyperlink linkAuthor = new JHyperlink(String.format(Utils.resourceBundle.getString("about_app_by"), "MrCraftCod"), "https://osu.ppy.sh/u/2313737");
 		linkAuthor.setBorder(new EmptyBorder(3, 3, 3, 3));
-		JHyperlink linkOsu = new JHyperlink(Main.resourceBundle.getString("about_game_osu"), "https://osu.ppy.sh/");
+		JHyperlink linkOsu = new JHyperlink(Utils.resourceBundle.getString("about_game_osu"), "https://osu.ppy.sh/");
 		linkOsu.setBorder(new EmptyBorder(3, 3, 3, 3));
 		footer.add(linkAuthor, BorderLayout.WEST);
 		footer.add(linkOsu, BorderLayout.EAST);
@@ -166,7 +166,7 @@ public class InterfaceAbout
 		frame.pack();
 		frame.setVisible(true);
 		frame.toFront();
-		Main.frame.hideFrame();
+		Utils.mainFrame.hideFrame();
 	}
 
 	/**

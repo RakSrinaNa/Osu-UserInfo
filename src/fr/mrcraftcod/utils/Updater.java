@@ -41,7 +41,7 @@ public class Updater
 	 */
 	private static void getLastVersionBitbucket(File updateFile, String link)
 	{
-		Main.logger.log(Level.INFO, "Getting last version...");
+		Utils.logger.log(Level.INFO, "Getting last version...");
 		HttpURLConnection request = null;
 		ReadableByteChannel rbc = null;
 		FileOutputStream fos = null;
@@ -58,7 +58,7 @@ public class Updater
 		}
 		catch(IOException e)
 		{
-			Main.logger.log(Level.WARNING, "Error writting XML file", e);
+			Utils.logger.log(Level.WARNING, "Error writting XML file", e);
 		}
 		try
 		{
@@ -89,8 +89,8 @@ public class Updater
 	 */
 	public static boolean getLastJAR(File newFile, String link)
 	{
-		Main.logger.log(Level.INFO, "Getting last JAR...");
-		Main.startup.addStartupText(Main.resourceBundle.getString("downloading"));
+		Utils.logger.log(Level.INFO, "Getting last JAR...");
+		Utils.startup.addStartupText(Utils.resourceBundle.getString("downloading"));
 		boolean result = false;
 		HttpURLConnection request = null;
 		ReadableByteChannel rbc = null;
@@ -109,7 +109,7 @@ public class Updater
 		}
 		catch(IOException e)
 		{
-			Main.logger.log(Level.WARNING, "Error writting JAR file", e);
+			Utils.logger.log(Level.WARNING, "Error writting JAR file", e);
 		}
 		try
 		{
@@ -147,7 +147,7 @@ public class Updater
 			switch(version)
 			{
 				case DEVELOPER:
-					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_dev") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_dev") + "\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath(), Main.APPNAME + ".jar"), LINKDEV);
 					else
@@ -156,7 +156,7 @@ public class Updater
 						return UPDATEERROR;
 					return UPDATEDDEV;
 				case PUBLIC:
-					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public") + "\n\n" + Main.resourceBundle.getString("new_update_want_to_update"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_public") + "\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath(), Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
@@ -165,7 +165,7 @@ public class Updater
 						return UPDATEERROR;
 					return UPDATEDPUBLIC;
 				case PUBLICFDEV:
-					reply = JOptionPane.showConfirmDialog(context, Main.resourceBundle.getString("new_update_public_dev"), Main.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_public_dev"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath(), Main.APPNAME + ".jar"), LINKPUBLIC);
 					else
@@ -190,7 +190,7 @@ public class Updater
 	 */
 	public static int update(JFrame con)
 	{
-		Main.logger.log(Level.INFO, "Checking updates...");
+		Utils.logger.log(Level.INFO, "Checking updates...");
 		context = con;
 		File updateFile = new File(".", "updates.xml");
 		File jarFile = new File(".", Main.APPNAME + ".jar");
@@ -205,14 +205,14 @@ public class Updater
 			return UPDATEERROR;
 		}
 		updateFile.delete();
-		boolean devMode = Main.config.getBoolean("devMode", false);
+		boolean devMode = Utils.config.getBoolean("devMode", false);
 		int result = NOUPDATE;
 		if(versionsUTD == null)
 			result = UPDATEERROR;
 		else if(versionsUTD.size() < 1)
 			result = UPDATEERROR;
 		for(String key : versionsUTD.keySet())
-			Main.logger.log(Level.INFO, "Version " + key + " latest is " + versionsUTD.get(key) + ", you are in " + Main.VERSION);
+			Utils.logger.log(Level.INFO, "Version " + key + " latest is " + versionsUTD.get(key) + ", you are in " + Main.VERSION);
 		if(!devMode && Main.VERSION.contains("b"))
 			result = update(jarFile, PUBLICFDEV);
 		if(devMode && !isDevUpToDate())
@@ -225,9 +225,9 @@ public class Updater
 		{
 			try
 			{
-				Main.startup.setPercent(100);
-				JOptionPane.showMessageDialog(context, String.format(Main.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
-				Main.exit();
+				Utils.startup.setPercent(100);
+				JOptionPane.showMessageDialog(context, String.format(Utils.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
+				Utils.exit();
 				String javaHome = System.getProperty("java.home");
 				File f = new File(javaHome);
 				f = new File(f, "bin");
@@ -236,7 +236,7 @@ public class Updater
 			}
 			catch(final IOException e)
 			{
-				Main.logger.log(Level.SEVERE, "Error launching new version", e);
+				Utils.logger.log(Level.SEVERE, "Error launching new version", e);
 			}
 		}
 		return result;

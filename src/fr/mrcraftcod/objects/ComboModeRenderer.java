@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
-import fr.mrcraftcod.Main;
+import fr.mrcraftcod.utils.Utils;
 
 @SuppressWarnings("rawtypes")
 public class ComboModeRenderer implements ListCellRenderer
@@ -48,10 +48,10 @@ public class ComboModeRenderer implements ListCellRenderer
 		}
 		catch(Exception e)
 		{}
-		label.setFont(Main.fontMain);
+		label.setFont(Utils.fontMain);
 		label.setBorder(new EmptyBorder(2, 2, 2, 0));
 		label.setOpaque(true);
-		label.setBackground(Main.searchBarColor);
+		label.setBackground(Utils.searchBarColor);
 		if(list != null)
 			isSelected = list.isSelectedIndex(index);
 		if(list.isSelectedIndex(index))

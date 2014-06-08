@@ -13,25 +13,25 @@ public class ThreadUpdater extends TimerTask
 	{
 		try
 		{
-			Main.logger.log(Level.INFO, "Starting updater task...");
+			Utils.logger.log(Level.INFO, "Starting updater task...");
 			timer = new Timer();
 			timer.schedule(this, 0, 15 * 1000);
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Failed to start updater task", e);
+			Utils.logger.log(Level.WARNING, "Failed to start updater task", e);
 		}
 	}
 
 	@Override
 	public void run()
 	{
-		Main.frame.refreshStats(false);
+		Utils.mainFrame.refreshStats(false);
 	}
 
 	public void stop()
 	{
-		Main.logger.log(Level.FINE, "Stopping updater Thread");
+		Utils.logger.log(Level.FINE, "Stopping updater Thread");
 		if(timer != null)
 		{
 			timer.cancel();

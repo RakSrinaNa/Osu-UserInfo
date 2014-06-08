@@ -44,7 +44,7 @@ public class Configuration
 		if(!appData.exists())
 			appData.mkdir();
 		configFile = new File(appData, fileName);
-		Main.logger.log(Level.INFO, "Opening config file " + configFile.getAbsolutePath());
+		Utils.logger.log(Level.INFO, "Opening config file " + configFile.getAbsolutePath());
 		try
 		{
 			lastConfigFile = readSmallTextFile(configFile);
@@ -68,9 +68,9 @@ public class Configuration
 					if(string.startsWith(key + ":"))
 					{
 						if(key.equals("api_key"))
-							Main.logger.log(Level.FINE, "Found key " + key);
+							Utils.logger.log(Level.FINE, "Found key " + key);
 						else
-							Main.logger.log(Level.FINE, "Found key " + key + " in " + string);
+							Utils.logger.log(Level.FINE, "Found key " + key + " in " + string);
 						return string.substring((key + ":").length());
 					}
 			}
@@ -109,7 +109,7 @@ public class Configuration
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Failed to parse to boolean!", e);
+			Utils.logger.log(Level.WARNING, "Failed to parse to boolean!", e);
 		}
 		return defaultValue;
 	}
@@ -123,7 +123,7 @@ public class Configuration
 	 */
 	public synchronized boolean writeVar(String key, Object obj)
 	{
-		Main.logger.log(Level.FINE, "Writting var " + key);
+		Utils.logger.log(Level.FINE, "Writting var " + key);
 		String value = obj == null ? "" : obj.toString();
 		List<String> oldConfiguration = null;
 		oldConfiguration = lastConfigFile;
@@ -134,7 +134,7 @@ public class Configuration
 		}
 		catch(final IOException exception)
 		{
-			Main.logger.log(Level.WARNING, "Failed to write config file!", exception);
+			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
 			return false;
 		}
 		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
@@ -157,9 +157,9 @@ public class Configuration
 		}
 		catch(IOException e)
 		{
-			Main.logger.log(Level.WARNING, "Failed to read config file!", e);
+			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
 		}
-		Main.logger.log(Level.FINE, "Config file wrote");
+		Utils.logger.log(Level.FINE, "Config file wrote");
 		return true;
 	}
 
@@ -171,7 +171,7 @@ public class Configuration
 	 */
 	public synchronized boolean deleteVar(String key)
 	{
-		Main.logger.log(Level.FINE, "Deletting var " + key);
+		Utils.logger.log(Level.FINE, "Deletting var " + key);
 		List<String> oldConfiguration = null;
 		oldConfiguration = lastConfigFile;
 		FileWriter fileWriter;
@@ -181,7 +181,7 @@ public class Configuration
 		}
 		catch(final IOException exception)
 		{
-			Main.logger.log(Level.WARNING, "Failed to write config file!", exception);
+			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
 			return false;
 		}
 		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
@@ -199,9 +199,9 @@ public class Configuration
 		}
 		catch(IOException e)
 		{
-			Main.logger.log(Level.WARNING, "Failed to read config file!", e);
+			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
 		}
-		Main.logger.log(Level.FINE, "Config file wrote");
+		Utils.logger.log(Level.FINE, "Config file wrote");
 		return true;
 	}
 
@@ -251,7 +251,7 @@ public class Configuration
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Failed to parse to double!", e);
+			Utils.logger.log(Level.WARNING, "Failed to parse to double!", e);
 		}
 		return defaultValue;
 	}
@@ -271,7 +271,7 @@ public class Configuration
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Failed to parse to long!", e);
+			Utils.logger.log(Level.WARNING, "Failed to parse to long!", e);
 		}
 		return defaultValue;
 	}
@@ -291,7 +291,7 @@ public class Configuration
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Failed to parse to integer!", e);
+			Utils.logger.log(Level.WARNING, "Failed to parse to integer!", e);
 		}
 		return defaultValue;
 	}

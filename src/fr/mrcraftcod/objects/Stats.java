@@ -5,8 +5,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
-import fr.mrcraftcod.Main;
-import fr.mrcraftcod.interfaces.Interface;
+import fr.mrcraftcod.utils.Utils;
 
 /**
  * Object to store stats.
@@ -265,7 +264,7 @@ public class Stats implements Serializable, Cloneable
 		if(previousStats == null)
 			return "";
 		double delta = this.getAccuracy() - previousStats.getAccuracy();
-		if(Interface.round(delta, 2) == 0D)
+		if(Utils.round(delta, 2) == 0D)
 			return "";
 		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
 	}
@@ -371,7 +370,7 @@ public class Stats implements Serializable, Cloneable
 		long lastDate = stats.getDate();
 		if(lastDate <= 0)
 			return "";
-		return String.format(Main.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault()).format(new Date(lastDate)));
+		return String.format(Utils.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault()).format(new Date(lastDate)));
 	}
 
 	/**

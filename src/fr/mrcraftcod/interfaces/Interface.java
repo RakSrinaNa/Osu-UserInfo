@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -27,13 +26,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -82,6 +77,7 @@ import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
+import fr.mrcraftcod.utils.Utils;
 
 public class Interface // TODO Javadoc
 {
@@ -102,34 +98,18 @@ public class Interface // TODO Javadoc
 	private User lastUser = new User();
 	private Stats lastStats = new Stats();
 
-	public enum Mods
-	{
-		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
-		private long key;
-
-		Mods(long key)
-		{
-			this.key = key;
-		}
-
-		private long getKey()
-		{
-			return this.key;
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
 	{
 		int pictureButtonSize = 20;
-		Main.logger.log(Level.FINE, "Loading icons...");
-		iconRefresh = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
-		iconSearch = new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
+		Utils.logger.log(Level.FINE, "Loading icons...");
+		iconRefresh = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
+		iconSearch = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
 		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		/************** FRAME INFOS ********************/
-		Main.logger.log(Level.FINE, "Setting frame options...");
+		Utils.logger.log(Level.FINE, "Setting frame options...");
 		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
-		getFrame().setBackground(Main.backColor);
+		getFrame().setBackground(Utils.backColor);
 		getFrame().setFocusable(true);
 		getFrame().setVisible(false);
 		getFrame().getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "getInfos");
@@ -156,7 +136,7 @@ public class Interface // TODO Javadoc
 			@Override
 			public void windowClosing(final WindowEvent event)
 			{
-				exit();
+				Utils.exit();
 			}
 
 			@Override
@@ -172,7 +152,7 @@ public class Interface // TODO Javadoc
 			{
 				try
 				{
-					if(Main.config.getBoolean("reduceTray", false))
+					if(Utils.config.getBoolean("reduceTray", false))
 					{
 						SystemTrayOsuStats.add();
 						hideFrame();
@@ -191,19 +171,19 @@ public class Interface // TODO Javadoc
 		getFrame().setMinimumSize(new Dimension(575, 725));
 		getFrame().setPreferredSize(new Dimension(575, 725));
 		getFrame().setAlwaysOnTop(false);
-		getFrame().setIconImages(Main.icons);
-		getFrame().getContentPane().setBackground(Main.backColor);
+		getFrame().setIconImages(Utils.icons);
+		getFrame().getContentPane().setBackground(Utils.backColor);
 		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
-		Main.logger.log(Level.FINE, "Creating frame bar...");
-		Font menuBarFont = Main.fontMain.deriveFont(Font.PLAIN, 13);
+		Utils.logger.log(Level.FINE, "Creating frame bar...");
+		Font menuBarFont = Utils.fontMain.deriveFont(Font.PLAIN, 13);
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setFont(menuBarFont);
-		JMenu menuFile = new JMenu(Main.resourceBundle.getString("menu_bar_file"));
+		JMenu menuFile = new JMenu(Utils.resourceBundle.getString("menu_bar_file"));
 		menuFile.setFont(menuBarFont);
-		JMenu menuHelp = new JMenu(Main.resourceBundle.getString("menu_bar_help"));
+		JMenu menuHelp = new JMenu(Utils.resourceBundle.getString("menu_bar_help"));
 		menuHelp.setFont(menuBarFont);
-		JMenuItem itemSettings = new JMenuItem(Main.resourceBundle.getString("settings"));
+		JMenuItem itemSettings = new JMenuItem(Utils.resourceBundle.getString("settings"));
 		itemSettings.setFont(menuBarFont);
 		itemSettings.addActionListener(new ActionListener()
 		{
@@ -213,7 +193,7 @@ public class Interface // TODO Javadoc
 				new InterfaceSettings();
 			}
 		});
-		JMenuItem itemAbout = new JMenuItem(Main.resourceBundle.getString("menu_bar_help_about"));
+		JMenuItem itemAbout = new JMenuItem(Utils.resourceBundle.getString("menu_bar_help_about"));
 		itemAbout.setFont(menuBarFont);
 		itemAbout.addActionListener(new ActionListener()
 		{
@@ -229,9 +209,9 @@ public class Interface // TODO Javadoc
 		menuBar.add(menuHelp);
 		getFrame().setJMenuBar(menuBar);
 		/*************** SEARCH PANEL **********************/
-		Main.logger.log(Level.FINE, "Creating search panel...");
+		Utils.logger.log(Level.FINE, "Creating search panel...");
 		JPanel searchPanel = new JPanel(new GridBagLayout());
-		searchPanel.setBackground(Main.searchBarColor);
+		searchPanel.setBackground(Utils.searchBarColor);
 		searchPanel.setMaximumSize(new Dimension(9999, 36));
 		searchPanel.addComponentListener(new ComponentListener()
 		{
@@ -259,12 +239,12 @@ public class Interface // TODO Javadoc
 			public void componentHidden(ComponentEvent e)
 			{}
 		});
-		JLabel usernameAsk = new JLabel(Main.resourceBundle.getString("username") + " : ");
-		usernameAsk.setFont(Main.fontMain);
+		JLabel usernameAsk = new JLabel(Utils.resourceBundle.getString("username") + " : ");
+		usernameAsk.setFont(Utils.fontMain);
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
-		userNameField = new AutoComboBox(getTrackedUsers(), Main.config.getBoolean("autoCompletion", false));
-		userNameField.setFont(Main.fontMain);
+		userNameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean("autoCompletion", false));
+		userNameField.setFont(Utils.fontMain);
 		userNameFieldModel = userNameField.getDefModel();
 		userNameField.setEditable(true);
 		userNameField.setPreferredSize(new Dimension(200, 30));
@@ -300,7 +280,7 @@ public class Interface // TODO Javadoc
 				{}
 			}
 		});
-		new GhostText(((JTextField) userNameField.getEditor().getEditorComponent()), Main.resourceBundle.getString("ghost_username_field"));
+		new GhostText(((JTextField) userNameField.getEditor().getEditorComponent()), Utils.resourceBundle.getString("ghost_username_field"));
 		((JTextField) userNameField.getEditor().getEditorComponent()).addKeyListener(new KeyListener()
 		{
 			@Override
@@ -319,8 +299,8 @@ public class Interface // TODO Javadoc
 			{}
 		});
 		validButon = new JButton(iconSearch);
-		validButon.setFont(Main.fontMain);
-		validButon.setToolTipText(Main.resourceBundle.getString("button_search_tooltip_text"));
+		validButon.setFont(Utils.fontMain);
+		validButon.setToolTipText(Utils.resourceBundle.getString("button_search_tooltip_text"));
 		validButon.addActionListener(new ActionListener()
 		{
 			@Override
@@ -354,7 +334,7 @@ public class Interface // TODO Javadoc
 		constraint.gridwidth = 3;
 		searchPanel.add(separator, constraint);
 		/*************** MODE PANEL **********************/
-		Main.logger.log(Level.FINE, "Creating mode panel...");
+		Utils.logger.log(Level.FINE, "Creating mode panel...");
 		int iconSize = 16;
 		Color colorButtonModeSelected = new Color(231, 228, 252);
 		Color colorButtonModeUnselected = new Color(190, 168, 244);
@@ -362,7 +342,7 @@ public class Interface // TODO Javadoc
 		Color colorTextSelected = new Color(55, 67, 166);
 		Color colorTextUnselected = new Color(255, 255, 255);
 		JPanel modePanel = new JPanel(new GridBagLayout());
-		modePanel.setBackground(Main.backColor);
+		modePanel.setBackground(Utils.backColor);
 		modePanel.addComponentListener(new ComponentListener()
 		{
 			@Override
@@ -404,8 +384,8 @@ public class Interface // TODO Javadoc
 		buttonStandard.setBorderColor(colorButtonBorder);
 		buttonStandard.setDisabledTextColor(colorTextUnselected);
 		buttonStandard.setForeground(colorTextSelected);
-		buttonStandard.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
-		buttonStandard.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
+		buttonStandard.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
+		buttonStandard.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
 		buttonStandard.setFocusPainted(false);
 		buttonStandard.addActionListener(new ActionListener()
 		{
@@ -421,8 +401,8 @@ public class Interface // TODO Javadoc
 		buttonTaiko.setBorderColor(colorButtonBorder);
 		buttonTaiko.setDisabledTextColor(colorTextUnselected);
 		buttonTaiko.setForeground(colorTextSelected);
-		buttonTaiko.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
-		buttonTaiko.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
+		buttonTaiko.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
+		buttonTaiko.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
 		buttonTaiko.setFocusPainted(false);
 		buttonTaiko.addActionListener(new ActionListener()
 		{
@@ -438,8 +418,8 @@ public class Interface // TODO Javadoc
 		buttonCTB.setBorderColor(colorButtonBorder);
 		buttonCTB.setDisabledTextColor(colorTextUnselected);
 		buttonCTB.setForeground(colorTextSelected);
-		buttonCTB.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
-		buttonCTB.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
+		buttonCTB.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
+		buttonCTB.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
 		buttonCTB.setFocusPainted(false);
 		buttonCTB.addActionListener(new ActionListener()
 		{
@@ -455,8 +435,8 @@ public class Interface // TODO Javadoc
 		buttonMania.setBorderColor(colorButtonBorder);
 		buttonMania.setDisabledTextColor(colorTextUnselected);
 		buttonMania.setForeground(colorTextSelected);
-		buttonMania.setUnselectedIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
-		buttonMania.setIconMode(new ImageIcon(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
+		buttonMania.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
+		buttonMania.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
 		buttonMania.setFocusPainted(false);
 		buttonMania.addActionListener(new ActionListener()
 		{
@@ -484,26 +464,26 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 3;
 		modePanel.add(buttonMania, constraint);
 		/***************** LEVEL PANEL ********************/
-		Main.logger.log(Level.FINE, "Creating level panel...");
+		Utils.logger.log(Level.FINE, "Creating level panel...");
 		JPanel levelUserPanel = new JPanel(new BorderLayout());
-		levelUserPanel.setBackground(Main.backColor);
+		levelUserPanel.setBackground(Utils.backColor);
 		levelBar = new JProgressBar();
 		Dimension dim = levelBar.getPreferredSize();
 		dim.height += 3;
 		levelBar.setPreferredSize(dim);
 		levelBar.setMaximum(100);
 		levelBar.setStringPainted(true);
-		levelBar.setFont(Main.fontMain.deriveFont(Font.BOLD, Main.fontMain.getSize()));
+		levelBar.setFont(Utils.fontMain.deriveFont(Font.BOLD, Utils.fontMain.getSize()));
 		updateLevel(0D);
 		// Construct
 		levelUserPanel.add(levelBar, BorderLayout.CENTER);
 		/***************** TRACK PANEL ********************/
-		Main.logger.log(Level.FINE, "Creating track panel...");
+		Utils.logger.log(Level.FINE, "Creating track panel...");
 		JPanel trackUserPanel = new JPanel(new GridBagLayout());
-		trackUserPanel.setBackground(Main.backColor);
+		trackUserPanel.setBackground(Utils.backColor);
 		track = new JCheckBox();
-		track.setText(Main.resourceBundle.getString("track_user"));
-		track.setFont(Main.fontMain);
+		track.setText(Utils.resourceBundle.getString("track_user"));
+		track.setFont(Utils.fontMain);
 		track.setEnabled(false);
 		track.addActionListener(new ActionListener()
 		{
@@ -523,12 +503,12 @@ public class Interface // TODO Javadoc
 					unTrackUser(lastUser);
 			}
 		});
-		lastStatsDate = new JLabel(Main.resourceBundle.getString("last_stats_date"));
+		lastStatsDate = new JLabel(Utils.resourceBundle.getString("last_stats_date"));
 		lastStatsDate.setEnabled(track.isSelected());
-		lastStatsDate.setFont(Main.fontMain);
+		lastStatsDate.setFont(Utils.fontMain);
 		statsDateModel = new DefaultComboBoxModel<String>(new String[] {});
 		lastStatsDateBox = new JComboBox<String>(statsDateModel);
-		lastStatsDateBox.setFont(Main.fontMain);
+		lastStatsDateBox.setFont(Utils.fontMain);
 		lastStatsDateBox.setEnabled(track.isEnabled());
 		lastStatsDateBox.addItemListener(new ItemListener()
 		{
@@ -544,8 +524,8 @@ public class Interface // TODO Javadoc
 			}
 		});
 		autoUpdateCheck = new JCheckBox();
-		autoUpdateCheck.setFont(Main.fontMain);
-		autoUpdateCheck.setText(Main.resourceBundle.getString("settings_auto_update"));
+		autoUpdateCheck.setFont(Utils.fontMain);
+		autoUpdateCheck.setText(Utils.resourceBundle.getString("settings_auto_update"));
 		autoUpdateCheck.setEnabled(false);
 		autoUpdateCheck.setSelected(false);
 		autoUpdateCheck.addActionListener(new ActionListener()
@@ -553,12 +533,12 @@ public class Interface // TODO Javadoc
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				Main.setThreadUpdater(autoUpdateCheck.isSelected());
+				Utils.setThreadUpdater(autoUpdateCheck.isSelected());
 			}
 		});
 		int logoSize = 28;
-		ImagePanel forumLink = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), logoSize, logoSize));
-		forumLink.setBackground(Main.backColor);
+		ImagePanel forumLink = new ImagePanel(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), logoSize, logoSize));
+		forumLink.setBackground(Utils.backColor);
 		forumLink.setMinimumSize(new Dimension(logoSize, logoSize));
 		forumLink.setPreferredSize(new Dimension(logoSize, logoSize));
 		forumLink.setMaximumSize(new Dimension(logoSize, logoSize));
@@ -619,10 +599,10 @@ public class Interface // TODO Javadoc
 		c.weightx = 1;
 		trackUserPanel.add(lastStatsDateBox, c);
 		/***************** HITS PANEL ********************/
-		Main.logger.log(Level.FINE, "Creating hits panel...");
+		Utils.logger.log(Level.FINE, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
-		hitCountPanel.setBackground(Main.noticeColor);
-		TitledBorder borderHits = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("hits"));
+		hitCountPanel.setBackground(Utils.noticeColor);
+		TitledBorder borderHits = BorderFactory.createTitledBorder(Utils.noticeBorder, Utils.resourceBundle.getString("hits"));
 		borderHits.setTitleJustification(TitledBorder.CENTER);
 		borderHits.setTitlePosition(TitledBorder.CENTER);
 		hitCountPanel.setBorder(borderHits);
@@ -635,9 +615,9 @@ public class Interface // TODO Javadoc
 		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count300Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")), picturesSize, picturesSize));
+		count300Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")), picturesSize, picturesSize));
 		hitCount300 = new JLabel();
-		hitCount300.setFont(Main.fontMain);
+		hitCount300.setFont(Utils.fontMain);
 		hitCount300.setHorizontalAlignment(JLabel.CENTER);
 		hitCount300.setVerticalAlignment(JLabel.CENTER);
 		count300Panel.add(count300Picture);
@@ -650,9 +630,9 @@ public class Interface // TODO Javadoc
 		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count100Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")), picturesSize, picturesSize));
+		count100Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")), picturesSize, picturesSize));
 		hitCount100 = new JLabel();
-		hitCount100.setFont(Main.fontMain);
+		hitCount100.setFont(Utils.fontMain);
 		hitCount100.setHorizontalAlignment(JLabel.CENTER);
 		hitCount100.setVerticalAlignment(JLabel.CENTER);
 		count100Panel.add(count100Picture);
@@ -666,9 +646,9 @@ public class Interface // TODO Javadoc
 		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count50Picture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")), picturesSize, picturesSize));
+		count50Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")), picturesSize, picturesSize));
 		hitCount50 = new JLabel();
-		hitCount50.setFont(Main.fontMain);
+		hitCount50.setFont(Utils.fontMain);
 		hitCount50.setHorizontalAlignment(JLabel.CENTER);
 		hitCount50.setVerticalAlignment(JLabel.CENTER);
 		count50Panel.add(count50Picture);
@@ -688,10 +668,10 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 2;
 		hitCountPanel.add(count50Panel, constraint);
 		/***************** RANK PANEL ********************/
-		Main.logger.log(Level.FINE, "Creating rank panel...");
+		Utils.logger.log(Level.FINE, "Creating rank panel...");
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
-		ranksUserPanel.setBackground(Main.noticeColor);
-		TitledBorder borderRanks = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("ranks"));
+		ranksUserPanel.setBackground(Utils.noticeColor);
+		TitledBorder borderRanks = BorderFactory.createTitledBorder(Utils.noticeBorder, Utils.resourceBundle.getString("ranks"));
 		borderRanks.setTitleJustification(TitledBorder.CENTER);
 		borderRanks.setTitlePosition(TitledBorder.CENTER);
 		ranksUserPanel.setBorder(borderRanks);
@@ -704,9 +684,9 @@ public class Interface // TODO Javadoc
 		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		ssPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")), picturesSize, picturesSize));
+		ssPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")), picturesSize, picturesSize));
 		countSS = new JLabel();
-		countSS.setFont(Main.fontMain);
+		countSS.setFont(Utils.fontMain);
 		countSS.setHorizontalAlignment(JLabel.CENTER);
 		countSS.setVerticalAlignment(JLabel.CENTER);
 		ssPanel.add(ssPicture);
@@ -719,9 +699,9 @@ public class Interface // TODO Javadoc
 		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		sPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")), picturesSize, picturesSize));
+		sPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")), picturesSize, picturesSize));
 		countS = new JLabel();
-		countS.setFont(Main.fontMain);
+		countS.setFont(Utils.fontMain);
 		countS.setHorizontalAlignment(JLabel.CENTER);
 		countS.setVerticalAlignment(JLabel.CENTER);
 		sPanel.add(sPicture);
@@ -734,9 +714,9 @@ public class Interface // TODO Javadoc
 		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		aPicture.setImage(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")), picturesSize, picturesSize));
+		aPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")), picturesSize, picturesSize));
 		countA = new JLabel();
-		countA.setFont(Main.fontMain);
+		countA.setFont(Utils.fontMain);
 		countA.setHorizontalAlignment(JLabel.CENTER);
 		countA.setVerticalAlignment(JLabel.CENTER);
 		aPanel.add(aPicture);
@@ -756,14 +736,14 @@ public class Interface // TODO Javadoc
 		constraint.gridx = 2;
 		ranksUserPanel.add(aPanel, constraint);
 		/******************** USER PANEL *****************/
-		Main.logger.log(Level.FINE, "Creating user panel...");
+		Utils.logger.log(Level.FINE, "Creating user panel...");
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
-		avatarPanel.setBackground(Main.backColor);
+		avatarPanel.setBackground(Utils.backColor);
 		int avatarSize = 128;
-		avatar = new ImagePanel(resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize));
+		avatar = new ImagePanel(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize));
 		avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		avatar.setBackground(Main.backColor);
-		avatar.setToolTipText(Main.resourceBundle.getString("open_profile"));
+		avatar.setBackground(Utils.backColor);
+		avatar.setToolTipText(Utils.resourceBundle.getString("open_profile"));
 		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
@@ -793,7 +773,7 @@ public class Interface // TODO Javadoc
 			{}
 		});
 		username = new JLabel(" ");
-		username.setToolTipText(Main.resourceBundle.getString("open_profile"));
+		username.setToolTipText(Utils.resourceBundle.getString("open_profile"));
 		username.addMouseListener(new MouseListener()
 		{
 			@Override
@@ -821,8 +801,8 @@ public class Interface // TODO Javadoc
 		});
 		username.setOpaque(true);
 		username.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		username.setBackground(Main.backColor);
-		username.setFont(Main.fontMain.deriveFont(Font.PLAIN, 25));
+		username.setBackground(Utils.backColor);
+		username.setFont(Utils.fontMain.deriveFont(Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.fill = GridBagConstraints.LINE_START;
@@ -837,82 +817,82 @@ public class Interface // TODO Javadoc
 		constraint.insets = new Insets(5, 0, 3, 0);
 		avatarPanel.add(username, constraint);
 		/**************** OTHERS PANEL *********************/
-		Main.logger.log(Level.FINE, "Creating other panel...");
+		Utils.logger.log(Level.FINE, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
-		otherPanel.setBackground(Main.noticeColor);
-		otherPanel.setBackground(Main.noticeColor);
-		TitledBorder borderOther = BorderFactory.createTitledBorder(Main.noticeBorder, Main.resourceBundle.getString("stats"));
+		otherPanel.setBackground(Utils.noticeColor);
+		otherPanel.setBackground(Utils.noticeColor);
+		TitledBorder borderOther = BorderFactory.createTitledBorder(Utils.noticeBorder, Utils.resourceBundle.getString("stats"));
 		borderOther.setTitleJustification(TitledBorder.CENTER);
 		borderOther.setTitlePosition(TitledBorder.CENTER);
 		otherPanel.setBorder(borderOther);
 		// PlayCount
-		JLabel playCountLabel = new JLabel(Main.resourceBundle.getString("play_count") + " : ");
-		playCountLabel.setFont(Main.fontMain);
+		JLabel playCountLabel = new JLabel(Utils.resourceBundle.getString("play_count") + " : ");
+		playCountLabel.setFont(Utils.fontMain);
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		playCountLabel.setVerticalAlignment(JLabel.CENTER);
 		playCount = new JLabel();
-		playCount.setFont(Main.fontMain);
+		playCount.setFont(Utils.fontMain);
 		playCount.setHorizontalAlignment(JLabel.LEFT);
 		playCount.setVerticalAlignment(JLabel.CENTER);
 		// RankedScore
-		JLabel rankedScoreLabel = new JLabel(Main.resourceBundle.getString("ranked_score") + " : ");
-		rankedScoreLabel.setFont(Main.fontMain);
+		JLabel rankedScoreLabel = new JLabel(Utils.resourceBundle.getString("ranked_score") + " : ");
+		rankedScoreLabel.setFont(Utils.fontMain);
 		rankedScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		rankedScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		rankedScore = new JLabel();
-		rankedScore.setFont(Main.fontMain);
+		rankedScore.setFont(Utils.fontMain);
 		rankedScore.setHorizontalAlignment(JLabel.LEFT);
 		rankedScore.setVerticalAlignment(JLabel.CENTER);
 		// TotalScore
-		JLabel totalScoreLabel = new JLabel(Main.resourceBundle.getString("total_score") + " : ");
-		totalScoreLabel.setFont(Main.fontMain);
+		JLabel totalScoreLabel = new JLabel(Utils.resourceBundle.getString("total_score") + " : ");
+		totalScoreLabel.setFont(Utils.fontMain);
 		totalScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalScoreLabel.setVerticalAlignment(JLabel.CENTER);
 		totalScore = new JLabel();
-		totalScore.setFont(Main.fontMain);
+		totalScore.setFont(Utils.fontMain);
 		totalScore.setHorizontalAlignment(JLabel.LEFT);
 		totalScore.setVerticalAlignment(JLabel.CENTER);
 		// PP
 		JLabel ppCountLabel = new JLabel("PP : ");
-		ppCountLabel.setFont(Main.fontMain);
+		ppCountLabel.setFont(Utils.fontMain);
 		ppCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		ppCountLabel.setVerticalAlignment(JLabel.CENTER);
 		ppCount = new JLabel();
-		ppCount.setFont(Main.fontMain);
+		ppCount.setFont(Utils.fontMain);
 		ppCount.setHorizontalAlignment(JLabel.LEFT);
 		ppCount.setVerticalAlignment(JLabel.CENTER);
 		// Accuracy
-		JLabel accuracyLabel = new JLabel(Main.resourceBundle.getString("accuracy") + " : ");
-		accuracyLabel.setFont(Main.fontMain);
+		JLabel accuracyLabel = new JLabel(Utils.resourceBundle.getString("accuracy") + " : ");
+		accuracyLabel.setFont(Utils.fontMain);
 		accuracyLabel.setHorizontalAlignment(JLabel.RIGHT);
 		accuracyLabel.setVerticalAlignment(JLabel.CENTER);
 		accuracy = new JLabel();
-		accuracy.setFont(Main.fontMain);
+		accuracy.setFont(Utils.fontMain);
 		accuracy.setHorizontalAlignment(JLabel.LEFT);
 		accuracy.setVerticalAlignment(JLabel.CENTER);
 		// Country
 		picturesSize = 16;
-		JLabel countryLabel = new JLabel(Main.resourceBundle.getString("country") + " : ");
-		countryLabel.setFont(Main.fontMain);
+		JLabel countryLabel = new JLabel(Utils.resourceBundle.getString("country") + " : ");
+		countryLabel.setFont(Utils.fontMain);
 		countryLabel.setHorizontalAlignment(JLabel.RIGHT);
 		countryLabel.setVerticalAlignment(JLabel.CENTER);
 		country = new JLabel();
-		country.setFont(Main.fontMain);
+		country.setFont(Utils.fontMain);
 		country.setHorizontalAlignment(JLabel.LEFT);
 		country.setVerticalAlignment(JLabel.CENTER);
 		countryFlag = new ImagePanel();
 		countryFlag.setPrintLoading(false);
-		countryFlag.setBackground(Main.noticeColor);
+		countryFlag.setBackground(Utils.noticeColor);
 		countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		// Total hits
-		JLabel totalHitsLabel = new JLabel(Main.resourceBundle.getString("total_hits") + " : ");
-		totalHitsLabel.setFont(Main.fontMain);
+		JLabel totalHitsLabel = new JLabel(Utils.resourceBundle.getString("total_hits") + " : ");
+		totalHitsLabel.setFont(Utils.fontMain);
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalHitsLabel.setVerticalAlignment(JLabel.CENTER);
 		totalHits = new JLabel();
-		totalHits.setFont(Main.fontMain);
+		totalHits.setFont(Utils.fontMain);
 		totalHits.setHorizontalAlignment(JLabel.LEFT);
 		totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
@@ -933,7 +913,7 @@ public class Interface // TODO Javadoc
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
 		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
-		Main.logger.log(Level.FINE, "Creating frame panel...");
+		Utils.logger.log(Level.FINE, "Creating frame panel...");
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
@@ -963,13 +943,16 @@ public class Interface // TODO Javadoc
 		getFrame().getContentPane().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
 		getFrame().getContentPane().add(trackUserPanel, constraint);
-		Main.logger.log(Level.FINE, "Packing frame...");
+		Utils.logger.log(Level.FINE, "Packing frame...");
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		getFrame().setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
 		getFrame().pack();
 		getFrame().setVisible(true);
 		getFrame().toFront();
 	}
+
+	public void displayStats(Stats stats)
+	{}
 
 	private void openUserProfile()
 	{
@@ -990,21 +973,21 @@ public class Interface // TODO Javadoc
 
 	private void trackNewUser(User user) throws IOException
 	{
-		Main.logger.log(Level.FINE, "Trcking user " + user.getUsername());
-		ArrayList<String> users = getTrackedUsers();
+		Utils.logger.log(Level.FINE, "Trcking user " + user.getUsername());
+		ArrayList<String> users = Utils.getTrackedUsers();
 		users.add(user.getUsername());
 		userNameFieldModel.addElement(user.getUsername());
 		user.serialize(new File(Configuration.appData, user.getUsername()));
 		lastStatsDate.setEnabled(track.isSelected());
 		lastStatsDateBox.setEnabled(track.isSelected());
 		autoUpdateCheck.setEnabled(track.isSelected());
-		setTrackedUser(users);
+		Utils.setTrackedUser(users);
 	}
 
 	private void unTrackUser(User user)
 	{
-		Main.logger.log(Level.FINE, "Untrcking user " + user.getUsername());
-		ArrayList<String> users = getTrackedUsers();
+		Utils.logger.log(Level.FINE, "Untrcking user " + user.getUsername());
+		ArrayList<String> users = Utils.getTrackedUsers();
 		users.remove(user.getUsername());
 		userNameFieldModel.removeElement(user.getUsername());
 		userNameField.setSelectedItem(null);
@@ -1012,70 +995,7 @@ public class Interface // TODO Javadoc
 		lastStatsDate.setEnabled(track.isSelected());
 		lastStatsDateBox.setEnabled(track.isSelected());
 		autoUpdateCheck.setEnabled(track.isSelected());
-		setTrackedUser(users);
-	}
-
-	private void setTrackedUser(ArrayList<String> users)
-	{
-		StringBuilder sb = new StringBuilder();
-		for(String user : users)
-			if(!user.equals(""))
-				sb.append(user).append(",");
-		sb.deleteCharAt(sb.length() - 1);
-		Main.config.writeVar("tracked_users", sb.toString());
-	}
-
-	private boolean isUserTracked(String user)
-	{
-		return getTrackedUsers().contains(user);
-	}
-
-	private ArrayList<String> getTrackedUsers()
-	{
-		ArrayList<String> trackedList = new ArrayList<String>();
-		String tracked = Main.config.getString("tracked_users", "");
-		for(String user : tracked.split(","))
-			trackedList.add(user);
-		return trackedList;
-	}
-
-	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
-	{
-		if(image == null)
-			return image;
-		int baseWidth = image.getWidth(), baseHeight = image.getHeight();
-		float ratio = (baseWidth > baseHeight) ? (width / baseWidth) : (height / baseHeight);
-		Image tmp = image.getScaledInstance((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.SCALE_SMOOTH);
-		BufferedImage buffered = new BufferedImage((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.TYPE_INT_ARGB);
-		buffered.getGraphics().drawImage(tmp, 0, 0, null);
-		return buffered;
-	}
-
-	private String[] getCode(String link) throws IOException
-	{
-		final URL url = new URL(link);
-		StringBuilder page = new StringBuilder();
-		String str = null;
-		final URLConnection connection = url.openConnection();
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-		connection.setRequestProperty("Accept-Language", "fr-FR");
-		connection.setConnectTimeout(30000);
-		connection.setReadTimeout(30000);
-		final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-		while((str = in.readLine()) != null)
-			page.append(str + "\n");
-		in.close();
-		return page.toString().split("\n");
-	}
-
-	public String getLineCodeFromLink(final String link, final String... gets) throws Exception
-	{
-		final String[] lines = getCode(link);
-		for(final String get : gets)
-			for(final String tempLine : lines)
-				if(tempLine.contains(get))
-					return tempLine;
-		throw new Exception("Cannot get code from link");
+		Utils.setTrackedUser(users);
 	}
 
 	private Color getColorUser()
@@ -1086,7 +1006,7 @@ public class Interface // TODO Javadoc
 
 	private boolean getInfos(String user, boolean showerror)
 	{
-		InterfaceLoading load = new InterfaceLoading(frame, user, showerror, Main.config.getBoolean("loadingScreen", true));
+		InterfaceLoading load = new InterfaceLoading(frame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
 		load.execute();
 		return true;
 	}
@@ -1097,7 +1017,7 @@ public class Interface // TODO Javadoc
 			return false;
 		if(user.length() < 1)
 			return false;
-		Main.logger.log(Level.FINE, "Getting user infos " + user);
+		Utils.logger.log(Level.FINE, "Getting user infos " + user);
 		lastPost = new Date();
 		userNameField.setBackground(null);
 		userNameFieldTextComponent.setBackground(null);
@@ -1106,10 +1026,10 @@ public class Interface // TODO Javadoc
 			User currentUser = new User();
 			Stats statsUser = new Stats();
 			statsUser.setDate(new Date().getTime());
-			final JSONObject jsonResponse = new JSONObject(sendPost("get_user", Main.API_KEY, user, getSelectedMode()));
-			username.setBackground(Main.noticeColor);
-			username.setBorder(Main.noticeBorder);
-			boolean tracked = isUserTracked(jsonResponse.getString("username"));
+			final JSONObject jsonResponse = new JSONObject(Utils.sendPost("get_user", Utils.API_KEY, user, getSelectedMode()));
+			username.setBackground(Utils.noticeColor);
+			username.setBorder(Utils.noticeBorder);
+			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
 				{
@@ -1144,7 +1064,7 @@ public class Interface // TODO Javadoc
 			countSS.setText(String.valueOf(jsonResponse.getInt("count_rank_ss")));
 			countS.setText(String.valueOf(jsonResponse.getInt("count_rank_s")));
 			countA.setText(String.valueOf(jsonResponse.getInt("count_rank_a")));
-			totalScore.setText(String.format(Main.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(getScoreToNextLevel(getLevel(jsonResponse.getDouble("level")), statsUser.getTotalScore())), getLevel(jsonResponse.getDouble("level")) + 1));
+			totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(statsUser.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(Utils.getScoreToNextLevel(Utils.getLevel(jsonResponse.getDouble("level")), statsUser.getTotalScore())), Utils.getLevel(jsonResponse.getDouble("level")) + 1));
 			country.setText(CountryCode.getByCode(jsonResponse.getString("country")).getName());
 			DecimalFormat decimalFormat = new DecimalFormat();
 			decimalFormat.setMaximumFractionDigits(2);
@@ -1161,8 +1081,8 @@ public class Interface // TODO Javadoc
 					{
 						try
 						{
-							avatar.setImage(resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
-							countryFlag.setImage(resizeBufferedImage(getFlag(jsonResponse.getString("country")), 16, 16));
+							avatar.setImage(Utils.resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
+							countryFlag.setImage(Utils.resizeBufferedImage(getFlag(jsonResponse.getString("country")), 16, 16));
 						}
 						catch(Exception e)
 						{
@@ -1191,7 +1111,7 @@ public class Interface // TODO Javadoc
 		{
 			if(showerror)
 			{
-				Main.logger.log(Level.SEVERE, "Error reading infos!", e);
+				Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
 				userNameField.setBackground(Color.RED);
 				userNameFieldTextComponent.setBackground(Color.RED);
 			}
@@ -1199,7 +1119,7 @@ public class Interface // TODO Javadoc
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.SEVERE, "Error reading infos!", e);
+			Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
 			return false;
 		}
 		return true;
@@ -1207,9 +1127,9 @@ public class Interface // TODO Javadoc
 
 	private void updateInfos(String user, Stats currentStats, Stats previousStats)
 	{
-		Main.logger.log(Level.INFO, "Updating tracked infos...");
+		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		username.setText("<html><div>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </div></html>");
-		accuracy.setText(String.valueOf(round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
+		accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
@@ -1220,11 +1140,11 @@ public class Interface // TODO Javadoc
 	{
 		try
 		{
-			return ImageIO.read(new URL("https:" + cutLine(getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+			return ImageIO.read(new URL("https:" + Utils.cutLine(Utils.getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
+			Utils.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
 		}
 		return avatarDefaultImage;
 	}
@@ -1240,104 +1160,12 @@ public class Interface // TODO Javadoc
 		return avatarDefaultImage;
 	}
 
-	private double getScoreToNextLevel(int currentLevel, double currentScore)
-	{
-		currentLevel++;
-		double result = -1;
-		// 5,000 / 3 * (4n^3 - 3n^2 - n) + 1.25 * 1.8^(n - 60), where n <= 100
-		// 26,931,190,829 + 100,000,000,000 * (n - 100), where n >= 101
-		if(currentLevel <= 100)
-		{
-			if(currentLevel >= 2)
-			{
-				double temp = 4 * round(Math.pow(currentLevel, 3), 0) - 3 * round(Math.pow(currentLevel, 2), 0) - currentLevel;
-				result = (5000D / 3D) * temp + 1.25 * round(Math.pow(1.8, currentLevel - 60), 0);
-			}
-			else
-				result = 0;
-		}
-		else if(currentLevel >= 101)
-		{
-			int temp = currentLevel - 100;
-			result = 26931190829D + 100000000000D * temp;
-		}
-		return round(result - currentScore, 0);
-	}
-
-	private int getLevel(double level)
-	{
-		return (int) level;
-	}
-
-	private double getProgressLevel(double level)
-	{
-		return level - ((int) level);
-	}
-
 	private void updateLevel(double level)
 	{
-		Main.logger.log(Level.FINE, "Setting level to " + level);
-		double progress = round(getProgressLevel(level) * 100, 2);
+		Utils.logger.log(Level.FINE, "Setting level to " + level);
+		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
 		levelBar.setValue((int) progress);
-		levelBar.setString(String.format(Main.resourceBundle.getString("level"), getLevel(level), progress));
-	}
-
-	public synchronized static String sendPost(String type, String key, String user, int selectedMode) throws Exception
-	{
-		Main.logger.log(Level.INFO, "Sending post request...");
-		String urlParameters = "k=" + key + "&u=" + user + "&m=" + selectedMode + "&type=string&event_days=1";
-		URL url = new URL("https://osu.ppy.sh/api/" + type + "?" + urlParameters);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("POST");
-		connection.setConnectTimeout(5000);
-		connection.setReadTimeout(5000);
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setRequestProperty("charset", "utf-8");
-		connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
-		BufferedReader inputSream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-		while((inputLine = inputSream.readLine()) != null)
-			response.append(inputLine);
-		inputSream.close();
-		response.deleteCharAt(0);
-		response.deleteCharAt(response.length() - 1);
-		return response.toString();
-	}
-
-	public static double round(double value, int places)
-	{
-		if(places < 0)
-			throw new IllegalArgumentException();
-		long factor = (long) Math.pow(10, places);
-		value = value * factor;
-		long tmp = Math.round(value);
-		return (double) tmp / factor;
-	}
-
-	private String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
-	{
-		if(!string.contains(ending))
-			throw new Exception();
-		boolean exists = false;
-		for(final String temp : begining)
-			if(string.contains(temp))
-				exists = true;
-		if(!exists)
-			throw new Exception();
-		int beginingIndex = 0;
-		for(final String temp : begining)
-			if((beginingIndex = string.indexOf(temp)) > -1)
-				break;
-		String result = string.substring(beginingIndex, string.indexOf(ending) + ending.length());
-		if(deleteDelimiters)
-		{
-			result = result.replace(ending, "");
-			for(final String temp : begining)
-				result = result.replace(temp, "");
-		}
-		return result;
+		levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
 	}
 
 	public void hideFrame()
@@ -1351,14 +1179,6 @@ public class Interface // TODO Javadoc
 		getFrame().setEnabled(true);
 		getFrame().setFocusable(true);
 		getFrame().setVisible(true);
-	}
-
-	public void exit()
-	{
-		Main.logger.log(Level.INFO, "Exiting main frame...");
-		Main.setThreadUpdater(false);
-		getFrame().dispose();
-		Main.exit();
 	}
 
 	public void backFromTray()
@@ -1424,28 +1244,13 @@ public class Interface // TODO Javadoc
 		return 0;
 	}
 
-	@SuppressWarnings("unused")
-	private String getModeName(int mode)
-	{
-		switch(mode)
-		{
-			case 1:
-				return "Taiko";
-			case 2:
-				return "Catch The Beat";
-			case 3:
-				return "osu!mania";
-		}
-		return "osu!";
-	}
-
-	public void activate()
+	public void activateFrame()
 	{
 		frame.setFocusable(true);
 		frame.setEnabled(true);
 	}
 
-	public void desactivate()
+	public void desactivateFrame()
 	{
 		frame.setFocusable(false);
 		frame.setEnabled(false);

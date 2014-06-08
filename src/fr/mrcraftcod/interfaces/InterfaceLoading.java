@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.TransparentPane;
+import fr.mrcraftcod.utils.Utils;
 
 public class InterfaceLoading extends SwingWorker<Boolean, String>
 {
@@ -31,8 +32,8 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 		frame = new JFrame();
 		frame.setUndecorated(true);
 		frame.setContentPane(new TransparentPane(new BorderLayout()));
-		frame.setTitle(Main.resourceBundle.getString("loading"));
-		frame.setIconImages(Main.icons);
+		frame.setTitle(Utils.resourceBundle.getString("loading"));
+		frame.setIconImages(Utils.icons);
 		frame.setBackground(new Color(255, 255, 255, 0));
 		ImageIcon icon = null;
 		icon = new ImageIcon(Main.class.getClassLoader().getResource("resources/images/loading.gif"));
@@ -49,7 +50,7 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 		frame.pack();
 		try
 		{
-			Main.frame.desactivate();
+			Utils.mainFrame.desactivateFrame();
 		}
 		catch(Exception e)
 		{}
@@ -58,7 +59,7 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
-		return Main.frame.getInfosServer(user, hard);
+		return Utils.mainFrame.getInfosServer(user, hard);
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 	{
 		try
 		{
-			Main.frame.activate();
+			Utils.mainFrame.activateFrame();
 		}
 		catch(Exception e)
 		{}

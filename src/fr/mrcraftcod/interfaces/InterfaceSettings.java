@@ -16,8 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
+import fr.mrcraftcod.utils.Utils;
 
 /**
  * Show a frame to modify settings.
@@ -43,13 +43,13 @@ public class InterfaceSettings
 	{
 		languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
-		frame = new JFrame(Main.resourceBundle.getString("settings"));
-		frame.setIconImages(Main.icons);
+		frame = new JFrame(Utils.resourceBundle.getString("settings"));
+		frame.setIconImages(Utils.icons);
 		frame.setLayout(new GridBagLayout());
 		frame.setResizable(true);
 		frame.setAlwaysOnTop(false);
 		frame.setVisible(true);
-		frame.getContentPane().setBackground(Main.backColor);
+		frame.getContentPane().setBackground(Utils.backColor);
 		frame.addWindowListener(new WindowListener()
 		{
 			@Override
@@ -62,7 +62,7 @@ public class InterfaceSettings
 				if(isSettingsModified())
 				{
 					hideFrame();
-					int result = JOptionPane.showConfirmDialog(null, Main.resourceBundle.getString("settings_save_changes"), Main.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
 					if(result == JOptionPane.YES_OPTION)
 					{
 						returnMain(false);
@@ -95,21 +95,21 @@ public class InterfaceSettings
 			{}
 		});
 		languageBox = new JComboBox<String>(getLanguages());
-		languageBox.setSelectedItem(getLang(Main.config.getString("locale", null)));
-		JLabel languageText = new JLabel(Main.resourceBundle.getString("pref_language"));
+		languageBox.setSelectedItem(getLang(Utils.config.getString("locale", null)));
+		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language"));
 		loadingCheck = new JCheckBox();
-		loadingCheck.setText(Main.resourceBundle.getString("settings_loading_screen"));
-		loadingCheck.setSelected(Main.config.getBoolean("loadingScreen", true));
+		loadingCheck.setText(Utils.resourceBundle.getString("settings_loading_screen"));
+		loadingCheck.setSelected(Utils.config.getBoolean("loadingScreen", true));
 		autoCompletionCheck = new JCheckBox();
-		autoCompletionCheck.setText(Main.resourceBundle.getString("settings_auto_completion"));
-		autoCompletionCheck.setSelected(Main.config.getBoolean("autoCompletion", false));
+		autoCompletionCheck.setText(Utils.resourceBundle.getString("settings_auto_completion"));
+		autoCompletionCheck.setSelected(Utils.config.getBoolean("autoCompletion", false));
 		devModeCheck = new JCheckBox();
-		devModeCheck.setText(Main.resourceBundle.getString("settings_dev_mode"));
-		devModeCheck.setSelected(Main.config.getBoolean("devMode", false));
+		devModeCheck.setText(Utils.resourceBundle.getString("settings_dev_mode"));
+		devModeCheck.setSelected(Utils.config.getBoolean("devMode", false));
 		systemTrayCheck = new JCheckBox();
-		systemTrayCheck.setText(Main.resourceBundle.getString("settings_reduce_tray"));
-		systemTrayCheck.setSelected(Main.config.getBoolean("reduceTray", false));
-		buttonReturn = new JButton(Main.resourceBundle.getString("settings_confirm"));
+		systemTrayCheck.setText(Utils.resourceBundle.getString("settings_reduce_tray"));
+		systemTrayCheck.setSelected(Utils.config.getBoolean("reduceTray", false));
+		buttonReturn = new JButton(Utils.resourceBundle.getString("settings_confirm"));
 		buttonReturn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -118,10 +118,10 @@ public class InterfaceSettings
 				returnMain(true);
 			}
 		});
-		textNumberKeepStats = new JLabel(Main.resourceBundle.getString("settings_number_stats_to_keep"));
+		textNumberKeepStats = new JLabel(Utils.resourceBundle.getString("settings_number_stats_to_keep"));
 		numberKeepStats = new JTextField();
 		numberKeepStats.setDocument(new JTextFieldLimitNumbers(3));
-		numberKeepStats.setText(String.valueOf(Main.numberTrackedStatsToKeep));
+		numberKeepStats.setText(String.valueOf(Utils.numberTrackedStatsToKeep));
 		int lign = 0;
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.PAGE_START;
@@ -157,8 +157,8 @@ public class InterfaceSettings
 		frame.setPreferredSize(new Dimension(frameWidth, frameHeight));
 		frame.setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setLocationRelativeTo(Main.frame.getFrame());
-		Main.frame.hideFrame();
+		frame.setLocationRelativeTo(Utils.mainFrame.getFrame());
+		Utils.mainFrame.hideFrame();
 		frame.toFront();
 		frame.pack();
 	}
@@ -174,10 +174,10 @@ public class InterfaceSettings
 
 	private String[] getLanguages()
 	{
-		languages.put(Main.resourceBundle.getString("system_language"), null);
-		languages.put(Main.resourceBundle.getString("english"), "en");
-		languages.put(Main.resourceBundle.getString("french"), "fr");
-		languages.put(Main.resourceBundle.getString("italian"), "it");
+		languages.put(Utils.resourceBundle.getString("system_language"), null);
+		languages.put(Utils.resourceBundle.getString("english"), "en");
+		languages.put(Utils.resourceBundle.getString("french"), "fr");
+		languages.put(Utils.resourceBundle.getString("italian"), "it");
 		return languages.keySet().toArray(new String[languages.keySet().size()]);
 	}
 
@@ -205,17 +205,17 @@ public class InterfaceSettings
 	 */
 	public void save()
 	{
-		Main.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
-		Main.config.writeVar("devMode", String.valueOf(devModeCheck.isSelected()));
-		Main.config.writeVar("reduceTray", String.valueOf(systemTrayCheck.isSelected()));
-		Main.config.writeVar("loadingScreen", String.valueOf(loadingCheck.isSelected()));
-		Main.config.writeVar("locale", languages.get(languageBox.getSelectedItem()));
+		Utils.config.writeVar("autoCompletion", String.valueOf(autoCompletionCheck.isSelected()));
+		Utils.config.writeVar("devMode", String.valueOf(devModeCheck.isSelected()));
+		Utils.config.writeVar("reduceTray", String.valueOf(systemTrayCheck.isSelected()));
+		Utils.config.writeVar("loadingScreen", String.valueOf(loadingCheck.isSelected()));
+		Utils.config.writeVar("locale", languages.get(languageBox.getSelectedItem()));
 		if(!numberKeepStats.getText().equals("") && !numberKeepStats.getText().equals("0"))
 		{
-			Main.config.writeVar("statsToKeep", numberKeepStats.getText());
-			Main.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
+			Utils.config.writeVar("statsToKeep", numberKeepStats.getText());
+			Utils.numberTrackedStatsToKeep = Integer.valueOf(numberKeepStats.getText());
 		}
-		Main.frame.updateAutoCompletion(autoCompletionCheck.isSelected());
+		Utils.mainFrame.updateAutoCompletion(autoCompletionCheck.isSelected());
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class InterfaceSettings
 	{
 		if(save)
 			save();
-		Main.frame.showFrame();
+		Utils.mainFrame.showFrame();
 		frame.dispose();
 	}
 
@@ -238,6 +238,6 @@ public class InterfaceSettings
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Main.config.getBoolean("loadingScreen", true) == loadingCheck.isSelected()) || !(Main.config.getString("locale", null) != languages.get(languageBox.getSelectedItem())) || !(Main.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Main.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Main.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Main.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
+		return !(Utils.config.getBoolean("loadingScreen", true) == loadingCheck.isSelected()) || !(Utils.config.getString("locale", null) != languages.get(languageBox.getSelectedItem())) || !(Utils.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Utils.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Utils.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
 	}
 }
