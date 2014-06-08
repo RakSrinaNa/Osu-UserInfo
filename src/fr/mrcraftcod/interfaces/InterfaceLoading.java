@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingWorker;
@@ -15,7 +14,7 @@ import fr.mrcraftcod.objects.TransparentPane;
 
 public class InterfaceLoading extends SwingWorker<Boolean, String>
 {
-	private JDialog frame;
+	private JFrame frame;
 	private String user;
 	private boolean hard;
 
@@ -29,7 +28,7 @@ public class InterfaceLoading extends SwingWorker<Boolean, String>
 
 	private void initFrame(Frame parent)
 	{
-		frame = new JDialog(parent);
+		frame = new JFrame();
 		frame.setUndecorated(true);
 		frame.setContentPane(new TransparentPane(new BorderLayout()));
 		frame.setTitle(Main.resourceBundle.getString("loading"));
