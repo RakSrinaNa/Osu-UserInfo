@@ -812,7 +812,7 @@ public class Interface // TODO Javadoc
 		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
-		if(showNotification && !(currentStats.getDiffRank(previousStats) == 0))
+		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 		{
 			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), currentStats.getDiffRank(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
 		}
