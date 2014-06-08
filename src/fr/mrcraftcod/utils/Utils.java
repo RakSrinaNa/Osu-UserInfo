@@ -247,7 +247,12 @@ public class Utils
 	{
 		Utils.logger.log(Level.INFO, "Exiting main frame...");
 		Utils.setThreadUpdater(false);
-		mainFrame.getFrame().dispose();
+		try
+		{
+			mainFrame.getFrame().dispose();
+		}
+		catch(Exception e)
+		{}
 		try
 		{
 			socket.close();
