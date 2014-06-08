@@ -1,4 +1,4 @@
-package fr.mrcraftcod.interfaces;
+package fr.mrcraftcod.utils;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,15 +11,14 @@ import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.TransparentPane;
-import fr.mrcraftcod.utils.Utils;
 
-public class InterfaceLoading extends SwingWorker<Boolean, String>
+public class LoadingWorker extends SwingWorker<Boolean, String>
 {
 	private JFrame frame;
 	private String user;
 	private boolean hard;
 
-	public InterfaceLoading(Frame parent, String user, boolean hard, boolean openFrame)
+	public LoadingWorker(Frame parent, String user, boolean hard, boolean openFrame)
 	{
 		this.user = user;
 		this.hard = hard;

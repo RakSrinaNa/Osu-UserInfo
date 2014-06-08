@@ -76,6 +76,7 @@ import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
+import fr.mrcraftcod.utils.LoadingWorker;
 import fr.mrcraftcod.utils.Utils;
 
 public class Interface // TODO Javadoc
@@ -671,7 +672,7 @@ public class Interface // TODO Javadoc
 
 	private boolean getInfos(String user, boolean showerror)
 	{
-		InterfaceLoading load = new InterfaceLoading(frame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
+		LoadingWorker load = new LoadingWorker(frame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
 		load.execute();
 		return true;
 	}

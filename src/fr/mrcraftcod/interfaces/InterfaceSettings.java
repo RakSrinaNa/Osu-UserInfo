@@ -3,10 +3,6 @@ package fr.mrcraftcod.interfaces;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import javax.swing.JButton;
@@ -16,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import fr.mrcraftcod.listeners.actions.ButtonReturnSettingsActionListener;
+import fr.mrcraftcod.listeners.windows.SettingsWindowListener;
 import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 import fr.mrcraftcod.utils.Utils;
 
@@ -50,50 +48,7 @@ public class InterfaceSettings
 		frame.setAlwaysOnTop(false);
 		frame.setVisible(true);
 		frame.getContentPane().setBackground(Utils.backColor);
-		frame.addWindowListener(new WindowListener()
-		{
-			@Override
-			public void windowOpened(WindowEvent e)
-			{}
-
-			@Override
-			public void windowClosing(final WindowEvent e)
-			{
-				if(isSettingsModified())
-				{
-					hideFrame();
-					int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
-					if(result == JOptionPane.YES_OPTION)
-					{
-						returnMain(false);
-						return;
-					}
-					showFrame();
-					return;
-				}
-				returnMain(false);
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e)
-			{}
-
-			@Override
-			public void windowIconified(WindowEvent e)
-			{}
-
-			@Override
-			public void windowDeiconified(WindowEvent e)
-			{}
-
-			@Override
-			public void windowActivated(WindowEvent e)
-			{}
-
-			@Override
-			public void windowDeactivated(WindowEvent e)
-			{}
-		});
+		frame.addWindowListener(new SettingsWindowListener());
 		languageBox = new JComboBox<String>(getLanguages());
 		languageBox.setSelectedItem(getLang(Utils.config.getString("locale", null)));
 		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language"));
@@ -110,14 +65,7 @@ public class InterfaceSettings
 		systemTrayCheck.setText(Utils.resourceBundle.getString("settings_reduce_tray"));
 		systemTrayCheck.setSelected(Utils.config.getBoolean("reduceTray", false));
 		buttonReturn = new JButton(Utils.resourceBundle.getString("settings_confirm"));
-		buttonReturn.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				returnMain(true);
-			}
-		});
+		buttonReturn.addActionListener(new ButtonReturnSettingsActionListener());
 		textNumberKeepStats = new JLabel(Utils.resourceBundle.getString("settings_number_stats_to_keep"));
 		numberKeepStats = new JTextField();
 		numberKeepStats.setDocument(new JTextFieldLimitNumbers(3));
@@ -239,5 +187,22 @@ public class InterfaceSettings
 	public boolean isSettingsModified()
 	{
 		return !(Utils.config.getBoolean("loadingScreen", true) == loadingCheck.isSelected()) || !(Utils.config.getString("locale", null) != languages.get(languageBox.getSelectedItem())) || !(Utils.config.getBoolean("reduceTray", false) == systemTrayCheck.isSelected()) || !(Utils.config.getBoolean("devMode", false) == devModeCheck.isSelected()) || !(Utils.config.getBoolean("autoCompletion", false) == autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(numberKeepStats.getText());
+	}
+
+	public void closeFrame()
+	{
+		if(isSettingsModified())
+		{
+			hideFrame();
+			int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
+			if(result == JOptionPane.YES_OPTION)
+			{
+				returnMain(false);
+				return;
+			}
+			showFrame();
+			return;
+		}
+		returnMain(false);
 	}
 }
