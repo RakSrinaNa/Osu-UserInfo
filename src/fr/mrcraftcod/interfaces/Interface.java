@@ -814,7 +814,7 @@ public class Interface // TODO Javadoc
 		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 		{
-			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), currentStats.getDiffRank(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
+			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
 		}
 	}
 
@@ -832,6 +832,7 @@ public class Interface // TODO Javadoc
 		statsDateModel.removeAllElements();
 		for(String date : user.getAvalidbleStatsDates(getSelectedMode()))
 			statsDateModel.addElement(date);
+		statsDateModel.addElement(Utils.resourceBundle.getString("last_date_saved"));
 		if(Utils.config.getBoolean("keepDate", false) && lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
 			lastStatsDateBox.setSelectedItem(lastDate);
 		else
@@ -965,9 +966,12 @@ public class Interface // TODO Javadoc
 
 	public long getSelectedDate()
 	{
+		String date = lastStatsDateBox.getSelectedItem().toString();
+		if(date.equals(Utils.resourceBundle.getString("last_date_saved")))
+			return -1;
 		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 		SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
 		DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
-		return formatter.parseDateTime(lastStatsDateBox.getSelectedItem().toString()).toDate().getTime();
+		return formatter.parseDateTime(date).toDate().getTime();
 	}
 }

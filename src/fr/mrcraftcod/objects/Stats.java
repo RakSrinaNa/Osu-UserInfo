@@ -479,7 +479,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return 0;
-		return Math.abs(previousStats.getRank() - this.getRank());
+		return previousStats.getRank() - this.getRank();
 	}
 
 	public int getDiffPlayCount(Stats previousStats)

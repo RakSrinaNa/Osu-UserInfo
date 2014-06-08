@@ -136,11 +136,12 @@ public class User implements Serializable
 	 * 
 	 * @param mode The mode of the Stats.
 	 * @param date The date of the Stats.
+	 * @param defaultStats The stats to return is the date is incorrect.
 	 * @return The wanted Stats object, null if it doesn't exists.
 	 * 
 	 * @see Stats
 	 */
-	public Stats getStatsByModeAndDate(int mode, long date)
+	public Stats getStatsByModeAndDate(int mode, long date, Stats defaultStats)
 	{
 		ArrayList<Stats> stats = getAllStats(mode);
 		for(Stats stat : stats)
@@ -150,7 +151,7 @@ public class User implements Serializable
 			if(temp.substring(0, temp.length() - 4).equals(tempp.substring(0, tempp.length() - 4)))
 				return stat;
 		}
-		return null;
+		return defaultStats;
 	}
 
 	/**

@@ -20,6 +20,7 @@ public class InterfaceNotification extends Thread
 	public InterfaceNotification(String text)
 	{
 		frame = new JFrame();
+		frame.setTitle("New stats!");
 		frame.setSize(400, 75);
 		frame.setUndecorated(true);
 		frame.setLayout(new GridBagLayout());
