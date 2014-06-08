@@ -55,9 +55,6 @@ public class InterfaceNotification extends Thread
 		constraints.insets = new Insets(1, 1, 1, 2);
 		frame.add(messageLabel, constraints);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
-		frame.setLocation(scrSize.width - frame.getWidth(), scrSize.height - toolHeight.bottom - frame.getHeight());
 		frame.setVisible(true);
 		frame.toFront();
 		this.start();
@@ -66,14 +63,42 @@ public class InterfaceNotification extends Thread
 	@Override
 	public void run()
 	{
+		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
+		int x = scrSize.width - frame.getWidth();
+		int y = scrSize.height;
+		for(int i = 0; i < frame.getHeight() + toolHeight.bottom; i++)
+		{
+			frame.setLocation(x, y - i);
+			try
+			{
+				Thread.sleep(5);
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
 		try
 		{
 			Thread.sleep(cooldown);
-			frame.dispose();
 		}
 		catch(InterruptedException e)
 		{
 			e.printStackTrace();
 		}
+		for(int i = frame.getHeight() + toolHeight.bottom; i > 0; i--)
+		{
+			frame.setLocation(x, y - i);
+			try
+			{
+				Thread.sleep(5);
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		frame.dispose();
 	}
 }
