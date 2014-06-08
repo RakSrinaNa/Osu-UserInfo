@@ -142,7 +142,6 @@ public class Updater
 	{
 		int reply;
 		boolean result = true;
-		String basePath = System.getProperty("user.dir");
 		try
 		{
 			switch(version)
@@ -150,7 +149,7 @@ public class Updater
 				case DEVELOPER:
 					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_dev") + "\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
-						result = getLastJAR(new File(basePath, Main.APPNAME + ".jar"), LINKDEV);
+						result = getLastJAR(newFile, LINKDEV);
 					else
 						return NOUPDATE;
 					if(!result)
@@ -159,7 +158,7 @@ public class Updater
 				case PUBLIC:
 					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_public") + "\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
-						result = getLastJAR(new File(basePath, Main.APPNAME + ".jar"), LINKPUBLIC);
+						result = getLastJAR(newFile, LINKPUBLIC);
 					else
 						return NOUPDATE;
 					if(!result)
@@ -168,7 +167,7 @@ public class Updater
 				case PUBLICFDEV:
 					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_public_dev"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
-						result = getLastJAR(new File(basePath, Main.APPNAME + ".jar"), LINKPUBLIC);
+						result = getLastJAR(newFile, LINKPUBLIC);
 					else
 						return NOUPDATE;
 					if(!result)
@@ -194,7 +193,7 @@ public class Updater
 		Utils.logger.log(Level.INFO, "Checking updates...");
 		context = con;
 		File updateFile = new File(".", "updates.xml");
-		File jarFile = new File(".", Main.APPNAME + ".jar");
+		File jarFile = new File(System.getProperty("user.dir"), Main.APPNAME + ".jar");
 		getLastVersionBitbucket(updateFile, LINKXML);
 		try
 		{
