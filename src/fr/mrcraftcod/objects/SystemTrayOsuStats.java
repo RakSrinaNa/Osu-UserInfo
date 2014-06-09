@@ -15,6 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import fr.mrcraftcod.Main;
+import fr.mrcraftcod.utils.Utils;
 
 /**
  * The system tray icon of the app.
@@ -41,16 +42,16 @@ public class SystemTrayOsuStats
 	 */
 	public static void init() throws IOException
 	{
-		Main.logger.log(Level.INFO, "Initialising system tray...");
+		Utils.logger.log(Level.INFO, "Initialising system tray...");
 		if(SystemTray.isSupported())
 			tray = SystemTray.getSystemTray();
 		else
 		{
-			Main.logger.log(Level.WARNING, "Tray not supported!");
+			Utils.logger.log(Level.WARNING, "Tray not supported!");
 			return;
 		}
 		final PopupMenu popup = new PopupMenu();
-		final MenuItem openItem = new MenuItem(Main.resourceBundle.getString("system_tray_open"));
+		final MenuItem openItem = new MenuItem(Utils.resourceBundle.getString("system_tray_open"));
 		openItem.addActionListener(new ActionListener()
 		{
 			@Override
@@ -61,18 +62,18 @@ public class SystemTrayOsuStats
 			}
 		});
 		popup.add(openItem);
-		final MenuItem closeItem = new MenuItem(Main.resourceBundle.getString("system_tray_exit"));
+		final MenuItem closeItem = new MenuItem(Utils.resourceBundle.getString("system_tray_exit"));
 		closeItem.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(final ActionEvent e)
 			{
-				Main.frame.exit();
+				Utils.exit();
 				remove();
 			}
 		});
 		popup.add(closeItem);
-		trayIcon = new TrayIcon(Main.icons.get(0), Main.APPNAME, popup);
+		trayIcon = new TrayIcon(Utils.icons.get(0), Main.APPNAME, popup);
 		trayIcon.setImageAutoSize(true);
 		trayIcon.addMouseListener(new MouseListener()
 		{
@@ -118,7 +119,7 @@ public class SystemTrayOsuStats
 	 */
 	public static void showUpFrame()
 	{
-		Main.frame.backFromTray();
+		Utils.mainFrame.backFromTray();
 	}
 
 	/**
@@ -136,7 +137,7 @@ public class SystemTrayOsuStats
 		}
 		catch(final Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Error displaying message in tray!", e);
+			Utils.logger.log(Level.WARNING, "Error displaying message in tray!", e);
 		}
 	}
 
@@ -151,7 +152,7 @@ public class SystemTrayOsuStats
 		}
 		catch(Exception e)
 		{
-			Main.logger.log(Level.WARNING, "Error removing tray icon!", e);
+			Utils.logger.log(Level.WARNING, "Error removing tray icon!", e);
 		}
 	}
 }

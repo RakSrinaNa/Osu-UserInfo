@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.TransparentPane;
+import fr.mrcraftcod.utils.Utils;
 
 /**
  * Used to show a startup frame with a progress bar.
@@ -30,22 +31,22 @@ public class InterfaceStartup
 	 */
 	public InterfaceStartup(int maxStep)
 	{
-		Main.logger.log(Level.INFO, "Creating startup frame...");
+		Utils.logger.log(Level.INFO, "Creating startup frame...");
 		setFrame(new JFrame());
 		getFrame().setUndecorated(true);
 		getFrame().setContentPane(new TransparentPane(new BorderLayout()));
 		getFrame().getContentPane().setBackground(Color.BLACK);
 		getFrame().setTitle("Starting " + Main.APPNAME);
-		getFrame().setIconImages(Main.icons);
+		getFrame().setIconImages(Utils.icons);
 		getFrame().setBackground(new Color(0, 255, 0, 0));
 		label = new JLabel();
-		label.setFont(Main.fontMain);
+		label.setFont(Utils.fontMain);
 		label.setForeground(new Color(255, 255, 255));
 		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setVerticalAlignment(JLabel.CENTER);
 		progressBar = new JProgressBar(0, maxStep);
 		progressBar.setStringPainted(true);
-		progressBar.setFont(Main.fontMain);
+		progressBar.setFont(Utils.fontMain);
 		refreshProgressBarStep();
 		getFrame().getContentPane().add(progressBar, BorderLayout.NORTH);
 		getFrame().getContentPane().add(label, BorderLayout.SOUTH);
@@ -71,7 +72,7 @@ public class InterfaceStartup
 	 */
 	public void reset()
 	{
-		Main.logger.log(Level.INFO, "Resetting startup frame...");
+		Utils.logger.log(Level.INFO, "Resetting startup frame...");
 		step = 0;
 		label.setText("");
 		refreshProgressBarStep();
@@ -85,7 +86,7 @@ public class InterfaceStartup
 	 */
 	public void setStartupText(int step, String text)
 	{
-		Main.logger.log(Level.INFO, "Setting startup (" + step + ") text to " + text);
+		Utils.logger.log(Level.INFO, "Setting startup (" + step + ") text to " + text);
 		if(label != null)
 		{
 			label.setText(text);
@@ -101,7 +102,7 @@ public class InterfaceStartup
 	 */
 	public void addStartupText(String text)
 	{
-		Main.logger.log(Level.INFO, "Add startup text to " + text);
+		Utils.logger.log(Level.INFO, "Add startup text to " + text);
 		if(label != null)
 		{
 			label.setText(text);
@@ -115,7 +116,7 @@ public class InterfaceStartup
 	 */
 	public void skipStep()
 	{
-		Main.logger.log(Level.INFO, "Skipping startup step...");
+		Utils.logger.log(Level.INFO, "Skipping startup step...");
 		step++;
 	}
 
@@ -124,7 +125,7 @@ public class InterfaceStartup
 	 */
 	public void exit()
 	{
-		Main.logger.log(Level.INFO, "Exitting startup frame...");
+		Utils.logger.log(Level.INFO, "Exitting startup frame...");
 		getFrame().dispose();
 	}
 

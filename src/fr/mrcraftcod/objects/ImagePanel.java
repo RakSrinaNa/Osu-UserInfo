@@ -3,7 +3,7 @@ package fr.mrcraftcod.objects;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
-import fr.mrcraftcod.Main;
+import fr.mrcraftcod.utils.Utils;
 
 /**
  * A panel containing a buffered image
@@ -44,7 +44,7 @@ public class ImagePanel extends JPanel
 		{
 			if(!isPrintLoading())
 				return;
-			String string = Main.resourceBundle.getString("loading");
+			String string = Utils.resourceBundle.getString("loading");
 			g.drawString(string, (this.getWidth() / 2) - (g.getFontMetrics().stringWidth(string) / 2), this.getHeight() / 2);
 			return;
 		}
