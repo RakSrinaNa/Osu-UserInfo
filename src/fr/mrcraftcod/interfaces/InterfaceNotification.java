@@ -17,20 +17,20 @@ public class InterfaceNotification extends JFrame implements Runnable
 {
 	private static final long serialVersionUID = 8870236400957609469L;
 	private final static int cooldown = 7000;
-	private JFrame frame;
 
 	public InterfaceNotification(String text)
 	{
+		super();
 		int offset = 0, arc = 15;
-		frame = new JFrame();
-		frame.setTitle("New stats!");
-		frame.setSize(400, 75);
-		frame.setUndecorated(true);
-		frame.setShape(new RoundRectangle2D.Double(offset, offset, offset + frame.getSize().getWidth(), offset + frame.getSize().getHeight(), arc, arc));
-		frame.setLayout(new GridBagLayout());
-		frame.setIconImages(Utils.icons);
-		frame.setBackground(Utils.backColor);
-		frame.getContentPane().setBackground(Utils.backColor);
+		getFrame().setTitle("New stats!");
+		getFrame().setSize(400, 75);
+		getFrame().setUndecorated(true);
+		getFrame().setShape(new RoundRectangle2D.Double(offset, offset, offset + getFrame().getSize().getWidth(), offset + getFrame().getSize().getHeight(), arc, arc));
+		getFrame().setLayout(new GridBagLayout());
+		getFrame().setIconImages(Utils.icons);
+		getFrame().setBackground(Utils.backColor);
+		getFrame().getContentPane().setBackground(Utils.backColor);
+		getFrame().setAlwaysOnTop(true);
 		JButton closeButton = new JButton("X");
 		closeButton.addActionListener(new CloseNotificationActionListener());
 		closeButton.setFocusable(false);
@@ -49,7 +49,7 @@ public class InterfaceNotification extends JFrame implements Runnable
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.insets = new Insets(-offset, 1, 1, -offset);
-		frame.add(closeButton, constraints);
+		getFrame().add(closeButton, constraints);
 		constraints.gridx = 0;
 		constraints.gridy++;
 		constraints.gridheight = 2;
@@ -57,23 +57,28 @@ public class InterfaceNotification extends JFrame implements Runnable
 		constraints.weighty = 5;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.insets = new Insets(1, 1, 1, 2);
-		frame.add(messageLabel, constraints);
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setVisible(true);
-		frame.toFront();
+		getFrame().add(messageLabel, constraints);
+		getFrame().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		getFrame().setVisible(true);
+		getFrame().toFront();
 		new Thread(this).start();
+	}
+
+	private InterfaceNotification getFrame()
+	{
+		return this;
 	}
 
 	@Override
 	public void run()
 	{
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
-		int x = scrSize.width - frame.getWidth() - 2;
+		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(getFrame().getGraphicsConfiguration());
+		int x = scrSize.width - getFrame().getWidth() - 2;
 		int y = scrSize.height;
-		for(int i = 0; i < frame.getHeight() + toolHeight.bottom; i++)
+		for(int i = 0; i < getFrame().getHeight() + toolHeight.bottom; i++)
 		{
-			frame.setLocation(x, y - i);
+			getFrame().setLocation(x, y - i);
 			try
 			{
 				Thread.sleep(5);
@@ -91,9 +96,9 @@ public class InterfaceNotification extends JFrame implements Runnable
 		{
 			e.printStackTrace();
 		}
-		for(int i = frame.getHeight() + toolHeight.bottom; i > 0; i--)
+		for(int i = getFrame().getHeight() + toolHeight.bottom; i > 0; i--)
 		{
-			frame.setLocation(x, y - i);
+			getFrame().setLocation(x, y - i);
 			try
 			{
 				Thread.sleep(5);
@@ -103,6 +108,6 @@ public class InterfaceNotification extends JFrame implements Runnable
 				e.printStackTrace();
 			}
 		}
-		frame.dispose();
+		getFrame().dispose();
 	}
 }
