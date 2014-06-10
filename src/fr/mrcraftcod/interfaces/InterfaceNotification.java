@@ -13,8 +13,9 @@ import javax.swing.WindowConstants;
 import fr.mrcraftcod.listeners.actions.CloseNotificationActionListener;
 import fr.mrcraftcod.utils.Utils;
 
-public class InterfaceNotification extends Thread
+public class InterfaceNotification extends JFrame implements Runnable
 {
+	private static final long serialVersionUID = 8870236400957609469L;
 	private final static int cooldown = 7000;
 	private JFrame frame;
 
@@ -60,7 +61,7 @@ public class InterfaceNotification extends Thread
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
 		frame.toFront();
-		this.start();
+		new Thread(this).start();
 	}
 
 	@Override

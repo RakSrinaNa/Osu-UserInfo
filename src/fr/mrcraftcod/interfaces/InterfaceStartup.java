@@ -17,9 +17,9 @@ import fr.mrcraftcod.utils.Utils;
  * 
  * @author MrCraftCod
  */
-public class InterfaceStartup
+public class InterfaceStartup extends JFrame
 {
-	private JFrame frame;
+	private static final long serialVersionUID = -5316219219270463412L;
 	private JLabel label;
 	private JProgressBar progressBar;
 	private int step = 0;
@@ -31,8 +31,8 @@ public class InterfaceStartup
 	 */
 	public InterfaceStartup(int maxStep)
 	{
+		super();
 		Utils.logger.log(Level.INFO, "Creating startup frame...");
-		setFrame(new JFrame());
 		getFrame().setUndecorated(true);
 		getFrame().setContentPane(new TransparentPane(new BorderLayout()));
 		getFrame().getContentPane().setBackground(Color.BLACK);
@@ -129,14 +129,9 @@ public class InterfaceStartup
 		getFrame().dispose();
 	}
 
-	public JFrame getFrame()
+	public InterfaceStartup getFrame()
 	{
-		return frame;
-	}
-
-	public void setFrame(JFrame frame)
-	{
-		this.frame = frame;
+		return this;
 	}
 
 	public void setPercent(int i)

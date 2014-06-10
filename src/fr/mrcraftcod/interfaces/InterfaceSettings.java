@@ -24,9 +24,9 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @since 1.4
  */
-public class InterfaceSettings
+public class InterfaceSettings extends JFrame
 {
-	public JFrame frame;
+	private static final long serialVersionUID = -339025516182085233L;
 	private JCheckBox notificationCheck, keepDateCheck, autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
 	private JComboBox<String> languageBox;
 	private LinkedHashMap<String, String> languages;
@@ -39,16 +39,16 @@ public class InterfaceSettings
 	 */
 	public InterfaceSettings()
 	{
+		super(Utils.resourceBundle.getString("settings"));
 		languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
-		frame = new JFrame(Utils.resourceBundle.getString("settings"));
-		frame.setIconImages(Utils.icons);
-		frame.setLayout(new GridBagLayout());
-		frame.setResizable(true);
-		frame.setAlwaysOnTop(false);
-		frame.setVisible(true);
-		frame.getContentPane().setBackground(Utils.backColor);
-		frame.addWindowListener(new SettingsWindowListener());
+		getFrame().setIconImages(Utils.icons);
+		getFrame().setLayout(new GridBagLayout());
+		getFrame().setResizable(true);
+		getFrame().setAlwaysOnTop(false);
+		getFrame().setVisible(true);
+		getFrame().getContentPane().setBackground(Utils.backColor);
+		getFrame().addWindowListener(new SettingsWindowListener());
 		languageBox = new JComboBox<String>(getLanguages());
 		languageBox.setSelectedItem(getLang(Utils.config.getString("locale", null)));
 		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language"));
@@ -85,40 +85,45 @@ public class InterfaceSettings
 		c.gridwidth = 2;
 		c.weightx = 1;
 		c.weighty = 1;
-		frame.add(autoCompletionCheck, c);
+		getFrame().add(autoCompletionCheck, c);
 		c.gridy = lign++;
-		frame.add(devModeCheck, c);
+		getFrame().add(devModeCheck, c);
 		c.gridy = lign++;
-		frame.add(loadingCheck, c);
+		getFrame().add(loadingCheck, c);
 		c.gridy = lign++;
-		frame.add(keepDateCheck, c);
+		getFrame().add(keepDateCheck, c);
 		c.gridy = lign++;
-		frame.add(notificationCheck, c);
+		getFrame().add(notificationCheck, c);
 		c.gridy = lign++;
-		frame.add(systemTrayCheck, c);
+		getFrame().add(systemTrayCheck, c);
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = lign++;
-		frame.add(textNumberKeepStats, c);
+		getFrame().add(textNumberKeepStats, c);
 		c.gridx = 1;
-		frame.add(numberKeepStats, c);
+		getFrame().add(numberKeepStats, c);
 		c.gridy = lign++;
 		c.gridx = 0;
-		frame.add(languageText, c);
+		getFrame().add(languageText, c);
 		c.gridx = 1;
-		frame.add(languageBox, c);
+		getFrame().add(languageBox, c);
 		c.gridwidth = 2;
 		c.gridy = lign++;
 		c.gridx = 0;
-		frame.add(buttonReturn, c);
+		getFrame().add(buttonReturn, c);
 		int frameHeight = lign * 30 + 20;
-		frame.setPreferredSize(new Dimension(frameWidth, frameHeight));
-		frame.setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setLocationRelativeTo(Utils.mainFrame.getFrame());
+		getFrame().setPreferredSize(new Dimension(frameWidth, frameHeight));
+		getFrame().setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
+		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		getFrame().setLocationRelativeTo(Utils.mainFrame.getFrame());
 		Utils.mainFrame.hideFrame();
-		frame.toFront();
-		frame.pack();
+		getFrame().toFront();
+		getFrame().pack();
+	}
+
+	private InterfaceSettings getFrame()
+	{
+		return this;
 	}
 
 	private String getLang(String string)
@@ -144,8 +149,8 @@ public class InterfaceSettings
 	 */
 	public void hideFrame()
 	{
-		frame.setFocusable(false);
-		frame.setEnabled(false);
+		getFrame().setFocusable(false);
+		getFrame().setEnabled(false);
 	}
 
 	/**
@@ -153,9 +158,9 @@ public class InterfaceSettings
 	 */
 	public void showFrame()
 	{
-		frame.setFocusable(true);
-		frame.setEnabled(true);
-		frame.toFront();
+		getFrame().setFocusable(true);
+		getFrame().setEnabled(true);
+		getFrame().toFront();
 	}
 
 	/**
@@ -188,7 +193,7 @@ public class InterfaceSettings
 		if(save)
 			save();
 		Utils.mainFrame.showFrame();
-		frame.dispose();
+		getFrame().dispose();
 	}
 
 	/**
