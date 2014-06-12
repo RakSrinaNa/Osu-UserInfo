@@ -1,10 +1,13 @@
 package fr.mrcraftcod.objects;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -35,6 +38,13 @@ public class User implements Serializable
 	 */
 	public static User deserialize(File file) throws FileNotFoundException, IOException, ClassNotFoundException
 	{
+		InputStream input = new FileInputStream(file);
+		InputStreamReader inputReader = new InputStreamReader(input);
+		BufferedReader buffered = new BufferedReader(inputReader);
+		String ligne;
+		while((ligne = buffered.readLine()) != null)
+			System.out.println(ligne);
+		buffered.close();
 		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 		User user = (User) ois.readObject();
 		ois.close();
@@ -98,14 +108,8 @@ public class User implements Serializable
 		ArrayList<Stats> stats = (ArrayList<Stats>) getAllStats(mode).clone();
 		if(stats == null)
 			return null;
-		try
-		{
+		if(stats.size() > 0)
 			stats.remove(stats.size() - 1);
-		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.WARNING, "", e);
-		}
 		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 		String[] dates = new String[stats.size()];
 		for(int i = 0; i < stats.size(); i++)
@@ -487,5 +491,6 @@ public class User implements Serializable
 		oos.writeObject(this.stats_taiko);
 		oos.writeObject(this.stats_ctb);
 		oos.writeObject(this.stats_mania);
+		oos.flush();
 	}
 }

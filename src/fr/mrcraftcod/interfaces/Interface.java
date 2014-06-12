@@ -722,11 +722,13 @@ public class Interface extends JFrame // TODO Javadoc
 			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
-				{
+			{
 					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-				}
-				catch(Exception e)
-				{}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 			Stats previousStats = currentUser.getLastStats(getSelectedMode());
 			this.track.setEnabled(true);
 			this.track.setSelected(tracked);
@@ -845,16 +847,16 @@ public class Interface extends JFrame // TODO Javadoc
 		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
 			try
-			{
+		{
 				String user_id = this.username.getText();
 				if(user_id.equalsIgnoreCase(""))
 					return;
 				desktop.browse(new URL("https://osu.ppy.sh/u/" + Utils.lastUser.getUserID()).toURI());
-			}
-			catch(final Exception e)
-			{
-				e.printStackTrace();
-			}
+		}
+		catch(final Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void setValidButonIcon(String string)
@@ -882,16 +884,16 @@ public class Interface extends JFrame // TODO Javadoc
 		{
 			case 0:
 				this.buttonStandard.setEnabled(false);
-			break;
+				break;
 			case 1:
 				this.buttonTaiko.setEnabled(false);
-			break;
+				break;
 			case 2:
 				this.buttonCTB.setEnabled(false);
-			break;
+				break;
 			case 3:
 				this.buttonMania.setEnabled(false);
-			break;
+				break;
 		}
 		if(checkInfos)
 			getInfos(Utils.lastUser.getUsername(), false);

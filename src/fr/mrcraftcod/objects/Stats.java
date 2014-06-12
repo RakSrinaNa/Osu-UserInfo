@@ -43,6 +43,22 @@ public class Stats implements Serializable, Cloneable
 	public Stats()
 	{
 		this.version = STATS_VERSION;
+		this.mode = 0;
+		this.playcount = 0;
+		this.rankedScore = 0;
+		this.totalScore = 0;
+		this.pp = 0;
+		this.accuracy = 0;
+		this.totalHits = 0;
+		this.rank = 0;
+		this.date = 0;
+		this.level = 0;
+		this.countSS = 0;
+		this.countS = 0;
+		this.countA = 0;
+		this.count300 = 0;
+		this.count100 = 0;
+		this.count50 = 0;
 	}
 
 	@Override
@@ -559,5 +575,6 @@ public class Stats implements Serializable, Cloneable
 		oos.writeLong(this.count300);
 		oos.writeLong(this.count100);
 		oos.writeLong(this.count50);
+		oos.flush();
 	}
 }
