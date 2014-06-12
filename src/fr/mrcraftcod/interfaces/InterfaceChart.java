@@ -29,7 +29,7 @@ public class InterfaceChart extends JFrame
 	public InterfaceChart(String user, String mode, List<Stats> stats)
 	{
 		super();
-		JFreeChart chart = ChartFactory.createTimeSeriesChart("Stats", "Time", "Values", processStats(stats), true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart("Stats for " + user, "Time", "Values", processStats(stats), true, true, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
@@ -76,9 +76,9 @@ public class InterfaceChart extends JFrame
 		{
 			Millisecond time = new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Locale.getDefault());
 			serieAccuracy.add(time, stat.getAccuracy());
-			serie300Percent.add(time, stat.getTotalHits() * 100f / stat.getTotalHits());
-			serie100Percent.add(time, stat.getTotalHits() * 66f / stat.getTotalHits());
-			serie50Percent.add(time, stat.getTotalHits() * 33f / stat.getTotalHits());
+			serie300Percent.add(time, stat.getCount300() * 100f / stat.getTotalHits());
+			serie100Percent.add(time, stat.getCount100() * 100f / stat.getTotalHits());
+			serie50Percent.add(time, stat.getCount50() * 100f / stat.getTotalHits());
 		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serieAccuracy);
@@ -102,7 +102,7 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serieRank = new TimeSeries("Rank");
 		for(Stats stat : stats)
-			serieRank.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Locale.getDefault()), 0);
+			serieRank.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Locale.getDefault()), stat.getRank());
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serieRank);
 		return collection;
