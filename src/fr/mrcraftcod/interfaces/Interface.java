@@ -723,13 +723,13 @@ public class Interface extends JFrame // TODO Javadoc
 			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
-			{
+				{
 					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 			Stats previousStats = currentUser.getLastStats(getSelectedMode());
 			this.track.setEnabled(true);
 			this.track.setSelected(tracked);
@@ -848,16 +848,16 @@ public class Interface extends JFrame // TODO Javadoc
 		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
 			try
-		{
+			{
 				String user_id = this.username.getText();
 				if(user_id.equalsIgnoreCase(""))
 					return;
 				desktop.browse(new URL("https://osu.ppy.sh/u/" + Utils.lastUser.getUserID()).toURI());
-		}
-		catch(final Exception e)
-		{
-			e.printStackTrace();
-		}
+			}
+			catch(final Exception e)
+			{
+				e.printStackTrace();
+			}
 	}
 
 	public void setValidButonIcon(String string)
@@ -885,16 +885,16 @@ public class Interface extends JFrame // TODO Javadoc
 		{
 			case 0:
 				this.buttonStandard.setEnabled(false);
-				break;
+			break;
 			case 1:
 				this.buttonTaiko.setEnabled(false);
-				break;
+			break;
 			case 2:
 				this.buttonCTB.setEnabled(false);
-				break;
+			break;
 			case 3:
 				this.buttonMania.setEnabled(false);
-				break;
+			break;
 		}
 		if(checkInfos)
 			getInfos(Utils.lastUser.getUsername(), false);
@@ -974,6 +974,6 @@ public class Interface extends JFrame // TODO Javadoc
 		this.totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
+			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
 	}
 }

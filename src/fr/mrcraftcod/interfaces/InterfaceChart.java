@@ -24,6 +24,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import fr.mrcraftcod.objects.Stats;
+import fr.mrcraftcod.utils.Utils;
 
 public class InterfaceChart extends JFrame
 {
@@ -32,17 +33,18 @@ public class InterfaceChart extends JFrame
 	public InterfaceChart(String user, String mode, List<Stats> stats)
 	{
 		super();
+		setTitle(String.format(Utils.resourceBundle.getString("stats_for"), user));
 		Color colorPP = Color.BLUE, colorRank = Color.RED, colorAcc = Color.BLACK;
 		int shapeOffset = 4;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
-		JFreeChart chart = ChartFactory.createTimeSeriesChart("Stats for " + user, "Time", "%", null, true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(String.format(Utils.resourceBundle.getString("stats_for"), user), Utils.resourceBundle.getString("dates"), "%", null, true, true, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
 		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		NumberAxis axisAcc = new NumberAxis("Accuracy");
+		NumberAxis axisAcc = new NumberAxis(Utils.resourceBundle.getString("accuracy"));
 		NumberAxis axisPP = new NumberAxis("PP");
-		NumberAxis axisRank = new NumberAxis("Rank");
+		NumberAxis axisRank = new NumberAxis(Utils.resourceBundle.getString("rank"));
 		axisAcc.setTickLabelPaint(colorAcc);
 		axisPP.setTickLabelPaint(colorPP);
 		axisRank.setTickLabelPaint(colorRank);
