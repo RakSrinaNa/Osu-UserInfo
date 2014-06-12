@@ -54,6 +54,7 @@ public class InterfaceChart extends JFrame
 		axisAcc.setNumberFormatOverride(new DecimalFormat("0.00"));
 		axisPP.setNumberFormatOverride(new DecimalFormat("0.00"));
 		axisRank.setNumberFormatOverride(new DecimalFormat("0"));
+		axisRank.setInverted(true);
 		xyPlot.setRangeAxis(0, axisAcc);
 		xyPlot.setRangeAxis(1, axisPP);
 		xyPlot.setRangeAxis(2, axisRank);
