@@ -1,13 +1,10 @@
 package fr.mrcraftcod.objects;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -38,13 +35,6 @@ public class User implements Serializable
 	 */
 	public static User deserialize(File file) throws FileNotFoundException, IOException, ClassNotFoundException
 	{
-		InputStream input = new FileInputStream(file);
-		InputStreamReader inputReader = new InputStreamReader(input);
-		BufferedReader buffered = new BufferedReader(inputReader);
-		String ligne;
-		while((ligne = buffered.readLine()) != null)
-			System.out.println(ligne);
-		buffered.close();
 		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 		User user = (User) ois.readObject();
 		ois.close();

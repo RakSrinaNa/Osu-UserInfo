@@ -1,12 +1,9 @@
 package fr.mrcraftcod.listeners.actions;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
 import javax.swing.AbstractAction;
-import fr.mrcraftcod.Main;
 import fr.mrcraftcod.interfaces.InterfaceChart;
-import fr.mrcraftcod.objects.User;
+import fr.mrcraftcod.utils.Utils;
 
 public class ItemChartActionListener extends AbstractAction
 {
@@ -15,13 +12,6 @@ public class ItemChartActionListener extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		try
-		{
-			new InterfaceChart("MrCraftCod", "Osu!", User.deserialize(new File(new File(System.getenv("APPDATA"), Main.APPNAME), "MrCraftCod")).getAllStats(0));
-		}
-		catch(ClassNotFoundException | IOException e)
-		{
-			e.printStackTrace();
-		}
+		new InterfaceChart("MrCraftCod", "Osu!", Utils.lastUser.getAllStats(Utils.mainFrame.getSelectedMode()));
 	}
 }
