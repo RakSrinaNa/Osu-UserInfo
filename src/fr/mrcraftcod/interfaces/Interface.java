@@ -55,6 +55,7 @@ import fr.mrcraftcod.listeners.AutoUpdateItemListener;
 import fr.mrcraftcod.listeners.UserNameFieldDocumentListener;
 import fr.mrcraftcod.listeners.UserNameTextFieldKeyListener;
 import fr.mrcraftcod.listeners.actions.ItemAboutActionListener;
+import fr.mrcraftcod.listeners.actions.ItemChartActionListener;
 import fr.mrcraftcod.listeners.actions.ItemSettingsActionListener;
 import fr.mrcraftcod.listeners.actions.ModeCTBActionListener;
 import fr.mrcraftcod.listeners.actions.ModeManiaActionListener;
@@ -81,18 +82,18 @@ import fr.mrcraftcod.utils.Utils;
 public class Interface extends JFrame // TODO Javadoc
 {
 	private static final long serialVersionUID = -6393144716196499998L;
-	private JTextComponent userNameFieldTextComponent;
-	private ImageIcon iconRefresh, iconSearch;
-	private BufferedImage avatarDefaultImage;
-	private ImagePanel avatar, countryFlag;
-	private AutoComboBox userNameField;
-	private JComboBox<String> lastStatsDateBox;
-	private DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
-	private JButton validButon;
-	private JButtonMode buttonStandard, buttonTaiko, buttonCTB, buttonMania;
-	private JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
-	private JProgressBar levelBar;
-	private JCheckBox track, autoUpdateCheck;
+	private final JTextComponent userNameFieldTextComponent;
+	private final ImageIcon iconRefresh, iconSearch;
+	private final BufferedImage avatarDefaultImage;
+	private final ImagePanel avatar, countryFlag;
+	private final AutoComboBox userNameField;
+	private final JComboBox<String> lastStatsDateBox;
+	private final DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
+	private final JButton validButon;
+	private final JButtonMode buttonStandard, buttonTaiko, buttonCTB, buttonMania;
+	private final JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
+	private final JProgressBar levelBar;
+	private final JCheckBox track, autoUpdateCheck;
 
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
@@ -100,9 +101,9 @@ public class Interface extends JFrame // TODO Javadoc
 		super(Main.APPNAME + " v" + Main.VERSION);
 		int pictureButtonSize = 20;
 		Utils.logger.log(Level.INFO, "Loading icons...");
-		iconRefresh = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
-		iconSearch = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
-		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
+		this.iconRefresh = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
+		this.iconSearch = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
+		this.avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		/************** FRAME INFOS ********************/
 		Utils.logger.log(Level.INFO, "Setting frame options...");
 		getFrame().setBackground(Utils.backColor);
@@ -127,12 +128,17 @@ public class Interface extends JFrame // TODO Javadoc
 		menuFile.setFont(menuBarFont);
 		JMenu menuHelp = new JMenu(Utils.resourceBundle.getString("menu_bar_help"));
 		menuHelp.setFont(menuBarFont);
+		JMenuItem itemChart = new JMenuItem(Utils.resourceBundle.getString("graph"));
+		itemChart.setFont(menuBarFont);
+		itemChart.addActionListener(new ItemChartActionListener());
 		JMenuItem itemSettings = new JMenuItem(Utils.resourceBundle.getString("settings"));
 		itemSettings.setFont(menuBarFont);
 		itemSettings.addActionListener(new ItemSettingsActionListener());
 		JMenuItem itemAbout = new JMenuItem(Utils.resourceBundle.getString("menu_bar_help_about"));
 		itemAbout.setFont(menuBarFont);
 		itemAbout.addActionListener(new ItemAboutActionListener());
+		menuFile.add(itemChart);
+		menuFile.addSeparator();
 		menuFile.add(itemSettings);
 		menuHelp.add(itemAbout);
 		menuBar.add(menuFile);
@@ -148,20 +154,21 @@ public class Interface extends JFrame // TODO Javadoc
 		usernameAsk.setFont(Utils.fontMain);
 		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
 		usernameAsk.setVerticalAlignment(JLabel.CENTER);
-		userNameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean("autoCompletion", false));
-		userNameField.setFont(Utils.fontMain);
-		userNameFieldModel = userNameField.getDefModel();
-		userNameField.setEditable(true);
-		userNameField.setPreferredSize(new Dimension(200, 30));
-		userNameField.setSelectedItem(null);
-		userNameFieldTextComponent = (JTextComponent) userNameField.getEditor().getEditorComponent();
-		userNameFieldTextComponent.getDocument().addDocumentListener(new UserNameFieldDocumentListener());
-		new GhostText(((JTextField) userNameField.getEditor().getEditorComponent()), Utils.resourceBundle.getString("ghost_username_field"));
-		((JTextField) userNameField.getEditor().getEditorComponent()).addKeyListener(new UserNameTextFieldKeyListener());
-		validButon = new JButton(iconSearch);
-		validButon.setFont(Utils.fontMain);
-		validButon.setToolTipText(Utils.resourceBundle.getString("button_search_tooltip_text"));
-		validButon.addActionListener(new ValidButtonActionListener());
+		this.userNameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean("autoCompletion", false));
+		this.userNameField.setFont(Utils.fontMain);
+		this.userNameFieldModel = this.userNameField.getDefModel();
+		this.userNameFieldModel.addElement(null);
+		this.userNameField.setEditable(true);
+		this.userNameField.setPreferredSize(new Dimension(200, 30));
+		this.userNameField.setSelectedItem(null);
+		this.userNameFieldTextComponent = (JTextComponent) this.userNameField.getEditor().getEditorComponent();
+		this.userNameFieldTextComponent.getDocument().addDocumentListener(new UserNameFieldDocumentListener());
+		new GhostText((JTextField) this.userNameField.getEditor().getEditorComponent(), Utils.resourceBundle.getString("ghost_username_field"));
+		((JTextField) this.userNameField.getEditor().getEditorComponent()).addKeyListener(new UserNameTextFieldKeyListener());
+		this.validButon = new JButton(this.iconSearch);
+		this.validButon.setFont(Utils.fontMain);
+		this.validButon.setToolTipText(Utils.resourceBundle.getString("button_search_tooltip_text"));
+		this.validButon.addActionListener(new ValidButtonActionListener());
 		JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
 		separator.setPreferredSize(new Dimension(100, 100));
 		// Construct panel
@@ -176,10 +183,10 @@ public class Interface extends JFrame // TODO Javadoc
 		searchPanel.add(usernameAsk, constraint);
 		constraint.weightx = 0.7;
 		constraint.gridx = 1;
-		searchPanel.add(userNameField, constraint);
+		searchPanel.add(this.userNameField, constraint);
 		constraint.gridx = 2;
 		constraint.weightx = 0.1;
-		searchPanel.add(validButon, constraint);
+		searchPanel.add(this.validButon, constraint);
 		constraint.insets = new Insets(1, 0, 0, 0);
 		constraint.gridy = 1;
 		constraint.gridx = 0;
@@ -197,46 +204,46 @@ public class Interface extends JFrame // TODO Javadoc
 		JPanel modePanel = new JPanel(new GridBagLayout());
 		modePanel.setBackground(Utils.backColor);
 		modePanel.addComponentListener(new ModesComponentListener());
-		buttonStandard = new JButtonMode("osu!");
-		buttonStandard.setBackground(colorButtonModeSelected);
-		buttonStandard.setDisabledBackground(colorButtonModeUnselected);
-		buttonStandard.setBorderColor(colorButtonBorder);
-		buttonStandard.setDisabledTextColor(colorTextUnselected);
-		buttonStandard.setForeground(colorTextSelected);
-		buttonStandard.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
-		buttonStandard.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
-		buttonStandard.setFocusPainted(false);
-		buttonStandard.addActionListener(new ModeStandardActionListener());
-		buttonTaiko = new JButtonMode("Taiko");
-		buttonTaiko.setBackground(colorButtonModeSelected);
-		buttonTaiko.setDisabledBackground(colorButtonModeUnselected);
-		buttonTaiko.setBorderColor(colorButtonBorder);
-		buttonTaiko.setDisabledTextColor(colorTextUnselected);
-		buttonTaiko.setForeground(colorTextSelected);
-		buttonTaiko.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
-		buttonTaiko.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
-		buttonTaiko.setFocusPainted(false);
-		buttonTaiko.addActionListener(new ModeTaikoActionListener());
-		buttonCTB = new JButtonMode("Catch The Beat");
-		buttonCTB.setBackground(colorButtonModeSelected);
-		buttonCTB.setDisabledBackground(colorButtonModeUnselected);
-		buttonCTB.setBorderColor(colorButtonBorder);
-		buttonCTB.setDisabledTextColor(colorTextUnselected);
-		buttonCTB.setForeground(colorTextSelected);
-		buttonCTB.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
-		buttonCTB.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
-		buttonCTB.setFocusPainted(false);
-		buttonCTB.addActionListener(new ModeCTBActionListener());
-		buttonMania = new JButtonMode("osu!mania");
-		buttonMania.setBackground(colorButtonModeSelected);
-		buttonMania.setDisabledBackground(colorButtonModeUnselected);
-		buttonMania.setBorderColor(colorButtonBorder);
-		buttonMania.setDisabledTextColor(colorTextUnselected);
-		buttonMania.setForeground(colorTextSelected);
-		buttonMania.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
-		buttonMania.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
-		buttonMania.setFocusPainted(false);
-		buttonMania.addActionListener(new ModeManiaActionListener());
+		this.buttonStandard = new JButtonMode("osu!");
+		this.buttonStandard.setBackground(colorButtonModeSelected);
+		this.buttonStandard.setDisabledBackground(colorButtonModeUnselected);
+		this.buttonStandard.setBorderColor(colorButtonBorder);
+		this.buttonStandard.setDisabledTextColor(colorTextUnselected);
+		this.buttonStandard.setForeground(colorTextSelected);
+		this.buttonStandard.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
+		this.buttonStandard.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
+		this.buttonStandard.setFocusPainted(false);
+		this.buttonStandard.addActionListener(new ModeStandardActionListener());
+		this.buttonTaiko = new JButtonMode("Taiko");
+		this.buttonTaiko.setBackground(colorButtonModeSelected);
+		this.buttonTaiko.setDisabledBackground(colorButtonModeUnselected);
+		this.buttonTaiko.setBorderColor(colorButtonBorder);
+		this.buttonTaiko.setDisabledTextColor(colorTextUnselected);
+		this.buttonTaiko.setForeground(colorTextSelected);
+		this.buttonTaiko.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
+		this.buttonTaiko.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
+		this.buttonTaiko.setFocusPainted(false);
+		this.buttonTaiko.addActionListener(new ModeTaikoActionListener());
+		this.buttonCTB = new JButtonMode("Catch The Beat");
+		this.buttonCTB.setBackground(colorButtonModeSelected);
+		this.buttonCTB.setDisabledBackground(colorButtonModeUnselected);
+		this.buttonCTB.setBorderColor(colorButtonBorder);
+		this.buttonCTB.setDisabledTextColor(colorTextUnselected);
+		this.buttonCTB.setForeground(colorTextSelected);
+		this.buttonCTB.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
+		this.buttonCTB.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
+		this.buttonCTB.setFocusPainted(false);
+		this.buttonCTB.addActionListener(new ModeCTBActionListener());
+		this.buttonMania = new JButtonMode("osu!mania");
+		this.buttonMania.setBackground(colorButtonModeSelected);
+		this.buttonMania.setDisabledBackground(colorButtonModeUnselected);
+		this.buttonMania.setBorderColor(colorButtonBorder);
+		this.buttonMania.setDisabledTextColor(colorTextUnselected);
+		this.buttonMania.setForeground(colorTextSelected);
+		this.buttonMania.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
+		this.buttonMania.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
+		this.buttonMania.setFocusPainted(false);
+		this.buttonMania.addActionListener(new ModeManiaActionListener());
 		switchMode(0, false);
 		// Construct
 		constraint = new GridBagConstraints();
@@ -247,50 +254,50 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
-		modePanel.add(buttonStandard, constraint);
+		modePanel.add(this.buttonStandard, constraint);
 		constraint.gridx = 1;
-		modePanel.add(buttonTaiko, constraint);
+		modePanel.add(this.buttonTaiko, constraint);
 		constraint.gridx = 2;
-		modePanel.add(buttonCTB, constraint);
+		modePanel.add(this.buttonCTB, constraint);
 		constraint.gridx = 3;
-		modePanel.add(buttonMania, constraint);
+		modePanel.add(this.buttonMania, constraint);
 		/***************** LEVEL PANEL ********************/
 		Utils.logger.log(Level.INFO, "Creating level panel...");
 		JPanel levelUserPanel = new JPanel(new BorderLayout());
 		levelUserPanel.setBackground(Utils.backColor);
-		levelBar = new JProgressBar();
-		Dimension dim = levelBar.getPreferredSize();
+		this.levelBar = new JProgressBar();
+		Dimension dim = this.levelBar.getPreferredSize();
 		dim.height += 3;
-		levelBar.setPreferredSize(dim);
-		levelBar.setMaximum(100);
-		levelBar.setStringPainted(true);
-		levelBar.setFont(Utils.fontMain.deriveFont(Font.BOLD, Utils.fontMain.getSize()));
+		this.levelBar.setPreferredSize(dim);
+		this.levelBar.setMaximum(100);
+		this.levelBar.setStringPainted(true);
+		this.levelBar.setFont(Utils.fontMain.deriveFont(Font.BOLD, Utils.fontMain.getSize()));
 		updateLevel(0D);
 		// Construct
-		levelUserPanel.add(levelBar, BorderLayout.CENTER);
+		levelUserPanel.add(this.levelBar, BorderLayout.CENTER);
 		/***************** TRACK PANEL ********************/
 		Utils.logger.log(Level.INFO, "Creating track panel...");
 		JPanel trackUserPanel = new JPanel(new GridBagLayout());
 		trackUserPanel.setBackground(Utils.backColor);
-		track = new JCheckBox();
-		track.setText(Utils.resourceBundle.getString("track_user"));
-		track.setFont(Utils.fontMain);
-		track.setEnabled(false);
-		track.addActionListener(new TrackUserActionListener());
-		lastStatsDate = new JLabel(Utils.resourceBundle.getString("last_stats_date"));
-		lastStatsDate.setEnabled(track.isSelected());
-		lastStatsDate.setFont(Utils.fontMain);
-		statsDateModel = new DefaultComboBoxModel<String>(new String[] {});
-		lastStatsDateBox = new JComboBox<String>(statsDateModel);
-		lastStatsDateBox.setFont(Utils.fontMain);
-		lastStatsDateBox.setEnabled(track.isEnabled());
-		lastStatsDateBox.addActionListener(new StatsDateActionListener());
-		autoUpdateCheck = new JCheckBox();
-		autoUpdateCheck.setFont(Utils.fontMain);
-		autoUpdateCheck.setText(Utils.resourceBundle.getString("settings_auto_update"));
-		autoUpdateCheck.setEnabled(false);
-		autoUpdateCheck.setSelected(false);
-		autoUpdateCheck.addItemListener(new AutoUpdateItemListener());
+		this.track = new JCheckBox();
+		this.track.setText(Utils.resourceBundle.getString("track_user"));
+		this.track.setFont(Utils.fontMain);
+		this.track.setEnabled(false);
+		this.track.addActionListener(new TrackUserActionListener());
+		this.lastStatsDate = new JLabel(Utils.resourceBundle.getString("last_stats_date"));
+		this.lastStatsDate.setEnabled(this.track.isSelected());
+		this.lastStatsDate.setFont(Utils.fontMain);
+		this.statsDateModel = new DefaultComboBoxModel<String>(new String[] {});
+		this.lastStatsDateBox = new JComboBox<String>(this.statsDateModel);
+		this.lastStatsDateBox.setFont(Utils.fontMain);
+		this.lastStatsDateBox.setEnabled(this.track.isEnabled());
+		this.lastStatsDateBox.addActionListener(new StatsDateActionListener());
+		this.autoUpdateCheck = new JCheckBox();
+		this.autoUpdateCheck.setFont(Utils.fontMain);
+		this.autoUpdateCheck.setText(Utils.resourceBundle.getString("settings_auto_update"));
+		this.autoUpdateCheck.setEnabled(false);
+		this.autoUpdateCheck.setSelected(false);
+		this.autoUpdateCheck.addItemListener(new AutoUpdateItemListener());
 		// Construct
 		int lign = 0;
 		GridBagConstraints c = new GridBagConstraints();
@@ -301,16 +308,16 @@ public class Interface extends JFrame // TODO Javadoc
 		c.gridwidth = 2;
 		c.weightx = 1;
 		c.weighty = 1;
-		trackUserPanel.add(track, c);
+		trackUserPanel.add(this.track, c);
 		c.gridy = lign++;
-		trackUserPanel.add(autoUpdateCheck, c);
+		trackUserPanel.add(this.autoUpdateCheck, c);
 		c.gridwidth = 1;
 		c.gridy = lign++;
 		c.weightx = 0.1;
-		trackUserPanel.add(lastStatsDate, c);
+		trackUserPanel.add(this.lastStatsDate, c);
 		c.gridx = 1;
 		c.weightx = 1;
-		trackUserPanel.add(lastStatsDateBox, c);
+		trackUserPanel.add(this.lastStatsDateBox, c);
 		/***************** HITS PANEL ********************/
 		Utils.logger.log(Level.INFO, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
@@ -329,12 +336,12 @@ public class Interface extends JFrame // TODO Javadoc
 		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")), picturesSize, picturesSize));
-		hitCount300 = new JLabel();
-		hitCount300.setFont(Utils.fontMain);
-		hitCount300.setHorizontalAlignment(JLabel.CENTER);
-		hitCount300.setVerticalAlignment(JLabel.CENTER);
+		this.hitCount300 = new JLabel();
+		this.hitCount300.setFont(Utils.fontMain);
+		this.hitCount300.setHorizontalAlignment(JLabel.CENTER);
+		this.hitCount300.setVerticalAlignment(JLabel.CENTER);
 		count300Panel.add(count300Picture);
-		count300Panel.add(hitCount300);
+		count300Panel.add(this.hitCount300);
 		// 100
 		JPanel count100Panel = new JPanel();
 		count100Panel.setBackground(hitCountPanel.getBackground());
@@ -344,12 +351,12 @@ public class Interface extends JFrame // TODO Javadoc
 		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")), picturesSize, picturesSize));
-		hitCount100 = new JLabel();
-		hitCount100.setFont(Utils.fontMain);
-		hitCount100.setHorizontalAlignment(JLabel.CENTER);
-		hitCount100.setVerticalAlignment(JLabel.CENTER);
+		this.hitCount100 = new JLabel();
+		this.hitCount100.setFont(Utils.fontMain);
+		this.hitCount100.setHorizontalAlignment(JLabel.CENTER);
+		this.hitCount100.setVerticalAlignment(JLabel.CENTER);
 		count100Panel.add(count100Picture);
-		count100Panel.add(hitCount100);
+		count100Panel.add(this.hitCount100);
 		// 50
 		JPanel count50Panel = new JPanel();
 		count50Panel.setBackground(hitCountPanel.getBackground());
@@ -360,12 +367,12 @@ public class Interface extends JFrame // TODO Javadoc
 		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")), picturesSize, picturesSize));
-		hitCount50 = new JLabel();
-		hitCount50.setFont(Utils.fontMain);
-		hitCount50.setHorizontalAlignment(JLabel.CENTER);
-		hitCount50.setVerticalAlignment(JLabel.CENTER);
+		this.hitCount50 = new JLabel();
+		this.hitCount50.setFont(Utils.fontMain);
+		this.hitCount50.setHorizontalAlignment(JLabel.CENTER);
+		this.hitCount50.setVerticalAlignment(JLabel.CENTER);
 		count50Panel.add(count50Picture);
-		count50Panel.add(hitCount50);
+		count50Panel.add(this.hitCount50);
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.CENTER;
@@ -398,12 +405,12 @@ public class Interface extends JFrame // TODO Javadoc
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")), picturesSize, picturesSize));
-		countSS = new JLabel();
-		countSS.setFont(Utils.fontMain);
-		countSS.setHorizontalAlignment(JLabel.CENTER);
-		countSS.setVerticalAlignment(JLabel.CENTER);
+		this.countSS = new JLabel();
+		this.countSS.setFont(Utils.fontMain);
+		this.countSS.setHorizontalAlignment(JLabel.CENTER);
+		this.countSS.setVerticalAlignment(JLabel.CENTER);
 		ssPanel.add(ssPicture);
-		ssPanel.add(countSS);
+		ssPanel.add(this.countSS);
 		// S
 		JPanel sPanel = new JPanel();
 		sPanel.setBackground(hitCountPanel.getBackground());
@@ -413,12 +420,12 @@ public class Interface extends JFrame // TODO Javadoc
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")), picturesSize, picturesSize));
-		countS = new JLabel();
-		countS.setFont(Utils.fontMain);
-		countS.setHorizontalAlignment(JLabel.CENTER);
-		countS.setVerticalAlignment(JLabel.CENTER);
+		this.countS = new JLabel();
+		this.countS.setFont(Utils.fontMain);
+		this.countS.setHorizontalAlignment(JLabel.CENTER);
+		this.countS.setVerticalAlignment(JLabel.CENTER);
 		sPanel.add(sPicture);
-		sPanel.add(countS);
+		sPanel.add(this.countS);
 		// A
 		JPanel aPanel = new JPanel();
 		aPanel.setBackground(hitCountPanel.getBackground());
@@ -428,12 +435,12 @@ public class Interface extends JFrame // TODO Javadoc
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")), picturesSize, picturesSize));
-		countA = new JLabel();
-		countA.setFont(Utils.fontMain);
-		countA.setHorizontalAlignment(JLabel.CENTER);
-		countA.setVerticalAlignment(JLabel.CENTER);
+		this.countA = new JLabel();
+		this.countA.setFont(Utils.fontMain);
+		this.countA.setHorizontalAlignment(JLabel.CENTER);
+		this.countA.setVerticalAlignment(JLabel.CENTER);
 		aPanel.add(aPicture);
-		aPanel.add(countA);
+		aPanel.add(this.countA);
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.LINE_START;
@@ -453,21 +460,21 @@ public class Interface extends JFrame // TODO Javadoc
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		avatarPanel.setBackground(Utils.backColor);
 		int avatarSize = 128;
-		avatar = new ImagePanel(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize));
-		avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		avatar.setBackground(Utils.backColor);
-		avatar.setToolTipText(Utils.resourceBundle.getString("open_profile"));
-		avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
-		avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
-		avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
-		avatar.addMouseListener(new OpenProfileMouseListener());
-		username = new JLabel(" ");
-		username.setToolTipText(Utils.resourceBundle.getString("open_profile"));
-		username.addMouseListener(new OpenProfileMouseListener());
-		username.setOpaque(true);
-		username.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		username.setBackground(Utils.backColor);
-		username.setFont(Utils.fontMain.deriveFont(Font.PLAIN, 25));
+		this.avatar = new ImagePanel(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize));
+		this.avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		this.avatar.setBackground(Utils.backColor);
+		this.avatar.setToolTipText(Utils.resourceBundle.getString("open_profile"));
+		this.avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
+		this.avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
+		this.avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
+		this.avatar.addMouseListener(new OpenProfileMouseListener());
+		this.username = new JLabel(" ");
+		this.username.setToolTipText(Utils.resourceBundle.getString("open_profile"));
+		this.username.addMouseListener(new OpenProfileMouseListener());
+		this.username.setOpaque(true);
+		this.username.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		this.username.setBackground(Utils.backColor);
+		this.username.setFont(Utils.fontMain.deriveFont(Font.PLAIN, 25));
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.fill = GridBagConstraints.LINE_START;
@@ -477,10 +484,10 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
-		avatarPanel.add(avatar, constraint);
+		avatarPanel.add(this.avatar, constraint);
 		constraint.gridy = 1;
 		constraint.insets = new Insets(5, 0, 3, 0);
-		avatarPanel.add(username, constraint);
+		avatarPanel.add(this.username, constraint);
 		/**************** OTHERS PANEL *********************/
 		Utils.logger.log(Level.INFO, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
@@ -495,88 +502,88 @@ public class Interface extends JFrame // TODO Javadoc
 		playCountLabel.setFont(Utils.fontMain);
 		playCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		playCountLabel.setVerticalAlignment(JLabel.CENTER);
-		playCount = new JLabel();
-		playCount.setFont(Utils.fontMain);
-		playCount.setHorizontalAlignment(JLabel.LEFT);
-		playCount.setVerticalAlignment(JLabel.CENTER);
+		this.playCount = new JLabel();
+		this.playCount.setFont(Utils.fontMain);
+		this.playCount.setHorizontalAlignment(JLabel.LEFT);
+		this.playCount.setVerticalAlignment(JLabel.CENTER);
 		// RankedScore
 		JLabel rankedScoreLabel = new JLabel(Utils.resourceBundle.getString("ranked_score") + " : ");
 		rankedScoreLabel.setFont(Utils.fontMain);
 		rankedScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		rankedScoreLabel.setVerticalAlignment(JLabel.CENTER);
-		rankedScore = new JLabel();
-		rankedScore.setFont(Utils.fontMain);
-		rankedScore.setHorizontalAlignment(JLabel.LEFT);
-		rankedScore.setVerticalAlignment(JLabel.CENTER);
+		this.rankedScore = new JLabel();
+		this.rankedScore.setFont(Utils.fontMain);
+		this.rankedScore.setHorizontalAlignment(JLabel.LEFT);
+		this.rankedScore.setVerticalAlignment(JLabel.CENTER);
 		// TotalScore
 		JLabel totalScoreLabel = new JLabel(Utils.resourceBundle.getString("total_score") + " : ");
 		totalScoreLabel.setFont(Utils.fontMain);
 		totalScoreLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalScoreLabel.setVerticalAlignment(JLabel.CENTER);
-		totalScore = new JLabel();
-		totalScore.setFont(Utils.fontMain);
-		totalScore.setHorizontalAlignment(JLabel.LEFT);
-		totalScore.setVerticalAlignment(JLabel.CENTER);
+		this.totalScore = new JLabel();
+		this.totalScore.setFont(Utils.fontMain);
+		this.totalScore.setHorizontalAlignment(JLabel.LEFT);
+		this.totalScore.setVerticalAlignment(JLabel.CENTER);
 		// PP
 		JLabel ppCountLabel = new JLabel("PP : ");
 		ppCountLabel.setFont(Utils.fontMain);
 		ppCountLabel.setHorizontalAlignment(JLabel.RIGHT);
 		ppCountLabel.setVerticalAlignment(JLabel.CENTER);
-		ppCount = new JLabel();
-		ppCount.setFont(Utils.fontMain);
-		ppCount.setHorizontalAlignment(JLabel.LEFT);
-		ppCount.setVerticalAlignment(JLabel.CENTER);
+		this.ppCount = new JLabel();
+		this.ppCount.setFont(Utils.fontMain);
+		this.ppCount.setHorizontalAlignment(JLabel.LEFT);
+		this.ppCount.setVerticalAlignment(JLabel.CENTER);
 		// Accuracy
 		JLabel accuracyLabel = new JLabel(Utils.resourceBundle.getString("accuracy") + " : ");
 		accuracyLabel.setFont(Utils.fontMain);
 		accuracyLabel.setHorizontalAlignment(JLabel.RIGHT);
 		accuracyLabel.setVerticalAlignment(JLabel.CENTER);
-		accuracy = new JLabel();
-		accuracy.setFont(Utils.fontMain);
-		accuracy.setHorizontalAlignment(JLabel.LEFT);
-		accuracy.setVerticalAlignment(JLabel.CENTER);
+		this.accuracy = new JLabel();
+		this.accuracy.setFont(Utils.fontMain);
+		this.accuracy.setHorizontalAlignment(JLabel.LEFT);
+		this.accuracy.setVerticalAlignment(JLabel.CENTER);
 		// Country
 		picturesSize = 16;
 		JLabel countryLabel = new JLabel(Utils.resourceBundle.getString("country") + " : ");
 		countryLabel.setFont(Utils.fontMain);
 		countryLabel.setHorizontalAlignment(JLabel.RIGHT);
 		countryLabel.setVerticalAlignment(JLabel.CENTER);
-		country = new JLabel();
-		country.setFont(Utils.fontMain);
-		country.setHorizontalAlignment(JLabel.LEFT);
-		country.setVerticalAlignment(JLabel.CENTER);
-		countryFlag = new ImagePanel();
-		countryFlag.setPrintLoading(false);
-		countryFlag.setBackground(Utils.noticeColor);
-		countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
-		countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.country = new JLabel();
+		this.country.setFont(Utils.fontMain);
+		this.country.setHorizontalAlignment(JLabel.LEFT);
+		this.country.setVerticalAlignment(JLabel.CENTER);
+		this.countryFlag = new ImagePanel();
+		this.countryFlag.setPrintLoading(false);
+		this.countryFlag.setBackground(Utils.noticeColor);
+		this.countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		// Total hits
 		JLabel totalHitsLabel = new JLabel(Utils.resourceBundle.getString("total_hits") + " : ");
 		totalHitsLabel.setFont(Utils.fontMain);
 		totalHitsLabel.setHorizontalAlignment(JLabel.RIGHT);
 		totalHitsLabel.setVerticalAlignment(JLabel.CENTER);
-		totalHits = new JLabel();
-		totalHits.setFont(Utils.fontMain);
-		totalHits.setHorizontalAlignment(JLabel.LEFT);
-		totalHits.setVerticalAlignment(JLabel.CENTER);
+		this.totalHits = new JLabel();
+		this.totalHits.setFont(Utils.fontMain);
+		this.totalHits.setHorizontalAlignment(JLabel.LEFT);
+		this.totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
 		lign = 0;
 		otherPanel.add(playCountLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(playCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(this.playCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(rankedScoreLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(rankedScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(this.rankedScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(totalScoreLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(totalScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(this.totalScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(ppCountLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(ppCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(this.ppCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(accuracyLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(accuracy, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(this.accuracy, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(countryLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(countryFlag, new CC().cell(1, lign).alignX("left").gapLeft("5"));
-		otherPanel.add(country, new CC().cell(2, lign++, 2, 1).alignX("left").gapLeft("2"));
+		otherPanel.add(this.countryFlag, new CC().cell(1, lign).alignX("left").gapLeft("5"));
+		otherPanel.add(this.country, new CC().cell(2, lign++, 2, 1).alignX("left").gapLeft("2"));
 		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(this.totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
 		Utils.logger.log(Level.INFO, "Creating frame panel...");
 		constraint = new GridBagConstraints();
@@ -616,49 +623,51 @@ public class Interface extends JFrame // TODO Javadoc
 		getFrame().toFront();
 	}
 
-	public void openUserProfile()
+	public void activateFrame()
 	{
-		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
-			try
-			{
-				String user_id = username.getText();
-				if(user_id.equalsIgnoreCase(""))
-					return;
-				desktop.browse(new URL("https://osu.ppy.sh/u/" + Utils.lastUser.getUserID()).toURI());
-			}
-			catch(final Exception e)
-			{
-				e.printStackTrace();
-			}
+		getFrame().setFocusable(true);
+		getFrame().setEnabled(true);
 	}
 
-	public void trackNewUser(User user) throws IOException
+	public void backFromTray()
 	{
-		Utils.logger.log(Level.INFO, "Trcking user " + user.getUsername());
-		ArrayList<String> users = Utils.getTrackedUsers();
-		users.add(user.getUsername());
-		userNameFieldModel.addElement(user.getUsername());
-		user.serialize(new File(Configuration.appData, user.getUsername()));
-		lastStatsDate.setEnabled(track.isSelected());
-		lastStatsDateBox.setEnabled(track.isSelected());
-		autoUpdateCheck.setEnabled(track.isSelected());
-		Utils.setTrackedUser(users);
+		getFrame().setState(JFrame.NORMAL);
+		showFrame();
+		getFrame().toFront();
 	}
 
-	public void unTrackUser(User user)
+	public void desactivateFrame()
 	{
-		Utils.logger.log(Level.INFO, "Untrcking user " + user.getUsername());
-		ArrayList<String> users = Utils.getTrackedUsers();
-		users.remove(user.getUsername());
-		userNameFieldModel.removeElement(user.getUsername());
-		userNameField.setSelectedItem(null);
-		new File(Configuration.appData, user.getUsername()).delete();
-		lastStatsDate.setEnabled(track.isSelected());
-		lastStatsDateBox.setEnabled(track.isSelected());
-		autoUpdateCheck.setEnabled(track.isSelected());
-		autoUpdateCheck.setSelected(false);
-		Utils.setTrackedUser(users);
+		getFrame().setFocusable(false);
+		getFrame().setEnabled(false);
+	}
+
+	public void displayStats(User user, Stats stats)
+	{
+		updateLevel(stats.getLevel());
+		this.countSS.setText(String.valueOf(stats.getCountSS()));
+		this.countS.setText(String.valueOf(stats.getCountS()));
+		this.countA.setText(String.valueOf(stats.getCountA()));
+		this.totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(stats.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
+		this.country.setText(CountryCode.getByCode(user.getCountry()).getName());
+		DecimalFormat decimalFormat = new DecimalFormat();
+		decimalFormat.setMaximumFractionDigits(2);
+		this.hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount300()) + " (" + decimalFormat.format(stats.getCount300() * 100f / stats.getTotalHits()) + "%)");
+		this.hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount100()) + " (" + decimalFormat.format(stats.getCount100() * 100f / stats.getTotalHits()) + "%)");
+		this.hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount50()) + " (" + decimalFormat.format(stats.getCount50() * 100f / stats.getTotalHits()) + "%)");
+	}
+
+	private synchronized BufferedImage getAvatar(String userID) throws Exception
+	{
+		try
+		{
+			return ImageIO.read(new URL("https:" + Utils.cutLine(Utils.getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
+		}
+		return this.avatarDefaultImage;
 	}
 
 	private Color getColorUser()
@@ -667,14 +676,25 @@ public class Interface extends JFrame // TODO Javadoc
 		return colors[new Random().nextInt(colors.length)];
 	}
 
-	public void getInfos(boolean showerror)
+	private synchronized BufferedImage getCountryFlag(String country) throws Exception
 	{
-		getInfos(userNameFieldTextComponent.getText(), showerror);
+		try
+		{
+			return ImageIO.read(new URL("http://s.ppy.sh/images/flags/" + country.toLowerCase() + ".gif"));
+		}
+		catch(Exception e)
+		{}
+		return this.avatarDefaultImage;
 	}
 
-	public void updateInfos(boolean showerror)
+	public Interface getFrame()
 	{
-		getInfos(Utils.lastUser.getUsername(), showerror);
+		return this;
+	}
+
+	public void getInfos(boolean showerror)
+	{
+		getInfos(this.userNameFieldTextComponent.getText(), showerror);
 	}
 
 	private boolean getInfos(String user, boolean showerror)
@@ -690,28 +710,30 @@ public class Interface extends JFrame // TODO Javadoc
 			return false;
 		Utils.logger.log(Level.INFO, "Getting user infos " + user);
 		Utils.lastPost = new Date();
-		userNameField.setBackground(null);
-		userNameFieldTextComponent.setBackground(null);
+		this.userNameField.setBackground(null);
+		this.userNameFieldTextComponent.setBackground(null);
 		try
 		{
 			User currentUser = new User();
 			Stats currentStats = new Stats();
 			currentStats.setDate(new Date().getTime());
 			final JSONObject jsonResponse = new JSONObject(Utils.sendPost("get_user", Utils.API_KEY, user, getSelectedMode()));
-			username.setBackground(Utils.noticeColor);
-			username.setBorder(Utils.noticeBorder);
+			this.username.setBackground(Utils.noticeColor);
+			this.username.setBorder(Utils.noticeBorder);
 			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
-				{
+			{
 					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-				}
-				catch(Exception e)
-				{}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 			Stats previousStats = currentUser.getLastStats(getSelectedMode());
-			track.setEnabled(true);
-			track.setSelected(tracked);
-			autoUpdateCheck.setEnabled(tracked);
+			this.track.setEnabled(true);
+			this.track.setSelected(tracked);
+			this.autoUpdateCheck.setEnabled(tracked);
 			currentUser.setUsername(jsonResponse.getString("username"));
 			currentUser.setUserID(jsonResponse.getInt("user_id"));
 			currentUser.setCountry(jsonResponse.getString("country"));
@@ -733,9 +755,9 @@ public class Interface extends JFrame // TODO Javadoc
 				return false;
 			if(!Utils.lastUser.getUsername().equals(jsonResponse.getString("username")))
 			{
-				avatar.setImage(null);
-				countryFlag.setImage(null);
-				autoUpdateCheck.setSelected(false);
+				this.avatar.setImage(null);
+				this.countryFlag.setImage(null);
+				this.autoUpdateCheck.setSelected(false);
 				Runnable task = new Runnable()
 				{
 					@Override
@@ -743,8 +765,8 @@ public class Interface extends JFrame // TODO Javadoc
 					{
 						try
 						{
-							avatar.setImage(Utils.resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
-							countryFlag.setImage(Utils.resizeBufferedImage(getCountryFlag(jsonResponse.getString("country")), 16, 16));
+							Interface.this.avatar.setImage(Utils.resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
+							Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(getCountryFlag(jsonResponse.getString("country")), 16, 16));
 						}
 						catch(Exception e)
 						{
@@ -754,18 +776,18 @@ public class Interface extends JFrame // TODO Javadoc
 				};
 				new Thread(task, "ThreadImages").start();
 			}
-			username.setForeground(getColorUser());
+			this.username.setForeground(getColorUser());
 			updateStatsDates(currentUser);
 			displayStats(currentUser, currentStats);
 			updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats, true);
 			setValidButonIcon("R");
-			userNameFieldTextComponent.setText(currentUser.getUsername());
+			this.userNameFieldTextComponent.setText(currentUser.getUsername());
 			currentUser.setStats(!showerror, currentStats, getSelectedMode());
 			if(tracked)
 			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
-				lastStatsDate.setEnabled(track.isSelected());
-				lastStatsDateBox.setEnabled(track.isSelected());
+				this.lastStatsDate.setEnabled(this.track.isSelected());
+				this.lastStatsDateBox.setEnabled(this.track.isSelected());
 			}
 			Utils.lastStats = currentStats;
 			Utils.lastUser = currentUser;
@@ -775,27 +797,166 @@ public class Interface extends JFrame // TODO Javadoc
 			if(showerror)
 			{
 				Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
-				userNameField.setBackground(Color.RED);
-				userNameFieldTextComponent.setBackground(Color.RED);
+				this.userNameField.setBackground(Color.RED);
+				this.userNameFieldTextComponent.setBackground(Color.RED);
 			}
 			return false;
 		}
 		return true;
 	}
 
-	public void displayStats(User user, Stats stats)
+	public long getSelectedDate()
 	{
-		updateLevel(stats.getLevel());
-		countSS.setText(String.valueOf(stats.getCountSS()));
-		countS.setText(String.valueOf(stats.getCountS()));
-		countA.setText(String.valueOf(stats.getCountA()));
-		totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(stats.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
-		country.setText(CountryCode.getByCode(user.getCountry()).getName());
-		DecimalFormat decimalFormat = new DecimalFormat();
-		decimalFormat.setMaximumFractionDigits(2);
-		hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount300()) + " (" + decimalFormat.format((stats.getCount300() * 100f) / stats.getTotalHits()) + "%)");
-		hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount100()) + " (" + decimalFormat.format((stats.getCount100() * 100f) / stats.getTotalHits()) + "%)");
-		hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount50()) + " (" + decimalFormat.format((stats.getCount50() * 100f) / stats.getTotalHits()) + "%)");
+		String date = this.lastStatsDateBox.getSelectedItem().toString();
+		if(date.equals(Utils.resourceBundle.getString("last_date_saved")))
+			return -1;
+		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+		SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
+		return formatter.parseDateTime(date).toDate().getTime();
+	}
+
+	public int getSelectedMode()
+	{
+		if(!this.buttonTaiko.isEnabled())
+			return 1;
+		if(!this.buttonCTB.isEnabled())
+			return 2;
+		if(!this.buttonMania.isEnabled())
+			return 3;
+		return 0;
+	}
+
+	public void hideFrame()
+	{
+		getFrame().setEnabled(false);
+		getFrame().setFocusable(false);
+	}
+
+	private boolean isValidTime()
+	{
+		return new Date().getTime() - Utils.lastPost.getTime() > 1000;
+	}
+
+	private boolean isValidUser(String username)
+	{
+		return username.length() > 1;
+	}
+
+	public void openUserProfile()
+	{
+		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+			try
+		{
+				String user_id = this.username.getText();
+				if(user_id.equalsIgnoreCase(""))
+					return;
+				desktop.browse(new URL("https://osu.ppy.sh/u/" + Utils.lastUser.getUserID()).toURI());
+		}
+		catch(final Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void setValidButonIcon(String string)
+	{
+		if(string.equalsIgnoreCase("R"))
+			this.validButon.setIcon(this.iconRefresh);
+		else
+			this.validButon.setIcon(this.iconSearch);
+	}
+
+	public void showFrame()
+	{
+		getFrame().setEnabled(true);
+		getFrame().setFocusable(true);
+		getFrame().setVisible(true);
+	}
+
+	public void switchMode(int mode, boolean checkInfos)
+	{
+		this.buttonStandard.setEnabled(true);
+		this.buttonTaiko.setEnabled(true);
+		this.buttonCTB.setEnabled(true);
+		this.buttonMania.setEnabled(true);
+		switch(mode)
+		{
+			case 0:
+				this.buttonStandard.setEnabled(false);
+				break;
+			case 1:
+				this.buttonTaiko.setEnabled(false);
+				break;
+			case 2:
+				this.buttonCTB.setEnabled(false);
+				break;
+			case 3:
+				this.buttonMania.setEnabled(false);
+				break;
+		}
+		if(checkInfos)
+			getInfos(Utils.lastUser.getUsername(), false);
+	}
+
+	public void trackNewUser(User user) throws IOException
+	{
+		Utils.logger.log(Level.INFO, "Trcking user " + user.getUsername());
+		ArrayList<String> users = Utils.getTrackedUsers();
+		users.add(user.getUsername());
+		this.userNameFieldModel.addElement(user.getUsername());
+		user.serialize(new File(Configuration.appData, user.getUsername()));
+		this.lastStatsDate.setEnabled(this.track.isSelected());
+		this.lastStatsDateBox.setEnabled(this.track.isSelected());
+		this.autoUpdateCheck.setEnabled(this.track.isSelected());
+		Utils.setTrackedUser(users);
+	}
+
+	public void unTrackUser(User user)
+	{
+		Utils.logger.log(Level.INFO, "Untrcking user " + user.getUsername());
+		ArrayList<String> users = Utils.getTrackedUsers();
+		users.remove(user.getUsername());
+		this.userNameFieldModel.removeElement(user.getUsername());
+		this.userNameField.setSelectedItem(null);
+		new File(Configuration.appData, user.getUsername()).delete();
+		this.lastStatsDate.setEnabled(this.track.isSelected());
+		this.lastStatsDateBox.setEnabled(this.track.isSelected());
+		this.autoUpdateCheck.setEnabled(this.track.isSelected());
+		this.autoUpdateCheck.setSelected(false);
+		Utils.setTrackedUser(users);
+	}
+
+	public void updateAutoCompletionStatus(boolean status)
+	{
+		this.userNameField.setAutoCompletion(status);
+	}
+
+	public void updateInfos(boolean showerror)
+	{
+		getInfos(Utils.lastUser.getUsername(), showerror);
+	}
+
+	private void updateLevel(double level)
+	{
+		Utils.logger.log(Level.INFO, "Setting level to " + level);
+		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
+		this.levelBar.setValue((int) progress);
+		this.levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
+	}
+
+	private void updateStatsDates(User user)
+	{
+		String lastDate = (String) this.statsDateModel.getSelectedItem();
+		this.statsDateModel.removeAllElements();
+		for(String date : user.getAvalidbleStatsDates(getSelectedMode()))
+			this.statsDateModel.addElement(date);
+		this.statsDateModel.addElement(Utils.resourceBundle.getString("last_date_saved"));
+		if(Utils.config.getBoolean("keepDate", false) && lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
+			this.lastStatsDateBox.setSelectedItem(lastDate);
+		else
+			this.lastStatsDateBox.setSelectedIndex(this.statsDateModel.getSize() - 1);
 	}
 
 	public void updateTrackedInfos()
@@ -806,165 +967,13 @@ public class Interface extends JFrame // TODO Javadoc
 	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
-		username.setText("<html><body><nobr>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
-		accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
-		playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
-		rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
-		totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
-		ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
+		this.username.setText("<html><body><nobr>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
+		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
+		this.playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
+		this.rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
+		this.totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
+		this.ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
-	}
-
-	private void updateLevel(double level)
-	{
-		Utils.logger.log(Level.INFO, "Setting level to " + level);
-		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
-		levelBar.setValue((int) progress);
-		levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
-	}
-
-	private void updateStatsDates(User user)
-	{
-		String lastDate = (String) statsDateModel.getSelectedItem();
-		statsDateModel.removeAllElements();
-		for(String date : user.getAvalidbleStatsDates(getSelectedMode()))
-			statsDateModel.addElement(date);
-		statsDateModel.addElement(Utils.resourceBundle.getString("last_date_saved"));
-		if(Utils.config.getBoolean("keepDate", false) && lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
-			lastStatsDateBox.setSelectedItem(lastDate);
-		else
-			lastStatsDateBox.setSelectedIndex(statsDateModel.getSize() - 1);
-	}
-
-	private boolean isValidUser(String username)
-	{
-		return username.length() > 1;
-	}
-
-	private boolean isValidTime()
-	{
-		return new Date().getTime() - Utils.lastPost.getTime() > 1000;
-	}
-
-	private synchronized BufferedImage getAvatar(String userID) throws Exception
-	{
-		try
-		{
-			return ImageIO.read(new URL("https:" + Utils.cutLine(Utils.getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
-		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
-		}
-		return avatarDefaultImage;
-	}
-
-	private synchronized BufferedImage getCountryFlag(String country) throws Exception
-	{
-		try
-		{
-			return ImageIO.read(new URL("http://s.ppy.sh/images/flags/" + country.toLowerCase() + ".gif"));
-		}
-		catch(Exception e)
-		{}
-		return avatarDefaultImage;
-	}
-
-	public void hideFrame()
-	{
-		getFrame().setEnabled(false);
-		getFrame().setFocusable(false);
-	}
-
-	public void showFrame()
-	{
-		getFrame().setEnabled(true);
-		getFrame().setFocusable(true);
-		getFrame().setVisible(true);
-	}
-
-	public void backFromTray()
-	{
-		getFrame().setState(JFrame.NORMAL);
-		showFrame();
-		getFrame().toFront();
-	}
-
-	public Interface getFrame()
-	{
-		return this;
-	}
-
-	public void updateAutoCompletionStatus(boolean status)
-	{
-		userNameField.setAutoCompletion(status);
-	}
-
-	public void switchMode(int mode, boolean checkInfos)
-	{
-		buttonStandard.setEnabled(true);
-		buttonTaiko.setEnabled(true);
-		buttonCTB.setEnabled(true);
-		buttonMania.setEnabled(true);
-		switch(mode)
-		{
-			case 0:
-				buttonStandard.setEnabled(false);
-			break;
-			case 1:
-				buttonTaiko.setEnabled(false);
-			break;
-			case 2:
-				buttonCTB.setEnabled(false);
-			break;
-			case 3:
-				buttonMania.setEnabled(false);
-			break;
-		}
-		if(checkInfos)
-			getInfos(Utils.lastUser.getUsername(), false);
-	}
-
-	public int getSelectedMode()
-	{
-		if(!buttonTaiko.isEnabled())
-			return 1;
-		if(!buttonCTB.isEnabled())
-			return 2;
-		if(!buttonMania.isEnabled())
-			return 3;
-		return 0;
-	}
-
-	public void activateFrame()
-	{
-		getFrame().setFocusable(true);
-		getFrame().setEnabled(true);
-	}
-
-	public void desactivateFrame()
-	{
-		getFrame().setFocusable(false);
-		getFrame().setEnabled(false);
-	}
-
-	public void setValidButonIcon(String string)
-	{
-		if(string.equalsIgnoreCase("R"))
-			this.validButon.setIcon(iconRefresh);
-		else
-			this.validButon.setIcon(iconSearch);
-	}
-
-	public long getSelectedDate()
-	{
-		String date = lastStatsDateBox.getSelectedItem().toString();
-		if(date.equals(Utils.resourceBundle.getString("last_date_saved")))
-			return -1;
-		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
-		SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
-		DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
-		return formatter.parseDateTime(date).toDate().getTime();
+			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
 	}
 }
