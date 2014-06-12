@@ -399,7 +399,6 @@ public class Stats implements Serializable, Cloneable
 		if(version >= 2)
 		{
 			ois.readInt();
-			ois.readInt();
 			ois.readLong();
 			ois.readInt();
 			ois.readLong();
