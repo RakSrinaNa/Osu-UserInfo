@@ -26,11 +26,11 @@ import fr.mrcraftcod.utils.Utils;
  * 
  * @author MrCraftCod
  */
-public class InterfaceAbout
+public class InterfaceAbout extends JFrame
 {
+	private static final long serialVersionUID = 1321865080360423098L;
 	private HashMap<String, String> traducers;
 	private String[][] valuesTable;
-	private JFrame frame;
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JTableUneditableModel model;
@@ -43,20 +43,20 @@ public class InterfaceAbout
 	 */
 	public InterfaceAbout(Component parent)
 	{
+		super(Utils.resourceBundle.getString("menu_bar_help_about"));
 		traducers = new HashMap<String, String>();
 		traducers.put(Utils.resourceBundle.getString("italian"), "TheHowl");
-		frame = new JFrame("About");
-		frame.setVisible(false);
-		frame.setLayout(new BorderLayout());
-		frame.setPreferredSize(new Dimension(400, 200));
-		frame.setMinimumSize(new Dimension(400, 200));
-		frame.setAlwaysOnTop(false);
-		frame.setIconImages(Utils.icons);
-		frame.getContentPane().setBackground(Utils.backColor);
-		frame.addWindowListener(new AboutWindowListener());
+		getFrame().setVisible(false);
+		getFrame().setLayout(new BorderLayout());
+		getFrame().setPreferredSize(new Dimension(400, 200));
+		getFrame().setMinimumSize(new Dimension(400, 200));
+		getFrame().setAlwaysOnTop(false);
+		getFrame().setIconImages(Utils.icons);
+		getFrame().getContentPane().setBackground(Utils.backColor);
+		getFrame().addWindowListener(new AboutWindowListener());
 		JLabel text = new JLabel(Utils.resourceBundle.getString("about_text"));
 		text.setBackground(Utils.backColor);
-		frame.add(text, BorderLayout.NORTH);
+		getFrame().add(text, BorderLayout.NORTH);
 		model = new JTableUneditableModel(setValuesTable(getTraducers()), new String[] {Utils.resourceBundle.getString("language"), Utils.resourceBundle.getString("traducer")});
 		table = new JTable(model);
 		table.setBackground(Color.WHITE);
@@ -87,14 +87,19 @@ public class InterfaceAbout
 		linkOsu.setBorder(new EmptyBorder(3, 3, 3, 3));
 		footer.add(linkAuthor, BorderLayout.WEST);
 		footer.add(linkOsu, BorderLayout.EAST);
-		frame.add(scrollPane, BorderLayout.CENTER);
-		frame.add(footer, BorderLayout.SOUTH);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setLocationRelativeTo(parent);
-		frame.pack();
-		frame.setVisible(true);
-		frame.toFront();
+		getFrame().add(scrollPane, BorderLayout.CENTER);
+		getFrame().add(footer, BorderLayout.SOUTH);
+		getFrame().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		getFrame().setLocationRelativeTo(parent);
+		getFrame().pack();
+		getFrame().setVisible(true);
+		getFrame().toFront();
 		Utils.mainFrame.hideFrame();
+	}
+
+	private InterfaceAbout getFrame()
+	{
+		return this;
 	}
 
 	/**

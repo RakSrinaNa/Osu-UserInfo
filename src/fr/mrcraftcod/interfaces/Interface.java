@@ -78,9 +78,9 @@ import fr.mrcraftcod.utils.CountryCode;
 import fr.mrcraftcod.utils.LoadingWorker;
 import fr.mrcraftcod.utils.Utils;
 
-public class Interface // TODO Javadoc
+public class Interface extends JFrame // TODO Javadoc
 {
-	private JFrame frame;
+	private static final long serialVersionUID = -6393144716196499998L;
 	private JTextComponent userNameFieldTextComponent;
 	private ImageIcon iconRefresh, iconSearch;
 	private BufferedImage avatarDefaultImage;
@@ -97,6 +97,7 @@ public class Interface // TODO Javadoc
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
 	{
+		super(Main.APPNAME + " v" + Main.VERSION);
 		int pictureButtonSize = 20;
 		Utils.logger.log(Level.INFO, "Loading icons...");
 		iconRefresh = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
@@ -104,7 +105,6 @@ public class Interface // TODO Javadoc
 		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		/************** FRAME INFOS ********************/
 		Utils.logger.log(Level.INFO, "Setting frame options...");
-		setFrame(new JFrame(Main.APPNAME + " v" + Main.VERSION));
 		getFrame().setBackground(Utils.backColor);
 		getFrame().setFocusable(true);
 		getFrame().setVisible(false);
@@ -679,7 +679,7 @@ public class Interface // TODO Javadoc
 
 	private boolean getInfos(String user, boolean showerror)
 	{
-		LoadingWorker load = new LoadingWorker(frame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
+		LoadingWorker load = new LoadingWorker(getFrame(), user, showerror, Utils.config.getBoolean("loadingScreen", true));
 		load.execute();
 		return true;
 	}
@@ -891,14 +891,9 @@ public class Interface // TODO Javadoc
 		getFrame().toFront();
 	}
 
-	public JFrame getFrame()
+	public Interface getFrame()
 	{
-		return frame;
-	}
-
-	public void setFrame(JFrame frame)
-	{
-		this.frame = frame;
+		return this;
 	}
 
 	public void updateAutoCompletionStatus(boolean status)
@@ -944,14 +939,14 @@ public class Interface // TODO Javadoc
 
 	public void activateFrame()
 	{
-		frame.setFocusable(true);
-		frame.setEnabled(true);
+		getFrame().setFocusable(true);
+		getFrame().setEnabled(true);
 	}
 
 	public void desactivateFrame()
 	{
-		frame.setFocusable(false);
-		frame.setEnabled(false);
+		getFrame().setFocusable(false);
+		getFrame().setEnabled(false);
 	}
 
 	public void setValidButonIcon(String string)
