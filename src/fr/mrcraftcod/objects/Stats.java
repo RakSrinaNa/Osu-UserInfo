@@ -19,23 +19,23 @@ public class Stats implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -3548705459172185871L;
 	private static final int STATS_VERSION = 2;
-	private int version;
-	private int mode;
-	private int playcount;
+	private transient long totalHits;
+	private transient double level;
 	private long rankedScore;
 	private long totalScore;
-	private double pp;
-	private double accuracy;
-	private long totalHits;
-	private double rank;
 	private long date;
-	private transient double level;
-	private int countSS;
-	private int countS;
-	private int countA;
 	private long count300;
 	private long count100;
 	private long count50;
+	private int version;
+	private int mode;
+	private int playcount;
+	private int countSS;
+	private int countS;
+	private int countA;
+	private double pp;
+	private double rank;
+	private double accuracy;
 
 	/**
 	 * Constructor.
@@ -398,22 +398,22 @@ public class Stats implements Serializable, Cloneable
 		int version = ois.readInt();
 		if(version >= 2)
 		{
-			ois.readInt();
-			ois.readLong();
-			ois.readInt();
-			ois.readLong();
-			ois.readLong();
-			ois.readDouble();
-			ois.readDouble();
-			ois.readDouble();
-			ois.readLong();
-			ois.readInt();
-			ois.readInt();
-			ois.readInt();
-			ois.readLong();
-			ois.readLong();
-			ois.readLong();
+			this.mode = ois.readInt();
+			this.date = ois.readLong();
+			this.playcount = ois.readInt();
+			this.rankedScore = ois.readLong();
+			this.totalScore = ois.readLong();
+			this.rank = ois.readDouble();
+			this.pp = ois.readDouble();
+			this.accuracy = ois.readDouble();
+			this.countSS = ois.readInt();
+			this.countS = ois.readInt();
+			this.countA = ois.readInt();
+			this.count300 = ois.readLong();
+			this.count100 = ois.readLong();
+			this.count50 = ois.readLong();
 		}
+		updateTotalHits();
 	}
 
 	/**
@@ -567,7 +567,6 @@ public class Stats implements Serializable, Cloneable
 		oos.writeDouble(this.rank);
 		oos.writeDouble(this.pp);
 		oos.writeDouble(this.accuracy);
-		oos.writeLong(this.totalHits);
 		oos.writeInt(this.countSS);
 		oos.writeInt(this.countS);
 		oos.writeInt(this.countA);

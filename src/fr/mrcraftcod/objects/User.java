@@ -298,17 +298,18 @@ public class User implements Serializable
 		return !(newStats.compareAccuracy(previousStats).equals("") && newStats.comparePlayCount(previousStats).equals("") && newStats.comparePP(previousStats).equals("") && newStats.compareRank(previousStats).equals("") && newStats.compareRankedScore(previousStats).equals("") && newStats.compareTotalHits(previousStats).equals(""));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
 	{
 		this.version = USER_VERSION;
 		int version = ois.readInt();
 		if(version >= 2)
 		{
-			ois.readUTF();
-			ois.readObject();
-			ois.readObject();
-			ois.readObject();
-			ois.readObject();
+			this.username = ois.readUTF();
+			this.stats_normal = (ArrayList<Stats>) ois.readObject();
+			this.stats_taiko = (ArrayList<Stats>) ois.readObject();
+			this.stats_ctb = (ArrayList<Stats>) ois.readObject();
+			this.stats_mania = (ArrayList<Stats>) ois.readObject();
 		}
 		if(this.stats_normal == null)
 			this.stats_normal = new ArrayList<Stats>();
