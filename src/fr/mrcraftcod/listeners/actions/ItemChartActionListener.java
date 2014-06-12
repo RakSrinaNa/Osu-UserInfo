@@ -12,6 +12,6 @@ public class ItemChartActionListener extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		new InterfaceChart("MrCraftCod", "Osu!", Utils.lastUser.getAllStats(Utils.mainFrame.getSelectedMode()));
+		new InterfaceChart(Utils.lastUser.getUsername(), "Osu!", Utils.lastUser.getAllStats(Utils.mainFrame.getSelectedMode()));
 	}
 }
