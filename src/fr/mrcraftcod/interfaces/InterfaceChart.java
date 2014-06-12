@@ -33,7 +33,7 @@ public class InterfaceChart extends JFrame
 	public InterfaceChart(String user, String mode, List<Stats> stats)
 	{
 		super();
-		setTitle(String.format(Utils.resourceBundle.getString("stats_for"), user));
+		setTitle(user);
 		Color colorPP = Color.BLUE, colorRank = Color.RED, colorAcc = Color.BLACK;
 		int shapeOffset = 4;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
@@ -63,8 +63,8 @@ public class InterfaceChart extends JFrame
 		xyPlot.mapDatasetToRangeAxis(0, 0);
 		xyPlot.mapDatasetToRangeAxis(1, 1);
 		xyPlot.mapDatasetToRangeAxis(2, 2);
-		xyPlot.setRangeAxisLocation(1, AxisLocation.BOTTOM_OR_LEFT);
-		xyPlot.setRangeAxisLocation(2, AxisLocation.BOTTOM_OR_LEFT);
+		xyPlot.setRangeAxisLocation(1, AxisLocation.TOP_OR_RIGHT);
+		xyPlot.setRangeAxisLocation(2, AxisLocation.TOP_OR_RIGHT);
 		XYLineAndShapeRenderer rendererAccuracy = new XYLineAndShapeRenderer();
 		XYLineAndShapeRenderer rendererPP = new XYLineAndShapeRenderer();
 		XYLineAndShapeRenderer rendererRank = new XYLineAndShapeRenderer();
@@ -95,7 +95,7 @@ public class InterfaceChart extends JFrame
 
 	private XYDataset processStatsAccuracy(List<Stats> stats)
 	{
-		TimeSeries serieAcc = new TimeSeries("Acc");
+		TimeSeries serieAcc = new TimeSeries(Utils.resourceBundle.getString("accuracy"));
 		for(Stats stat : stats)
 			serieAcc.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Locale.getDefault()), stat.getAccuracy());
 		TimeSeriesCollection collection = new TimeSeriesCollection();
@@ -115,7 +115,7 @@ public class InterfaceChart extends JFrame
 
 	private XYDataset processStatsRank(List<Stats> stats)
 	{
-		TimeSeries serieRank = new TimeSeries("Rank");
+		TimeSeries serieRank = new TimeSeries(Utils.resourceBundle.getString("rank"));
 		for(Stats stat : stats)
 			serieRank.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Locale.getDefault()), stat.getRank());
 		TimeSeriesCollection collection = new TimeSeriesCollection();
