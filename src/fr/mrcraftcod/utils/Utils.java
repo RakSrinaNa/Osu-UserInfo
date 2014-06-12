@@ -39,6 +39,22 @@ import fr.mrcraftcod.objects.User;
 
 public class Utils
 {
+	public enum Mods
+	{
+		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
+		private long key;
+
+		Mods(long key)
+		{
+			this.key = key;
+		}
+
+		private long getKey()
+		{
+			return this.key;
+		}
+	}
+
 	private final static String logFileName = "log.log";
 	private static ServerSocket socket;
 	private static TaskUpdater threadUpdater;
@@ -59,188 +75,28 @@ public class Utils
 	public static InterfaceAbout aboutFrame;
 	public static InterfaceSettings configFrame;
 
-	public static void init() throws IOException
+	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
 	{
-		logger = Logger.getLogger(Main.APPNAME);
-		logger.setLevel(Level.INFO);
-		boolean resetedLog = false;
-		File confFolder = new File(System.getenv("APPDATA"), Main.APPNAME);
-		File logFile = new File(confFolder, logFileName);
-		if(!confFolder.exists())
-			confFolder.mkdirs();
-		if(logFile.length() > 2500000)
+		if(!string.contains(ending))
+			throw new Exception();
+		boolean exists = false;
+		for(final String temp : begining)
+			if(string.contains(temp))
+				exists = true;
+		if(!exists)
+			throw new Exception();
+		int beginingIndex = 0;
+		for(final String temp : begining)
+			if((beginingIndex = string.indexOf(temp)) > -1)
+				break;
+		String result = string.substring(beginingIndex, string.indexOf(ending) + ending.length());
+		if(deleteDelimiters)
 		{
-			resetedLog = true;
-			logFile.delete();
+			result = result.replace(ending, "");
+			for(final String temp : begining)
+				result = result.replace(temp, "");
 		}
-		FileHandler fileTxt = new FileHandler(logFile.getAbsolutePath(), true);
-		fileTxt.setFormatter(new LogFormatter());
-		fileTxt.setEncoding("UTF-8");
-		logger.addHandler(fileTxt);
-		logger.log(Level.INFO, "\n\n---------- Starting program ----------\n\nRunning version " + Main.VERSION + "\n");
-		if(resetedLog)
-			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
-		config = new Configuration();
-		logger.log(Level.INFO, "Opening resource bundle...");
-		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", getLocaleByName(config.getString("locale", null)));
-		try
-		{
-			setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
-		}
-		catch(BindException e)
-		{
-			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
-			System.exit(1);
-		}
-		catch(IOException e)
-		{
-			logger.log(Level.SEVERE, "Unexpected error", e);
-			System.exit(2);
-		}
-		logger.log(Level.INFO, "Loading icons...");
-		icons = new ArrayList<Image>();
-		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
-		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
-		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
-		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
-		setLookAndFeel();
-		int currentStep = 0;
-		startup = new InterfaceStartup(4);
-		config.writeVar("last_version", Main.VERSION);
-		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
-		int result = Updater.update(startup.getFrame());
-		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
-		{
-			try
-			{
-				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
-				String tempApiKey = config.getString("api_key", "");
-				if(tempApiKey.equals(""))
-					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
-				logger.log(Level.INFO, "Verifying API key...");
-				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
-				if(!verifyApiKey(tempApiKey))
-				{
-					logger.log(Level.WARNING, "Wrong API key!");
-					JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
-					config.deleteVar("api_key");
-					System.exit(0);
-				}
-				config.writeVar("api_key", tempApiKey);
-				API_KEY = tempApiKey;
-				SystemTrayOsuStats.init();
-				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
-				logger.log(Level.INFO, "Launching interface...");
-				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
-				backColor = new Color(240, 236, 250);
-				searchBarColor = Color.WHITE;
-				noticeColor = Color.WHITE;
-				noticeBorderColor = new Color(221, 221, 221);
-				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
-				mainFrame = new Interface();
-			}
-			catch(Exception exception)
-			{
-				exception.printStackTrace();
-			}
-		}
-		startup.exit();
-	}
-
-	private static Locale getLocaleByName(String string)
-	{
-		if(string == null)
-			return Locale.getDefault();
-		switch(string)
-		{
-			case "fr":
-				return Locale.FRENCH;
-			case "it":
-				return Locale.ITALIAN;
-			case "en":
-				return Locale.ENGLISH;
-			default:
-				return Locale.getDefault();
-		}
-	}
-
-	public static void setThreadUpdater(boolean state)
-	{
-		if(state)
-		{
-			if(threadUpdater == null)
-				threadUpdater = new TaskUpdater();
-		}
-		else if(threadUpdater != null)
-		{
-			threadUpdater.stop();
-			threadUpdater = null;
-		}
-	}
-
-	/**
-	 * Function to know if the given api key is valid or not.
-	 * 
-	 * @param apiKey The api key to test.
-	 * @return A boolean representing the validity of the key.
-	 */
-	private static boolean verifyApiKey(String apiKey)
-	{
-		try
-		{
-			new JSONObject(sendPost("get_user", apiKey, "peppy", 0));
-		}
-		catch(IOException exception)
-		{
-			logger.log(Level.SEVERE, "Connexion error?", exception);
-			JOptionPane.showMessageDialog(null, "Couldn't connect to osu.ppy.sh!", "Internet problem", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
-		catch(Exception exception)
-		{
-			logger.log(Level.SEVERE, "Error verifyng API Key", exception);
-			JOptionPane.showMessageDialog(null, exception.getStackTrace(), "Internet problem", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-		logger.log(Level.INFO, "API Key valid");
-		return true;
-	}
-
-	/**
-	 * Used to set a better look and feel to the frames.
-	 */
-	private static void setLookAndFeel()
-	{
-		logger.log(Level.INFO, "Setting look and feel...");
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-			{
-				if("Nimbus".equals(info.getName()))
-				{
-					logger.log(Level.INFO, "Nimbus found, using it...");
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-			UIManager.put("nimbusOrange", new Color(255, 200, 0));
-			UIManager.put("nimbusOrange", new Color(255, 200, 0));
-		}
-		catch(final Exception exception)
-		{
-			logger.log(Level.WARNING, "Error loading look and feel", exception);
-		}
-	}
-
-	public static ServerSocket getSocket()
-	{
-		return socket;
-	}
-
-	public static void setSocket(ServerSocket socket)
-	{
-		Utils.socket = socket;
+		return result;
 	}
 
 	public static void exit()
@@ -280,42 +136,6 @@ public class Utils
 		}
 	}
 
-	public static boolean isUserTracked(String user)
-	{
-		return getTrackedUsers().contains(user);
-	}
-
-	public static ArrayList<String> getTrackedUsers()
-	{
-		ArrayList<String> trackedList = new ArrayList<String>();
-		String tracked = Utils.config.getString("tracked_users", "");
-		for(String user : tracked.split(","))
-			trackedList.add(user);
-		return trackedList;
-	}
-
-	public static void setTrackedUser(ArrayList<String> users)
-	{
-		StringBuilder sb = new StringBuilder();
-		for(String user : users)
-			if(!user.equals(""))
-				sb.append(user).append(",");
-		sb.deleteCharAt(sb.length() - 1);
-		config.writeVar("tracked_users", sb.toString());
-	}
-
-	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
-	{
-		if(image == null)
-			return image;
-		int baseWidth = image.getWidth(), baseHeight = image.getHeight();
-		float ratio = (baseWidth > baseHeight) ? (width / baseWidth) : (height / baseHeight);
-		Image tmp = image.getScaledInstance((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.SCALE_SMOOTH);
-		BufferedImage buffered = new BufferedImage((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.TYPE_INT_ARGB);
-		buffered.getGraphics().drawImage(tmp, 0, 0, null);
-		return buffered;
-	}
-
 	public static String[] getHTMLCode(String link) throws IOException
 	{
 		final URL url = new URL(link);
@@ -333,6 +153,11 @@ public class Utils
 		return page.toString().split("\n");
 	}
 
+	public static int getLevel(double level)
+	{
+		return (int) level;
+	}
+
 	public static String getLineCodeFromLink(final String link, final String... gets) throws Exception
 	{
 		final String[] lines = getHTMLCode(link);
@@ -341,6 +166,42 @@ public class Utils
 				if(tempLine.contains(get))
 					return tempLine;
 		throw new Exception("Cannot get code from link");
+	}
+
+	private static Locale getLocaleByName(String string)
+	{
+		if(string == null)
+			return Locale.getDefault();
+		switch(string)
+		{
+			case "fr":
+				return Locale.FRENCH;
+			case "it":
+				return Locale.ITALIAN;
+			case "en":
+				return Locale.ENGLISH;
+			default:
+				return Locale.getDefault();
+		}
+	}
+
+	public static String getModeName(int mode)
+	{
+		switch(mode)
+		{
+			case 1:
+				return "Taiko";
+			case 2:
+				return "Catch The Beat";
+			case 3:
+				return "osu!mania";
+		}
+		return "osu!";
+	}
+
+	public static double getProgressLevel(double level)
+	{
+		return level - (int) level;
 	}
 
 	public static double getScoreToNextLevel(int currentLevel, double currentScore)
@@ -354,7 +215,7 @@ public class Utils
 			if(currentLevel >= 2)
 			{
 				double temp = 4 * round(Math.pow(currentLevel, 3), 0) - 3 * round(Math.pow(currentLevel, 2), 0) - currentLevel;
-				result = (5000D / 3D) * temp + 1.25 * round(Math.pow(1.8, currentLevel - 60), 0);
+				result = 5000D / 3D * temp + 1.25 * round(Math.pow(1.8, currentLevel - 60), 0);
 			}
 			else
 				result = 0;
@@ -367,14 +228,140 @@ public class Utils
 		return round(result - currentScore, 0);
 	}
 
-	public static int getLevel(double level)
+	public static ServerSocket getSocket()
 	{
-		return (int) level;
+		return socket;
 	}
 
-	public static double getProgressLevel(double level)
+	public static ArrayList<String> getTrackedUsers()
 	{
-		return level - ((int) level);
+		ArrayList<String> trackedList = new ArrayList<String>();
+		String tracked = Utils.config.getString("tracked_users", "");
+		for(String user : tracked.split(","))
+			trackedList.add(user);
+		return trackedList;
+	}
+
+	public static void init(String[] args) throws IOException
+	{
+		logger = Logger.getLogger(Main.APPNAME);
+		logger.setLevel(Level.INFO);
+		boolean resetedLog = false;
+		File confFolder = new File(System.getenv("APPDATA"), Main.APPNAME);
+		File logFile = new File(confFolder, logFileName);
+		if(!confFolder.exists())
+			confFolder.mkdirs();
+		if(logFile.length() > 2500000)
+		{
+			resetedLog = true;
+			logFile.delete();
+		}
+		FileHandler fileTxt = new FileHandler(logFile.getAbsolutePath(), true);
+		fileTxt.setFormatter(new LogFormatter());
+		fileTxt.setEncoding("UTF-8");
+		logger.addHandler(fileTxt);
+		logger.log(Level.INFO, "\n\n---------- Starting program ----------\n\nRunning version " + Main.VERSION + "\n");
+		if(resetedLog)
+			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
+		config = new Configuration();
+		logger.log(Level.INFO, "Opening resource bundle...");
+		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", getLocaleByName(config.getString("locale", null)));
+		if(!isModeSet(args, "test"))
+			try
+		{
+				setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
+		}
+		catch(BindException e)
+		{
+			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+		catch(IOException e)
+		{
+			logger.log(Level.SEVERE, "Unexpected error", e);
+			System.exit(2);
+		}
+		logger.log(Level.INFO, "Loading icons...");
+		icons = new ArrayList<Image>();
+		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
+		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
+		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
+		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
+		setLookAndFeel();
+		int currentStep = 0;
+		startup = new InterfaceStartup(4);
+		config.writeVar("last_version", Main.VERSION);
+		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
+		int result = isModeSet(args, "ignoreupdate") ? Updater.NOUPDATE : Updater.update(startup.getFrame());
+		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
+			try
+		{
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
+				String tempApiKey = config.getString("api_key", "");
+				if(tempApiKey.equals(""))
+					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+				logger.log(Level.INFO, "Verifying API key...");
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
+				if(!isModeSet(args, "ignoreverifapi") && !verifyApiKey(tempApiKey))
+				{
+					logger.log(Level.WARNING, "Wrong API key!");
+					JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
+					config.deleteVar("api_key");
+					System.exit(0);
+				}
+				config.writeVar("api_key", tempApiKey);
+				API_KEY = tempApiKey;
+				SystemTrayOsuStats.init();
+				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
+				logger.log(Level.INFO, "Launching interface...");
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
+				backColor = new Color(240, 236, 250);
+				searchBarColor = Color.WHITE;
+				noticeColor = Color.WHITE;
+				noticeBorderColor = new Color(221, 221, 221);
+				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
+				mainFrame = new Interface();
+		}
+		catch(Exception exception)
+		{
+			exception.printStackTrace();
+		}
+		startup.exit();
+	}
+
+	private static boolean isModeSet(String[] args, String mode)
+	{
+		for(String s : args)
+			if(s.equalsIgnoreCase(mode))
+				return true;
+		return false;
+	}
+
+	public static boolean isUserTracked(String user)
+	{
+		return getTrackedUsers().contains(user);
+	}
+
+	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
+	{
+		if(image == null)
+			return image;
+		int baseWidth = image.getWidth(), baseHeight = image.getHeight();
+		float ratio = baseWidth > baseHeight ? width / baseWidth : height / baseHeight;
+		Image tmp = image.getScaledInstance((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.SCALE_SMOOTH);
+		BufferedImage buffered = new BufferedImage((int) (ratio * baseWidth), (int) (ratio * baseHeight), BufferedImage.TYPE_INT_ARGB);
+		buffered.getGraphics().drawImage(tmp, 0, 0, null);
+		return buffered;
+	}
+
+	public static double round(double value, int places)
+	{
+		if(places < 0)
+			throw new IllegalArgumentException();
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 
 	public synchronized static String sendPost(String type, String key, String user, int selectedMode) throws Exception
@@ -401,67 +388,85 @@ public class Utils
 		return response.toString();
 	}
 
-	public static double round(double value, int places)
+	/**
+	 * Used to set a better look and feel to the frames.
+	 */
+	private static void setLookAndFeel()
 	{
-		if(places < 0)
-			throw new IllegalArgumentException();
-		long factor = (long) Math.pow(10, places);
-		value = value * factor;
-		long tmp = Math.round(value);
-		return (double) tmp / factor;
+		logger.log(Level.INFO, "Setting look and feel...");
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+				if("Nimbus".equals(info.getName()))
+				{
+					logger.log(Level.INFO, "Nimbus found, using it...");
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			UIManager.put("nimbusOrange", new Color(255, 200, 0));
+			UIManager.put("nimbusOrange", new Color(255, 200, 0));
+		}
+		catch(final Exception exception)
+		{
+			logger.log(Level.WARNING, "Error loading look and feel", exception);
+		}
 	}
 
-	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
+	public static void setSocket(ServerSocket socket)
 	{
-		if(!string.contains(ending))
-			throw new Exception();
-		boolean exists = false;
-		for(final String temp : begining)
-			if(string.contains(temp))
-				exists = true;
-		if(!exists)
-			throw new Exception();
-		int beginingIndex = 0;
-		for(final String temp : begining)
-			if((beginingIndex = string.indexOf(temp)) > -1)
-				break;
-		String result = string.substring(beginingIndex, string.indexOf(ending) + ending.length());
-		if(deleteDelimiters)
-		{
-			result = result.replace(ending, "");
-			for(final String temp : begining)
-				result = result.replace(temp, "");
-		}
-		return result;
+		Utils.socket = socket;
 	}
 
-	public static String getModeName(int mode)
+	public static void setThreadUpdater(boolean state)
 	{
-		switch(mode)
+		if(state)
 		{
-			case 1:
-				return "Taiko";
-			case 2:
-				return "Catch The Beat";
-			case 3:
-				return "osu!mania";
+			if(threadUpdater == null)
+				threadUpdater = new TaskUpdater();
 		}
-		return "osu!";
+		else if(threadUpdater != null)
+		{
+			threadUpdater.stop();
+			threadUpdater = null;
+		}
 	}
 
-	public enum Mods
+	public static void setTrackedUser(ArrayList<String> users)
 	{
-		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
-		private long key;
+		StringBuilder sb = new StringBuilder();
+		for(String user : users)
+			if(!user.equals(""))
+				sb.append(user).append(",");
+		sb.deleteCharAt(sb.length() - 1);
+		config.writeVar("tracked_users", sb.toString());
+	}
 
-		Mods(long key)
+	/**
+	 * Function to know if the given api key is valid or not.
+	 *
+	 * @param apiKey The api key to test.
+	 * @return A boolean representing the validity of the key.
+	 */
+	private static boolean verifyApiKey(String apiKey)
+	{
+		try
 		{
-			this.key = key;
+			new JSONObject(sendPost("get_user", apiKey, "peppy", 0));
 		}
-
-		private long getKey()
+		catch(IOException exception)
 		{
-			return this.key;
+			logger.log(Level.SEVERE, "Connexion error?", exception);
+			JOptionPane.showMessageDialog(null, "Couldn't connect to osu.ppy.sh!", "Internet problem", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
+		catch(Exception exception)
+		{
+			logger.log(Level.SEVERE, "Error verifyng API Key", exception);
+			JOptionPane.showMessageDialog(null, exception.getStackTrace(), "Internet problem", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		logger.log(Level.INFO, "API Key valid");
+		return true;
 	}
 }

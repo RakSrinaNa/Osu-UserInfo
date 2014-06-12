@@ -157,6 +157,7 @@ public class Interface extends JFrame // TODO Javadoc
 		this.userNameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean("autoCompletion", false));
 		this.userNameField.setFont(Utils.fontMain);
 		this.userNameFieldModel = this.userNameField.getDefModel();
+		this.userNameFieldModel.addElement(null);
 		this.userNameField.setEditable(true);
 		this.userNameField.setPreferredSize(new Dimension(200, 30));
 		this.userNameField.setSelectedItem(null);
