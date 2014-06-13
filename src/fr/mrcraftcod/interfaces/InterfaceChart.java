@@ -63,10 +63,10 @@ public class InterfaceChart extends JFrame
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
 		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		NumberAxis axisAcc = new NumberAxis(Utils.resourceBundle.getString("accuracy"));
+		NumberAxis axisAcc = new NumberAxis(Utils.resourceBundle.getString("accuracy") + " (%)");
 		axisAcc.setTickLabelPaint(colorAcc);
 		axisAcc.setAutoRangeIncludesZero(false);
-		axisAcc.setNumberFormatOverride(new DecimalFormat("0.00"));
+		axisAcc.setNumberFormatOverride(new DecimalFormat("0.0000"));
 		xyPlot.setRangeAxis(0, axisAcc);
 		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
 		xyPlot.setDataset(0, processStatsAccuracy(stats));
