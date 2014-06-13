@@ -41,6 +41,7 @@ public class InterfaceChart extends JFrame
 	public InterfaceChart(String user, String mode, List<Stats> stats)
 	{
 		super();
+		setIconImages(Utils.icons);
 		setTitle(user);
 		int shapeOffset = 4;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
