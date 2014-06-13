@@ -47,10 +47,12 @@ public class InterfaceChart extends JFrame
 		ChartPanel chartPPAndRankPanel = getChartInPannel(createRankAndPPChart(user, stats, shape));
 		ChartPanel chartAccuracyPanel = getChartInPannel(createAccuracyChart(user, stats, shape));
 		ChartPanel chartHitsPanel = getChartInPannel(createHitsChart(user, stats));
+		ChartPanel chartRanksPanel = getChartInPannel(createRanksChart(user, stats));
 		JTabbedPane contentPane = new JTabbedPane();
 		contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
 		contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
-		contentPane.addTab(Utils.resourceBundle.getString("hits"), chartHitsPanel);
+		contentPane.addTab("300 / 100 / 50", chartHitsPanel);
+		contentPane.addTab("SS / S / A", chartRanksPanel);
 		setContentPane(contentPane);
 		setVisible(true);
 		pack();
@@ -82,7 +84,9 @@ public class InterfaceChart extends JFrame
 
 	private JFreeChart createHitsChart(String user, List<Stats> stats)
 	{
-		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsHits(stats), true, true, false);
+		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsHits(stats), true, false, false);
+		chart.setAntiAlias(true);
+		chart.setTextAntiAlias(true);
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);
@@ -90,7 +94,8 @@ public class InterfaceChart extends JFrame
 		NumberFormat percentFormat = NumberFormat.getPercentInstance();
 		percentFormat.setMaximumFractionDigits(2);
 		plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", NumberFormat.getNumberInstance(), percentFormat));
-		plot.setNoDataMessage("You shouldn't be there! How have you come here, are you a wizzard??! :o");
+		plot.setLegendLabelGenerator(new StandardPieSectionLabelGenerator("{0} : {1}"));
+		plot.setNoDataMessage("You shouldn't be there! How have you come here, are you a wizard??! :o");
 		return chart;
 	}
 
@@ -128,6 +133,23 @@ public class InterfaceChart extends JFrame
 		xyPlot.getRendererForDataset(xyPlot.getDataset(1)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		return chart;
+	}
+
+	private JFreeChart createRanksChart(String user, List<Stats> stats)
+	{
+		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsRanks(stats), true, false, false);
+		chart.setAntiAlias(true);
+		chart.setTextAntiAlias(true);
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setStartAngle(290);
+		plot.setDirection(Rotation.CLOCKWISE);
+		plot.setForegroundAlpha(0.5f);
+		NumberFormat percentFormat = NumberFormat.getPercentInstance();
+		percentFormat.setMaximumFractionDigits(2);
+		plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", NumberFormat.getNumberInstance(), percentFormat));
+		plot.setLegendLabelGenerator(new StandardPieSectionLabelGenerator("{0} : {1}"));
+		plot.setNoDataMessage("You shouldn't be there! How have you come here, are you a wizard??! :o");
 		return chart;
 	}
 
@@ -182,5 +204,14 @@ public class InterfaceChart extends JFrame
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serieRank);
 		return collection;
+	}
+
+	private PieDataset processStatsRanks(List<Stats> stats)
+	{
+		DefaultPieDataset data = new DefaultPieDataset();
+		data.setValue("SS", stats.get(stats.size() - 1).getCountSS());
+		data.setValue("S", stats.get(stats.size() - 1).getCountS());
+		data.setValue("A", stats.get(stats.size() - 1).getCountA());
+		return data;
 	}
 }
