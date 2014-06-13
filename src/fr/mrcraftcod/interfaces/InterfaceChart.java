@@ -7,6 +7,7 @@ import java.awt.Shape;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -18,12 +19,17 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
+import org.jfree.util.Rotation;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
 
@@ -39,10 +45,12 @@ public class InterfaceChart extends JFrame
 		int shapeOffset = 4;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
 		ChartPanel chartPPAndRankPanel = getChartInPannel(createRankAndPPChart(user, stats, shape));
-		ChartPanel chartAccurqcyPanel = getChartInPannel(createAccuracyChart(user, stats, shape));
+		ChartPanel chartAccuracyPanel = getChartInPannel(createAccuracyChart(user, stats, shape));
+		ChartPanel chartHitsPanel = getChartInPannel(createHitsChart(user, stats));
 		JTabbedPane contentPane = new JTabbedPane();
 		contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
-		contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccurqcyPanel);
+		contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
+		contentPane.addTab(Utils.resourceBundle.getString("hits"), chartHitsPanel);
 		setContentPane(contentPane);
 		setVisible(true);
 		pack();
@@ -69,6 +77,20 @@ public class InterfaceChart extends JFrame
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		return chart;
+	}
+
+	private JFreeChart createHitsChart(String user, List<Stats> stats)
+	{
+		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsHits(stats), true, true, false);
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setStartAngle(290);
+		plot.setDirection(Rotation.CLOCKWISE);
+		plot.setForegroundAlpha(0.5f);
+		NumberFormat percentFormat = NumberFormat.getPercentInstance();
+		percentFormat.setMaximumFractionDigits(2);
+		plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", NumberFormat.getNumberInstance(), percentFormat));
+		plot.setNoDataMessage("You shouldn't be there! How have you come here, are you a wizzard??! :o");
 		return chart;
 	}
 
@@ -131,6 +153,15 @@ public class InterfaceChart extends JFrame
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serieAcc);
 		return collection;
+	}
+
+	private PieDataset processStatsHits(List<Stats> stats)
+	{
+		DefaultPieDataset data = new DefaultPieDataset();
+		data.setValue("300", stats.get(stats.size() - 1).getCount300());
+		data.setValue("100", stats.get(stats.size() - 1).getCount100());
+		data.setValue("50", stats.get(stats.size() - 1).getCount50());
+		return data;
 	}
 
 	private XYDataset processStatsPP(List<Stats> stats)
