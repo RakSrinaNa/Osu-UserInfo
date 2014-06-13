@@ -281,11 +281,9 @@ public class User implements Serializable
 	 */
 	public boolean hasStatsChanged(boolean hard, Stats previousStats, Stats newStats)
 	{
-		if(previousStats == null)
+		if(previousStats == null || !hard)
 			return true;
-		if(!hard)
-			return true;
-		return !(newStats.compareAccuracy(previousStats).equals("") && newStats.comparePlayCount(previousStats).equals("") && newStats.comparePP(previousStats).equals("") && newStats.compareRank(previousStats).equals("") && newStats.compareRankedScore(previousStats).equals("") && newStats.compareTotalHits(previousStats).equals(""));
+		return !newStats.equals(previousStats);
 	}
 
 	@SuppressWarnings("unchecked")
