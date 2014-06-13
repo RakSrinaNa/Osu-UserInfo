@@ -43,7 +43,7 @@ import fr.mrcraftcod.utils.Utils;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.6b13";
+	public final static String VERSION = "1.6b14";
 
 	/**
 	 * Start the program.
@@ -53,6 +53,6 @@ public class Main
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		Utils.init();
+		Utils.init(args);
 	}
 }
