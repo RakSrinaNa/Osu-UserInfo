@@ -19,7 +19,7 @@ public class MainWindowListener implements WindowListener
 	@Override
 	public void windowClosing(final WindowEvent event)
 	{
-		Utils.exit();
+		Utils.exit(true);
 	}
 
 	@Override
