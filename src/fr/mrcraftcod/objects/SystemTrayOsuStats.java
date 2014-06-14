@@ -19,7 +19,7 @@ import fr.mrcraftcod.utils.Utils;
 
 /**
  * The system tray icon of the app.
- * 
+ *
  * @author MrCraftCod
  */
 public class SystemTrayOsuStats
@@ -37,7 +37,7 @@ public class SystemTrayOsuStats
 
 	/**
 	 * Initalize the SystemTray object.
-	 * 
+	 *
 	 * @throws IOException if the system tray object cannot be initialised.
 	 */
 	public static void init() throws IOException
@@ -68,7 +68,7 @@ public class SystemTrayOsuStats
 			@Override
 			public void actionPerformed(final ActionEvent e)
 			{
-				Utils.exit();
+				Utils.exit(true);
 				remove();
 			}
 		});
@@ -115,16 +115,8 @@ public class SystemTrayOsuStats
 	}
 
 	/**
-	 * Used to show the main app frame.
-	 */
-	public static void showUpFrame()
-	{
-		Utils.mainFrame.backFromTray();
-	}
-
-	/**
 	 * Called when need to notify by the system tray.
-	 * 
+	 *
 	 * @param title The title of the notification.
 	 * @param message The message of the notification.
 	 * @param messageType The type of the notification.
@@ -154,5 +146,13 @@ public class SystemTrayOsuStats
 		{
 			Utils.logger.log(Level.WARNING, "Error removing tray icon!", e);
 		}
+	}
+
+	/**
+	 * Used to show the main app frame.
+	 */
+	public static void showUpFrame()
+	{
+		Utils.mainFrame.backFromTray();
 	}
 }

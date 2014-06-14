@@ -11,6 +11,6 @@ public class ActionRefreshStats extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		Utils.mainFrame.getInfos(true);
+		Utils.mainFrame.getInfos(false);
 	}
 }
