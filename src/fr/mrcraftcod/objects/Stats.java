@@ -93,7 +93,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return "";
-		int delta = getPlaycount() - previousStats.getPlaycount();
+		int delta = getPlayCount() - previousStats.getPlayCount();
 		if(delta == 0)
 			return "";
 		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
@@ -183,7 +183,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(stats == null)
 			return false;
-		if(getPlaycount() != stats.getPlaycount())
+		if(getPlayCount() != stats.getPlayCount())
 			return false;
 		if(getTotalHits() != stats.getTotalHits())
 			return false;
@@ -259,7 +259,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return 0;
-		return getPlaycount() - previousStats.getPlaycount();
+		return getPlayCount() - previousStats.getPlayCount();
 	}
 
 	public double getDiffPP(Stats previousStats)
@@ -319,7 +319,7 @@ public class Stats implements Serializable, Cloneable
 	 *
 	 * @return The play count.
 	 */
-	public int getPlaycount()
+	public int getPlayCount()
 	{
 		return this.playcount;
 	}

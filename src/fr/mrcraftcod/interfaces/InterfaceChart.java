@@ -49,6 +49,7 @@ public class InterfaceChart extends JFrame
 		ChartPanel chartAccuracyPanel = getChartInPannel(createAccuracyChart(user, stats, shape));
 		ChartPanel chartRankedScorePanel = getChartInPannel(createRankedScoreChart(user, stats, shape));
 		ChartPanel chartTotalScorePanel = getChartInPannel(createTotalScoreChart(user, stats, shape));
+		ChartPanel chartPlayCountPanel = getChartInPannel(createPlayCountChart(user, stats, shape));
 		ChartPanel chartHitsPanel = getChartInPannel(createHitsChart(user, stats));
 		ChartPanel chartRanksPanel = getChartInPannel(createRanksChart(user, stats));
 		JTabbedPane contentPane = new JTabbedPane();
@@ -56,6 +57,7 @@ public class InterfaceChart extends JFrame
 		contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
 		contentPane.addTab(Utils.resourceBundle.getString("ranked_score"), chartRankedScorePanel);
 		contentPane.addTab(Utils.resourceBundle.getString("total_score"), chartTotalScorePanel);
+		contentPane.addTab(Utils.resourceBundle.getString("play_count"), chartPlayCountPanel);
 		contentPane.addTab("300 / 100 / 50", chartHitsPanel);
 		contentPane.addTab("SS / S / A", chartRanksPanel);
 		setContentPane(contentPane);
@@ -70,16 +72,16 @@ public class InterfaceChart extends JFrame
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
 		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		NumberAxis axisAcc = new NumberAxis(Utils.resourceBundle.getString("accuracy") + " (%)");
-		axisAcc.setTickLabelPaint(colorLine1);
-		axisAcc.setAutoRangeIncludesZero(false);
-		axisAcc.setNumberFormatOverride(new DecimalFormat("0.0000"));
-		xyPlot.setRangeAxis(0, axisAcc);
+		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("accuracy") + " (%)");
+		axis.setTickLabelPaint(colorLine1);
+		axis.setAutoRangeIncludesZero(false);
+		axis.setNumberFormatOverride(new DecimalFormat("0.0000"));
+		xyPlot.setRangeAxis(0, axis);
 		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
 		xyPlot.setDataset(0, processStatsAccuracy(stats));
 		xyPlot.mapDatasetToRangeAxis(0, 0);
-		XYLineAndShapeRenderer rendererAccuracy = new XYLineAndShapeRenderer();
-		xyPlot.setRenderer(0, rendererAccuracy);
+		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+		xyPlot.setRenderer(0, renderer);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesPaint(0, colorLine1);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
@@ -101,6 +103,30 @@ public class InterfaceChart extends JFrame
 		plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", NumberFormat.getNumberInstance(), percentFormat));
 		plot.setLegendLabelGenerator(new StandardPieSectionLabelGenerator("{0} : {1}"));
 		plot.setNoDataMessage("You shouldn't be there! How have you come here, are you a wizard??! :o");
+		return chart;
+	}
+
+	private JFreeChart createPlayCountChart(String user, List<Stats> stats, Shape shape)
+	{
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(String.format(Utils.resourceBundle.getString("stats_for"), user), Utils.resourceBundle.getString("dates"), "", null, true, true, false);
+		chart.setAntiAlias(true);
+		chart.setTextAntiAlias(true);
+		XYPlot xyPlot = chart.getXYPlot();
+		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("play_count"));
+		axis.setTickLabelPaint(colorLine1);
+		axis.setAutoRangeIncludesZero(false);
+		axis.setNumberFormatOverride(new DecimalFormat("0"));
+		xyPlot.setRangeAxis(0, axis);
+		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
+		xyPlot.setDataset(0, processStatsPlayCount(stats));
+		xyPlot.mapDatasetToRangeAxis(0, 0);
+		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+		xyPlot.setRenderer(0, renderer);
+		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesPaint(0, colorLine1);
+		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
+		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
+		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
 		return chart;
 	}
 
@@ -148,16 +174,16 @@ public class InterfaceChart extends JFrame
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
 		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		NumberAxis axisAcc = new NumberAxis(Utils.resourceBundle.getString("ranked_score"));
-		axisAcc.setTickLabelPaint(colorLine1);
-		axisAcc.setAutoRangeIncludesZero(false);
-		axisAcc.setNumberFormatOverride(new DecimalFormat("0"));
-		xyPlot.setRangeAxis(0, axisAcc);
+		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("ranked_score"));
+		axis.setTickLabelPaint(colorLine1);
+		axis.setAutoRangeIncludesZero(false);
+		axis.setNumberFormatOverride(new DecimalFormat("0"));
+		xyPlot.setRangeAxis(0, axis);
 		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
 		xyPlot.setDataset(0, processStatsRankedScore(stats));
 		xyPlot.mapDatasetToRangeAxis(0, 0);
-		XYLineAndShapeRenderer rendererAccuracy = new XYLineAndShapeRenderer();
-		xyPlot.setRenderer(0, rendererAccuracy);
+		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+		xyPlot.setRenderer(0, renderer);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesPaint(0, colorLine1);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
@@ -189,16 +215,16 @@ public class InterfaceChart extends JFrame
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
 		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		NumberAxis axisAcc = new NumberAxis(Utils.resourceBundle.getString("total_score"));
-		axisAcc.setTickLabelPaint(colorLine1);
-		axisAcc.setAutoRangeIncludesZero(false);
-		axisAcc.setNumberFormatOverride(new DecimalFormat("0"));
-		xyPlot.setRangeAxis(0, axisAcc);
+		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("total_score"));
+		axis.setTickLabelPaint(colorLine1);
+		axis.setAutoRangeIncludesZero(false);
+		axis.setNumberFormatOverride(new DecimalFormat("0"));
+		xyPlot.setRangeAxis(0, axis);
 		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
 		xyPlot.setDataset(0, processStatsTotalScore(stats));
 		xyPlot.mapDatasetToRangeAxis(0, 0);
-		XYLineAndShapeRenderer rendererAccuracy = new XYLineAndShapeRenderer();
-		xyPlot.setRenderer(0, rendererAccuracy);
+		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+		xyPlot.setRenderer(0, renderer);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesPaint(0, colorLine1);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
@@ -237,6 +263,16 @@ public class InterfaceChart extends JFrame
 		data.setValue("100", stats.get(stats.size() - 1).getCount100());
 		data.setValue("50", stats.get(stats.size() - 1).getCount50());
 		return data;
+	}
+
+	private XYDataset processStatsPlayCount(List<Stats> stats)
+	{
+		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("play_count"));
+		for(Stats stat : stats)
+			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Locale.getDefault()), stat.getPlayCount());
+		TimeSeriesCollection collection = new TimeSeriesCollection();
+		collection.addSeries(serie);
+		return collection;
 	}
 
 	private XYDataset processStatsPP(List<Stats> stats)

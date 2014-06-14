@@ -980,7 +980,7 @@ public class Interface extends JFrame // TODO Javadoc
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		this.username.setText("<html><body><nobr>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
-		this.playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlaycount()) + currentStats.comparePlayCount(previousStats));
+		this.playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
 		this.rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		this.totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
