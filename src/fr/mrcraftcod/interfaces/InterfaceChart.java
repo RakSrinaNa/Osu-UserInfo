@@ -305,7 +305,7 @@ public class InterfaceChart extends JFrame
 
 	private XYDataset processStatsRankedScore(List<Stats> stats)
 	{
-		TimeSeries serie = new TimeSeries("TS");
+		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("ranked_score"));
 		for(Stats stat : stats)
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getRankedScore());
 		TimeSeriesCollection collection = new TimeSeriesCollection();
@@ -324,7 +324,7 @@ public class InterfaceChart extends JFrame
 
 	private XYDataset processStatsTotalScore(List<Stats> stats)
 	{
-		TimeSeries serie = new TimeSeries("TS");
+		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("total_score"));
 		for(Stats stat : stats)
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getTotalScore());
 		TimeSeriesCollection collection = new TimeSeriesCollection();
