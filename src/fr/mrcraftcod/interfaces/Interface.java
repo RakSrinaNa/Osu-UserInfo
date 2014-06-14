@@ -677,9 +677,9 @@ public class Interface extends JFrame // TODO Javadoc
 		String date = this.lastStatsDateBox.getSelectedItem().toString();
 		if(date.equals(Utils.resourceBundle.getString("last_date_saved")))
 			return -1;
-		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Utils.locale);
 		SimpleDateFormat simpleFormat = (SimpleDateFormat) format;
-		DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern());
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(simpleFormat.toPattern()).withLocale(Utils.locale);
 		return formatter.parseDateTime(date).toDate().getTime();
 	}
 
