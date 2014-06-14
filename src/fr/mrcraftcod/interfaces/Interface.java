@@ -753,29 +753,6 @@ public class Interface extends JFrame // TODO Javadoc
 			currentStats.updateTotalHits();
 			if(currentStats.equals(Utils.lastStats))
 				return false;
-			if(!Utils.lastUser.getUsername().equals(jsonResponse.getString("username")))
-			{
-				this.avatar.setImage(null);
-				this.countryFlag.setImage(null);
-				this.autoUpdateCheck.setSelected(false);
-				Runnable task = new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						try
-						{
-							Interface.this.avatar.setImage(Utils.resizeBufferedImage(getAvatar(jsonResponse.getString("user_id")), 128, 128));
-							Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(getCountryFlag(jsonResponse.getString("country")), 16, 16));
-						}
-						catch(Exception e)
-						{
-							e.printStackTrace();
-						}
-					}
-				};
-				new Thread(task, "ThreadImages").start();
-			}
 			this.username.setForeground(getColorUser());
 			updateStatsDates(currentUser);
 			displayStats(currentUser, currentStats);
@@ -789,6 +766,8 @@ public class Interface extends JFrame // TODO Javadoc
 				this.lastStatsDate.setEnabled(this.track.isSelected());
 				this.lastStatsDateBox.setEnabled(this.track.isSelected());
 			}
+			if(!currentUser.isSameUser(Utils.lastUser))
+				setFlagAndAvatar(currentUser);
 			Utils.lastStats = currentStats;
 			Utils.lastUser = currentUser;
 		}
@@ -858,6 +837,38 @@ public class Interface extends JFrame // TODO Javadoc
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private void setFlagAndAvatar(final User user)
+	{
+		this.avatar.setImage(null);
+		this.countryFlag.setImage(null);
+		this.autoUpdateCheck.setSelected(false);
+		Runnable task = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					Thread.currentThread().sleep(2500);
+				}
+				catch(InterruptedException e1)
+				{
+					e1.printStackTrace();
+				}
+				try
+				{
+					Interface.this.avatar.setImage(Utils.resizeBufferedImage(getAvatar(String.valueOf(user.getUserID())), 128, 128));
+					Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(getCountryFlag(user.getCountry()), 16, 16));
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		};
+		new Thread(task, "ThreadImages").start();
 	}
 
 	public void setValidButonIcon(String string)

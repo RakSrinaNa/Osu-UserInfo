@@ -26,39 +26,10 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 			initFrame(parent);
 	}
 
-	private void initFrame(Frame parent)
-	{
-		frame = new JFrame();
-		frame.setUndecorated(true);
-		frame.setContentPane(new TransparentPane(new BorderLayout()));
-		frame.setTitle(Utils.resourceBundle.getString("loading"));
-		frame.setIconImages(Utils.icons);
-		frame.setBackground(new Color(255, 255, 255, 0));
-		ImageIcon icon = null;
-		icon = new ImageIcon(Main.class.getClassLoader().getResource("resources/images/loading.gif"));
-		JLabel label = new JLabel();
-		label.setIcon(icon);
-		icon.setImageObserver(label);
-		frame.getContentPane().add(label, BorderLayout.CENTER);
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
-		Point p = parent.getLocation();
-		p.setLocation(p.getX() + (parent.getSize().getWidth() / 2) - (icon.getIconWidth() / 2), p.getY() + (parent.getSize().getHeight() / 2) - (icon.getIconHeight() / 2));
-		frame.setLocation(p);
-		frame.setVisible(true);
-		frame.pack();
-		try
-		{
-			Utils.mainFrame.desactivateFrame();
-		}
-		catch(Exception e)
-		{}
-	}
-
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
-		return Utils.mainFrame.getInfosServer(user, hard);
+		return Utils.mainFrame.getInfosServer(this.user, this.hard);
 	}
 
 	@Override
@@ -70,7 +41,36 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 		}
 		catch(Exception e)
 		{}
-		if(frame != null)
-			frame.dispose();
+		if(this.frame != null)
+			this.frame.dispose();
+	}
+
+	private void initFrame(Frame parent)
+	{
+		this.frame = new JFrame();
+		this.frame.setUndecorated(true);
+		this.frame.setContentPane(new TransparentPane(new BorderLayout()));
+		this.frame.setTitle(Utils.resourceBundle.getString("loading"));
+		this.frame.setIconImages(Utils.icons);
+		this.frame.setBackground(new Color(255, 255, 255, 0));
+		ImageIcon icon = null;
+		icon = new ImageIcon(Main.class.getClassLoader().getResource("resources/images/loading.gif"));
+		JLabel label = new JLabel();
+		label.setIcon(icon);
+		icon.setImageObserver(label);
+		this.frame.getContentPane().add(label, BorderLayout.CENTER);
+		this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.frame.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+		Point p = parent.getLocation();
+		p.setLocation(p.getX() + parent.getSize().getWidth() / 2 - icon.getIconWidth() / 2, p.getY() + parent.getSize().getHeight() / 2 - icon.getIconHeight() / 2);
+		this.frame.setLocation(p);
+		this.frame.setVisible(true);
+		this.frame.pack();
+		try
+		{
+			Utils.mainFrame.desactivateFrame();
+		}
+		catch(Exception e)
+		{}
 	}
 }

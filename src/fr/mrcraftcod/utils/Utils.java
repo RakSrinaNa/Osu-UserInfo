@@ -115,9 +115,7 @@ public class Utils
 			socket.close();
 		}
 		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		{}
 		try
 		{
 			Thread.sleep(250);
@@ -271,19 +269,19 @@ public class Utils
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", getLocaleByName(config.getString("locale", null)));
 		if(!isModeSet(args, "test"))
 			try
-		{
+			{
 				setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
-		}
-		catch(BindException e)
-		{
-			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
-			System.exit(1);
-		}
-		catch(IOException e)
-		{
-			logger.log(Level.SEVERE, "Unexpected error", e);
-			System.exit(2);
-		}
+			}
+			catch(BindException e)
+			{
+				JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
+			}
+			catch(IOException e)
+			{
+				logger.log(Level.SEVERE, "Unexpected error", e);
+				System.exit(2);
+			}
 		logger.log(Level.INFO, "Loading icons...");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
@@ -298,7 +296,7 @@ public class Utils
 		int result = isModeSet(args, "ignoreupdate") ? Updater.NOUPDATE : Updater.update(startup.getFrame());
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 			try
-		{
+			{
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
 				String tempApiKey = config.getString("api_key", "");
 				if(tempApiKey.equals(""))
@@ -324,11 +322,11 @@ public class Utils
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
 				mainFrame = new Interface();
-		}
-		catch(Exception exception)
-		{
-			exception.printStackTrace();
-		}
+			}
+			catch(Exception exception)
+			{
+				exception.printStackTrace();
+			}
 		startup.exit();
 	}
 

@@ -286,6 +286,13 @@ public class User implements Serializable
 		return !newStats.equals(previousStats);
 	}
 
+	public boolean isSameUser(User lastUser)
+	{
+		if(lastUser == null)
+			return false;
+		return this.username.equals(lastUser.getUsername());
+	}
+
 	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
 	{
