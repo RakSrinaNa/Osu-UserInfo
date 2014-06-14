@@ -29,7 +29,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
-		return Utils.mainFrame.getInfosServer(this.user, this.hard);
+		return Utils.getInfosServer(this.user, this.hard);
 	}
 
 	@Override

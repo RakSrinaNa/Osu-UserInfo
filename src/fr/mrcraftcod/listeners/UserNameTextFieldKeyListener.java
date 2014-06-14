@@ -10,7 +10,7 @@ public class UserNameTextFieldKeyListener implements KeyListener
 	public void keyPressed(KeyEvent arg0)
 	{
 		if(KeyEvent.VK_ENTER == arg0.getExtendedKeyCode())
-			Utils.mainFrame.getInfos(true);
+			Utils.getInfos(true);
 	}
 
 	@Override

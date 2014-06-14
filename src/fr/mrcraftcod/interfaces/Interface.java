@@ -3,7 +3,6 @@ package fr.mrcraftcod.interfaces;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -11,18 +10,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -48,7 +41,6 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionRefreshStats;
 import fr.mrcraftcod.listeners.AutoUpdateItemListener;
@@ -74,26 +66,38 @@ import fr.mrcraftcod.objects.ImagePanel;
 import fr.mrcraftcod.objects.JButtonMode;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.User;
-import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
-import fr.mrcraftcod.utils.LoadingWorker;
 import fr.mrcraftcod.utils.Utils;
 
 public class Interface extends JFrame // TODO Javadoc
 {
 	private static final long serialVersionUID = -6393144716196499998L;
-	private final JTextComponent userNameFieldTextComponent;
+	public final JTextComponent userNameFieldTextComponent;
+	public final AutoComboBox userNameField;
+	public final JComboBox<String> lastStatsDateBox;
+	public final JLabel lastStatsDate;
+	public final JLabel username;
+	public final JCheckBox track;
+	public final JCheckBox autoUpdateCheck;
 	private final ImageIcon iconRefresh, iconSearch;
-	private final BufferedImage avatarDefaultImage;
 	private final ImagePanel avatar, countryFlag;
-	private final AutoComboBox userNameField;
-	private final JComboBox<String> lastStatsDateBox;
 	private final DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
 	private final JButton validButon;
 	private final JButtonMode buttonStandard, buttonTaiko, buttonCTB, buttonMania;
-	private final JLabel lastStatsDate, totalHits, username, countSS, countS, countA, playCount, rankedScore, totalScore, ppCount, accuracy, country, hitCount300, hitCount100, hitCount50;
+	private final JLabel totalHits;
+	private final JLabel countSS;
+	private final JLabel countS;
+	private final JLabel countA;
+	private final JLabel playCount;
+	private final JLabel rankedScore;
+	private final JLabel totalScore;
+	private final JLabel ppCount;
+	private final JLabel accuracy;
+	private final JLabel country;
+	private final JLabel hitCount300;
+	private final JLabel hitCount100;
+	private final JLabel hitCount50;
 	private final JProgressBar levelBar;
-	private final JCheckBox track, autoUpdateCheck;
 
 	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
@@ -103,7 +107,6 @@ public class Interface extends JFrame // TODO Javadoc
 		Utils.logger.log(Level.INFO, "Loading icons...");
 		this.iconRefresh = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
 		this.iconSearch = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
-		this.avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		/************** FRAME INFOS ********************/
 		Utils.logger.log(Level.INFO, "Setting frame options...");
 		getFrame().setBackground(Utils.backColor);
@@ -629,6 +632,14 @@ public class Interface extends JFrame // TODO Javadoc
 		getFrame().setEnabled(true);
 	}
 
+	public void addTrackedUser(User user)
+	{
+		this.userNameFieldModel.addElement(user.getUsername());
+		this.lastStatsDate.setEnabled(this.track.isSelected());
+		this.lastStatsDateBox.setEnabled(this.track.isSelected());
+		this.autoUpdateCheck.setEnabled(this.track.isSelected());
+	}
+
 	public void backFromTray()
 	{
 		getFrame().setState(JFrame.NORMAL);
@@ -657,131 +668,9 @@ public class Interface extends JFrame // TODO Javadoc
 		this.hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount50()) + " (" + decimalFormat.format(stats.getCount50() * 100f / stats.getTotalHits()) + "%)");
 	}
 
-	private synchronized BufferedImage getAvatar(String userID) throws Exception
-	{
-		try
-		{
-			return ImageIO.read(new URL("https:" + Utils.cutLine(Utils.getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
-		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
-		}
-		return this.avatarDefaultImage;
-	}
-
-	private Color getColorUser()
-	{
-		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
-		return colors[new Random().nextInt(colors.length)];
-	}
-
-	private synchronized BufferedImage getCountryFlag(String country) throws Exception
-	{
-		try
-		{
-			return ImageIO.read(new URL("http://s.ppy.sh/images/flags/" + country.toLowerCase() + ".gif"));
-		}
-		catch(Exception e)
-		{}
-		return this.avatarDefaultImage;
-	}
-
 	public Interface getFrame()
 	{
 		return this;
-	}
-
-	public void getInfos(boolean showerror)
-	{
-		getInfos(this.userNameFieldTextComponent.getText(), showerror);
-	}
-
-	private boolean getInfos(String user, boolean showerror)
-	{
-		LoadingWorker load = new LoadingWorker(getFrame(), user, showerror, Utils.config.getBoolean("loadingScreen", true));
-		load.execute();
-		return true;
-	}
-
-	public boolean getInfosServer(String user, boolean showerror)
-	{
-		if(!isValidTime() || !isValidUser(user))
-			return false;
-		Utils.logger.log(Level.INFO, "Getting user infos " + user);
-		Utils.lastPost = new Date();
-		this.userNameField.setBackground(null);
-		this.userNameFieldTextComponent.setBackground(null);
-		try
-		{
-			User currentUser = new User();
-			Stats currentStats = new Stats();
-			currentStats.setDate(new Date().getTime());
-			final JSONObject jsonResponse = new JSONObject(Utils.sendPost("get_user", Utils.API_KEY, user, getSelectedMode()));
-			this.username.setBackground(Utils.noticeColor);
-			this.username.setBorder(Utils.noticeBorder);
-			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
-			if(tracked)
-				try
-			{
-					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-			Stats previousStats = currentUser.getLastStats(getSelectedMode());
-			this.track.setEnabled(true);
-			this.track.setSelected(tracked);
-			this.autoUpdateCheck.setEnabled(tracked);
-			currentUser.setUsername(jsonResponse.getString("username"));
-			currentUser.setUserID(jsonResponse.getInt("user_id"));
-			currentUser.setCountry(jsonResponse.getString("country"));
-			currentStats.setRank(jsonResponse.getDouble("pp_rank"));
-			currentStats.setPlaycount(jsonResponse.getInt("playcount"));
-			currentStats.setRankedScore(jsonResponse.getLong("ranked_score"));
-			currentStats.setTotalScore(jsonResponse.getLong("total_score"));
-			currentStats.setAccuracy(jsonResponse.getDouble("accuracy"));
-			currentStats.setPp(jsonResponse.getDouble("pp_raw"));
-			currentStats.setLevel(jsonResponse.getDouble("level"));
-			currentStats.setCountSS(jsonResponse.getInt("count_rank_ss"));
-			currentStats.setCountS(jsonResponse.getInt("count_rank_s"));
-			currentStats.setCountA(jsonResponse.getInt("count_rank_a"));
-			currentStats.setCount300(jsonResponse.getLong("count300"));
-			currentStats.setCount100(jsonResponse.getLong("count100"));
-			currentStats.setCount50(jsonResponse.getLong("count50"));
-			currentStats.updateTotalHits();
-			if(currentStats.equals(Utils.lastStats))
-				return false;
-			this.username.setForeground(getColorUser());
-			updateStatsDates(currentUser);
-			displayStats(currentUser, currentStats);
-			updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats, true);
-			setValidButonIcon("R");
-			this.userNameFieldTextComponent.setText(currentUser.getUsername());
-			currentUser.setStats(!showerror, currentStats, getSelectedMode());
-			if(tracked)
-			{
-				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
-				this.lastStatsDate.setEnabled(this.track.isSelected());
-				this.lastStatsDateBox.setEnabled(this.track.isSelected());
-			}
-			if(!currentUser.isSameUser(Utils.lastUser))
-				setFlagAndAvatar(currentUser);
-			Utils.lastStats = currentStats;
-			Utils.lastUser = currentUser;
-		}
-		catch(Exception e)
-		{
-			if(showerror)
-			{
-				Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
-				this.userNameField.setBackground(Color.RED);
-				this.userNameFieldTextComponent.setBackground(Color.RED);
-			}
-			return false;
-		}
-		return true;
 	}
 
 	public long getSelectedDate()
@@ -812,34 +701,17 @@ public class Interface extends JFrame // TODO Javadoc
 		getFrame().setFocusable(false);
 	}
 
-	private boolean isValidTime()
+	public void removeTrackedUser(User user)
 	{
-		return new Date().getTime() - Utils.lastPost.getTime() > 1000;
+		this.userNameFieldModel.removeElement(user.getUsername());
+		this.userNameField.setSelectedItem(null);
+		this.lastStatsDate.setEnabled(this.track.isSelected());
+		this.lastStatsDateBox.setEnabled(this.track.isSelected());
+		this.autoUpdateCheck.setEnabled(this.track.isSelected());
+		this.autoUpdateCheck.setSelected(false);
 	}
 
-	private boolean isValidUser(String username)
-	{
-		return username.length() > 1;
-	}
-
-	public void openUserProfile()
-	{
-		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
-			try
-		{
-				String user_id = this.username.getText();
-				if(user_id.equalsIgnoreCase(""))
-					return;
-				desktop.browse(new URL("https://osu.ppy.sh/u/" + Utils.lastUser.getUserID()).toURI());
-		}
-		catch(final Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void setFlagAndAvatar(final User user)
+	public void setFlagAndAvatar(final User user)
 	{
 		this.avatar.setImage(null);
 		this.countryFlag.setImage(null);
@@ -859,8 +731,8 @@ public class Interface extends JFrame // TODO Javadoc
 				}
 				try
 				{
-					Interface.this.avatar.setImage(Utils.resizeBufferedImage(getAvatar(String.valueOf(user.getUserID())), 128, 128));
-					Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(getCountryFlag(user.getCountry()), 16, 16));
+					Interface.this.avatar.setImage(Utils.resizeBufferedImage(Utils.getAvatar(String.valueOf(user.getUserID())), 128, 128));
+					Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(Utils.getCountryFlag(user.getCountry()), 16, 16));
 				}
 				catch(Exception e)
 				{
@@ -896,47 +768,19 @@ public class Interface extends JFrame // TODO Javadoc
 		{
 			case 0:
 				this.buttonStandard.setEnabled(false);
-				break;
+			break;
 			case 1:
 				this.buttonTaiko.setEnabled(false);
-				break;
+			break;
 			case 2:
 				this.buttonCTB.setEnabled(false);
-				break;
+			break;
 			case 3:
 				this.buttonMania.setEnabled(false);
-				break;
+			break;
 		}
 		if(checkInfos)
-			getInfos(Utils.lastUser.getUsername(), false);
-	}
-
-	public void trackNewUser(User user) throws IOException
-	{
-		Utils.logger.log(Level.INFO, "Trcking user " + user.getUsername());
-		ArrayList<String> users = Utils.getTrackedUsers();
-		users.add(user.getUsername());
-		this.userNameFieldModel.addElement(user.getUsername());
-		user.serialize(new File(Configuration.appData, user.getUsername()));
-		this.lastStatsDate.setEnabled(this.track.isSelected());
-		this.lastStatsDateBox.setEnabled(this.track.isSelected());
-		this.autoUpdateCheck.setEnabled(this.track.isSelected());
-		Utils.setTrackedUser(users);
-	}
-
-	public void unTrackUser(User user)
-	{
-		Utils.logger.log(Level.INFO, "Untrcking user " + user.getUsername());
-		ArrayList<String> users = Utils.getTrackedUsers();
-		users.remove(user.getUsername());
-		this.userNameFieldModel.removeElement(user.getUsername());
-		this.userNameField.setSelectedItem(null);
-		new File(Configuration.appData, user.getUsername()).delete();
-		this.lastStatsDate.setEnabled(this.track.isSelected());
-		this.lastStatsDateBox.setEnabled(this.track.isSelected());
-		this.autoUpdateCheck.setEnabled(this.track.isSelected());
-		this.autoUpdateCheck.setSelected(false);
-		Utils.setTrackedUser(users);
+			Utils.getInfos(Utils.lastUser.getUsername(), false);
 	}
 
 	public void updateAutoCompletionStatus(boolean status)
@@ -946,7 +790,7 @@ public class Interface extends JFrame // TODO Javadoc
 
 	public void updateInfos(boolean showerror)
 	{
-		getInfos(Utils.lastUser.getUsername(), showerror);
+		Utils.getInfos(Utils.lastUser.getUsername(), showerror);
 	}
 
 	private void updateLevel(double level)
@@ -957,7 +801,7 @@ public class Interface extends JFrame // TODO Javadoc
 		this.levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
 	}
 
-	private void updateStatsDates(User user)
+	public void updateStatsDates(User user)
 	{
 		String lastDate = (String) this.statsDateModel.getSelectedItem();
 		this.statsDateModel.removeAllElements();

@@ -22,7 +22,7 @@ public class OpenProfileMouseListener implements MouseListener
 	public void mousePressed(MouseEvent arg0)
 	{
 		if(arg0.getClickCount() > 1)
-			Utils.mainFrame.openUserProfile();
+			Utils.openUserProfile(Utils.lastUser);
 	}
 
 	@Override

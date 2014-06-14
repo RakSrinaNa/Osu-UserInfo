@@ -1,6 +1,7 @@
 package fr.mrcraftcod.utils;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -74,6 +76,7 @@ public class Utils
 	public static Stats lastStats = new Stats();
 	public static InterfaceAbout aboutFrame;
 	public static InterfaceSettings configFrame;
+	public static BufferedImage avatarDefaultImage;
 
 	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
 	{
@@ -137,6 +140,30 @@ public class Utils
 			System.exit(0);
 	}
 
+	public synchronized static BufferedImage getAvatar(String userID) throws Exception
+	{
+		try
+		{
+			return ImageIO.read(new URL("https:" + Utils.cutLine(Utils.getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Error getting avatar for " + userID, e);
+		}
+		return avatarDefaultImage;
+	}
+
+	public synchronized static BufferedImage getCountryFlag(String country) throws Exception
+	{
+		try
+		{
+			return ImageIO.read(new URL("http://s.ppy.sh/images/flags/" + country.toLowerCase() + ".gif"));
+		}
+		catch(Exception e)
+		{}
+		return avatarDefaultImage;
+	}
+
 	public static String[] getHTMLCode(String link) throws IOException
 	{
 		final URL url = new URL(link);
@@ -152,6 +179,98 @@ public class Utils
 			page.append(str + "\n");
 		in.close();
 		return page.toString().split("\n");
+	}
+
+	public static void getInfos(boolean showerror)
+	{
+		getInfos(mainFrame.userNameFieldTextComponent.getText(), showerror);
+	}
+
+	public static boolean getInfos(String user, boolean showerror)
+	{
+		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
+		load.execute();
+		return true;
+	}
+
+	public static boolean getInfosServer(String user, boolean showerror)
+	{
+		if(!isValidTime() || !isValidUser(user))
+			return false;
+		Utils.logger.log(Level.INFO, "Getting user infos " + user);
+		Utils.lastPost = new Date();
+		mainFrame.userNameField.setBackground(null);
+		mainFrame.userNameFieldTextComponent.setBackground(null);
+		try
+		{
+			User currentUser = new User();
+			Stats currentStats = new Stats();
+			currentStats.setDate(new Date().getTime());
+			final JSONObject jsonResponse = new JSONObject(Utils.sendPost("get_user", Utils.API_KEY, user, mainFrame.getSelectedMode()));
+			mainFrame.username.setBackground(Utils.noticeColor);
+			mainFrame.username.setBorder(Utils.noticeBorder);
+			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
+			if(tracked)
+				try
+			{
+					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			Stats previousStats = currentUser.getLastStats(mainFrame.getSelectedMode());
+			mainFrame.track.setEnabled(true);
+			mainFrame.track.setSelected(tracked);
+			mainFrame.autoUpdateCheck.setEnabled(tracked);
+			currentUser.setUsername(jsonResponse.getString("username"));
+			currentUser.setUserID(jsonResponse.getInt("user_id"));
+			currentUser.setCountry(jsonResponse.getString("country"));
+			currentStats.setRank(jsonResponse.getDouble("pp_rank"));
+			currentStats.setPlaycount(jsonResponse.getInt("playcount"));
+			currentStats.setRankedScore(jsonResponse.getLong("ranked_score"));
+			currentStats.setTotalScore(jsonResponse.getLong("total_score"));
+			currentStats.setAccuracy(jsonResponse.getDouble("accuracy"));
+			currentStats.setPp(jsonResponse.getDouble("pp_raw"));
+			currentStats.setLevel(jsonResponse.getDouble("level"));
+			currentStats.setCountSS(jsonResponse.getInt("count_rank_ss"));
+			currentStats.setCountS(jsonResponse.getInt("count_rank_s"));
+			currentStats.setCountA(jsonResponse.getInt("count_rank_a"));
+			currentStats.setCount300(jsonResponse.getLong("count300"));
+			currentStats.setCount100(jsonResponse.getLong("count100"));
+			currentStats.setCount50(jsonResponse.getLong("count50"));
+			currentStats.updateTotalHits();
+			if(currentStats.equals(Utils.lastStats))
+				return false;
+			mainFrame.username.setForeground(getRandomColor());
+			mainFrame.updateStatsDates(currentUser);
+			mainFrame.displayStats(currentUser, currentStats);
+			mainFrame.updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats, true);
+			mainFrame.setValidButonIcon("R");
+			mainFrame.userNameFieldTextComponent.setText(currentUser.getUsername());
+			currentUser.setStats(!showerror, currentStats, mainFrame.getSelectedMode());
+			if(tracked)
+			{
+				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
+				mainFrame.lastStatsDate.setEnabled(mainFrame.track.isSelected());
+				mainFrame.lastStatsDateBox.setEnabled(mainFrame.track.isSelected());
+			}
+			if(!currentUser.isSameUser(Utils.lastUser))
+				mainFrame.setFlagAndAvatar(currentUser);
+			Utils.lastStats = currentStats;
+			Utils.lastUser = currentUser;
+		}
+		catch(Exception e)
+		{
+			if(showerror)
+			{
+				Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
+				mainFrame.userNameField.setBackground(Color.RED);
+				mainFrame.userNameFieldTextComponent.setBackground(Color.RED);
+			}
+			return false;
+		}
+		return true;
 	}
 
 	public static int getLevel(double level)
@@ -203,6 +322,12 @@ public class Utils
 	public static double getProgressLevel(double level)
 	{
 		return level - (int) level;
+	}
+
+	private static Color getRandomColor()
+	{
+		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
+		return colors[new Random().nextInt(colors.length)];
 	}
 
 	public static double getScoreToNextLevel(int currentLevel, double currentScore)
@@ -287,6 +412,7 @@ public class Utils
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
+		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
 		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
 		setLookAndFeel();
 		int currentStep = 0;
@@ -341,6 +467,34 @@ public class Utils
 	public static boolean isUserTracked(String user)
 	{
 		return getTrackedUsers().contains(user);
+	}
+
+	private static boolean isValidTime()
+	{
+		return new Date().getTime() - lastPost.getTime() > 1000;
+	}
+
+	private static boolean isValidUser(String username)
+	{
+		return username.length() > 1;
+	}
+
+	public static void openUserProfile(User user)
+	{
+		if(user == null)
+			return;
+		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+			try
+			{
+				if(user.getUsername().equalsIgnoreCase(""))
+					return;
+				desktop.browse(new URL("https://osu.ppy.sh/u/" + user.getUserID()).toURI());
+			}
+			catch(final Exception e)
+			{
+				e.printStackTrace();
+			}
 	}
 
 	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
@@ -441,6 +595,26 @@ public class Utils
 				sb.append(user).append(",");
 		sb.deleteCharAt(sb.length() - 1);
 		config.writeVar("tracked_users", sb.toString());
+	}
+
+	public static void trackNewUser(User user) throws IOException
+	{
+		Utils.logger.log(Level.INFO, "Trcking user " + user.getUsername());
+		ArrayList<String> users = Utils.getTrackedUsers();
+		users.add(user.getUsername());
+		user.serialize(new File(Configuration.appData, user.getUsername()));
+		mainFrame.addTrackedUser(user);
+		setTrackedUser(users);
+	}
+
+	public static void unTrackUser(User user)
+	{
+		Utils.logger.log(Level.INFO, "Untrcking user " + user.getUsername());
+		ArrayList<String> users = Utils.getTrackedUsers();
+		users.remove(user.getUsername());
+		new File(Configuration.appData, user.getUsername()).delete();
+		mainFrame.removeTrackedUser(user);
+		Utils.setTrackedUser(users);
 	}
 
 	/**
