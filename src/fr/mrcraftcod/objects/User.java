@@ -100,7 +100,7 @@ public class User implements Serializable
 			return null;
 		if(stats.size() > 0)
 			stats.remove(stats.size() - 1);
-		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Utils.locale);
 		String[] dates = new String[stats.size()];
 		for(int i = 0; i < stats.size(); i++)
 			dates[i] = formatter.format(stats.get(i).getDate());
