@@ -77,6 +77,7 @@ public class Utils
 	public static InterfaceAbout aboutFrame;
 	public static InterfaceSettings configFrame;
 	public static BufferedImage avatarDefaultImage;
+	public static Locale locale;
 
 	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
 	{
@@ -212,13 +213,13 @@ public class Utils
 			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
-			{
+				{
 					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 			Stats previousStats = currentUser.getLastStats(mainFrame.getSelectedMode());
 			mainFrame.track.setEnabled(true);
 			mainFrame.track.setSelected(tracked);
@@ -390,23 +391,24 @@ public class Utils
 		if(resetedLog)
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
+		locale = getLocaleByName(config.getString("locale", null));
 		logger.log(Level.INFO, "Opening resource bundle...");
-		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", getLocaleByName(config.getString("locale", null)));
+		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "test"))
 			try
-			{
+		{
 				setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
-			}
-			catch(BindException e)
-			{
-				JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
-				System.exit(1);
-			}
-			catch(IOException e)
-			{
-				logger.log(Level.SEVERE, "Unexpected error", e);
-				System.exit(2);
-			}
+		}
+		catch(BindException e)
+		{
+			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+		catch(IOException e)
+		{
+			logger.log(Level.SEVERE, "Unexpected error", e);
+			System.exit(2);
+		}
 		logger.log(Level.INFO, "Loading icons...");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
@@ -422,7 +424,7 @@ public class Utils
 		int result = isModeSet(args, "ignoreupdate") ? Updater.NOUPDATE : Updater.update(startup.getFrame());
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 			try
-			{
+		{
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
 				String tempApiKey = config.getString("api_key", "");
 				if(tempApiKey.equals(""))
@@ -448,11 +450,11 @@ public class Utils
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
 				mainFrame = new Interface();
-			}
-			catch(Exception exception)
-			{
-				exception.printStackTrace();
-			}
+		}
+		catch(Exception exception)
+		{
+			exception.printStackTrace();
+		}
 		startup.exit();
 	}
 
@@ -486,15 +488,15 @@ public class Utils
 		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
 			try
-			{
+		{
 				if(user.getUsername().equalsIgnoreCase(""))
 					return;
 				desktop.browse(new URL("https://osu.ppy.sh/u/" + user.getUserID()).toURI());
-			}
-			catch(final Exception e)
-			{
-				e.printStackTrace();
-			}
+		}
+		catch(final Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)

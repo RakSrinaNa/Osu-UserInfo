@@ -15,7 +15,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -659,13 +658,13 @@ public class Interface extends JFrame // TODO Javadoc
 		this.countSS.setText(String.valueOf(stats.getCountSS()));
 		this.countS.setText(String.valueOf(stats.getCountS()));
 		this.countA.setText(String.valueOf(stats.getCountA()));
-		this.totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Locale.getDefault()).format(stats.getTotalScore()), NumberFormat.getInstance(Locale.getDefault()).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
+		this.totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Utils.locale).format(stats.getTotalScore()), NumberFormat.getInstance(Utils.locale).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
 		this.country.setText(CountryCode.getByCode(user.getCountry()).getName());
 		DecimalFormat decimalFormat = new DecimalFormat();
 		decimalFormat.setMaximumFractionDigits(2);
-		this.hitCount300.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount300()) + " (" + decimalFormat.format(stats.getCount300() * 100f / stats.getTotalHits()) + "%)");
-		this.hitCount100.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount100()) + " (" + decimalFormat.format(stats.getCount100() * 100f / stats.getTotalHits()) + "%)");
-		this.hitCount50.setText(NumberFormat.getInstance(Locale.getDefault()).format(stats.getCount50()) + " (" + decimalFormat.format(stats.getCount50() * 100f / stats.getTotalHits()) + "%)");
+		this.hitCount300.setText(NumberFormat.getInstance(Utils.locale).format(stats.getCount300()) + " (" + decimalFormat.format(stats.getCount300() * 100f / stats.getTotalHits()) + "%)");
+		this.hitCount100.setText(NumberFormat.getInstance(Utils.locale).format(stats.getCount100()) + " (" + decimalFormat.format(stats.getCount100() * 100f / stats.getTotalHits()) + "%)");
+		this.hitCount50.setText(NumberFormat.getInstance(Utils.locale).format(stats.getCount50()) + " (" + decimalFormat.format(stats.getCount50() * 100f / stats.getTotalHits()) + "%)");
 	}
 
 	public Interface getFrame()
@@ -768,16 +767,16 @@ public class Interface extends JFrame // TODO Javadoc
 		{
 			case 0:
 				this.buttonStandard.setEnabled(false);
-			break;
+				break;
 			case 1:
 				this.buttonTaiko.setEnabled(false);
-			break;
+				break;
 			case 2:
 				this.buttonCTB.setEnabled(false);
-			break;
+				break;
 			case 3:
 				this.buttonMania.setEnabled(false);
-			break;
+				break;
 		}
 		if(checkInfos)
 			Utils.getInfos(Utils.lastUser.getUsername(), false);
@@ -822,12 +821,12 @@ public class Interface extends JFrame // TODO Javadoc
 	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
-		this.username.setText("<html><body><nobr>  " + user + " (#" + NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
+		this.username.setText("<html><body><nobr>  " + user + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
-		this.playCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
-		this.rankedScore.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
-		this.totalHits.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
-		this.ppCount.setText(NumberFormat.getInstance(Locale.getDefault()).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
+		this.playCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
+		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
+		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
+		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
 	}

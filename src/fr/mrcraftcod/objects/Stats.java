@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
-import java.util.Locale;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -80,7 +79,7 @@ public class Stats implements Serializable, Cloneable
 		double delta = getAccuracy() - previousStats.getAccuracy();
 		if(Utils.round(delta, 2) == 0D)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -96,7 +95,7 @@ public class Stats implements Serializable, Cloneable
 		int delta = getPlayCount() - previousStats.getPlayCount();
 		if(delta == 0)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -112,7 +111,7 @@ public class Stats implements Serializable, Cloneable
 		double delta = getPp() - previousStats.getPp();
 		if(delta == 0D)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -128,7 +127,7 @@ public class Stats implements Serializable, Cloneable
 		double delta = previousStats.getRank() - getRank();
 		if(delta == 0D)
 			return "";
-		return "<font color=" + (delta >= 0 ? "green" : "red") + ">(" + getArrow(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")</font>";
+		return "<font color=" + (delta >= 0 ? "green" : "red") + ">(" + getArrow(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")</font>";
 	}
 
 	/**
@@ -144,7 +143,7 @@ public class Stats implements Serializable, Cloneable
 		long delta = getRankedScore() - previousStats.getRankedScore();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -160,7 +159,7 @@ public class Stats implements Serializable, Cloneable
 		long delta = getTotalHits() - previousStats.getTotalHits();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -176,7 +175,7 @@ public class Stats implements Serializable, Cloneable
 		long delta = getTotalScore() - previousStats.getTotalScore();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	public boolean equals(Stats stats)
@@ -296,7 +295,7 @@ public class Stats implements Serializable, Cloneable
 		long lastDate = stats.getDate();
 		if(lastDate <= 0)
 			return "";
-		return String.format(Utils.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault()).format(new Date(lastDate)));
+		return String.format(Utils.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Utils.locale).format(new Date(lastDate)));
 	}
 
 	public double getLevel()
