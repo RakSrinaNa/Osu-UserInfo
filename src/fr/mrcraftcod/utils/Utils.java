@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -57,6 +58,7 @@ public class Utils
 		}
 	}
 
+	public final static String[] UNITS = {"", "K", "M", "G", "T", "P"};
 	private final static String logFileName = "log.log";
 	private static ServerSocket socket;
 	private static TaskUpdater threadUpdater;
@@ -163,6 +165,20 @@ public class Utils
 		catch(Exception e)
 		{}
 		return avatarDefaultImage;
+	}
+
+	public static String getDownloadSizeText(double size)
+	{
+		NumberFormat format = NumberFormat.getInstance(locale);
+		format.setMaximumFractionDigits(2);
+		int unit = 0;
+		while(size > 1024)
+		{
+			unit++;
+			size /= 1024;
+		}
+		String result = format.format(size) + " " + UNITS[unit] + "B";
+		return result;
 	}
 
 	public static String[] getHTMLCode(String link) throws IOException
