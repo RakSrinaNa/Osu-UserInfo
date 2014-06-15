@@ -41,15 +41,16 @@ public class InterfaceChart extends JFrame
 		super();
 		setIconImages(Utils.icons);
 		setTitle(user);
+		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
 		int shapeOffset = 4;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
-		ChartPanel chartPPAndRankPanel = getChartInPannel(createRankAndPPChart(user, stats, shape));
-		ChartPanel chartAccuracyPanel = getChartInPannel(createAccuracyChart(user, stats, shape));
-		ChartPanel chartRankedScorePanel = getChartInPannel(createRankedScoreChart(user, stats, shape));
-		ChartPanel chartTotalScorePanel = getChartInPannel(createTotalScoreChart(user, stats, shape));
-		ChartPanel chartPlayCountPanel = getChartInPannel(createPlayCountChart(user, stats, shape));
-		ChartPanel chartHitsPanel = getChartInPannel(createHitsChart(user, stats));
-		ChartPanel chartRanksPanel = getChartInPannel(createRanksChart(user, stats));
+		ChartPanel chartPPAndRankPanel = getChartInPannel(createRankAndPPChart(title, user, stats, shape));
+		ChartPanel chartAccuracyPanel = getChartInPannel(createAccuracyChart(title, user, stats, shape));
+		ChartPanel chartRankedScorePanel = getChartInPannel(createRankedScoreChart(title, user, stats, shape));
+		ChartPanel chartTotalScorePanel = getChartInPannel(createTotalScoreChart(title, user, stats, shape));
+		ChartPanel chartPlayCountPanel = getChartInPannel(createPlayCountChart(title, user, stats, shape));
+		ChartPanel chartHitsPanel = getChartInPannel(createHitsChart(title, user, stats));
+		ChartPanel chartRanksPanel = getChartInPannel(createRanksChart(title, user, stats));
 		JTabbedPane contentPane = new JTabbedPane();
 		contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
 		contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
@@ -63,9 +64,9 @@ public class InterfaceChart extends JFrame
 		pack();
 	}
 
-	private JFreeChart createAccuracyChart(String user, List<Stats> stats, Shape shape)
+	private JFreeChart createAccuracyChart(String title, String user, List<Stats> stats, Shape shape)
 	{
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(String.format(Utils.resourceBundle.getString("stats_for"), user), Utils.resourceBundle.getString("dates"), "%", null, true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "%", null, true, true, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
@@ -93,9 +94,9 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
-	private JFreeChart createHitsChart(String user, List<Stats> stats)
+	private JFreeChart createHitsChart(String title, String user, List<Stats> stats)
 	{
-		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsHits(stats), true, false, false);
+		JFreeChart chart = ChartFactory.createPieChart3D(title + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsHits(stats), true, false, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		chart.getLegend().setItemFont(Utils.fontMain);
@@ -112,9 +113,9 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
-	private JFreeChart createPlayCountChart(String user, List<Stats> stats, Shape shape)
+	private JFreeChart createPlayCountChart(String title, String user, List<Stats> stats, Shape shape)
 	{
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(String.format(Utils.resourceBundle.getString("stats_for"), user), Utils.resourceBundle.getString("dates"), "", null, true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
@@ -142,9 +143,9 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
-	private JFreeChart createRankAndPPChart(String user, List<Stats> stats, Shape shape)
+	private JFreeChart createRankAndPPChart(String title, String user, List<Stats> stats, Shape shape)
 	{
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(String.format(Utils.resourceBundle.getString("stats_for"), user), Utils.resourceBundle.getString("dates"), "", null, true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
@@ -189,9 +190,9 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
-	private JFreeChart createRankedScoreChart(String user, List<Stats> stats, Shape shape)
+	private JFreeChart createRankedScoreChart(String title, String user, List<Stats> stats, Shape shape)
 	{
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(String.format(Utils.resourceBundle.getString("stats_for"), user), Utils.resourceBundle.getString("dates"), "", null, true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
@@ -219,9 +220,9 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
-	private JFreeChart createRanksChart(String user, List<Stats> stats)
+	private JFreeChart createRanksChart(String title, String user, List<Stats> stats)
 	{
-		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsRanks(stats), true, false, false);
+		JFreeChart chart = ChartFactory.createPieChart3D(title + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsRanks(stats), true, false, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		chart.getLegend().setItemFont(Utils.fontMain);
@@ -238,9 +239,9 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
-	private JFreeChart createTotalScoreChart(String user, List<Stats> stats, Shape shape)
+	private JFreeChart createTotalScoreChart(String title, String user, List<Stats> stats, Shape shape)
 	{
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(String.format(Utils.resourceBundle.getString("stats_for"), user), Utils.resourceBundle.getString("dates"), "", null, true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
