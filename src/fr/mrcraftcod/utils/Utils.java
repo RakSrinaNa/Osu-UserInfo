@@ -231,13 +231,13 @@ public class Utils
 			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
 			if(tracked)
 				try
-				{
+			{
 					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 			Stats previousStats = currentUser.getLastStats(mainFrame.getSelectedMode());
 			mainFrame.track.setEnabled(true);
 			mainFrame.track.setSelected(tracked);
@@ -414,19 +414,19 @@ public class Utils
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "nosocket"))
 			try
-		{
+			{
 				setSocket(new ServerSocket(10854, 0, InetAddress.getByAddress(new byte[] {127, 0, 0, 1})));
-		}
-		catch(BindException e)
-		{
-			JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
-			System.exit(1);
-		}
-		catch(IOException e)
-		{
-			logger.log(Level.SEVERE, "Unexpected error", e);
-			System.exit(2);
-		}
+			}
+			catch(BindException e)
+			{
+				JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_already_running"), resourceBundle.getString("startup_already_running_title"), JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
+			}
+			catch(IOException e)
+			{
+				logger.log(Level.SEVERE, "Unexpected error", e);
+				System.exit(2);
+			}
 		logger.log(Level.INFO, "Loading icons...");
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
@@ -441,7 +441,7 @@ public class Utils
 		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup.getFrame());
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 			try
-		{
+			{
 				if(isNewVersion(config.getString("last_version", Main.VERSION)))
 					new InterfaceChangelog(Changelog.getChangelogForVersion(Main.VERSION));
 				config.writeVar("last_version", Main.VERSION);
@@ -470,11 +470,11 @@ public class Utils
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
 				mainFrame = new Interface();
-		}
-		catch(Exception exception)
-		{
-			exception.printStackTrace();
-		}
+			}
+			catch(Exception exception)
+			{
+				exception.printStackTrace();
+			}
 		startup.exit();
 	}
 
@@ -488,7 +488,7 @@ public class Utils
 
 	private static boolean isNewVersion(String lastVersion)
 	{
-		return !Main.VERSION.equals(lastVersion);
+		return !Main.VERSION.equals(lastVersion) || true;
 	}
 
 	public static boolean isUserTracked(String user)
@@ -531,15 +531,15 @@ public class Utils
 		final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
 		if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
 			try
-		{
+			{
 				if(user.getUsername().equalsIgnoreCase(""))
 					return;
 				desktop.browse(new URL("https://osu.ppy.sh/u/" + user.getUserID()).toURI());
-		}
-		catch(final Exception e)
-		{
-			e.printStackTrace();
-		}
+			}
+			catch(final Exception e)
+			{
+				e.printStackTrace();
+			}
 	}
 
 	public static void reloadResourceBundleWithLocale(String string)

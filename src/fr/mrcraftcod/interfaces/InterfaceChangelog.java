@@ -13,13 +13,18 @@ public class InterfaceChangelog extends JFrame
 	public InterfaceChangelog(String changelog)
 	{
 		super("Changelog");
+		if(changelog == null)
+		{
+			dispose();
+			return;
+		}
 		setTitle("Changelog");
 		this.setSize(400, 75);
 		setIconImages(Utils.icons);
 		setBackground(Utils.backColor);
 		getContentPane().setBackground(Utils.backColor);
 		getContentPane().setLayout(new BorderLayout());
-		JTextArea messageLabel = new JTextArea(changelog);
+		JTextArea messageLabel = new JTextArea(processText(changelog));
 		messageLabel.setBackground(Utils.backColor);
 		messageLabel.setEditable(false);
 		messageLabel.setBorder(null);
@@ -30,5 +35,15 @@ public class InterfaceChangelog extends JFrame
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		toFront();
+	}
+
+	private String processText(String changelog)
+	{
+		StringBuilder sb = new StringBuilder();
+		String[] changes = changelog.split("[{]{1}\\d+[}]{1}");
+		for(String change : changes)
+			if(!change.equals(""))
+				sb.append(change + System.lineSeparator());
+		return sb.toString();
 	}
 }
