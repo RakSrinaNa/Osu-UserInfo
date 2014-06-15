@@ -73,6 +73,8 @@ public class InterfaceChart extends JFrame
 		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("accuracy") + " (%)");
 		axis.setTickLabelPaint(colorLine1);
 		axis.setAutoRangeIncludesZero(false);
+		axis.setTickLabelFont(Utils.fontMain);
+		axis.setLabelFont(Utils.fontMain);
 		NumberFormat format = NumberFormat.getInstance(Utils.locale);
 		format.setMaximumFractionDigits(4);
 		axis.setNumberFormatOverride(format);
@@ -86,6 +88,8 @@ public class InterfaceChart extends JFrame
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		axisDate.setTickLabelFont(Utils.fontMain);
+		axisDate.setLabelFont(Utils.fontMain);
 		return chart;
 	}
 
@@ -94,10 +98,12 @@ public class InterfaceChart extends JFrame
 		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsHits(stats), true, false, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
+		chart.getLegend().setItemFont(Utils.fontMain);
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);
 		plot.setForegroundAlpha(0.5f);
+		plot.setLabelFont(Utils.fontMain);
 		NumberFormat percentFormat = NumberFormat.getPercentInstance();
 		percentFormat.setMaximumFractionDigits(2);
 		plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", NumberFormat.getNumberInstance(), percentFormat));
@@ -116,6 +122,8 @@ public class InterfaceChart extends JFrame
 		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("play_count"));
 		axis.setTickLabelPaint(colorLine1);
 		axis.setAutoRangeIncludesZero(false);
+		axis.setTickLabelFont(Utils.fontMain);
+		axis.setLabelFont(Utils.fontMain);
 		NumberFormat format = NumberFormat.getInstance(Utils.locale);
 		format.setMaximumFractionDigits(0);
 		axis.setNumberFormatOverride(format);
@@ -129,6 +137,8 @@ public class InterfaceChart extends JFrame
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		axisDate.setTickLabelFont(Utils.fontMain);
+		axisDate.setLabelFont(Utils.fontMain);
 		return chart;
 	}
 
@@ -145,6 +155,10 @@ public class InterfaceChart extends JFrame
 		axisRank.setTickLabelPaint(colorLine2);
 		axisPP.setAutoRangeIncludesZero(false);
 		axisRank.setAutoRangeIncludesZero(false);
+		axisRank.setTickLabelFont(Utils.fontMain);
+		axisPP.setTickLabelFont(Utils.fontMain);
+		axisRank.setLabelFont(Utils.fontMain);
+		axisPP.setLabelFont(Utils.fontMain);
 		NumberFormat formatPP = NumberFormat.getInstance(Utils.locale);
 		NumberFormat formatRank = NumberFormat.getInstance(Utils.locale);
 		formatPP.setMaximumFractionDigits(2);
@@ -170,6 +184,8 @@ public class InterfaceChart extends JFrame
 		xyPlot.getRendererForDataset(xyPlot.getDataset(1)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		axisDate.setTickLabelFont(Utils.fontMain);
+		axisDate.setLabelFont(Utils.fontMain);
 		return chart;
 	}
 
@@ -183,6 +199,8 @@ public class InterfaceChart extends JFrame
 		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("ranked_score"));
 		axis.setTickLabelPaint(colorLine1);
 		axis.setAutoRangeIncludesZero(false);
+		axis.setTickLabelFont(Utils.fontMain);
+		axis.setLabelFont(Utils.fontMain);
 		NumberFormat format = NumberFormat.getInstance(Utils.locale);
 		format.setMaximumFractionDigits(0);
 		axis.setNumberFormatOverride(format);
@@ -196,6 +214,8 @@ public class InterfaceChart extends JFrame
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		axisDate.setTickLabelFont(Utils.fontMain);
+		axisDate.setLabelFont(Utils.fontMain);
 		return chart;
 	}
 
@@ -204,10 +224,12 @@ public class InterfaceChart extends JFrame
 		JFreeChart chart = ChartFactory.createPieChart3D(String.format(Utils.resourceBundle.getString("stats_for"), user) + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsRanks(stats), true, false, false);
 		chart.setAntiAlias(true);
 		chart.setTextAntiAlias(true);
+		chart.getLegend().setItemFont(Utils.fontMain);
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setStartAngle(290);
 		plot.setDirection(Rotation.CLOCKWISE);
 		plot.setForegroundAlpha(0.5f);
+		plot.setLabelFont(Utils.fontMain);
 		NumberFormat percentFormat = NumberFormat.getPercentInstance();
 		percentFormat.setMaximumFractionDigits(2);
 		plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", NumberFormat.getNumberInstance(), percentFormat));
@@ -226,6 +248,8 @@ public class InterfaceChart extends JFrame
 		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("total_score"));
 		axis.setTickLabelPaint(colorLine1);
 		axis.setAutoRangeIncludesZero(false);
+		axis.setTickLabelFont(Utils.fontMain);
+		axis.setLabelFont(Utils.fontMain);
 		axis.setNumberFormatOverride(NumberFormat.getInstance(Utils.locale));
 		xyPlot.setRangeAxis(0, axis);
 		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
@@ -237,6 +261,8 @@ public class InterfaceChart extends JFrame
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		axisDate.setTickLabelFont(Utils.fontMain);
+		axisDate.setLabelFont(Utils.fontMain);
 		return chart;
 	}
 
