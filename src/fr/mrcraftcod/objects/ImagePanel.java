@@ -7,7 +7,7 @@ import fr.mrcraftcod.utils.Utils;
 
 /**
  * A panel containing a buffered image
- * 
+ *
  * @author MrCraftCod
  */
 public class ImagePanel extends JPanel
@@ -18,20 +18,49 @@ public class ImagePanel extends JPanel
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param image The BufferedImage to show.
+	 * Will show nothing.
 	 */
-	public ImagePanel(BufferedImage image)
+	public ImagePanel()
 	{
-		this.image = image;
+		this(null, false);
 	}
 
 	/**
 	 * Constructor.
-	 * Will show nothing.
+	 *
+	 * @param printLoading Print or not the loading text
 	 */
-	public ImagePanel()
-	{}
+	public ImagePanel(boolean printLoading)
+	{
+		this(null, printLoading);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param image The BufferedImage to show.
+	 */
+	public ImagePanel(BufferedImage image)
+	{
+		this(image, false);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param image The BufferedImage to show.
+	 * @param printLoading Print or not the loading text
+	 */
+	public ImagePanel(BufferedImage image, boolean printLoading)
+	{
+		this.image = image;
+		this.printLoading = printLoading;
+	}
+
+	public boolean isPrintLoading()
+	{
+		return this.printLoading;
+	}
 
 	/**
 	 * Paint the image if there is one, if not this will print the "loading" string found in the ResourceBundle
@@ -40,33 +69,28 @@ public class ImagePanel extends JPanel
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		if(image == null)
+		if(this.image == null)
 		{
 			if(!isPrintLoading())
 				return;
 			String string = Utils.resourceBundle.getString("loading");
-			g.drawString(string, (this.getWidth() / 2) - (g.getFontMetrics().stringWidth(string) / 2), this.getHeight() / 2);
+			g.drawString(string, getWidth() / 2 - g.getFontMetrics().stringWidth(string) / 2, getHeight() / 2);
 			return;
 		}
-		int baseY = (this.getHeight() - image.getHeight()) / 2, baseX = (this.getWidth() - image.getWidth()) / 2;
-		g.drawImage(image, baseX, baseY, null);
+		int baseY = (getHeight() - this.image.getHeight()) / 2, baseX = (getWidth() - this.image.getWidth()) / 2;
+		g.drawImage(this.image, baseX, baseY, null);
 	}
 
 	/**
 	 * Used to modify the current printed image.
-	 * 
+	 *
 	 * @param image The BufferedImage to show.
 	 */
 	public void setImage(BufferedImage image)
 	{
 		this.image = image;
 		this.repaint();
-		this.invalidate();
-	}
-
-	public boolean isPrintLoading()
-	{
-		return printLoading;
+		invalidate();
 	}
 
 	public void setPrintLoading(boolean printLoading)

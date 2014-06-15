@@ -462,7 +462,7 @@ public class Interface extends JFrame // TODO Javadoc
 		JPanel avatarPanel = new JPanel(new GridBagLayout());
 		avatarPanel.setBackground(Utils.backColor);
 		int avatarSize = 128;
-		this.avatar = new ImagePanel(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize));
+		this.avatar = new ImagePanel(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/osu_logo.png")), avatarSize, avatarSize), true);
 		this.avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		this.avatar.setBackground(Utils.backColor);
 		this.avatar.setToolTipText(Utils.resourceBundle.getString("open_profile"));
@@ -554,7 +554,7 @@ public class Interface extends JFrame // TODO Javadoc
 		this.country.setFont(Utils.fontMain);
 		this.country.setHorizontalAlignment(JLabel.LEFT);
 		this.country.setVerticalAlignment(JLabel.CENTER);
-		this.countryFlag = new ImagePanel();
+		this.countryFlag = new ImagePanel(true);
 		this.countryFlag.setPrintLoading(false);
 		this.countryFlag.setBackground(Utils.noticeColor);
 		this.countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
@@ -730,8 +730,8 @@ public class Interface extends JFrame // TODO Javadoc
 				}
 				try
 				{
-					Interface.this.avatar.setImage(Utils.resizeBufferedImage(Utils.getAvatar(String.valueOf(user.getUserID())), 128, 128));
 					Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(Utils.getCountryFlag(user.getCountry()), 16, 16));
+					Interface.this.avatar.setImage(Utils.resizeBufferedImage(Utils.getAvatar(String.valueOf(user.getUserID())), 128, 128));
 				}
 				catch(Exception e)
 				{
