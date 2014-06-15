@@ -188,6 +188,8 @@ public class Stats implements Serializable, Cloneable
 			return false;
 		if(getTotalScore() != stats.getTotalScore())
 			return false;
+		if(getRank() != stats.getRank())
+			return false;
 		return true;
 	}
 
