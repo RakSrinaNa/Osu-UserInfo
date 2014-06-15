@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -497,6 +498,24 @@ public class Utils
 		return username.length() > 1;
 	}
 
+	public static void newFrame() throws IOException
+	{
+		mainFrame.dispose();
+		mainFrame = new Interface();
+	}
+
+	public static void newFrame(String user) throws IOException
+	{
+		mainFrame.dispose();
+		mainFrame = new Interface(user);
+	}
+
+	public static void newFrame(String user, Point parent) throws IOException
+	{
+		mainFrame.dispose();
+		mainFrame = new Interface(user, parent);
+	}
+
 	public static void openUserProfile(User user)
 	{
 		if(user == null)
@@ -513,6 +532,13 @@ public class Utils
 			{
 				e.printStackTrace();
 			}
+	}
+
+	public static void reloadResourceBundleWithLocale(String string)
+	{
+		resourceBundle.clearCache();
+		locale = getLocaleByName(string);
+		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 	}
 
 	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)

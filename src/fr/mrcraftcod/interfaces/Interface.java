@@ -98,8 +98,18 @@ public class Interface extends JFrame // TODO Javadoc
 	private final JLabel hitCount50;
 	private final JProgressBar levelBar;
 
-	@SuppressWarnings("unchecked")
 	public Interface() throws IOException
+	{
+		this(null);
+	}
+
+	public Interface(String user) throws IOException
+	{
+		this(user, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Interface(String user, Point parent) throws IOException
 	{
 		super(Main.APPNAME + " v" + Main.VERSION);
 		int pictureButtonSize = 20;
@@ -618,11 +628,17 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.gridy = line++;
 		getFrame().getContentPane().add(trackUserPanel, constraint);
 		Utils.logger.log(Level.INFO, "Packing frame...");
-		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		getFrame().setLocation(new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2));
+		if(parent == null)
+		{
+			Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+			parent = new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2);
+		}
+		getFrame().setLocation(parent);
 		getFrame().pack();
 		getFrame().setVisible(true);
 		getFrame().toFront();
+		if(user != null)
+			Utils.getInfos(user, false);
 	}
 
 	public void activateFrame()
@@ -767,16 +783,16 @@ public class Interface extends JFrame // TODO Javadoc
 		{
 			case 0:
 				this.buttonStandard.setEnabled(false);
-				break;
+			break;
 			case 1:
 				this.buttonTaiko.setEnabled(false);
-				break;
+			break;
 			case 2:
 				this.buttonCTB.setEnabled(false);
-				break;
+			break;
 			case 3:
 				this.buttonMania.setEnabled(false);
-				break;
+			break;
 		}
 		if(checkInfos)
 			Utils.getInfos(Utils.lastUser.getUsername(), false);
