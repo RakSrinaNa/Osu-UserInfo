@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<changelog>
+	<version>
+		<name>1.6</name>
+		<changes>1.5</changes>
+	</version>
+	<version>
+		<name>1.6b16</name>
+		<changes>1.6b15</changes>
+	</version>
+</changelog>
