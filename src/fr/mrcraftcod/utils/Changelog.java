@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 
 public class Changelog
 {
-	private final static String LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/changelog/Infos/changelog.xml";
+	private final static String LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/changelog.xml";
 
 	/**
 	 * Used to get the XML file containing the changelog.

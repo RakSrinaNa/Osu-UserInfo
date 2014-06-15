@@ -25,11 +25,11 @@ public class InterfaceChangelog extends JFrame
 		setBackground(Utils.backColor);
 		getContentPane().setBackground(Utils.backColor);
 		getContentPane().setLayout(new BorderLayout());
-		JLabel messageLabel = new JLabel(processText(changelog));
-		messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		messageLabel.setBackground(Utils.backColor);
-		messageLabel.setFocusable(false);
-		this.add(messageLabel, BorderLayout.CENTER);
+		JLabel changelogLabel = new JLabel(processText(changelog));
+		changelogLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		changelogLabel.setBackground(Utils.backColor);
+		changelogLabel.setFocusable(false);
+		this.add(changelogLabel, BorderLayout.CENTER);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		toFront();
