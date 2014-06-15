@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<changelog>
+	<version>
+		<name>1.6</name>
+		<changes>TODO</changes>
+	</version>
+	<version>
+		<name>1.6b17</name>
+		<changes>{0}+ Add changelog frame{1}- Test new line{} test { a } ze</changes>
+	</version>
+</changelog>
