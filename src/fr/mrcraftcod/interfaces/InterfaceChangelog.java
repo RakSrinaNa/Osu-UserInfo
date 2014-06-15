@@ -31,6 +31,7 @@ public class InterfaceChangelog extends JFrame
 		changelogLabel.setFocusable(false);
 		this.add(changelogLabel, BorderLayout.CENTER);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setResizable(false);
 		setVisible(true);
 		toFront();
 	}
