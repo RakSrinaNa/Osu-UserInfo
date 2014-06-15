@@ -6,7 +6,7 @@ public class InterfaceChangelog extends JFrame
 {
 	private static final long serialVersionUID = -8709993783125141424L;
 
-	public InterfaceChangelog()
+	public InterfaceChangelog(String changelog)
 	{
 		super();
 	}
