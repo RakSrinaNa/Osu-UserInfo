@@ -2,10 +2,10 @@
 <changelog>
 	<version>
 		<name>1.6</name>
-		<changes>test</changes>
+		<changes>TODO</changes>
 	</version>
 	<version>
-		<name>1.6b16</name>
-		<changes>testt</changes>
+		<name>1.6b17</name>
+		<changes>{0}+ Add changelog frame{1}- Test new line</changes>
 	</version>
 </changelog>
