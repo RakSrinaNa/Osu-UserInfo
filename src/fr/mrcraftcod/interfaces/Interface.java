@@ -783,16 +783,16 @@ public class Interface extends JFrame // TODO Javadoc
 		{
 			case 0:
 				this.buttonStandard.setEnabled(false);
-			break;
+				break;
 			case 1:
 				this.buttonTaiko.setEnabled(false);
-			break;
+				break;
 			case 2:
 				this.buttonCTB.setEnabled(false);
-			break;
+				break;
 			case 3:
 				this.buttonMania.setEnabled(false);
-			break;
+				break;
 		}
 		if(checkInfos)
 			Utils.getInfos(Utils.lastUser.getUsername(), false);
@@ -844,6 +844,6 @@ public class Interface extends JFrame // TODO Javadoc
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalHits(previousStats)));
+			new InterfaceNotification(String.format(Utils.resourceBundle.getString("notification_text"), user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats)));
 	}
 }

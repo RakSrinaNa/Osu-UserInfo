@@ -277,11 +277,25 @@ public class Stats implements Serializable, Cloneable
 		return previousStats.getRank() - getRank();
 	}
 
+	public long getDiffRankedScore(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return getRankedScore() - previousStats.getRankedScore();
+	}
+
 	public long getDiffTotalHits(Stats previousStats)
 	{
 		if(previousStats == null)
 			return 0;
 		return getTotalHits() - previousStats.getTotalHits();
+	}
+
+	public long getDiffTotalScore(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return getTotalScore() - previousStats.getTotalScore();
 	}
 
 	/**
