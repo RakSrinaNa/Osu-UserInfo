@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.geom.RoundRectangle2D;
+import java.text.NumberFormat;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -18,7 +19,7 @@ public class InterfaceNotification extends JFrame implements Runnable
 	private static final long serialVersionUID = 8870236400957609469L;
 	private final static int cooldown = 7000;
 
-	public InterfaceNotification(String text)
+	public InterfaceNotification(String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
 	{
 		super();
 		int offset = 0, arc = 15;
@@ -34,7 +35,7 @@ public class InterfaceNotification extends JFrame implements Runnable
 		JButton closeButton = new JButton("X");
 		closeButton.addActionListener(new CloseNotificationActionListener());
 		closeButton.setFocusable(false);
-		JTextArea messageLabel = new JTextArea(text);
+		JTextArea messageLabel = new JTextArea(processText(name, textRank, rank, pp, playCount, totalScore, rankedScore));
 		messageLabel.setBackground(Utils.backColor);
 		messageLabel.setEditable(false);
 		messageLabel.setBorder(null);
@@ -67,6 +68,14 @@ public class InterfaceNotification extends JFrame implements Runnable
 	private InterfaceNotification getFrame()
 	{
 		return this;
+	}
+
+	private String processText(String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
+	{
+		NumberFormat format = NumberFormat.getInstance(Utils.locale);
+		NumberFormat formatt = NumberFormat.getInstance(Utils.locale);
+		formatt.setMaximumFractionDigits(2);
+		return String.format(Utils.resourceBundle.getString("notification_text"), name, textRank, format.format(rank), formatt.format(pp), format.format(playCount), format.format(totalScore), format.format(rankedScore));
 	}
 
 	@Override
