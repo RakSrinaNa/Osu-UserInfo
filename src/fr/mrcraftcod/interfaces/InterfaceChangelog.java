@@ -1,6 +1,13 @@
 package fr.mrcraftcod.interfaces;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,20 +36,48 @@ public class InterfaceChangelog extends JFrame
 		changelogLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		changelogLabel.setBackground(Utils.backColor);
 		changelogLabel.setFocusable(false);
-		this.add(changelogLabel, BorderLayout.CENTER);
+		changelogLabel.setFont(Utils.fontMain);
+		add(changelogLabel, BorderLayout.CENTER);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(true);
 		setVisible(true);
 		toFront();
 	}
 
+	private String getFormatedChange(String change)
+	{
+		StringBuilder sb = new StringBuilder("<font color=\"");
+		final String typePattern = "[{]{1}.+[}]{1}";
+		Pattern pattern = Pattern.compile(typePattern);
+		Matcher matcher = pattern.matcher(change);
+		List<String> matchList = new ArrayList<String>();
+		while(matcher.find())
+			matchList.add(matcher.group(0));
+		if(matchList.size() < 1)
+			return change;
+		if(matchList.get(0).contains("+"))
+			sb.append("green");
+		else if(matchList.get(0).contains("-"))
+			sb.append("red");
+		else if(matchList.get(0).contains("*"))
+			sb.append("orange");
+		else
+			sb.append("black");
+		return sb.append("\">").append(change.replaceFirst(typePattern, "")).append("</font>").toString();
+	}
+
 	private String processText(String changelog)
 	{
 		StringBuilder sb = new StringBuilder("<html><ul>");
-		String[] changes = changelog.split("[{]{1}\\d+[}]{1}");
-		for(String change : changes)
+		final String stringPattern = "[{]{1}.+[}]{1}.*";
+		Pattern pattern = Pattern.compile(stringPattern);
+		Matcher matcher = pattern.matcher(changelog);
+		List<String> matchList = new ArrayList<String>();
+		while(matcher.find())
+			matchList.add(matcher.group(0));
+		for(String change : matchList)
 			if(!change.equals(""))
-				sb.append("<li>" + change + "</li>");
+				sb.append("<li>" + getFormatedChange(change) + "</li>");
 		return sb.append("</ul></html>").toString();
 	}
 }
