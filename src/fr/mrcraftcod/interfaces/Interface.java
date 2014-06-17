@@ -650,6 +650,7 @@ public class Interface extends JFrame // TODO Javadoc
 	public void addTrackedUser(User user)
 	{
 		this.userNameFieldModel.addElement(user.getUsername());
+		this.userNameField.setSelectedItem(user.getUsername());
 		this.lastStatsDate.setEnabled(this.track.isSelected());
 		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
@@ -718,8 +719,7 @@ public class Interface extends JFrame // TODO Javadoc
 
 	public void removeTrackedUser(User user)
 	{
-		this.userNameFieldModel.removeElement(user.getUsername());
-		this.userNameField.setSelectedItem(null);
+		this.userNameField.setSelectedItem(user.getUsername());
 		this.lastStatsDate.setEnabled(this.track.isSelected());
 		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
