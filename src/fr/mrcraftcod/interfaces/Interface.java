@@ -637,6 +637,7 @@ public class Interface extends JFrame // TODO Javadoc
 		getFrame().pack();
 		getFrame().setVisible(true);
 		getFrame().toFront();
+		this.userNameField.requestFocusInWindow();
 		if(user != null)
 			Utils.getInfos(user, false);
 	}
