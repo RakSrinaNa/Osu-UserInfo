@@ -2,8 +2,6 @@ package fr.mrcraftcod.interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -27,17 +25,21 @@ public class InterfaceChangelog extends JFrame
 			return;
 		}
 		setTitle("Changelog for version " + version);
-		this.setSize(400, 75);
 		setIconImages(Utils.icons);
 		setBackground(Utils.backColor);
 		getContentPane().setBackground(Utils.backColor);
 		getContentPane().setLayout(new BorderLayout());
 		JLabel changelogLabel = new JLabel(processText(changelog));
-		changelogLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		changelogLabel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 1));
 		changelogLabel.setBackground(Utils.backColor);
 		changelogLabel.setFocusable(false);
 		changelogLabel.setFont(Utils.fontMain);
 		add(changelogLabel, BorderLayout.CENTER);
+		Dimension d = changelogLabel.getPreferredSize();
+		d.height += 50;
+		d.width += 20;
+		setPreferredSize(d);
+		setSize(d);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(true);
 		setVisible(true);
