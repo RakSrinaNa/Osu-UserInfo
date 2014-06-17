@@ -31,18 +31,18 @@ public class InterfaceChangelog extends JFrame
 		changelogLabel.setFocusable(false);
 		this.add(changelogLabel, BorderLayout.CENTER);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setResizable(false);
+		setResizable(true);
 		setVisible(true);
 		toFront();
 	}
 
 	private String processText(String changelog)
 	{
-		StringBuilder sb = new StringBuilder("<html>");
+		StringBuilder sb = new StringBuilder("<html><ul>");
 		String[] changes = changelog.split("[{]{1}\\d+[}]{1}");
 		for(String change : changes)
 			if(!change.equals(""))
-				sb.append(change + "<br>");
-		return sb.append("</html>").toString();
+				sb.append("<li>" + change + "</li>");
+		return sb.append("</ul></html>").toString();
 	}
 }
