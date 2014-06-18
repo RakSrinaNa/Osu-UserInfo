@@ -12,12 +12,25 @@ import javax.swing.SwingWorker;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.TransparentPane;
 
+/**
+ * Used to fetch user infos in the background.
+ *
+ * @author MrCraftCod
+ */
 public class LoadingWorker extends SwingWorker<Boolean, String>
 {
 	private JFrame frame;
 	private String user;
 	private boolean hard;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param parent The parent frame.
+	 * @param user The user to fetch (username).
+	 * @param hard Fetch the infos in 'hard mode'.
+	 * @param openFrame Open or not the loading frame.
+	 */
 	public LoadingWorker(Frame parent, String user, boolean hard, boolean openFrame)
 	{
 		this.user = user;
@@ -26,6 +39,11 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 			initFrame(parent);
 	}
 
+	/**
+	 * Create and open the loading frame.
+	 *
+	 * @param parent The parent frame.
+	 */
 	private void initFrame(Frame parent)
 	{
 		this.frame = new JFrame();
@@ -55,12 +73,22 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 		{}
 	}
 
+	/**
+	 * Fetch the infos.
+	 *
+	 * @see SwingWorker#doInBackground()
+	 */
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
 		return Utils.getInfosServer(this.user, this.hard);
 	}
 
+	/**
+	 * Return to main frame when done.
+	 *
+	 * @see SwingWorker#done()
+	 */
 	@Override
 	protected void done()
 	{

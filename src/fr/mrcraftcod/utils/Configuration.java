@@ -14,7 +14,7 @@ import fr.mrcraftcod.Main;
 
 /**
  * Configuration object, used to store and get variables.
- * 
+ *
  * @author MrCraftCod
  */
 public class Configuration
@@ -25,7 +25,7 @@ public class Configuration
 
 	/**
 	 * Constructor.
-	 * Will create a new file in %appdata%/APPNAME/vars.ors.
+	 * Will create a new file in %appdata%/[APPNAME]/vars.ors.
 	 */
 	public Configuration()
 	{
@@ -35,7 +35,7 @@ public class Configuration
 	/**
 	 * Constructor.
 	 * Will create a new file in %appdata%/[APPNAME]/[filename].
-	 * 
+	 *
 	 * @param fileName The name of the config file.
 	 */
 	public Configuration(String fileName)
@@ -43,11 +43,11 @@ public class Configuration
 		appData = new File(System.getenv("APPDATA"), Main.APPNAME);
 		if(!appData.exists())
 			appData.mkdir();
-		configFile = new File(appData, fileName);
-		Utils.logger.log(Level.INFO, "Opening config file " + configFile.getAbsolutePath());
+		this.configFile = new File(appData, fileName);
+		Utils.logger.log(Level.INFO, "Opening config file " + this.configFile.getAbsolutePath());
 		try
 		{
-			currentConfig = readSmallTextFile(configFile);
+			this.currentConfig = readSmallTextFile(this.configFile);
 		}
 		catch(IOException e)
 		{}
@@ -55,7 +55,7 @@ public class Configuration
 
 	/**
 	 * Used to delete a key in the config file.
-	 * 
+	 *
 	 * @param key The key to delete.
 	 * @return A boolean showing if the action has been done or not.
 	 */
@@ -63,11 +63,11 @@ public class Configuration
 	{
 		Utils.logger.log(Level.INFO, "Deletting var " + key);
 		List<String> oldConfiguration = null;
-		oldConfiguration = currentConfig;
+		oldConfiguration = this.currentConfig;
 		FileWriter fileWriter;
 		try
 		{
-			fileWriter = new FileWriter(configFile, false);
+			fileWriter = new FileWriter(this.configFile, false);
 		}
 		catch(final IOException exception)
 		{
@@ -85,7 +85,7 @@ public class Configuration
 		printWriter.close();
 		try
 		{
-			currentConfig = readSmallTextFile(configFile);
+			this.currentConfig = readSmallTextFile(this.configFile);
 		}
 		catch(IOException e)
 		{
@@ -97,7 +97,7 @@ public class Configuration
 
 	/**
 	 * Used to get the boolean associated with the given key in the config file.
-	 * 
+	 *
 	 * @param key The key of what to get.
 	 * @param defaultValue The value to return if the key wasn't found.
 	 * @return The boolean associated with the given key, defaultValue if the key doesn't exist.
@@ -119,17 +119,17 @@ public class Configuration
 
 	/**
 	 * Used to get config file.
-	 * 
+	 *
 	 * @return The config file currently used by this object.
 	 */
 	public File getConfigFile()
 	{
-		return configFile;
+		return this.configFile;
 	}
 
 	/**
 	 * Used to get the double associated with the given key in the config file.
-	 * 
+	 *
 	 * @param key The key of what to get.
 	 * @param defaultValue The value to return if the key wasn't found.
 	 * @return The double associated with the given key, defaultValue if the key doesn't exist.
@@ -149,7 +149,7 @@ public class Configuration
 
 	/**
 	 * Used to get the integer associated with the given key in the config file.
-	 * 
+	 *
 	 * @param key The key of what to get.
 	 * @param defaultValue The value to return if the key wasn't found.
 	 * @return The integer associated with the given key, defaultValue if the key doesn't exist.
@@ -169,7 +169,7 @@ public class Configuration
 
 	/**
 	 * Used to get the long associated with the given key in the config file.
-	 * 
+	 *
 	 * @param key The key of what to get.
 	 * @param defaultValue The value to return if the key wasn't found.
 	 * @return The long associated with the given key, defaultValue if the key doesn't exist.
@@ -189,7 +189,7 @@ public class Configuration
 
 	/**
 	 * Used to get the String associated with the given key in the config file.
-	 * 
+	 *
 	 * @param key The key of what to get.
 	 * @param defaultValue The value to return if the key wasn't found.
 	 * @return The String associated with the given key, defaultValue if the key doesn't exist.
@@ -202,16 +202,16 @@ public class Configuration
 
 	/**
 	 * Used to get the string associated with the given key in the config file.
-	 * 
+	 *
 	 * @param key The key of what to get.
 	 * @return The String associated with the given key, null if the key doesn't exist.
 	 */
 	public String getVar(String key)
 	{
-		if(configFile.exists())
+		if(this.configFile.exists())
 			try
 			{
-				for(String string : currentConfig)
+				for(String string : this.currentConfig)
 					if(string.startsWith(key + ":"))
 					{
 						if(key.equals("api_key"))
@@ -228,9 +228,10 @@ public class Configuration
 
 	/**
 	 * Used to read the config file.
-	 * 
+	 *
 	 * @param configFile The File object pointing to the config file.
 	 * @return A list representing the read file.
+	 *
 	 * @throws IOException If the file cannot be read or is not found.
 	 */
 	public List<String> readSmallTextFile(final File configFile) throws IOException
@@ -253,13 +254,13 @@ public class Configuration
 		{
 			bufferedReader.close();
 		}
-		currentConfig = fileLines;
+		this.currentConfig = fileLines;
 		return fileLines;
 	}
 
 	/**
 	 * Used to write an object to the config file.
-	 * 
+	 *
 	 * @param key The key to store the value.
 	 * @param obj The object to save (as string).
 	 * @return A boolean showing if the operation has been done or not.
@@ -269,11 +270,11 @@ public class Configuration
 		Utils.logger.log(Level.INFO, "Writting var " + key);
 		String value = obj == null ? "" : obj.toString();
 		List<String> oldConfiguration = null;
-		oldConfiguration = currentConfig;
+		oldConfiguration = this.currentConfig;
 		FileWriter fileWriter;
 		try
 		{
-			fileWriter = new FileWriter(configFile, false);
+			fileWriter = new FileWriter(this.configFile, false);
 		}
 		catch(final IOException exception)
 		{
@@ -296,7 +297,7 @@ public class Configuration
 		printWriter.close();
 		try
 		{
-			currentConfig = readSmallTextFile(configFile);
+			this.currentConfig = readSmallTextFile(this.configFile);
 		}
 		catch(IOException e)
 		{
