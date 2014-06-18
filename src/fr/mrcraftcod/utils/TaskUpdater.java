@@ -4,17 +4,25 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 
+/**
+ * Task to fetch user info every 15 seconds.
+ *
+ * @author MrCraftCod
+ */
 public class TaskUpdater extends TimerTask
 {
 	private Timer timer;
 
+	/**
+	 * Constructor.
+	 */
 	public TaskUpdater()
 	{
 		try
 		{
 			Utils.logger.log(Level.INFO, "Starting updater task...");
-			timer = new Timer();
-			timer.schedule(this, 0, 15 * 1000);
+			this.timer = new Timer();
+			this.timer.schedule(this, 0, 15 * 1000);
 		}
 		catch(Exception e)
 		{
@@ -22,20 +30,28 @@ public class TaskUpdater extends TimerTask
 		}
 	}
 
+	/**
+	 * Run the task.
+	 *
+	 * @see TimerTask#run()
+	 */
 	@Override
 	public void run()
 	{
 		Utils.mainFrame.updateInfos(false);
 	}
 
+	/**
+	 * Stop the current task.
+	 */
 	public void stop()
 	{
 		Utils.logger.log(Level.INFO, "Stopping updater Thread");
-		if(timer != null)
+		if(this.timer != null)
 		{
-			timer.cancel();
-			timer.purge();
-			timer = null;
+			this.timer.cancel();
+			this.timer.purge();
+			this.timer = null;
 		}
 	}
 }
