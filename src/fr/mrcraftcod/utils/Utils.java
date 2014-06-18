@@ -88,7 +88,18 @@ public class Utils
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 
-	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
+	/**
+	 * Used to cut a string.
+	 *
+	 * @param string The string to cut.
+	 * @param deleteDelimiters Delete delimiters or not.
+	 * @param ending The ending of the string to cut.
+	 * @param begining The beginnings of the string to cut.
+	 * @return The cut string.
+	 *
+	 * @throws Exception If the string cannot be cut.
+	 */
+	public static String cutString(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
 	{
 		if(!string.contains(ending))
 			throw new Exception();
@@ -112,6 +123,11 @@ public class Utils
 		return result;
 	}
 
+	/**
+	 * Called to exit the program.
+	 *
+	 * @param close True if exit at the end of the function.
+	 */
 	public static void exit(boolean close)
 	{
 		Utils.logger.log(Level.INFO, "Exiting main frame...");
@@ -150,11 +166,19 @@ public class Utils
 			System.exit(0);
 	}
 
+	/**
+	 * Used to get the avatar of a user.
+	 *
+	 * @param userID The UserID of the user.
+	 * @return The avatar.
+	 *
+	 * @throws Exception If the avatar isn't found.
+	 */
 	public synchronized static BufferedImage getAvatar(String userID) throws Exception
 	{
 		try
 		{
-			return ImageIO.read(new URL("https:" + Utils.cutLine(Utils.getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
+			return ImageIO.read(new URL("https:" + Utils.cutString(Utils.getLineCodeFromLink("https://osu.ppy.sh/u/" + userID, "<div class=\"avatar-holder\">"), true, "\" alt=\"User avatar\"", "<div class=\"avatar-holder\"><img src=\"")));
 		}
 		catch(Exception e)
 		{
@@ -163,6 +187,14 @@ public class Utils
 		return avatarDefaultImage;
 	}
 
+	/**
+	 * Used to get the country flag for a country.
+	 *
+	 * @param country The country to get the flag.
+	 * @return The flag.
+	 *
+	 * @throws Exception If the flag isn't found.
+	 */
 	public synchronized static BufferedImage getCountryFlag(String country) throws Exception
 	{
 		try
@@ -174,6 +206,12 @@ public class Utils
 		return avatarDefaultImage;
 	}
 
+	/**
+	 * Used to get a text representing a file size.
+	 *
+	 * @param size The size to get the text.
+	 * @return The text size.
+	 */
 	public static String getDownloadSizeText(double size)
 	{
 		NumberFormat format = NumberFormat.getInstance(locale);
@@ -188,6 +226,14 @@ public class Utils
 		return result;
 	}
 
+	/**
+	 * Used to get the HTML source code from a link.
+	 *
+	 * @param link The link where to get the code.
+	 * @return The HTML source code.
+	 *
+	 * @throws IOException If the source code cannot be get.
+	 */
 	public static String[] getHTMLCode(String link) throws IOException
 	{
 		final URL url = new URL(link);
@@ -205,18 +251,35 @@ public class Utils
 		return page.toString().split("\n");
 	}
 
+	/**
+	 * Used to get infos for a user.
+	 *
+	 * @param showerror //TODO
+	 */
 	public static void getInfos(boolean showerror)
 	{
 		getInfos(mainFrame.userNameFieldTextComponent.getText(), showerror);
 	}
 
-	public static boolean getInfos(String user, boolean showerror)
+	/**
+	 * Used to get infos for a user.
+	 *
+	 * @param user The user to get the stats.
+	 * @param showerror //TODO
+	 */
+	public static void getInfos(String user, boolean showerror)
 	{
 		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
 		load.execute();
-		return true;
 	}
 
+	/**
+	 * Used to get infos for a user from the API.
+	 *
+	 * @param user The user to get the infos.
+	 * @param showerror //TODO
+	 * @return True if the stats have changed, false if the stats are the same or cannot be found.
+	 */
 	public static boolean getInfosServer(String user, boolean showerror)
 	{
 		if(!isValidTime() || !isValidUser(user))
@@ -299,11 +362,26 @@ public class Utils
 		return true;
 	}
 
+	/**
+	 * Used to get the level.
+	 *
+	 * @param level The level where to get the level.
+	 * @return The level.
+	 */
 	public static int getLevel(double level)
 	{
 		return (int) level;
 	}
 
+	/**
+	 * Used to find a line from the HTML source code of a link.
+	 *
+	 * @param link The link where to get the HTML source code.
+	 * @param gets The parts to identify the wanted line.
+	 * @return The wanted line containing the text.
+	 *
+	 * @throws Exception If the line cannot be found.
+	 */
 	public static String getLineCodeFromLink(final String link, final String... gets) throws Exception
 	{
 		final String[] lines = getHTMLCode(link);
@@ -314,6 +392,12 @@ public class Utils
 		throw new Exception("Cannot get code from link");
 	}
 
+	/**
+	 * Used to get the name of a mode.
+	 *
+	 * @param mode The mode.
+	 * @return The mod's name.
+	 */
 	public static String getModeName(int mode)
 	{
 		switch(mode)
@@ -328,11 +412,24 @@ public class Utils
 		return "osu!";
 	}
 
+	/**
+	 * Used to get the progress for a level.
+	 *
+	 * @param level The level.
+	 * @return The progress for the level.
+	 */
 	public static double getProgressLevel(double level)
 	{
 		return level - (int) level;
 	}
 
+	/**
+	 * Used to get the needed for to up to the next level.
+	 *
+	 * @param currentLevel The current level.
+	 * @param currentScore The current score.
+	 * @return The score needed to up to the next level.
+	 */
 	public static double getScoreToNextLevel(int currentLevel, double currentScore)
 	{
 		currentLevel++;
@@ -357,11 +454,11 @@ public class Utils
 		return round(result - currentScore, 0);
 	}
 
-	public static ServerSocket getSocket()
-	{
-		return socket;
-	}
-
+	/**
+	 * Used to get the tracked users.
+	 *
+	 * @return The tracked users.
+	 */
 	public static ArrayList<String> getTrackedUsers()
 	{
 		ArrayList<String> trackedList = new ArrayList<String>();
@@ -371,6 +468,14 @@ public class Utils
 		return trackedList;
 	}
 
+	/**
+	 * Used to launch the program.
+	 *
+	 * @param args {@link Main#main(String[])}
+	 * @throws IOException If there were an error during startup.
+	 *
+	 * @see Main#main(String[])
+	 */
 	public static void init(String[] args) throws IOException
 	{
 		logger = Logger.getLogger(Main.APPNAME);
@@ -462,29 +567,58 @@ public class Utils
 		startup.exit();
 	}
 
+	/**
+	 * Used to know is a user is tracked.
+	 *
+	 * @param user The user to know if he's tracked.
+	 * @return True if the user is tracked, false if not.
+	 */
 	public static boolean isUserTracked(String user)
 	{
 		return getTrackedUsers().contains(user);
 	}
 
+	/**
+	 * Used to create a new frame.
+	 *
+	 * @throws IOException If there were an error when creating the frame.
+	 */
 	public static void newFrame() throws IOException
 	{
 		mainFrame.dispose();
 		mainFrame = new Interface();
 	}
 
+	/**
+	 * Used to create a new frame.
+	 *
+	 * @param user The user to show in the frame.
+	 * @throws IOException If there were an error when creating the frame.
+	 */
 	public static void newFrame(String user) throws IOException
 	{
 		mainFrame.dispose();
 		mainFrame = new Interface(user);
 	}
 
+	/**
+	 * Used to create a new frame.
+	 *
+	 * @param user The user to show in the frame.
+	 * @param parent The point where to open the frame.
+	 * @throws IOException If there were an error when creating the frame.
+	 */
 	public static void newFrame(String user, Point parent) throws IOException
 	{
 		mainFrame.dispose();
 		mainFrame = new Interface(user, parent);
 	}
 
+	/**
+	 * Used to open the user profile page.
+	 *
+	 * @param user The user.
+	 */
 	public static void openUserProfile(User user)
 	{
 		if(user == null)
@@ -503,13 +637,26 @@ public class Utils
 			}
 	}
 
-	public static void reloadResourceBundleWithLocale(String string)
+	/**
+	 * Used to reload the resource bundle with a new locale.
+	 *
+	 * @param stringLocale The locale to set.
+	 */
+	public static void reloadResourceBundleWithLocale(String stringLocale)
 	{
 		resourceBundle.clearCache();
-		locale = getLocaleByName(string);
+		locale = getLocaleByName(stringLocale);
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 	}
 
+	/**
+	 * Used to resize an image.
+	 *
+	 * @param image The image to resize.
+	 * @param width The maximum width.
+	 * @param height The maximum height.
+	 * @return The resized image.
+	 */
 	public static BufferedImage resizeBufferedImage(BufferedImage image, float width, float height)
 	{
 		if(image == null)
@@ -522,6 +669,13 @@ public class Utils
 		return buffered;
 	}
 
+	/**
+	 * Used to round a number.
+	 *
+	 * @param value The value to round.
+	 * @param places The number of digits.
+	 * @return The rounded number.
+	 */
 	public static double round(double value, int places)
 	{
 		if(places < 0)
@@ -532,6 +686,17 @@ public class Utils
 		return (double) tmp / factor;
 	}
 
+	/**
+	 * Used to send a POST request.
+	 *
+	 * @param type The type of the request.
+	 * @param key The API key.
+	 * @param user The user to get the stats.
+	 * @param selectedMode The mode to get the stats.
+	 * @return The JSON response.
+	 *
+	 * @throws Exception If something went wrong.
+	 */
 	public synchronized static String sendPost(String type, String key, String user, int selectedMode) throws Exception
 	{
 		Utils.logger.log(Level.INFO, "Sending post request...");
@@ -556,11 +721,21 @@ public class Utils
 		return response.toString();
 	}
 
+	/**
+	 * Used to set the socket.
+	 *
+	 * @param socket The socket to set.
+	 */
 	public static void setSocket(ServerSocket socket)
 	{
 		Utils.socket = socket;
 	}
 
+	/**
+	 * Used to update the status of the thread updater.
+	 *
+	 * @param state The status of the thread.
+	 */
 	public static void setThreadUpdater(boolean state)
 	{
 		if(state)
@@ -575,6 +750,11 @@ public class Utils
 		}
 	}
 
+	/**
+	 * Used to set the tracked users.
+	 *
+	 * @param users The tracked users.
+	 */
 	public static void setTrackedUser(ArrayList<String> users)
 	{
 		StringBuilder sb = new StringBuilder();
@@ -585,6 +765,13 @@ public class Utils
 		config.writeVar("tracked_users", sb.toString());
 	}
 
+	/**
+	 * Used to track a new user.
+	 *
+	 * @param user The user to track.
+	 *
+	 * @throws IOException If there were an error serializing the user.
+	 */
 	public static void trackNewUser(User user) throws IOException
 	{
 		Utils.logger.log(Level.INFO, "Trcking user " + user.getUsername());
@@ -595,6 +782,11 @@ public class Utils
 		setTrackedUser(users);
 	}
 
+	/**
+	 * Used to untrack a user.
+	 *
+	 * @param user The user to untrack.
+	 */
 	public static void unTrackUser(User user)
 	{
 		Utils.logger.log(Level.INFO, "Untrcking user " + user.getUsername());
@@ -605,11 +797,17 @@ public class Utils
 		Utils.setTrackedUser(users);
 	}
 
-	private static Locale getLocaleByName(String string)
+	/**
+	 * Used to get a locale by its name.
+	 *
+	 * @param localName The name of the locale.
+	 * @return The wanted locale.
+	 */
+	private static Locale getLocaleByName(String localName)
 	{
-		if(string == null)
+		if(localName == null)
 			return Locale.getDefault();
-		switch(string)
+		switch(localName)
 		{
 			case "fr":
 				return Locale.FRENCH;
@@ -622,12 +820,24 @@ public class Utils
 		}
 	}
 
+	/**
+	 * Used to get a random colour.
+	 *
+	 * @return A random colour.
+	 */
 	private static Color getRandomColor()
 	{
 		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
 		return colors[new Random().nextInt(colors.length)];
 	}
 
+	/**
+	 * Used to know is an argument is set when launching the program.
+	 *
+	 * @param args The arguments sets.
+	 * @param mode The mode to verify if is activated.
+	 * @return True is the mode is activated, false if not.
+	 */
 	private static boolean isModeSet(String[] args, String mode)
 	{
 		for(String s : args)
@@ -636,16 +846,33 @@ public class Utils
 		return false;
 	}
 
+	/**
+	 * Used to know if this is a new version.
+	 *
+	 * @param lastVersion The last version.
+	 * @return True if it's a new version, false if not.
+	 */
 	private static boolean isNewVersion(String lastVersion)
 	{
 		return !Main.VERSION.equals(lastVersion);
 	}
 
+	/**
+	 * Used to know if there is enough time between each POST requests (1s).
+	 *
+	 * @return True if it's good, false if not.
+	 */
 	private static boolean isValidTime()
 	{
 		return new Date().getTime() - lastPost.getTime() > 1000;
 	}
 
+	/**
+	 * Used to know if the username is valid.
+	 *
+	 * @param username The username to verify.
+	 * @return True if it's valid, false if not.
+	 */
 	private static boolean isValidUser(String username)
 	{
 		return username.length() > 1;
@@ -680,7 +907,7 @@ public class Utils
 	 * Function to know if the given api key is valid or not.
 	 *
 	 * @param apiKey The api key to test.
-	 * @return A boolean representing the validity of the key.
+	 * @return True if the key is valid, false if not.
 	 */
 	private static boolean verifyApiKey(String apiKey)
 	{
