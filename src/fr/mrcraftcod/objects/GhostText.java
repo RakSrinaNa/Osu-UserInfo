@@ -9,6 +9,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+/**
+ * @author Come from Internet.
+ */
 public class GhostText implements FocusListener, DocumentListener, PropertyChangeListener
 {
 	private final JTextField textfield;
@@ -27,9 +30,7 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 		registerListeners();
 		updateState();
 		if(!this.textfield.hasFocus())
-		{
 			focusLost(null);
-		}
 	}
 
 	@Override
@@ -41,19 +42,19 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 	public void delete()
 	{
 		unregisterListeners();
-		textfield.removeFocusListener(this);
+		this.textfield.removeFocusListener(this);
 	}
 
 	@Override
 	public void focusGained(FocusEvent e)
 	{
-		if(isEmpty)
+		if(this.isEmpty)
 		{
 			unregisterListeners();
 			try
 			{
-				textfield.setText("");
-				textfield.setForeground(foregroundColor);
+				this.textfield.setText("");
+				this.textfield.setForeground(this.foregroundColor);
 			}
 			finally
 			{
@@ -65,13 +66,13 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 	@Override
 	public void focusLost(FocusEvent e)
 	{
-		if(isEmpty)
+		if(this.isEmpty)
 		{
 			unregisterListeners();
 			try
 			{
-				textfield.setText(ghostText);
-				textfield.setForeground(ghostColor);
+				this.textfield.setText(this.ghostText);
+				this.textfield.setForeground(this.ghostColor);
 			}
 			finally
 			{
@@ -82,7 +83,7 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 
 	public Color getGhostColor()
 	{
-		return ghostColor;
+		return this.ghostColor;
 	}
 
 	@Override
@@ -110,19 +111,19 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 
 	private void registerListeners()
 	{
-		textfield.getDocument().addDocumentListener(this);
-		textfield.addPropertyChangeListener("foreground", this);
+		this.textfield.getDocument().addDocumentListener(this);
+		this.textfield.addPropertyChangeListener("foreground", this);
 	}
 
 	private void unregisterListeners()
 	{
-		textfield.getDocument().removeDocumentListener(this);
-		textfield.removePropertyChangeListener("foreground", this);
+		this.textfield.getDocument().removeDocumentListener(this);
+		this.textfield.removePropertyChangeListener("foreground", this);
 	}
 
 	private void updateState()
 	{
-		isEmpty = textfield.getText().length() == 0;
-		foregroundColor = textfield.getForeground();
+		this.isEmpty = this.textfield.getText().length() == 0;
+		this.foregroundColor = this.textfield.getForeground();
 	}
 }

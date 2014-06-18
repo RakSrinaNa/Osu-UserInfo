@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import fr.mrcraftcod.utils.Utils;
 
 /**
- * A panel containing a buffered image
+ * A panel containing a buffered image.
  *
  * @author MrCraftCod
  */
@@ -57,6 +57,11 @@ public class ImagePanel extends JPanel
 		this.printLoading = printLoading;
 	}
 
+	/**
+	 * Used to know if the loading text is activated.
+	 *
+	 * @return True if the loading text is activated, false if not.
+	 */
 	public boolean isPrintLoading()
 	{
 		return this.printLoading;
@@ -74,6 +79,11 @@ public class ImagePanel extends JPanel
 		invalidate();
 	}
 
+	/**
+	 * Used to activate or not the loading text.
+	 *
+	 * @param printLoading The stats of the text.
+	 */
 	public void setPrintLoading(boolean printLoading)
 	{
 		this.printLoading = printLoading;

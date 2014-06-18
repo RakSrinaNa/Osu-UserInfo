@@ -106,6 +106,11 @@ public class User implements Serializable
 		return dates;
 	}
 
+	/**
+	 * Used to get the country of the user.
+	 *
+	 * @return The country.
+	 */
 	public String getCountry()
 	{
 		return this.country;
@@ -285,6 +290,12 @@ public class User implements Serializable
 		return !newStats.equals(previousStats);
 	}
 
+	/**
+	 * Used to know if two User objects represents the same user.
+	 *
+	 * @param lastUser The user to compare with.
+	 * @return True if they are same user, false if not.
+	 */
 	public boolean isSameUser(User lastUser)
 	{
 		if(lastUser == null)
@@ -308,6 +319,11 @@ public class User implements Serializable
 		oos.close();
 	}
 
+	/**
+	 * Used to set the country of the user.
+	 *
+	 * @param country The country to set.
+	 */
 	public void setCountry(String country)
 	{
 		this.country = country;
@@ -455,6 +471,12 @@ public class User implements Serializable
 		this.username = username;
 	}
 
+	/**
+	 * Called to read object from a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
 	{
@@ -478,6 +500,12 @@ public class User implements Serializable
 			this.stats_mania = new ArrayList<Stats>();
 	}
 
+	/**
+	 * Called to write the object in a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
 	private void writeObject(ObjectOutputStream oos) throws IOException
 	{
 		oos.writeInt(this.version);

@@ -301,9 +301,9 @@ public class Updater
 	 *
 	 * @param file The XML file.
 	 *
-	 * @throws SAXException
-	 * @throws IOException If the file can't be read.
-	 * @throws ParserConfigurationException
+	 * @throws SAXException If there were an error with the XML file.
+	 * @throws IOException If there were an error with the file.
+	 * @throws ParserConfigurationException If there were an error with the XML file.
 	 */
 	private static void parseVersions(File file) throws SAXException, IOException, ParserConfigurationException
 	{

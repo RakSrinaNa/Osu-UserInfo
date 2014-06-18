@@ -60,6 +60,9 @@ public class Stats implements Serializable, Cloneable
 		this.count50 = 0;
 	}
 
+	/**
+	 * @see Object#clone()
+	 */
 	@Override
 	public Stats clone()
 	{
@@ -178,6 +181,12 @@ public class Stats implements Serializable, Cloneable
 		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
+	/**
+	 * Used to know if two Stats objects are the same.
+	 *
+	 * @param stats the Stats to compare with.
+	 * @return True if stats are the same, false if not.
+	 */
 	public boolean equals(Stats stats)
 	{
 		if(stats == null)
@@ -203,31 +212,61 @@ public class Stats implements Serializable, Cloneable
 		return this.accuracy;
 	}
 
+	/**
+	 * Used to get the count of 100 hits.
+	 *
+	 * @return The count of 100 hits.
+	 */
 	public long getCount100()
 	{
 		return this.count100;
 	}
 
+	/**
+	 * Used to get the count of 300 hits.
+	 *
+	 * @return The count of 300 hits.
+	 */
 	public long getCount300()
 	{
 		return this.count300;
 	}
 
+	/**
+	 * Used to get the count of 50 hits.
+	 *
+	 * @return The count of 50 hits.
+	 */
 	public long getCount50()
 	{
 		return this.count50;
 	}
 
+	/**
+	 * Used to get the count of A ranks.
+	 *
+	 * @return The count of A ranks.
+	 */
 	public int getCountA()
 	{
 		return this.countA;
 	}
 
+	/**
+	 * Used to get the count of S ranks.
+	 *
+	 * @return The count of S ranks.
+	 */
 	public int getCountS()
 	{
 		return this.countS;
 	}
 
+	/**
+	 * Used to get the count of SS ranks.
+	 *
+	 * @return The count of SS ranks.
+	 */
 	public int getCountSS()
 	{
 		return this.countSS;
@@ -243,6 +282,12 @@ public class Stats implements Serializable, Cloneable
 		return this.date;
 	}
 
+	/**
+	 * Used to get the difference of play count between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public int getDiffPlayCount(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -250,6 +295,12 @@ public class Stats implements Serializable, Cloneable
 		return getPlayCount() - previousStats.getPlayCount();
 	}
 
+	/**
+	 * Used to get the difference of PP between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public double getDiffPP(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -257,6 +308,12 @@ public class Stats implements Serializable, Cloneable
 		return getPp() - previousStats.getPp();
 	}
 
+	/**
+	 * Used to get the difference of rank between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public double getDiffRank(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -264,6 +321,12 @@ public class Stats implements Serializable, Cloneable
 		return previousStats.getRank() - getRank();
 	}
 
+	/**
+	 * Used to get the difference of ranked score between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public long getDiffRankedScore(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -271,6 +334,12 @@ public class Stats implements Serializable, Cloneable
 		return getRankedScore() - previousStats.getRankedScore();
 	}
 
+	/**
+	 * Used to get the difference of total hits between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public long getDiffTotalHits(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -278,6 +347,12 @@ public class Stats implements Serializable, Cloneable
 		return getTotalHits() - previousStats.getTotalHits();
 	}
 
+	/**
+	 * Used to get the difference of total score between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public long getDiffTotalScore(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -301,6 +376,11 @@ public class Stats implements Serializable, Cloneable
 		return String.format(Utils.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Utils.locale).format(new Date(lastDate)));
 	}
 
+	/**
+	 * Used to get the level.
+	 *
+	 * @return The level.
+	 */
 	public double getLevel()
 	{
 		return this.level;
@@ -391,31 +471,64 @@ public class Stats implements Serializable, Cloneable
 		this.accuracy = accuracy;
 	}
 
+	/**
+	 * Used to set the number of 100 hits.
+	 *
+	 * @param accuracy The number of 100 hits to set.
+	 */
 	public void setCount100(long count100)
 	{
 		this.count100 = count100;
+		updateTotalHits();
 	}
 
+	/**
+	 * Used to set the number of 300 hits.
+	 *
+	 * @param accuracy The number of 300 hits to set.
+	 */
 	public void setCount300(long count300)
 	{
 		this.count300 = count300;
+		updateTotalHits();
 	}
 
+	/**
+	 * Used to set the number of 50 hits.
+	 *
+	 * @param accuracy The number of 50 hits to set.
+	 */
 	public void setCount50(long count50)
 	{
 		this.count50 = count50;
+		updateTotalHits();
 	}
 
+	/**
+	 * Used to set the number of A ranks.
+	 *
+	 * @param accuracy The number of A ranks to set.
+	 */
 	public void setCountA(int countA)
 	{
 		this.countA = countA;
 	}
 
+	/**
+	 * Used to set the number of S ranks.
+	 *
+	 * @param accuracy The number of S ranks to set.
+	 */
 	public void setCountS(int countS)
 	{
 		this.countS = countS;
 	}
 
+	/**
+	 * Used to set the number of SS ranks.
+	 *
+	 * @param accuracy The number of SS ranks to set.
+	 */
 	public void setCountSS(int countSS)
 	{
 		this.countSS = countSS;
@@ -441,6 +554,11 @@ public class Stats implements Serializable, Cloneable
 		this.date = date;
 	}
 
+	/**
+	 * Used to set the level.
+	 *
+	 * @param level The level to set.
+	 */
 	public void setLevel(double level)
 	{
 		this.level = level;
@@ -516,6 +634,9 @@ public class Stats implements Serializable, Cloneable
 		this.totalScore = totalScore;
 	}
 
+	/**
+	 * Used to update the number of total hits.
+	 */
 	public void updateTotalHits()
 	{
 		setTotalHits(getCount300() + getCount100() + getCount50());
@@ -547,6 +668,12 @@ public class Stats implements Serializable, Cloneable
 		return "-";
 	}
 
+	/**
+	 * Called to read object from a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
 	private void readObject(ObjectInputStream ois) throws IOException
 	{
 		this.version = STATS_VERSION;
@@ -571,6 +698,12 @@ public class Stats implements Serializable, Cloneable
 		updateTotalHits();
 	}
 
+	/**
+	 * Called to write the object in a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
 	private void writeObject(ObjectOutputStream oos) throws IOException
 	{
 		oos.writeInt(this.version);
