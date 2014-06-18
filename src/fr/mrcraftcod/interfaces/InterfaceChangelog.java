@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import fr.mrcraftcod.objects.JChangelogPanel;
 import fr.mrcraftcod.utils.Utils;
 
 public class InterfaceChangelog extends JFrame

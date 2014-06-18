@@ -1,4 +1,4 @@
-package fr.mrcraftcod.interfaces;
+package fr.mrcraftcod.objects;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
