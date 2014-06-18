@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 import fr.mrcraftcod.utils.Utils;
 
@@ -29,8 +28,8 @@ public class InterfaceChangelog extends JFrame
 		setBackground(Utils.backColor);
 		getContentPane().setBackground(Utils.backColor);
 		getContentPane().setLayout(new BorderLayout());
-		JLabel changelogLabel = new JLabel(processText(changelog));
-		changelogLabel.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 1));
+		JChangelogPanel changelogLabel = new JChangelogPanel(processText(changelog));
+		changelogLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		changelogLabel.setBackground(Utils.backColor);
 		changelogLabel.setFocusable(false);
 		changelogLabel.setFont(Utils.fontMain);
@@ -68,9 +67,9 @@ public class InterfaceChangelog extends JFrame
 		return sb.append("\">").append(change.replaceFirst(typePattern, "")).append("</font>").toString();
 	}
 
-	private String processText(String changelog)
+	private ArrayList<String> processText(String changelog)
 	{
-		StringBuilder sb = new StringBuilder("<html><ul>");
+		ArrayList<String> list = new ArrayList<String>();
 		final String stringPattern = "[{]{1}.+[}]{1}.*";
 		Pattern pattern = Pattern.compile(stringPattern);
 		Matcher matcher = pattern.matcher(changelog);
@@ -79,7 +78,7 @@ public class InterfaceChangelog extends JFrame
 			matchList.add(matcher.group(0));
 		for(String change : matchList)
 			if(!change.equals(""))
-				sb.append("<li>" + getFormatedChange(change) + "</li>");
-		return sb.append("</ul></html>").toString();
+				list.add(getFormatedChange(change));
+		return list;
 	}
 }
