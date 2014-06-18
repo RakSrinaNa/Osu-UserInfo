@@ -2,8 +2,23 @@ package fr.mrcraftcod.objects;
 
 import java.util.Comparator;
 
+/**
+ * Compare strings ignoring case.
+ *
+ * @author MrCraftCod
+ *
+ * @param <T>
+ */
 public class ComparatorIgnoreCase<T> implements Comparator<T>
 {
+	/**
+	 * Compare two strings ignoring case.
+	 *
+	 * @param o1 First string.
+	 * @param o2 Second string.
+	 *
+	 * @see Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public int compare(T o1, T o2)
 	{
