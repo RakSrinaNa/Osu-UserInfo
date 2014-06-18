@@ -18,10 +18,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Class used to get the changelog for a version from Bitbucket.
+ *
+ * @author MrCraftCod
+ */
 public class Changelog
 {
 	private final static String LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/changelog.xml";
 
+	/**
+	 * Get the changelog for the wanted version.
+	 *
+	 * @param version The version wanted.
+	 * @return The changelog.
+	 */
 	public static String getChangelogForVersion(String version)
 	{
 		String changelogText = "";
@@ -84,11 +95,32 @@ public class Changelog
 		{}
 	}
 
+	/**
+	 * Used to get the changelog text from an XML file.
+	 *
+	 * @param changelogFile The XML file.
+	 * @param version The version to get.
+	 * @return The changelog text of the wanted version.
+	 *
+	 * @throws SAXException If there were an error with the XML file.
+	 * @throws IOException If there were an error with the file.
+	 * @throws ParserConfigurationException If there were an error with the XML file.
+	 */
 	private static String getChangelogText(File changelogFile, String version) throws SAXException, IOException, ParserConfigurationException
 	{
 		return parseVersions(changelogFile).get(version);
 	}
 
+	/**
+	 * Used to extract versions and changelog from an XML file.
+	 *
+	 * @param file The XML file.
+	 * @return An HashMap object containing the versions as key and changelog as values.
+	 *
+	 * @throws SAXException If there were an error with the XML file.
+	 * @throws IOException If there were an error with the file.
+	 * @throws ParserConfigurationException If there were an error with the XML file.
+	 */
 	private static HashMap<String, String> parseVersions(File file) throws SAXException, IOException, ParserConfigurationException
 	{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
