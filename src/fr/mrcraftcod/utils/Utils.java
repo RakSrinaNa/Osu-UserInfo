@@ -27,6 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -82,6 +84,7 @@ public class Utils
 	public static InterfaceSettings configFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
+	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
 
 	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
 	{
@@ -407,11 +410,15 @@ public class Utils
 				System.exit(2);
 			}
 		logger.log(Level.INFO, "Loading icons...");
+		int iconSize = 10;
 		icons = new ArrayList<Image>();
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon16.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon32.png")));
 		icons.add(ImageIO.read(Main.class.getClassLoader().getResource("resources/icons/icon64.png")));
 		avatarDefaultImage = ImageIO.read(Main.class.getClassLoader().getResource("resources/images/avatar.png"));
+		iconChangelogAdd = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogAdd.png")), iconSize, iconSize));
+		iconChangelogRemove = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogRemove.png")), iconSize, iconSize));
+		iconChangelogModify = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogModify.png")), iconSize, iconSize));
 		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
 		setLookAndFeel();
 		int currentStep = 0;
