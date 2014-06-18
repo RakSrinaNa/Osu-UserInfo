@@ -76,7 +76,7 @@ public class InterfaceSettings extends JFrame
 		this.buttonReturn.addActionListener(new ButtonReturnSettingsActionListener());
 		this.textNumberKeepStats = new JLabel(Utils.resourceBundle.getString("settings_number_stats_to_keep"));
 		this.numberKeepStats = new JTextField();
-		this.numberKeepStats.setDocument(new JTextFieldLimitNumbers(3));
+		this.numberKeepStats.setDocument(new JTextFieldLimitNumbers(5));
 		this.numberKeepStats.setText(String.valueOf(Utils.numberTrackedStatsToKeep));
 		int lign = 0;
 		GridBagConstraints c = new GridBagConstraints();
@@ -221,14 +221,14 @@ public class InterfaceSettings extends JFrame
 		Utils.mainFrame.updateAutoCompletionStatus(this.autoCompletionCheck.isSelected());
 		if(newInterface)
 			try
-		{
+			{
 				Utils.reloadResourceBundleWithLocale(this.languages.get(this.languageBox.getSelectedItem()));
 				Utils.newFrame(Utils.lastUser.getUsername(), Utils.mainFrame.getLocation());
-		}
-		catch(IOException e)
-		{
-			Utils.logger.log(Level.SEVERE, "Error opening new frame!", e);
-		}
+			}
+			catch(IOException e)
+			{
+				Utils.logger.log(Level.SEVERE, "Error opening new frame!", e);
+			}
 	}
 
 	/**
