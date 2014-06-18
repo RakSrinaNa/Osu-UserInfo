@@ -16,13 +16,13 @@ public class TrackUserActionListener implements ActionListener
 			JCheckBox check = (JCheckBox) arg0.getSource();
 			if(check.isSelected())
 				try
-			{
+				{
 					Utils.trackNewUser(Utils.lastUser);
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
 			else
 				Utils.unTrackUser(Utils.lastUser);
 		}

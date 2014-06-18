@@ -54,6 +54,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 		}
 	}
+
 	class ToggleAction extends AbstractAction
 	{
 		private static final long serialVersionUID = -1908076775236567044L;
@@ -81,14 +82,13 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 		}
 	}
+
 	private JTable table;
 	private int spacing;
 	private boolean isColumnHeaderIncluded;
 	private boolean isColumnDataIncluded;
 	private boolean isOnlyAdjustLarger;
-
 	private boolean isDynamicAdjustment;
-
 	private Map<TableColumn, Integer> columnSizes = new HashMap<TableColumn, Integer>();
 
 	public TableColumnAdjuster(JTable table)

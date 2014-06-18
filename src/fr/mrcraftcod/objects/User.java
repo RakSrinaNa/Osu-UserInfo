@@ -22,13 +22,12 @@ public class User implements Serializable
 {
 	private static final long serialVersionUID = 9114477464694621621L;
 	private static final int USER_VERSION = 2;
-
 	private ArrayList<Stats> stats_normal, stats_taiko, stats_ctb, stats_mania;
-
 	private String username = "";
 	private int version;
 	private transient int userID;
 	private transient String country;
+
 	public User()
 	{
 		this.version = USER_VERSION;
