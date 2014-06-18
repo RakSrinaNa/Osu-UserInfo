@@ -309,23 +309,6 @@ public class Utils
 		throw new Exception("Cannot get code from link");
 	}
 
-	private static Locale getLocaleByName(String string)
-	{
-		if(string == null)
-			return Locale.getDefault();
-		switch(string)
-		{
-			case "fr":
-				return Locale.FRENCH;
-			case "it":
-				return Locale.ITALIAN;
-			case "en":
-				return Locale.ENGLISH;
-			default:
-				return Locale.getDefault();
-		}
-	}
-
 	public static String getModeName(int mode)
 	{
 		switch(mode)
@@ -343,12 +326,6 @@ public class Utils
 	public static double getProgressLevel(double level)
 	{
 		return level - (int) level;
-	}
-
-	private static Color getRandomColor()
-	{
-		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
-		return colors[new Random().nextInt(colors.length)];
 	}
 
 	public static double getScoreToNextLevel(int currentLevel, double currentScore)
@@ -480,32 +457,9 @@ public class Utils
 		startup.exit();
 	}
 
-	private static boolean isModeSet(String[] args, String mode)
-	{
-		for(String s : args)
-			if(s.equalsIgnoreCase(mode))
-				return true;
-		return false;
-	}
-
-	private static boolean isNewVersion(String lastVersion)
-	{
-		return !Main.VERSION.equals(lastVersion);
-	}
-
 	public static boolean isUserTracked(String user)
 	{
 		return getTrackedUsers().contains(user);
-	}
-
-	private static boolean isValidTime()
-	{
-		return new Date().getTime() - lastPost.getTime() > 1000;
-	}
-
-	private static boolean isValidUser(String username)
-	{
-		return username.length() > 1;
 	}
 
 	public static void newFrame() throws IOException
@@ -597,31 +551,6 @@ public class Utils
 		return response.toString();
 	}
 
-	/**
-	 * Used to set a better look and feel to the frames.
-	 */
-	private static void setLookAndFeel()
-	{
-		logger.log(Level.INFO, "Setting look and feel...");
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-				if("Nimbus".equals(info.getName()))
-				{
-					logger.log(Level.INFO, "Nimbus found, using it...");
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			UIManager.put("nimbusOrange", new Color(255, 200, 0));
-			UIManager.put("nimbusOrange", new Color(255, 200, 0));
-		}
-		catch(final Exception exception)
-		{
-			logger.log(Level.WARNING, "Error loading look and feel", exception);
-		}
-	}
-
 	public static void setSocket(ServerSocket socket)
 	{
 		Utils.socket = socket;
@@ -669,6 +598,77 @@ public class Utils
 		new File(Configuration.appData, user.getUsername()).delete();
 		mainFrame.removeTrackedUser(user);
 		Utils.setTrackedUser(users);
+	}
+
+	private static Locale getLocaleByName(String string)
+	{
+		if(string == null)
+			return Locale.getDefault();
+		switch(string)
+		{
+			case "fr":
+				return Locale.FRENCH;
+			case "it":
+				return Locale.ITALIAN;
+			case "en":
+				return Locale.ENGLISH;
+			default:
+				return Locale.getDefault();
+		}
+	}
+
+	private static Color getRandomColor()
+	{
+		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
+		return colors[new Random().nextInt(colors.length)];
+	}
+
+	private static boolean isModeSet(String[] args, String mode)
+	{
+		for(String s : args)
+			if(s.equalsIgnoreCase(mode))
+				return true;
+		return false;
+	}
+
+	private static boolean isNewVersion(String lastVersion)
+	{
+		return !Main.VERSION.equals(lastVersion);
+	}
+
+	private static boolean isValidTime()
+	{
+		return new Date().getTime() - lastPost.getTime() > 1000;
+	}
+
+	private static boolean isValidUser(String username)
+	{
+		return username.length() > 1;
+	}
+
+	/**
+	 * Used to set a better look and feel to the frames.
+	 */
+	private static void setLookAndFeel()
+	{
+		logger.log(Level.INFO, "Setting look and feel...");
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+				if("Nimbus".equals(info.getName()))
+				{
+					logger.log(Level.INFO, "Nimbus found, using it...");
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			UIManager.put("nimbusOrange", new Color(255, 200, 0));
+			UIManager.put("nimbusOrange", new Color(255, 200, 0));
+		}
+		catch(final Exception exception)
+		{
+			logger.log(Level.WARNING, "Error loading look and feel", exception);
+		}
 	}
 
 	/**

@@ -23,6 +23,21 @@ public class User implements Serializable
 	private static final long serialVersionUID = 9114477464694621621L;
 	private static final int USER_VERSION = 2;
 
+	private ArrayList<Stats> stats_normal, stats_taiko, stats_ctb, stats_mania;
+
+	private String username = "";
+	private int version;
+	private transient int userID;
+	private transient String country;
+	public User()
+	{
+		this.version = USER_VERSION;
+		this.stats_normal = new ArrayList<Stats>();
+		this.stats_taiko = new ArrayList<Stats>();
+		this.stats_ctb = new ArrayList<Stats>();
+		this.stats_mania = new ArrayList<Stats>();
+	}
+
 	/**
 	 * Used to deserialize a serialised User object.
 	 *
@@ -39,21 +54,6 @@ public class User implements Serializable
 		User user = (User) ois.readObject();
 		ois.close();
 		return user;
-	}
-
-	private ArrayList<Stats> stats_normal, stats_taiko, stats_ctb, stats_mania;
-	private String username = "";
-	private int version;
-	private transient int userID;
-	private transient String country;
-
-	public User()
-	{
-		this.version = USER_VERSION;
-		this.stats_normal = new ArrayList<Stats>();
-		this.stats_taiko = new ArrayList<Stats>();
-		this.stats_ctb = new ArrayList<Stats>();
-		this.stats_mania = new ArrayList<Stats>();
 	}
 
 	/**
@@ -293,29 +293,6 @@ public class User implements Serializable
 		return this.username.equals(lastUser.getUsername());
 	}
 
-	@SuppressWarnings("unchecked")
-	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
-	{
-		this.version = USER_VERSION;
-		int version = ois.readInt();
-		if(version >= 2)
-		{
-			this.username = ois.readUTF();
-			this.stats_normal = (ArrayList<Stats>) ois.readObject();
-			this.stats_taiko = (ArrayList<Stats>) ois.readObject();
-			this.stats_ctb = (ArrayList<Stats>) ois.readObject();
-			this.stats_mania = (ArrayList<Stats>) ois.readObject();
-		}
-		if(this.stats_normal == null)
-			this.stats_normal = new ArrayList<Stats>();
-		if(this.stats_taiko == null)
-			this.stats_taiko = new ArrayList<Stats>();
-		if(this.stats_ctb == null)
-			this.stats_ctb = new ArrayList<Stats>();
-		if(this.stats_mania == null)
-			this.stats_mania = new ArrayList<Stats>();
-	}
-
 	/**
 	 * Used to serialize the object to a file.
 	 *
@@ -477,6 +454,29 @@ public class User implements Serializable
 	public void setUsername(String username)
 	{
 		this.username = username;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
+	{
+		this.version = USER_VERSION;
+		int version = ois.readInt();
+		if(version >= 2)
+		{
+			this.username = ois.readUTF();
+			this.stats_normal = (ArrayList<Stats>) ois.readObject();
+			this.stats_taiko = (ArrayList<Stats>) ois.readObject();
+			this.stats_ctb = (ArrayList<Stats>) ois.readObject();
+			this.stats_mania = (ArrayList<Stats>) ois.readObject();
+		}
+		if(this.stats_normal == null)
+			this.stats_normal = new ArrayList<Stats>();
+		if(this.stats_taiko == null)
+			this.stats_taiko = new ArrayList<Stats>();
+		if(this.stats_ctb == null)
+			this.stats_ctb = new ArrayList<Stats>();
+		if(this.stats_mania == null)
+			this.stats_mania = new ArrayList<Stats>();
 	}
 
 	private void writeObject(ObjectOutputStream oos) throws IOException

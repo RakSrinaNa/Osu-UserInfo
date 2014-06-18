@@ -203,19 +203,6 @@ public class Stats implements Serializable, Cloneable
 		return this.accuracy;
 	}
 
-	/**
-	 * Used to get the arrow of a number.
-	 *
-	 * @param number The number to get the sign.
-	 * @return A String of the arrow.
-	 */
-	private String getArrow(double number)
-	{
-		if(number >= 0)
-			return "\u2191";
-		return "\u2193";
-	}
-
 	public long getCount100()
 	{
 		return this.count100;
@@ -370,19 +357,6 @@ public class Stats implements Serializable, Cloneable
 	}
 
 	/**
-	 * Used to get the sign of a number.
-	 *
-	 * @param number The number to get the sign.
-	 * @return A String of the sign.
-	 */
-	private String getSign(double number)
-	{
-		if(number >= 0)
-			return "+";
-		return "-";
-	}
-
-	/**
 	 * Used to get the number of hits.
 	 *
 	 * @return The number of hits.
@@ -405,30 +379,6 @@ public class Stats implements Serializable, Cloneable
 	public int getVersion()
 	{
 		return this.version;
-	}
-
-	private void readObject(ObjectInputStream ois) throws IOException
-	{
-		this.version = STATS_VERSION;
-		int version = ois.readInt();
-		if(version >= 2)
-		{
-			this.mode = ois.readInt();
-			this.date = ois.readLong();
-			this.playcount = ois.readInt();
-			this.rankedScore = ois.readLong();
-			this.totalScore = ois.readLong();
-			this.rank = ois.readDouble();
-			this.pp = ois.readDouble();
-			this.accuracy = ois.readDouble();
-			this.countSS = ois.readInt();
-			this.countS = ois.readInt();
-			this.countA = ois.readInt();
-			this.count300 = ois.readLong();
-			this.count100 = ois.readLong();
-			this.count50 = ois.readLong();
-		}
-		updateTotalHits();
 	}
 
 	/**
@@ -569,6 +519,56 @@ public class Stats implements Serializable, Cloneable
 	public void updateTotalHits()
 	{
 		setTotalHits(getCount300() + getCount100() + getCount50());
+	}
+
+	/**
+	 * Used to get the arrow of a number.
+	 *
+	 * @param number The number to get the sign.
+	 * @return A String of the arrow.
+	 */
+	private String getArrow(double number)
+	{
+		if(number >= 0)
+			return "\u2191";
+		return "\u2193";
+	}
+
+	/**
+	 * Used to get the sign of a number.
+	 *
+	 * @param number The number to get the sign.
+	 * @return A String of the sign.
+	 */
+	private String getSign(double number)
+	{
+		if(number >= 0)
+			return "+";
+		return "-";
+	}
+
+	private void readObject(ObjectInputStream ois) throws IOException
+	{
+		this.version = STATS_VERSION;
+		int version = ois.readInt();
+		if(version >= 2)
+		{
+			this.mode = ois.readInt();
+			this.date = ois.readLong();
+			this.playcount = ois.readInt();
+			this.rankedScore = ois.readLong();
+			this.totalScore = ois.readLong();
+			this.rank = ois.readDouble();
+			this.pp = ois.readDouble();
+			this.accuracy = ois.readDouble();
+			this.countSS = ois.readInt();
+			this.countS = ois.readInt();
+			this.countA = ois.readInt();
+			this.count300 = ois.readLong();
+			this.count100 = ois.readLong();
+			this.count50 = ois.readLong();
+		}
+		updateTotalHits();
 	}
 
 	private void writeObject(ObjectOutputStream oos) throws IOException

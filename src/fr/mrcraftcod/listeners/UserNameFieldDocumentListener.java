@@ -11,12 +11,12 @@ public class UserNameFieldDocumentListener implements DocumentListener
 		update(e);
 	}
 
-	public void removeUpdate(DocumentEvent e)
+	public void insertUpdate(DocumentEvent e)
 	{
 		update(e);
 	}
 
-	public void insertUpdate(DocumentEvent e)
+	public void removeUpdate(DocumentEvent e)
 	{
 		update(e);
 	}

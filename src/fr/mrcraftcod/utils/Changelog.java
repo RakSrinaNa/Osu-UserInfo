@@ -22,6 +22,21 @@ public class Changelog
 {
 	private final static String LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/changelog.xml";
 
+	public static String getChangelogForVersion(String version)
+	{
+		String changelogText = "";
+		File changelogFile = new File(".", "changelog.xml");
+		getChangelogBitbucket(changelogFile, LINKXML);
+		try
+		{
+			changelogText = getChangelogText(changelogFile, version);
+		}
+		catch(SAXException | IOException | ParserConfigurationException e)
+		{}
+		changelogFile.delete();
+		return changelogText;
+	}
+
 	/**
 	 * Used to get the XML file containing the changelog.
 	 *
@@ -67,21 +82,6 @@ public class Changelog
 		}
 		catch(Exception e)
 		{}
-	}
-
-	public static String getChangelogForVersion(String version)
-	{
-		String changelogText = "";
-		File changelogFile = new File(".", "changelog.xml");
-		getChangelogBitbucket(changelogFile, LINKXML);
-		try
-		{
-			changelogText = getChangelogText(changelogFile, version);
-		}
-		catch(SAXException | IOException | ParserConfigurationException e)
-		{}
-		changelogFile.delete();
-		return changelogText;
 	}
 
 	private static String getChangelogText(File changelogFile, String version) throws SAXException, IOException, ParserConfigurationException

@@ -140,29 +140,6 @@ public class InterfaceSettings extends JFrame
 		returnMain(false);
 	}
 
-	private InterfaceSettings getFrame()
-	{
-		return this;
-	}
-
-	private String getLang(String string)
-	{
-		for(Entry<String, String> s : this.languages.entrySet())
-			if(s.getValue() != null)
-				if(s.getValue().equals(string))
-					return s.getKey();
-		return "System language";
-	}
-
-	private String[] getLanguages()
-	{
-		this.languages.put(Utils.resourceBundle.getString("system_language"), null);
-		this.languages.put(Utils.resourceBundle.getString("english"), "en");
-		this.languages.put(Utils.resourceBundle.getString("french"), "fr");
-		this.languages.put(Utils.resourceBundle.getString("italian"), "it");
-		return this.languages.keySet().toArray(new String[this.languages.keySet().size()]);
-	}
-
 	/**
 	 * Used to hide the frame.
 	 */
@@ -239,5 +216,28 @@ public class InterfaceSettings extends JFrame
 		getFrame().setFocusable(true);
 		getFrame().setEnabled(true);
 		getFrame().toFront();
+	}
+
+	private InterfaceSettings getFrame()
+	{
+		return this;
+	}
+
+	private String getLang(String string)
+	{
+		for(Entry<String, String> s : this.languages.entrySet())
+			if(s.getValue() != null)
+				if(s.getValue().equals(string))
+					return s.getKey();
+		return "System language";
+	}
+
+	private String[] getLanguages()
+	{
+		this.languages.put(Utils.resourceBundle.getString("system_language"), null);
+		this.languages.put(Utils.resourceBundle.getString("english"), "en");
+		this.languages.put(Utils.resourceBundle.getString("french"), "fr");
+		this.languages.put(Utils.resourceBundle.getString("italian"), "it");
+		return this.languages.keySet().toArray(new String[this.languages.keySet().size()]);
 	}
 }

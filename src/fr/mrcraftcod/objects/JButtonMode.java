@@ -30,6 +30,26 @@ public class JButtonMode extends JButton
 		borderSize = 2;
 	}
 
+	public Color getBorderColor()
+	{
+		return borderColor;
+	}
+
+	public Color getDisabledTextColor()
+	{
+		return disabledTextColor;
+	}
+
+	public Icon getIconMode()
+	{
+		return iconMode;
+	}
+
+	public Icon getUnselectedIconMode()
+	{
+		return unselectedIconMode;
+	}
+
 	@Override
 	public void paintComponent(Graphics g)
 	{
@@ -65,34 +85,14 @@ public class JButtonMode extends JButton
 			unselectedIconMode.paintIcon(this, g2, (int) (x - 1.2 * iconMode.getIconWidth()), y - (iconMode.getIconHeight() / 2) - 4);
 	}
 
-	public void setDisabledBackground(Color color)
-	{
-		disabledBackgroundColor = color;
-	}
-
-	public Icon getIconMode()
-	{
-		return iconMode;
-	}
-
-	public void setIconMode(Icon iconMode)
-	{
-		this.iconMode = iconMode;
-	}
-
-	public Color getBorderColor()
-	{
-		return borderColor;
-	}
-
 	public void setBorderColor(Color borderColor)
 	{
 		this.borderColor = borderColor;
 	}
 
-	public Color getDisabledTextColor()
+	public void setDisabledBackground(Color color)
 	{
-		return disabledTextColor;
+		disabledBackgroundColor = color;
 	}
 
 	public void setDisabledTextColor(Color disabledTextColor)
@@ -100,9 +100,9 @@ public class JButtonMode extends JButton
 		this.disabledTextColor = disabledTextColor;
 	}
 
-	public Icon getUnselectedIconMode()
+	public void setIconMode(Icon iconMode)
 	{
-		return unselectedIconMode;
+		this.iconMode = iconMode;
 	}
 
 	public void setUnselectedIconMode(Icon unselectedIconMode)

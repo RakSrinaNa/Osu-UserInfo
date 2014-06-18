@@ -91,14 +91,6 @@ public class InterfaceStartup extends JFrame
 	}
 
 	/**
-	 * Used to refresh the current step showed by the progress bar.
-	 */
-	private void refreshProgressBarStep()
-	{
-		this.progressBar.setValue(this.step);
-	}
-
-	/**
 	 * Used to reset the current step.
 	 */
 	public void reset()
@@ -158,5 +150,13 @@ public class InterfaceStartup extends JFrame
 	{
 		Utils.logger.log(Level.INFO, "Skipping startup step...");
 		this.step++;
+	}
+
+	/**
+	 * Used to refresh the current step showed by the progress bar.
+	 */
+	private void refreshProgressBarStep()
+	{
+		this.progressBar.setValue(this.step);
 	}
 }

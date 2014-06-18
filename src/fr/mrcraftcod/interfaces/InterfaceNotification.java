@@ -65,19 +65,6 @@ public class InterfaceNotification extends JFrame implements Runnable
 		new Thread(this).start();
 	}
 
-	private InterfaceNotification getFrame()
-	{
-		return this;
-	}
-
-	private String processText(String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
-	{
-		NumberFormat format = NumberFormat.getInstance(Utils.locale);
-		NumberFormat formatt = NumberFormat.getInstance(Utils.locale);
-		formatt.setMaximumFractionDigits(2);
-		return String.format(Utils.resourceBundle.getString("notification_text"), name, textRank, format.format(rank), formatt.format(pp), format.format(playCount), format.format(totalScore), format.format(rankedScore));
-	}
-
 	@Override
 	public void run()
 	{
@@ -118,5 +105,18 @@ public class InterfaceNotification extends JFrame implements Runnable
 			}
 		}
 		getFrame().dispose();
+	}
+
+	private InterfaceNotification getFrame()
+	{
+		return this;
+	}
+
+	private String processText(String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
+	{
+		NumberFormat format = NumberFormat.getInstance(Utils.locale);
+		NumberFormat formatt = NumberFormat.getInstance(Utils.locale);
+		formatt.setMaximumFractionDigits(2);
+		return String.format(Utils.resourceBundle.getString("notification_text"), name, textRank, format.format(rank), formatt.format(pp), format.format(playCount), format.format(totalScore), format.format(rankedScore));
 	}
 }

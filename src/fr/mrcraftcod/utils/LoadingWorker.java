@@ -26,25 +26,6 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 			initFrame(parent);
 	}
 
-	@Override
-	protected Boolean doInBackground() throws Exception
-	{
-		return Utils.getInfosServer(this.user, this.hard);
-	}
-
-	@Override
-	protected void done()
-	{
-		try
-		{
-			Utils.mainFrame.activateFrame();
-		}
-		catch(Exception e)
-		{}
-		if(this.frame != null)
-			this.frame.dispose();
-	}
-
 	private void initFrame(Frame parent)
 	{
 		this.frame = new JFrame();
@@ -72,5 +53,24 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 		}
 		catch(Exception e)
 		{}
+	}
+
+	@Override
+	protected Boolean doInBackground() throws Exception
+	{
+		return Utils.getInfosServer(this.user, this.hard);
+	}
+
+	@Override
+	protected void done()
+	{
+		try
+		{
+			Utils.mainFrame.activateFrame();
+		}
+		catch(Exception e)
+		{}
+		if(this.frame != null)
+			this.frame.dispose();
 	}
 }

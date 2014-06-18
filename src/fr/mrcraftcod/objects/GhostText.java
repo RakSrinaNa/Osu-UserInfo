@@ -32,38 +32,16 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 		}
 	}
 
+	@Override
+	public void changedUpdate(DocumentEvent e)
+	{
+		updateState();
+	}
+
 	public void delete()
 	{
 		unregisterListeners();
 		textfield.removeFocusListener(this);
-	}
-
-	private void registerListeners()
-	{
-		textfield.getDocument().addDocumentListener(this);
-		textfield.addPropertyChangeListener("foreground", this);
-	}
-
-	private void unregisterListeners()
-	{
-		textfield.getDocument().removeDocumentListener(this);
-		textfield.removePropertyChangeListener("foreground", this);
-	}
-
-	public Color getGhostColor()
-	{
-		return ghostColor;
-	}
-
-	public void setGhostColor(Color ghostColor)
-	{
-		this.ghostColor = ghostColor;
-	}
-
-	private void updateState()
-	{
-		isEmpty = textfield.getText().length() == 0;
-		foregroundColor = textfield.getForeground();
 	}
 
 	@Override
@@ -102,16 +80,9 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 		}
 	}
 
-	@Override
-	public void propertyChange(PropertyChangeEvent evt)
+	public Color getGhostColor()
 	{
-		updateState();
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent e)
-	{
-		updateState();
+		return ghostColor;
 	}
 
 	@Override
@@ -121,8 +92,37 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
 	}
 
 	@Override
+	public void propertyChange(PropertyChangeEvent evt)
+	{
+		updateState();
+	}
+
+	@Override
 	public void removeUpdate(DocumentEvent e)
 	{
 		updateState();
+	}
+
+	public void setGhostColor(Color ghostColor)
+	{
+		this.ghostColor = ghostColor;
+	}
+
+	private void registerListeners()
+	{
+		textfield.getDocument().addDocumentListener(this);
+		textfield.addPropertyChangeListener("foreground", this);
+	}
+
+	private void unregisterListeners()
+	{
+		textfield.getDocument().removeDocumentListener(this);
+		textfield.removePropertyChangeListener("foreground", this);
+	}
+
+	private void updateState()
+	{
+		isEmpty = textfield.getText().length() == 0;
+		foregroundColor = textfield.getForeground();
 	}
 }

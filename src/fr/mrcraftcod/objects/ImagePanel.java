@@ -63,6 +63,23 @@ public class ImagePanel extends JPanel
 	}
 
 	/**
+	 * Used to modify the current printed image.
+	 *
+	 * @param image The BufferedImage to show.
+	 */
+	public void setImage(BufferedImage image)
+	{
+		this.image = image;
+		this.repaint();
+		invalidate();
+	}
+
+	public void setPrintLoading(boolean printLoading)
+	{
+		this.printLoading = printLoading;
+	}
+
+	/**
 	 * Paint the image if there is one, if not this will print the "loading" string found in the ResourceBundle
 	 */
 	@Override
@@ -79,22 +96,5 @@ public class ImagePanel extends JPanel
 		}
 		int baseY = (getHeight() - this.image.getHeight()) / 2, baseX = (getWidth() - this.image.getWidth()) / 2;
 		g.drawImage(this.image, baseX, baseY, null);
-	}
-
-	/**
-	 * Used to modify the current printed image.
-	 *
-	 * @param image The BufferedImage to show.
-	 */
-	public void setImage(BufferedImage image)
-	{
-		this.image = image;
-		this.repaint();
-		invalidate();
-	}
-
-	public void setPrintLoading(boolean printLoading)
-	{
-		this.printLoading = printLoading;
 	}
 }

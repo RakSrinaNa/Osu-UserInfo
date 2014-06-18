@@ -54,6 +54,153 @@ public class Configuration
 	}
 
 	/**
+	 * Used to delete a key in the config file.
+	 * 
+	 * @param key The key to delete.
+	 * @return A boolean showing if the action has been done or not.
+	 */
+	public synchronized boolean deleteVar(String key)
+	{
+		Utils.logger.log(Level.INFO, "Deletting var " + key);
+		List<String> oldConfiguration = null;
+		oldConfiguration = currentConfig;
+		FileWriter fileWriter;
+		try
+		{
+			fileWriter = new FileWriter(configFile, false);
+		}
+		catch(final IOException exception)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
+			return false;
+		}
+		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
+		if(oldConfiguration != null)
+			for(String string : oldConfiguration)
+			{
+				if(string.startsWith(key + ":"))
+					continue;
+				printWriter.println(string);
+			}
+		printWriter.close();
+		try
+		{
+			currentConfig = readSmallTextFile(configFile);
+		}
+		catch(IOException e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
+		}
+		Utils.logger.log(Level.INFO, "Config file wrote");
+		return true;
+	}
+
+	/**
+	 * Used to get the boolean associated with the given key in the config file.
+	 * 
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The boolean associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public boolean getBoolean(String key, boolean defaultValue)
+	{
+		try
+		{
+			String s = getVar(key);
+			if(s != null)
+				return Boolean.parseBoolean(s);
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to parse to boolean!", e);
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * Used to get config file.
+	 * 
+	 * @return The config file currently used by this object.
+	 */
+	public File getConfigFile()
+	{
+		return configFile;
+	}
+
+	/**
+	 * Used to get the double associated with the given key in the config file.
+	 * 
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The double associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public double getDouble(String key, double defaultValue)
+	{
+		try
+		{
+			return Double.parseDouble(getVar(key));
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to parse to double!", e);
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * Used to get the integer associated with the given key in the config file.
+	 * 
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The integer associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public int getInt(String key, int defaultValue)
+	{
+		try
+		{
+			return Integer.parseInt(getVar(key));
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to parse to integer!", e);
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * Used to get the long associated with the given key in the config file.
+	 * 
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The long associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public long getLong(String key, long defaultValue)
+	{
+		try
+		{
+			return Long.parseLong(getVar(key));
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to parse to long!", e);
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * Used to get the String associated with the given key in the config file.
+	 * 
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The String associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public String getString(String key, String defaultValue)
+	{
+		String value = getVar(key);
+		return value == null ? defaultValue : value;
+	}
+
+	/**
 	 * Used to get the string associated with the given key in the config file.
 	 * 
 	 * @param key The key of what to get.
@@ -80,38 +227,34 @@ public class Configuration
 	}
 
 	/**
-	 * Used to get the String associated with the given key in the config file.
+	 * Used to read the config file.
 	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The String associated with the given key, defaultValue if the key doesn't exist.
+	 * @param configFile The File object pointing to the config file.
+	 * @return A list representing the read file.
+	 * @throws IOException If the file cannot be read or is not found.
 	 */
-	public String getString(String key, String defaultValue)
+	public List<String> readSmallTextFile(final File configFile) throws IOException
 	{
-		String value = getVar(key);
-		return value == null ? defaultValue : value;
-	}
-
-	/**
-	 * Used to get the boolean associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The boolean associated with the given key, defaultValue if the key doesn't exist.
-	 */
-	public boolean getBoolean(String key, boolean defaultValue)
-	{
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile));
+		List<String> fileLines = null;
 		try
 		{
-			String s = getVar(key);
-			if(s != null)
-				return Boolean.parseBoolean(s);
+			String line = bufferedReader.readLine();
+			fileLines = new ArrayList<String>();
+			while(line != null)
+			{
+				fileLines.add(line);
+				line = bufferedReader.readLine();
+			}
 		}
-		catch(Exception e)
+		catch(IOException exception)
+		{}
+		finally
 		{
-			Utils.logger.log(Level.WARNING, "Failed to parse to boolean!", e);
+			bufferedReader.close();
 		}
-		return defaultValue;
+		currentConfig = fileLines;
+		return fileLines;
 	}
 
 	/**
@@ -161,148 +304,5 @@ public class Configuration
 		}
 		Utils.logger.log(Level.INFO, "Config file wrote");
 		return true;
-	}
-
-	/**
-	 * Used to delete a key in the config file.
-	 * 
-	 * @param key The key to delete.
-	 * @return A boolean showing if the action has been done or not.
-	 */
-	public synchronized boolean deleteVar(String key)
-	{
-		Utils.logger.log(Level.INFO, "Deletting var " + key);
-		List<String> oldConfiguration = null;
-		oldConfiguration = currentConfig;
-		FileWriter fileWriter;
-		try
-		{
-			fileWriter = new FileWriter(configFile, false);
-		}
-		catch(final IOException exception)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
-			return false;
-		}
-		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
-		if(oldConfiguration != null)
-			for(String string : oldConfiguration)
-			{
-				if(string.startsWith(key + ":"))
-					continue;
-				printWriter.println(string);
-			}
-		printWriter.close();
-		try
-		{
-			currentConfig = readSmallTextFile(configFile);
-		}
-		catch(IOException e)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
-		}
-		Utils.logger.log(Level.INFO, "Config file wrote");
-		return true;
-	}
-
-	/**
-	 * Used to read the config file.
-	 * 
-	 * @param configFile The File object pointing to the config file.
-	 * @return A list representing the read file.
-	 * @throws IOException If the file cannot be read or is not found.
-	 */
-	public List<String> readSmallTextFile(final File configFile) throws IOException
-	{
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile));
-		List<String> fileLines = null;
-		try
-		{
-			String line = bufferedReader.readLine();
-			fileLines = new ArrayList<String>();
-			while(line != null)
-			{
-				fileLines.add(line);
-				line = bufferedReader.readLine();
-			}
-		}
-		catch(IOException exception)
-		{}
-		finally
-		{
-			bufferedReader.close();
-		}
-		currentConfig = fileLines;
-		return fileLines;
-	}
-
-	/**
-	 * Used to get the double associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The double associated with the given key, defaultValue if the key doesn't exist.
-	 */
-	public double getDouble(String key, double defaultValue)
-	{
-		try
-		{
-			return Double.parseDouble(getVar(key));
-		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to parse to double!", e);
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Used to get the long associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The long associated with the given key, defaultValue if the key doesn't exist.
-	 */
-	public long getLong(String key, long defaultValue)
-	{
-		try
-		{
-			return Long.parseLong(getVar(key));
-		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to parse to long!", e);
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Used to get the integer associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The integer associated with the given key, defaultValue if the key doesn't exist.
-	 */
-	public int getInt(String key, int defaultValue)
-	{
-		try
-		{
-			return Integer.parseInt(getVar(key));
-		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to parse to integer!", e);
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Used to get config file.
-	 * 
-	 * @return The config file currently used by this object.
-	 */
-	public File getConfigFile()
-	{
-		return configFile;
 	}
 }

@@ -8,6 +8,14 @@ import javax.swing.JPanel;
 public class SearchPanelComponentListener implements ComponentListener
 {
 	@Override
+	public void componentHidden(ComponentEvent e)
+	{}
+
+	@Override
+	public void componentMoved(ComponentEvent e)
+	{}
+
+	@Override
 	public void componentResized(ComponentEvent e)
 	{
 		if(e.getSource() instanceof JPanel)
@@ -20,14 +28,6 @@ public class SearchPanelComponentListener implements ComponentListener
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent e)
-	{}
-
-	@Override
 	public void componentShown(ComponentEvent e)
-	{}
-
-	@Override
-	public void componentHidden(ComponentEvent e)
 	{}
 }

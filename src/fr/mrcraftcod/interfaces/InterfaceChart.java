@@ -64,6 +64,11 @@ public class InterfaceChart extends JFrame
 		pack();
 	}
 
+	public InterfaceChart getFrame()
+	{
+		return this;
+	}
+
 	private JFreeChart createAccuracyChart(String title, String user, List<Stats> stats, Shape shape)
 	{
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "%", null, true, true, false);
@@ -274,11 +279,6 @@ public class InterfaceChart extends JFrame
 		chartPanel.setDomainZoomable(true);
 		chartPanel.setRangeZoomable(true);
 		return chartPanel;
-	}
-
-	public InterfaceChart getFrame()
-	{
-		return this;
 	}
 
 	private XYDataset processStatsAccuracy(List<Stats> stats)

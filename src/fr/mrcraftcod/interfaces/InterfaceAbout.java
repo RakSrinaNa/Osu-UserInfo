@@ -97,6 +97,17 @@ public class InterfaceAbout extends JFrame
 		Utils.mainFrame.hideFrame();
 	}
 
+	public String[][] getValuesTable()
+	{
+		return valuesTable;
+	}
+
+	public String[][] setValuesTable(String[][] valuesTable)
+	{
+		this.valuesTable = valuesTable;
+		return valuesTable;
+	}
+
 	private InterfaceAbout getFrame()
 	{
 		return this;
@@ -117,16 +128,5 @@ public class InterfaceAbout extends JFrame
 			values[i++][1] = traducers.get(language);
 		}
 		return values;
-	}
-
-	public String[][] getValuesTable()
-	{
-		return valuesTable;
-	}
-
-	public String[][] setValuesTable(String[][] valuesTable)
-	{
-		this.valuesTable = valuesTable;
-		return valuesTable;
 	}
 }

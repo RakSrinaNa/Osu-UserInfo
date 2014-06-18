@@ -10,6 +10,14 @@ import fr.mrcraftcod.objects.JButtonMode;
 public class ModesComponentListener implements ComponentListener
 {
 	@Override
+	public void componentHidden(ComponentEvent e)
+	{}
+
+	@Override
+	public void componentMoved(ComponentEvent e)
+	{}
+
+	@Override
 	public void componentResized(ComponentEvent e)
 	{
 		if(e.getComponent() instanceof JPanel)
@@ -31,14 +39,6 @@ public class ModesComponentListener implements ComponentListener
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent e)
-	{}
-
-	@Override
 	public void componentShown(ComponentEvent e)
-	{}
-
-	@Override
-	public void componentHidden(ComponentEvent e)
 	{}
 }

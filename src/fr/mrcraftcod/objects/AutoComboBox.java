@@ -170,6 +170,18 @@ public class AutoComboBox extends JComboBox
 		private boolean isStrict;
 		private AutoComboBox autoComboBox;
 
+		public Java2sAutoTextField(List list, boolean ac)
+		{
+			this.isCaseSensitive = false;
+			this.isStrict = false;
+			this.autoComboBox = null;
+			if(list == null)
+				throw new IllegalArgumentException("values can not be null");
+			this.dataList = list;
+			init(ac);
+			return;
+		}
+
 		Java2sAutoTextField(List list, AutoComboBox b, boolean ac)
 		{
 			this.isCaseSensitive = false;
@@ -183,44 +195,9 @@ public class AutoComboBox extends JComboBox
 			return;
 		}
 
-		public Java2sAutoTextField(List list, boolean ac)
-		{
-			this.isCaseSensitive = false;
-			this.isStrict = false;
-			this.autoComboBox = null;
-			if(list == null)
-				throw new IllegalArgumentException("values can not be null");
-			this.dataList = list;
-			init(ac);
-			return;
-		}
-
 		public List getDataList()
 		{
 			return this.dataList;
-		}
-
-		private String getMatch(String s)
-		{
-			for(int i = 0; i < this.dataList.size(); i++)
-			{
-				String s1 = this.dataList.get(i).toString();
-				if(s1 != null)
-				{
-					if(!this.isCaseSensitive && s1.toLowerCase().startsWith(s.toLowerCase()))
-						return s1;
-					if(this.isCaseSensitive && s1.startsWith(s))
-						return s1;
-				}
-			}
-			return null;
-		}
-
-		private void init(boolean ac)
-		{
-			setDocument(new AutoDocument(ac));
-			if(this.isStrict && this.dataList.size() > 0)
-				setText(this.dataList.get(0).toString());
 		}
 
 		public boolean isCaseSensitive()
@@ -265,6 +242,29 @@ public class AutoComboBox extends JComboBox
 		{
 			this.isStrict = flag;
 		}
+
+		private String getMatch(String s)
+		{
+			for(int i = 0; i < this.dataList.size(); i++)
+			{
+				String s1 = this.dataList.get(i).toString();
+				if(s1 != null)
+				{
+					if(!this.isCaseSensitive && s1.toLowerCase().startsWith(s.toLowerCase()))
+						return s1;
+					if(this.isCaseSensitive && s1.startsWith(s))
+						return s1;
+				}
+			}
+			return null;
+		}
+
+		private void init(boolean ac)
+		{
+			setDocument(new AutoDocument(ac));
+			if(this.isStrict && this.dataList.size() > 0)
+				setText(this.dataList.get(0).toString());
+		}
 	}
 
 	private static final long serialVersionUID = 2903956019272831092L;
@@ -289,17 +289,17 @@ public class AutoComboBox extends JComboBox
 			}
 
 			@Override
-			protected void fireContentsChanged(Object obj, int i, int j)
-			{
-				if(!AutoComboBox.this.isFired)
-					super.fireContentsChanged(obj, i, j);
-			}
-
-			@Override
 			public void removeElement(Object anObject)
 			{
 				super.removeElement(anObject);
 				removeDataList(anObject);
+			}
+
+			@Override
+			protected void fireContentsChanged(Object obj, int i, int j)
+			{
+				if(!AutoComboBox.this.isFired)
+					super.fireContentsChanged(obj, i, j);
 			}
 		});
 		setEditor(this.autoTextFieldEditor);
@@ -314,13 +314,6 @@ public class AutoComboBox extends JComboBox
 		Collections.sort(list, new ComparatorIgnoreCase<String>());
 		this.autoTextFieldEditor.getAutoTextFieldEditor().setDataList(list);
 		setModel(new DefaultComboBoxModel(list.toArray()));
-	}
-
-	@Override
-	protected void fireActionEvent()
-	{
-		if(!this.isFired)
-			super.fireActionEvent();
 	}
 
 	public List getDataList()
@@ -369,6 +362,18 @@ public class AutoComboBox extends JComboBox
 		setModel(new DefaultComboBoxModel(list.toArray()));
 	}
 
+	public void setStrict(boolean flag)
+	{
+		this.autoTextFieldEditor.getAutoTextFieldEditor().setStrict(flag);
+	}
+
+	@Override
+	protected void fireActionEvent()
+	{
+		if(!this.isFired)
+			super.fireActionEvent();
+	}
+
 	void setSelectedValue(Object obj)
 	{
 		if(this.isFired)
@@ -378,10 +383,5 @@ public class AutoComboBox extends JComboBox
 		fireItemStateChanged(new ItemEvent(this, 701, this.selectedItemReminder, 1));
 		this.isFired = false;
 		return;
-	}
-
-	public void setStrict(boolean flag)
-	{
-		this.autoTextFieldEditor.getAutoTextFieldEditor().setStrict(flag);
 	}
 }

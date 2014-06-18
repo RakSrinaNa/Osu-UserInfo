@@ -37,6 +37,63 @@ public class Updater
 	private static JFrame context;
 
 	/**
+	 * Used to choose the version to download.
+	 *
+	 * @return The type of version to download.
+	 */
+	public static int update(JFrame con)
+	{
+		Utils.logger.log(Level.INFO, "Checking updates...");
+		context = con;
+		File updateFile = new File(".", "updates.xml");
+		File jarFile = new File(System.getProperty("user.dir"), Main.APPNAME + ".jar");
+		getLastVersionBitbucket(updateFile, LINKXML);
+		try
+		{
+			parseVersions(updateFile);
+		}
+		catch(SAXException | IOException | ParserConfigurationException e)
+		{
+			updateFile.delete();
+			return UPDATEERROR;
+		}
+		updateFile.delete();
+		boolean devMode = Utils.config.getBoolean("devMode", false);
+		int result = NOUPDATE;
+		if(versionsUTD == null)
+			result = UPDATEERROR;
+		else if(versionsUTD.size() < 1)
+			result = UPDATEERROR;
+		for(String key : versionsUTD.keySet())
+			Utils.logger.log(Level.INFO, "Version " + key + " latest is " + versionsUTD.get(key) + ", you are in " + Main.VERSION);
+		if(!devMode && Main.VERSION.contains("b"))
+			result = update(jarFile, PUBLICFDEV);
+		if(devMode && !isDevUpToDate())
+			result = update(jarFile, DEVELOPER);
+		else if(!isPublicUpToDate(devMode))
+			result = update(jarFile, PUBLIC);
+		else
+			result = NOUPDATE;
+		if(result == UPDATEDPUBLIC || result == UPDATEDDEV)
+			try
+			{
+				Utils.startup.setPercent(100);
+				JOptionPane.showMessageDialog(context, String.format(Utils.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
+				Utils.exit(false);
+				String javaHome = System.getProperty("java.home");
+				File f = new File(javaHome);
+				f = new File(f, "bin");
+				f = new File(f, "javaw.exe");
+				Runtime.getRuntime().exec(f.getAbsolutePath() + " -jar " + jarFile.getAbsolutePath());
+			}
+			catch(final IOException e)
+			{
+				Utils.logger.log(Level.SEVERE, "Error launching new version", e);
+			}
+		return result;
+	}
+
+	/**
 	 * Used to download to wanted JAR.
 	 *
 	 * @param newFile The file where to save the new JAR.
@@ -322,62 +379,5 @@ public class Updater
 		{
 			return UPDATEERROR;
 		}
-	}
-
-	/**
-	 * Used to choose the version to download.
-	 *
-	 * @return The type of version to download.
-	 */
-	public static int update(JFrame con)
-	{
-		Utils.logger.log(Level.INFO, "Checking updates...");
-		context = con;
-		File updateFile = new File(".", "updates.xml");
-		File jarFile = new File(System.getProperty("user.dir"), Main.APPNAME + ".jar");
-		getLastVersionBitbucket(updateFile, LINKXML);
-		try
-		{
-			parseVersions(updateFile);
-		}
-		catch(SAXException | IOException | ParserConfigurationException e)
-		{
-			updateFile.delete();
-			return UPDATEERROR;
-		}
-		updateFile.delete();
-		boolean devMode = Utils.config.getBoolean("devMode", false);
-		int result = NOUPDATE;
-		if(versionsUTD == null)
-			result = UPDATEERROR;
-		else if(versionsUTD.size() < 1)
-			result = UPDATEERROR;
-		for(String key : versionsUTD.keySet())
-			Utils.logger.log(Level.INFO, "Version " + key + " latest is " + versionsUTD.get(key) + ", you are in " + Main.VERSION);
-		if(!devMode && Main.VERSION.contains("b"))
-			result = update(jarFile, PUBLICFDEV);
-		if(devMode && !isDevUpToDate())
-			result = update(jarFile, DEVELOPER);
-		else if(!isPublicUpToDate(devMode))
-			result = update(jarFile, PUBLIC);
-		else
-			result = NOUPDATE;
-		if(result == UPDATEDPUBLIC || result == UPDATEDDEV)
-			try
-			{
-				Utils.startup.setPercent(100);
-				JOptionPane.showMessageDialog(context, String.format(Utils.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
-				Utils.exit(false);
-				String javaHome = System.getProperty("java.home");
-				File f = new File(javaHome);
-				f = new File(f, "bin");
-				f = new File(f, "javaw.exe");
-				Runtime.getRuntime().exec(f.getAbsolutePath() + " -jar " + jarFile.getAbsolutePath());
-			}
-			catch(final IOException e)
-			{
-				Utils.logger.log(Level.SEVERE, "Error launching new version", e);
-			}
-		return result;
 	}
 }

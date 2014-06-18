@@ -809,14 +809,6 @@ public class Interface extends JFrame // TODO Javadoc
 		Utils.getInfos(Utils.lastUser.getUsername(), showerror);
 	}
 
-	private void updateLevel(double level)
-	{
-		Utils.logger.log(Level.INFO, "Setting level to " + level);
-		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
-		this.levelBar.setValue((int) progress);
-		this.levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
-	}
-
 	public void updateStatsDates(User user)
 	{
 		String lastDate = (String) this.statsDateModel.getSelectedItem();
@@ -846,5 +838,13 @@ public class Interface extends JFrame // TODO Javadoc
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 			new InterfaceNotification(user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
+	}
+
+	private void updateLevel(double level)
+	{
+		Utils.logger.log(Level.INFO, "Setting level to " + level);
+		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
+		this.levelBar.setValue((int) progress);
+		this.levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
 	}
 }
