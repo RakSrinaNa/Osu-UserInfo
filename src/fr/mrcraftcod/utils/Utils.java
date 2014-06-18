@@ -42,6 +42,11 @@ import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
 
+/**
+ * Class used to do a lot of things.
+ *
+ * @author MrCraftCod
+ */
 public class Utils
 {
 	public enum Mods
