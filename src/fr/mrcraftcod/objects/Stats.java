@@ -17,7 +17,7 @@ import fr.mrcraftcod.utils.Utils;
 public class Stats implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -3548705459172185871L;
-	private static final int STATS_VERSION = 2;
+	private static final int STATS_VERSION = 3;
 	private transient long totalHits;
 	private transient double level;
 	private long rankedScore;
@@ -695,6 +695,8 @@ public class Stats implements Serializable, Cloneable
 			this.count100 = ois.readLong();
 			this.count50 = ois.readLong();
 		}
+		if(version >= 3)
+			this.level = ois.readDouble();
 		updateTotalHits();
 	}
 
@@ -721,6 +723,7 @@ public class Stats implements Serializable, Cloneable
 		oos.writeLong(this.count300);
 		oos.writeLong(this.count100);
 		oos.writeLong(this.count50);
+		oos.writeDouble(this.level);
 		oos.flush();
 	}
 }
