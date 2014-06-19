@@ -58,7 +58,7 @@ public class InterfaceChart extends JFrame
 		contentPane.addTab(Utils.resourceBundle.getString("ranked_score"), chartRankedScorePanel);
 		contentPane.addTab(Utils.resourceBundle.getString("total_score"), chartTotalScorePanel);
 		contentPane.addTab(Utils.resourceBundle.getString("play_count"), chartPlayCountPanel);
-		contentPane.addTab(Utils.resourceBundle.getString("level"), chartLevelPanel);
+		contentPane.addTab(Utils.resourceBundle.getString("graph_level"), chartLevelPanel);
 		contentPane.addTab("300 / 100 / 50", chartHitsPanel);
 		contentPane.addTab("SS / S / A", chartRanksPanel);
 		setContentPane(contentPane);
@@ -127,7 +127,7 @@ public class InterfaceChart extends JFrame
 		chart.setTextAntiAlias(true);
 		XYPlot xyPlot = chart.getXYPlot();
 		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("level"));
+		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("graph_level"));
 		axis.setTickLabelPaint(colorLine1);
 		axis.setAutoRangeIncludesZero(false);
 		axis.setTickLabelFont(Utils.fontMain);
@@ -334,7 +334,7 @@ public class InterfaceChart extends JFrame
 
 	private XYDataset processStatsLevel(List<Stats> stats)
 	{
-		TimeSeries serie = new TimeSeries("Lvl");
+		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("graph_level"));
 		for(Stats stat : stats)
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getLevel());
 		TimeSeriesCollection collection = new TimeSeriesCollection();

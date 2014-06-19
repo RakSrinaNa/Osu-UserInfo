@@ -19,7 +19,7 @@ public class Stats implements Serializable, Cloneable
 	private static final long serialVersionUID = -3548705459172185871L;
 	private static final int STATS_VERSION = 3;
 	private transient long totalHits;
-	private transient double level;
+	private double level;
 	private long rankedScore;
 	private long totalScore;
 	private long date;
