@@ -565,7 +565,7 @@ public class Utils
 				if(isNewVersion(config.getString("last_version", Main.VERSION)))
 					new InterfaceChangelog(Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
 				config.writeVar("last_version", Main.VERSION);
-				mainFrame = new Interface();
+				mainFrame = new Interface(config.getInt("lastmode", 0));
 			}
 			catch(Exception exception)
 			{

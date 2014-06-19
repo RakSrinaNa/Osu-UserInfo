@@ -103,6 +103,11 @@ public class Interface extends JFrame // TODO Javadoc
 		this(null);
 	}
 
+	public Interface(int defaultMode) throws IOException
+	{
+		this(null, null, defaultMode);
+	}
+
 	public Interface(String user) throws IOException
 	{
 		this(user, null);
@@ -781,6 +786,7 @@ public class Interface extends JFrame // TODO Javadoc
 
 	public void switchMode(int mode, boolean checkInfos)
 	{
+		Utils.config.writeVar("lastmode", mode);
 		this.buttonStandard.setEnabled(true);
 		this.buttonTaiko.setEnabled(true);
 		this.buttonCTB.setEnabled(true);
