@@ -261,7 +261,7 @@ public class Utils
 	 */
 	public static void getInfos(boolean showerror)
 	{
-		getInfos(mainFrame.userNameFieldTextComponent.getText(), showerror);
+		getInfos(mainFrame.userNameFieldTextComponent.getText(), showerror, false);
 	}
 
 	/**
@@ -269,10 +269,11 @@ public class Utils
 	 *
 	 * @param user The user to get the stats.
 	 * @param showerror //TODO
+	 * @param force Force the function to update stats on screen even if they are the same.
 	 */
-	public static void getInfos(String user, boolean showerror)
+	public static void getInfos(String user, boolean showerror, boolean force)
 	{
-		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true));
+		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true), force);
 		load.execute();
 	}
 
@@ -281,9 +282,10 @@ public class Utils
 	 *
 	 * @param user The user to get the infos.
 	 * @param showerror //TODO
+	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
 	 * @return True if the stats have changed, false if the stats are the same or cannot be found.
 	 */
-	public static boolean getInfosServer(String user, boolean showerror)
+	public static boolean getInfosServer(String user, boolean showerror, boolean forceDisplay)
 	{
 		if(!isValidTime() || !isValidUser(user))
 			return false;
@@ -332,13 +334,17 @@ public class Utils
 			currentStats.setCount100(jsonResponse.getLong("count100"));
 			currentStats.setCount50(jsonResponse.getLong("count50"));
 			currentStats.updateTotalHits();
-			if(currentStats.equals(Utils.lastStats))
+			if(!forceDisplay && currentStats.equals(Utils.lastStats))
 				return false;
 			mainFrame.username.setForeground(getRandomColor());
 			mainFrame.updateStatsDates(currentUser);
 			mainFrame.displayStats(currentUser, currentStats);
 			mainFrame.updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats, true);
 			mainFrame.setValidButonIcon("R");
+			if(forceDisplay || !currentUser.isSameUser(Utils.lastUser))
+				mainFrame.setFlagAndAvatar(currentUser);
+			if(currentStats.equals(Utils.lastStats))
+				return false;
 			mainFrame.userNameFieldTextComponent.setText(currentUser.getUsername());
 			currentUser.setStats(!showerror, currentStats, mainFrame.getSelectedMode());
 			if(tracked)
@@ -347,8 +353,6 @@ public class Utils
 				mainFrame.lastStatsDate.setEnabled(mainFrame.track.isSelected());
 				mainFrame.lastStatsDateBox.setEnabled(mainFrame.track.isSelected());
 			}
-			if(!currentUser.isSameUser(Utils.lastUser))
-				mainFrame.setFlagAndAvatar(currentUser);
 			Utils.lastStats = currentStats;
 			Utils.lastUser = currentUser;
 		}

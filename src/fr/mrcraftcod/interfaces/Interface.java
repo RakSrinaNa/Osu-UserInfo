@@ -649,7 +649,7 @@ public class Interface extends JFrame // TODO Javadoc
 		getFrame().toFront();
 		this.userNameField.requestFocusInWindow();
 		if(user != null)
-			Utils.getInfos(user, false);
+			Utils.getInfos(user, false, true);
 	}
 
 	public void activateFrame()
@@ -807,7 +807,7 @@ public class Interface extends JFrame // TODO Javadoc
 			break;
 		}
 		if(checkInfos)
-			Utils.getInfos(Utils.lastUser.getUsername(), false);
+			Utils.getInfos(Utils.lastUser.getUsername(), false, false);
 	}
 
 	public void updateAutoCompletionStatus(boolean status)
@@ -817,7 +817,7 @@ public class Interface extends JFrame // TODO Javadoc
 
 	public void updateInfos(boolean showerror)
 	{
-		Utils.getInfos(Utils.lastUser.getUsername(), showerror);
+		Utils.getInfos(Utils.lastUser.getUsername(), showerror, false);
 	}
 
 	public void updateStatsDates(User user)

@@ -22,6 +22,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	private JFrame frame;
 	private String user;
 	private boolean hard;
+	private boolean force;
 
 	/**
 	 * Constructor.
@@ -31,10 +32,11 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	 * @param hard Fetch the infos in 'hard mode'.
 	 * @param openFrame Open or not the loading frame.
 	 */
-	public LoadingWorker(Frame parent, String user, boolean hard, boolean openFrame)
+	public LoadingWorker(Frame parent, String user, boolean hard, boolean openFrame, boolean force)
 	{
 		this.user = user;
 		this.hard = hard;
+		this.force = force;
 		if(openFrame)
 			initFrame(parent);
 	}
@@ -81,7 +83,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
-		return Utils.getInfosServer(this.user, this.hard);
+		return Utils.getInfosServer(this.user, this.hard, this.force);
 	}
 
 	/**
