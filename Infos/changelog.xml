@@ -56,7 +56,15 @@
 		</changes>
 	</version>
 	<version>
-		<name>1.6b16</name>
-		<changes>{+}Changelog frame</changes>
+		<name>1.6b17</name>
+		<changes>
+		{*}Fix wrong values in notification popup
+		{+}Show differences between stats when refreshing user info if the user is not tracked
+		{*}Don't remove user in the search bar when tracking/untracking user
+		{*}Allow to save up to 99999 stats
+		{*}Better changelog frame
+		{+}Add level graph
+		{+}Open frame with last selected mode
+		</changes>
 	</version>
 </changelog>
