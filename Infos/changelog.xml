@@ -53,6 +53,7 @@
 			{+}Add graphs
 			{*}Modify the way to select mode (now like on the user profile page)
 			{*}Show differences between stats when refreshing user info if the user is not tracked
+			{+}Possibility to open the changelog for the current version from the 'About' section
 		</changes>
 	</version>
 	<version>
@@ -65,6 +66,12 @@
 		{*}Better changelog frame
 		{+}Add level graph
 		{+}Open frame with last selected mode
+		</changes>
+	</version>
+	<version>
+		<name>1.6b18</name>
+		<changes>
+		{+}Possibility to open the changelog for the current version from the 'About' section
 		</changes>
 	</version>
 </changelog>

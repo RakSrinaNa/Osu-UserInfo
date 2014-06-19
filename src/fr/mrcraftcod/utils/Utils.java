@@ -191,6 +191,14 @@ public class Utils
 	}
 
 	/**
+	 * Used to create a new changelog frame for this version.
+	 */
+	public static void getChangelogFrame()
+	{
+		new InterfaceChangelog(Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
+	}
+
+	/**
 	 * Used to get the country flag for a country.
 	 *
 	 * @param country The country to get the flag.
@@ -567,7 +575,7 @@ public class Utils
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
 				if(isNewVersion(config.getString("last_version", Main.VERSION)))
-					new InterfaceChangelog(Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
+					getChangelogFrame();
 				config.writeVar("last_version", Main.VERSION);
 				mainFrame = new Interface(config.getInt("lastmode", 0));
 			}
