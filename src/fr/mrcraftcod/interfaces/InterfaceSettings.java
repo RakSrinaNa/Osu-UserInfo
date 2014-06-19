@@ -200,7 +200,7 @@ public class InterfaceSettings extends JFrame
 			try
 			{
 				Utils.reloadResourceBundleWithLocale(this.languages.get(this.languageBox.getSelectedItem()));
-				Utils.newFrame(Utils.lastUser.getUsername(), Utils.mainFrame.getLocation());
+				Utils.newFrame(Utils.lastUser.getUsername(), Utils.mainFrame.getLocation(), Utils.mainFrame.getSelectedMode());
 			}
 			catch(IOException e)
 			{

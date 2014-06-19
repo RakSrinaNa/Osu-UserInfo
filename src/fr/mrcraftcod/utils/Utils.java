@@ -622,6 +622,20 @@ public class Utils
 	}
 
 	/**
+	 * Used to create a new frame.
+	 *
+	 * @param user The user to show in the frame.
+	 * @param parent The point where to open the frame.
+	 * @param defaultMode The selected mode.
+	 * @throws IOException If there were an error when creating the frame.
+	 */
+	public static void newFrame(String user, Point parent, int defaultMode) throws IOException
+	{
+		mainFrame.dispose();
+		mainFrame = new Interface(user, parent, defaultMode);
+	}
+
+	/**
 	 * Used to open the user profile page.
 	 *
 	 * @param user The user.

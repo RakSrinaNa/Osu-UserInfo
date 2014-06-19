@@ -108,8 +108,13 @@ public class Interface extends JFrame // TODO Javadoc
 		this(user, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Interface(String user, Point parent) throws IOException
+	{
+		this(user, parent, 0);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Interface(String user, Point parent, int defaultMode) throws IOException
 	{
 		super(Main.APPNAME + " v" + Main.VERSION);
 		int pictureButtonSize = 20;
@@ -256,7 +261,7 @@ public class Interface extends JFrame // TODO Javadoc
 		this.buttonMania.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
 		this.buttonMania.setFocusPainted(false);
 		this.buttonMania.addActionListener(new ModeManiaActionListener());
-		switchMode(0, false);
+		switchMode(defaultMode, false);
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.LINE_START;
