@@ -49,6 +49,7 @@ public class InterfaceChart extends JFrame
 		ChartPanel chartRankedScorePanel = getChartInPannel(createRankedScoreChart(title, user, stats, shape));
 		ChartPanel chartTotalScorePanel = getChartInPannel(createTotalScoreChart(title, user, stats, shape));
 		ChartPanel chartPlayCountPanel = getChartInPannel(createPlayCountChart(title, user, stats, shape));
+		ChartPanel chartLevelPanel = getChartInPannel(createLevelChart(title, user, stats, shape));
 		ChartPanel chartHitsPanel = getChartInPannel(createHitsChart(title, user, stats));
 		ChartPanel chartRanksPanel = getChartInPannel(createRanksChart(title, user, stats));
 		JTabbedPane contentPane = new JTabbedPane();
@@ -57,6 +58,7 @@ public class InterfaceChart extends JFrame
 		contentPane.addTab(Utils.resourceBundle.getString("ranked_score"), chartRankedScorePanel);
 		contentPane.addTab(Utils.resourceBundle.getString("total_score"), chartTotalScorePanel);
 		contentPane.addTab(Utils.resourceBundle.getString("play_count"), chartPlayCountPanel);
+		contentPane.addTab(Utils.resourceBundle.getString("level"), chartLevelPanel);
 		contentPane.addTab("300 / 100 / 50", chartHitsPanel);
 		contentPane.addTab("SS / S / A", chartRanksPanel);
 		setContentPane(contentPane);
@@ -115,6 +117,36 @@ public class InterfaceChart extends JFrame
 		plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", NumberFormat.getNumberInstance(), percentFormat));
 		plot.setLegendLabelGenerator(new StandardPieSectionLabelGenerator("{0} : {1}"));
 		plot.setNoDataMessage("You shouldn't be there! How have you come here, are you a wizard??! :o");
+		return chart;
+	}
+
+	private JFreeChart createLevelChart(String title, String user, List<Stats> stats, Shape shape)
+	{
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
+		chart.setAntiAlias(true);
+		chart.setTextAntiAlias(true);
+		XYPlot xyPlot = chart.getXYPlot();
+		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+		NumberAxis axis = new NumberAxis(Utils.resourceBundle.getString("level"));
+		axis.setTickLabelPaint(colorLine1);
+		axis.setAutoRangeIncludesZero(false);
+		axis.setTickLabelFont(Utils.fontMain);
+		axis.setLabelFont(Utils.fontMain);
+		NumberFormat format = NumberFormat.getInstance(Utils.locale);
+		format.setMaximumFractionDigits(4);
+		axis.setNumberFormatOverride(format);
+		xyPlot.setRangeAxis(0, axis);
+		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
+		xyPlot.setDataset(0, processStatsLevel(stats));
+		xyPlot.mapDatasetToRangeAxis(0, 0);
+		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+		xyPlot.setRenderer(0, renderer);
+		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesPaint(0, colorLine1);
+		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
+		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
+		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
+		axisDate.setTickLabelFont(Utils.fontMain);
+		axisDate.setLabelFont(Utils.fontMain);
 		return chart;
 	}
 
@@ -298,6 +330,16 @@ public class InterfaceChart extends JFrame
 		data.setValue("100", stats.get(stats.size() - 1).getCount100());
 		data.setValue("50", stats.get(stats.size() - 1).getCount50());
 		return data;
+	}
+
+	private XYDataset processStatsLevel(List<Stats> stats)
+	{
+		TimeSeries serie = new TimeSeries("Lvl");
+		for(Stats stat : stats)
+			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getLevel());
+		TimeSeriesCollection collection = new TimeSeriesCollection();
+		collection.addSeries(serie);
+		return collection;
 	}
 
 	private XYDataset processStatsPlayCount(List<Stats> stats)
