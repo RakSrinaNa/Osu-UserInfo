@@ -44,13 +44,13 @@ public class InterfaceSettings extends JFrame
 		super(Utils.resourceBundle.getString("settings"));
 		this.languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
-		getFrame().setIconImages(Utils.icons);
-		getFrame().setLayout(new GridBagLayout());
-		getFrame().setResizable(true);
-		getFrame().setAlwaysOnTop(false);
-		getFrame().setVisible(true);
-		getFrame().getContentPane().setBackground(Utils.backColor);
-		getFrame().addWindowListener(new SettingsWindowListener());
+		setIconImages(Utils.icons);
+		setLayout(new GridBagLayout());
+		setResizable(true);
+		setAlwaysOnTop(false);
+		setVisible(true);
+		getContentPane().setBackground(Utils.backColor);
+		addWindowListener(new SettingsWindowListener());
 		this.languageBox = new JComboBox<String>(getLanguages());
 		this.languageBox.setSelectedItem(getLang(Utils.config.getString("locale", null)));
 		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language"));
@@ -87,42 +87,45 @@ public class InterfaceSettings extends JFrame
 		c.gridwidth = 2;
 		c.weightx = 1;
 		c.weighty = 1;
-		getFrame().add(this.autoCompletionCheck, c);
+		add(this.autoCompletionCheck, c);
 		c.gridy = lign++;
-		getFrame().add(this.devModeCheck, c);
+		add(this.devModeCheck, c);
 		c.gridy = lign++;
-		getFrame().add(this.loadingCheck, c);
+		add(this.loadingCheck, c);
 		c.gridy = lign++;
-		getFrame().add(this.keepDateCheck, c);
+		add(this.keepDateCheck, c);
 		c.gridy = lign++;
-		getFrame().add(this.notificationCheck, c);
+		add(this.notificationCheck, c);
 		c.gridy = lign++;
-		getFrame().add(this.systemTrayCheck, c);
+		add(this.systemTrayCheck, c);
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = lign++;
-		getFrame().add(this.textNumberKeepStats, c);
+		add(this.textNumberKeepStats, c);
 		c.gridx = 1;
-		getFrame().add(this.numberKeepStats, c);
+		add(this.numberKeepStats, c);
 		c.gridy = lign++;
 		c.gridx = 0;
-		getFrame().add(languageText, c);
+		add(languageText, c);
 		c.gridx = 1;
-		getFrame().add(this.languageBox, c);
+		add(this.languageBox, c);
 		c.gridwidth = 2;
 		c.gridy = lign++;
 		c.gridx = 0;
-		getFrame().add(this.buttonReturn, c);
+		add(this.buttonReturn, c);
 		int frameHeight = lign * 30 + 20;
-		getFrame().setPreferredSize(new Dimension(frameWidth, frameHeight));
-		getFrame().setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
-		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		getFrame().setLocationRelativeTo(Utils.mainFrame.getFrame());
+		setPreferredSize(new Dimension(frameWidth, frameHeight));
+		setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setLocationRelativeTo(Utils.mainFrame.getFrame());
 		Utils.mainFrame.hideFrame();
-		getFrame().toFront();
-		getFrame().pack();
+		toFront();
+		pack();
 	}
 
+	/**
+	 * Used to close the frame.
+	 */
 	public void closeFrame()
 	{
 		if(isSettingsModified())
@@ -145,10 +148,15 @@ public class InterfaceSettings extends JFrame
 	 */
 	public void hideFrame()
 	{
-		getFrame().setFocusable(false);
-		getFrame().setEnabled(false);
+		setFocusable(false);
+		setEnabled(false);
 	}
 
+	/**
+	 * Used to know if the locale has been modified.
+	 *
+	 * @return True if modified, false of not.
+	 */
 	public boolean isLocaleModified()
 	{
 		return !Utils.config.getString("locale", null).equals(this.languages.get(this.languageBox.getSelectedItem()));
@@ -174,7 +182,7 @@ public class InterfaceSettings extends JFrame
 		if(save)
 			save();
 		Utils.mainFrame.showFrame();
-		getFrame().dispose();
+		dispose();
 	}
 
 	/**
@@ -213,16 +221,17 @@ public class InterfaceSettings extends JFrame
 	 */
 	public void showFrame()
 	{
-		getFrame().setFocusable(true);
-		getFrame().setEnabled(true);
-		getFrame().toFront();
+		setFocusable(true);
+		setEnabled(true);
+		toFront();
 	}
 
-	private InterfaceSettings getFrame()
-	{
-		return this;
-	}
-
+	/**
+	 * Used to get the key of the name language.
+	 *
+	 * @param string The language key (fr, en, it ...).
+	 * @return The name of the language.
+	 */
 	private String getLang(String string)
 	{
 		for(Entry<String, String> s : this.languages.entrySet())
@@ -232,6 +241,11 @@ public class InterfaceSettings extends JFrame
 		return "System language";
 	}
 
+	/**
+	 * Used to get the available languages.
+	 *
+	 * @return The languages.
+	 */
 	private String[] getLanguages()
 	{
 		this.languages.put(Utils.resourceBundle.getString("system_language"), null);

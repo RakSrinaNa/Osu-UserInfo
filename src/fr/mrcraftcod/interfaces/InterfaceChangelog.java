@@ -17,12 +17,22 @@ import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.JChangelogPanel;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Interface to show changelogs.
+ *
+ * @author MrCraftCod
+ */
 public class InterfaceChangelog extends JFrame
 {
 	private static final long serialVersionUID = -8709993783125141424L;
 	private LinkedHashMap<String, JChangelogPanel> panels;
 	private JComboBox<String> versionSelection;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param changelog The changelogs.
+	 */
 	public InterfaceChangelog(LinkedHashMap<String, String> changelog)
 	{
 		super("Changelog");
@@ -34,6 +44,12 @@ public class InterfaceChangelog extends JFrame
 		initFrame(changelog);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param version The version of the changelog.
+	 * @param changelog The changelog.
+	 */
 	public InterfaceChangelog(String version, String changelog)
 	{
 		super("Changelog");
@@ -47,6 +63,12 @@ public class InterfaceChangelog extends JFrame
 		initFrame(changes);
 	}
 
+	/**
+	 * Used to create a JChangelogPanel with a list of changes.
+	 *
+	 * @param list The changes in this panel.
+	 * @return The JChangelogPanel with the changes.
+	 */
 	private JChangelogPanel createChangePanel(ArrayList<String> list)
 	{
 		JChangelogPanel panel = new JChangelogPanel(list);
@@ -57,6 +79,12 @@ public class InterfaceChangelog extends JFrame
 		return panel;
 	}
 
+	/**
+	 * Used to get a change formatted (with colour and without the {} indicator).
+	 *
+	 * @param change The change to format.
+	 * @return The formatted change.
+	 */
 	private String getFormatedChange(String change)
 	{
 		StringBuilder sb = new StringBuilder("<font color=\"");
@@ -79,6 +107,11 @@ public class InterfaceChangelog extends JFrame
 		return sb.append("\">").append(change.replaceFirst(typePattern, "")).append("</font>").toString();
 	}
 
+	/**
+	 * Used to initialise the frame.
+	 *
+	 * @param changelog The changelogs of the frame.
+	 */
 	private void initFrame(LinkedHashMap<String, String> changelog)
 	{
 		this.panels = processTexts(changelog);
@@ -102,6 +135,12 @@ public class InterfaceChangelog extends JFrame
 		toFront();
 	}
 
+	/**
+	 * Used to create changelog panels.
+	 *
+	 * @param changelog The changelogs.
+	 * @return The JChangelogPanels
+	 */
 	private LinkedHashMap<String, JChangelogPanel> processTexts(LinkedHashMap<String, String> changelog)
 	{
 		LinkedHashMap<String, JChangelogPanel> changes = new LinkedHashMap<String, JChangelogPanel>();
@@ -122,6 +161,11 @@ public class InterfaceChangelog extends JFrame
 		return changes;
 	}
 
+	/**
+	 * Used to set a new changelog.
+	 *
+	 * @param version The version of the changelog to show.
+	 */
 	private void setPanelChange(String version)
 	{
 		getContentPane().removeAll();
@@ -137,6 +181,9 @@ public class InterfaceChangelog extends JFrame
 		setSize(d);
 	}
 
+	/**
+	 * Used to update the printed changelog.
+	 */
 	protected void updateVersion()
 	{
 		setPanelChange(this.versionSelection.getSelectedItem().toString());

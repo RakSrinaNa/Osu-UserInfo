@@ -35,12 +35,12 @@ public class InterfaceStartup extends JFrame
 		super();
 		this.percentMode = maxStep == 100;
 		Utils.logger.log(Level.INFO, "Creating startup frame...");
-		getFrame().setUndecorated(true);
-		getFrame().setContentPane(new TransparentPane(new BorderLayout()));
-		getFrame().getContentPane().setBackground(Color.BLACK);
-		getFrame().setTitle("Starting " + Main.APPNAME);
-		getFrame().setIconImages(Utils.icons);
-		getFrame().setBackground(new Color(0, 255, 0, 0));
+		setUndecorated(true);
+		setContentPane(new TransparentPane(new BorderLayout()));
+		getContentPane().setBackground(Color.BLACK);
+		setTitle("Starting " + Main.APPNAME);
+		setIconImages(Utils.icons);
+		setBackground(new Color(0, 255, 0, 0));
 		this.label = new JLabel();
 		this.label.setFont(Utils.fontMain);
 		this.label.setForeground(new Color(255, 255, 255));
@@ -49,15 +49,15 @@ public class InterfaceStartup extends JFrame
 		this.progressBar = new JProgressBarLabel(0, maxStep, "");
 		this.progressBar.setFont(Utils.fontMain);
 		refreshProgressBarStep();
-		getFrame().getContentPane().add(this.progressBar, BorderLayout.NORTH);
-		getFrame().getContentPane().add(this.label, BorderLayout.SOUTH);
+		getContentPane().add(this.progressBar, BorderLayout.NORTH);
+		getContentPane().add(this.label, BorderLayout.SOUTH);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		getFrame().setLocation((dim.width - 500) / 2, (dim.height - 50) / 2);
-		getFrame().setPreferredSize(new Dimension(500, 50));
-		getFrame().setVisible(true);
-		getFrame().toFront();
-		getFrame().pack();
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setLocation((dim.width - 500) / 2, (dim.height - 50) / 2);
+		setPreferredSize(new Dimension(500, 50));
+		setVisible(true);
+		toFront();
+		pack();
 	}
 
 	/**
@@ -82,12 +82,7 @@ public class InterfaceStartup extends JFrame
 	public void exit()
 	{
 		Utils.logger.log(Level.INFO, "Exitting startup frame...");
-		getFrame().dispose();
-	}
-
-	public InterfaceStartup getFrame()
-	{
-		return this;
+		dispose();
 	}
 
 	/**
@@ -101,6 +96,11 @@ public class InterfaceStartup extends JFrame
 		refreshProgressBarStep();
 	}
 
+	/**
+	 * Used to set a percentage to the bar.
+	 *
+	 * @param percent The percent to set.
+	 */
 	public void setBarPercent(float percent)
 	{
 		if(!this.percentMode)
@@ -108,22 +108,38 @@ public class InterfaceStartup extends JFrame
 		this.progressBar.setValue((int) percent);
 	}
 
+	/**
+	 * Used to set a percentage to the bar with a text.
+	 *
+	 * @param percent The percent to set.
+	 * @param text The text to set.
+	 */
 	public void setBarPercentWithText(float percent, String text)
 	{
 		setBarPercent(percent);
 		setBarText(text);
 	}
 
-	public void setBarText(String text)
-	{
-		this.progressBar.setText(text, false);
-	}
-
-	public void setPercent(int i)
+	/**
+	 * Used to set the progress of the bar.
+	 *
+	 * @param i The step of the bar.
+	 */
+	public void setBarProgress(int i)
 	{
 		float percent = i / 100f;
 		this.step = (int) (percent * this.progressBar.getMaximum());
 		refreshProgressBarStep();
+	}
+
+	/**
+	 * Used to set the bar text.
+	 *
+	 * @param text The text to set.
+	 */
+	public void setBarText(String text)
+	{
+		this.progressBar.setText(text, false);
 	}
 
 	/**

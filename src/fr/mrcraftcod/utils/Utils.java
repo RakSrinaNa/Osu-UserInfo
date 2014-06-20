@@ -554,7 +554,7 @@ public class Utils
 		int currentStep = 0;
 		startup = new InterfaceStartup(4);
 		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
-		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup.getFrame());
+		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup);
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 			try
 			{
