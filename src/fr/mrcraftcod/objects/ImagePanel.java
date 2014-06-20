@@ -83,9 +83,9 @@ public class ImagePanel extends JPanel
 	 */
 	public void setImage(BufferedImage image)
 	{
-		this.image = image;
 		for(ImageChangeListener l : this.listeners)
 			l.onImageChanged(new ImageEvent(this, image));
+		this.image = Utils.resizeBufferedImage(image, getPreferredSize());
 		this.repaint();
 		invalidate();
 	}

@@ -2,6 +2,7 @@ package fr.mrcraftcod.utils;
 
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
@@ -721,6 +722,18 @@ public class Utils
 		resourceBundle.clearCache();
 		locale = getLocaleByName(stringLocale);
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
+	}
+
+	/**
+	 * Used to resize an image.
+	 *
+	 * @param image The image to resize.
+	 * @param size The dimension of the image.
+	 * @return The resized image.
+	 */
+	public static BufferedImage resizeBufferedImage(BufferedImage image, Dimension size)
+	{
+		return resizeBufferedImage(image, (float) size.getWidth(), (float) size.getHeight());
 	}
 
 	/**

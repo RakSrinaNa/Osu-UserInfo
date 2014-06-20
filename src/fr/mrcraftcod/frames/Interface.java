@@ -401,7 +401,7 @@ public class Interface extends JFrame
 		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count300Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")), picturesSize, picturesSize));
+		count300Picture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")));
 		this.hitCount300 = new JLabel();
 		this.hitCount300.setFont(Utils.fontMain);
 		this.hitCount300.setHorizontalAlignment(JLabel.CENTER);
@@ -416,7 +416,7 @@ public class Interface extends JFrame
 		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count100Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")), picturesSize, picturesSize));
+		count100Picture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")));
 		this.hitCount100 = new JLabel();
 		this.hitCount100.setFont(Utils.fontMain);
 		this.hitCount100.setHorizontalAlignment(JLabel.CENTER);
@@ -432,7 +432,7 @@ public class Interface extends JFrame
 		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count50Picture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")), picturesSize, picturesSize));
+		count50Picture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")));
 		this.hitCount50 = new JLabel();
 		this.hitCount50.setFont(Utils.fontMain);
 		this.hitCount50.setHorizontalAlignment(JLabel.CENTER);
@@ -470,7 +470,7 @@ public class Interface extends JFrame
 		ssPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		ssPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		ssPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")), picturesSize, picturesSize));
+		ssPicture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/SS.png")));
 		this.countSS = new JLabel();
 		this.countSS.setFont(Utils.fontMain);
 		this.countSS.setHorizontalAlignment(JLabel.CENTER);
@@ -485,7 +485,7 @@ public class Interface extends JFrame
 		sPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		sPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		sPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")), picturesSize, picturesSize));
+		sPicture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/S.png")));
 		this.countS = new JLabel();
 		this.countS.setFont(Utils.fontMain);
 		this.countS.setHorizontalAlignment(JLabel.CENTER);
@@ -500,7 +500,7 @@ public class Interface extends JFrame
 		aPicture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		aPicture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		aPicture.setImage(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")), picturesSize, picturesSize));
+		aPicture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/A.png")));
 		this.countA = new JLabel();
 		this.countA.setFont(Utils.fontMain);
 		this.countA.setHorizontalAlignment(JLabel.CENTER);
@@ -870,8 +870,8 @@ public class Interface extends JFrame
 				}
 				try
 				{
-					Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(Utils.getCountryFlag(user.getCountry()), 16, 16));
-					Interface.this.avatar.setImage(Utils.resizeBufferedImage(Interface.this.avatarImage = Utils.getAvatar(String.valueOf(user.getUserID())), 128, 128));
+					Interface.this.countryFlag.setImage(Utils.getCountryFlag(user.getCountry()));
+					Interface.this.avatar.setImage(Utils.getAvatar(String.valueOf(user.getUserID())));
 				}
 				catch(Exception e)
 				{
