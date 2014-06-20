@@ -170,6 +170,14 @@ public class Utils
 	}
 
 	/**
+	 * Used to create a new changelog frame.
+	 */
+	public static void getAllChangelogFrame()
+	{
+		new InterfaceChangelog(Main.VERSION, Changelog.getAllChangelog());
+	}
+
+	/**
 	 * Used to get the avatar of a user.
 	 *
 	 * @param userID The UserID of the user.

@@ -2,19 +2,37 @@ package fr.mrcraftcod.interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import fr.mrcraftcod.Main;
 import fr.mrcraftcod.objects.JChangelogPanel;
 import fr.mrcraftcod.utils.Utils;
 
 public class InterfaceChangelog extends JFrame
 {
 	private static final long serialVersionUID = -8709993783125141424L;
+	private LinkedHashMap<String, JChangelogPanel> panels;
+	private JComboBox<String> versionSelection;
+
+	public InterfaceChangelog(String version, LinkedHashMap<String, String> changelog)
+	{
+		super("Changelog");
+		if(changelog == null)
+		{
+			dispose();
+			return;
+		}
+		initFrame(version, changelog);
+	}
 
 	public InterfaceChangelog(String version, String changelog)
 	{
@@ -24,26 +42,19 @@ public class InterfaceChangelog extends JFrame
 			dispose();
 			return;
 		}
-		setTitle("Changelog for version " + version);
-		setIconImages(Utils.icons);
-		setBackground(Utils.backColor);
-		getContentPane().setBackground(Utils.backColor);
-		getContentPane().setLayout(new BorderLayout());
-		JChangelogPanel changelogLabel = new JChangelogPanel(processText(changelog));
-		changelogLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		changelogLabel.setBackground(Utils.backColor);
-		changelogLabel.setFocusable(false);
-		changelogLabel.setFont(Utils.fontMain);
-		add(changelogLabel, BorderLayout.CENTER);
-		Dimension d = changelogLabel.getPreferredSize();
-		d.height += 50;
-		d.width += 20;
-		setPreferredSize(d);
-		setSize(d);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setResizable(true);
-		setVisible(true);
-		toFront();
+		LinkedHashMap<String, String> changes = new LinkedHashMap<String, String>();
+		changes.put(version, changelog);
+		initFrame(version, changes);
+	}
+
+	private JChangelogPanel createChangePanel(ArrayList<String> list)
+	{
+		JChangelogPanel panel = new JChangelogPanel(list);
+		panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		panel.setBackground(Utils.backColor);
+		panel.setFocusable(false);
+		panel.setFont(Utils.fontMain);
+		return panel;
 	}
 
 	private String getFormatedChange(String change)
@@ -68,18 +79,65 @@ public class InterfaceChangelog extends JFrame
 		return sb.append("\">").append(change.replaceFirst(typePattern, "")).append("</font>").toString();
 	}
 
-	private ArrayList<String> processText(String changelog)
+	private void initFrame(String version, LinkedHashMap<String, String> changelog)
 	{
-		ArrayList<String> list = new ArrayList<String>();
-		final String stringPattern = "[{]{1}.+[}]{1}.*";
-		Pattern pattern = Pattern.compile(stringPattern);
-		Matcher matcher = pattern.matcher(changelog);
-		List<String> matchList = new ArrayList<String>();
-		while(matcher.find())
-			matchList.add(matcher.group(0));
-		for(String change : matchList)
-			if(!change.equals(""))
-				list.add(getFormatedChange(change));
-		return list;
+		this.panels = processTexts(changelog);
+		setTitle("Changelog for version " + version);
+		setIconImages(Utils.icons);
+		setBackground(Utils.backColor);
+		getContentPane().setBackground(Utils.backColor);
+		getContentPane().setLayout(new BorderLayout());
+		this.versionSelection = new JComboBox<String>(this.panels.keySet().toArray(new String[this.panels.size()]));
+		this.versionSelection.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				updateVersion();
+			}
+		});
+		setPanelChange(Main.VERSION);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setResizable(true);
+		setVisible(true);
+		toFront();
+	}
+
+	private LinkedHashMap<String, JChangelogPanel> processTexts(LinkedHashMap<String, String> changelog)
+	{
+		LinkedHashMap<String, JChangelogPanel> changes = new LinkedHashMap<String, JChangelogPanel>();
+		for(String version : changelog.keySet())
+		{
+			ArrayList<String> list = new ArrayList<String>();
+			final String stringPattern = "[{]{1}.+[}]{1}.*";
+			Pattern pattern = Pattern.compile(stringPattern);
+			Matcher matcher = pattern.matcher(changelog.get(version));
+			List<String> matchList = new ArrayList<String>();
+			while(matcher.find())
+				matchList.add(matcher.group(0));
+			for(String change : matchList)
+				if(!change.equals(""))
+					list.add(getFormatedChange(change));
+			changes.put(version, createChangePanel(list));
+		}
+		return changes;
+	}
+
+	private void setPanelChange(String version)
+	{
+		getContentPane().removeAll();
+		getContentPane().add(this.panels.get(version), BorderLayout.CENTER);
+		if(this.panels.size() > 1)
+			getContentPane().add(this.versionSelection, BorderLayout.SOUTH);
+		Dimension d = this.panels.get(version).getPreferredSize();
+		d.height += 50 + this.versionSelection.getPreferredSize().height;
+		d.width += 20;
+		setPreferredSize(d);
+		setSize(d);
+	}
+
+	protected void updateVersion()
+	{
+		setPanelChange(this.versionSelection.getSelectedItem().toString());
 	}
 }

@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,6 +28,27 @@ public class Changelog
 	private final static String LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/changelog.xml";
 
 	/**
+	 * Get the changelogs.
+	 *
+	 * @param version The version wanted.
+	 * @return The changelog.
+	 */
+	public static LinkedHashMap<String, String> getAllChangelog()
+	{
+		LinkedHashMap<String, String> changelogs = null;
+		File changelogFile = new File(".", "changelog.xml");
+		getChangelogBitbucket(changelogFile, LINKXML);
+		try
+		{
+			changelogs = getAllChangelogText(changelogFile);
+		}
+		catch(SAXException | IOException | ParserConfigurationException e)
+		{}
+		changelogFile.delete();
+		return changelogs;
+	}
+
+	/**
 	 * Get the changelog for the wanted version.
 	 *
 	 * @param version The version wanted.
@@ -46,6 +67,22 @@ public class Changelog
 		{}
 		changelogFile.delete();
 		return changelogText;
+	}
+
+	/**
+	 * Used to get the changelogs.
+	 *
+	 * @param changelogFile The XML file.
+	 * @param version The version to get.
+	 * @return The changelog text of the wanted version.
+	 *
+	 * @throws SAXException If there were an error with the XML file.
+	 * @throws IOException If there were an error with the file.
+	 * @throws ParserConfigurationException If there were an error with the XML file.
+	 */
+	private static LinkedHashMap<String, String> getAllChangelogText(File changelogFile) throws SAXException, IOException, ParserConfigurationException
+	{
+		return parseVersions(changelogFile);
 	}
 
 	/**
@@ -121,15 +158,15 @@ public class Changelog
 	 * @throws IOException If there were an error with the file.
 	 * @throws ParserConfigurationException If there were an error with the XML file.
 	 */
-	private static HashMap<String, String> parseVersions(File file) throws SAXException, IOException, ParserConfigurationException
+	private static LinkedHashMap<String, String> parseVersions(File file) throws SAXException, IOException, ParserConfigurationException
 	{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		Document doc = docBuilder.parse(file);
 		doc.getDocumentElement().normalize();
 		NodeList listVersion = doc.getElementsByTagName("version");
-		HashMap<String, String> changelogs = new HashMap<String, String>();
-		for(int s = 0; s < listVersion.getLength(); s++)
+		LinkedHashMap<String, String> changelogs = new LinkedHashMap<String, String>();
+		for(int s = listVersion.getLength() - 1; s > -1; s--)
 		{
 			Node versionNode = listVersion.item(s);
 			if(versionNode.getNodeType() == Node.ELEMENT_NODE)
