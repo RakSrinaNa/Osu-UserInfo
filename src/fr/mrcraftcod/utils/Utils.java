@@ -174,7 +174,7 @@ public class Utils
 	 */
 	public static void getAllChangelogFrame()
 	{
-		new InterfaceChangelog(Main.VERSION, Changelog.getAllChangelog());
+		new InterfaceChangelog(Changelog.getAllChangelog());
 	}
 
 	/**

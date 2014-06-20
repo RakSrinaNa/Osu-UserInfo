@@ -23,7 +23,7 @@ public class InterfaceChangelog extends JFrame
 	private LinkedHashMap<String, JChangelogPanel> panels;
 	private JComboBox<String> versionSelection;
 
-	public InterfaceChangelog(String version, LinkedHashMap<String, String> changelog)
+	public InterfaceChangelog(LinkedHashMap<String, String> changelog)
 	{
 		super("Changelog");
 		if(changelog == null)
@@ -31,7 +31,7 @@ public class InterfaceChangelog extends JFrame
 			dispose();
 			return;
 		}
-		initFrame(version, changelog);
+		initFrame(changelog);
 	}
 
 	public InterfaceChangelog(String version, String changelog)
@@ -44,7 +44,7 @@ public class InterfaceChangelog extends JFrame
 		}
 		LinkedHashMap<String, String> changes = new LinkedHashMap<String, String>();
 		changes.put(version, changelog);
-		initFrame(version, changes);
+		initFrame(changes);
 	}
 
 	private JChangelogPanel createChangePanel(ArrayList<String> list)
@@ -79,10 +79,9 @@ public class InterfaceChangelog extends JFrame
 		return sb.append("\">").append(change.replaceFirst(typePattern, "")).append("</font>").toString();
 	}
 
-	private void initFrame(String version, LinkedHashMap<String, String> changelog)
+	private void initFrame(LinkedHashMap<String, String> changelog)
 	{
 		this.panels = processTexts(changelog);
-		setTitle("Changelog for version " + version);
 		setIconImages(Utils.icons);
 		setBackground(Utils.backColor);
 		getContentPane().setBackground(Utils.backColor);
@@ -126,6 +125,7 @@ public class InterfaceChangelog extends JFrame
 	private void setPanelChange(String version)
 	{
 		getContentPane().removeAll();
+		setTitle(String.format(Utils.resourceBundle.getString("changelog_for"), version));
 		getContentPane().add(this.panels.get(version), BorderLayout.CENTER);
 		if(this.panels.size() > 1)
 			getContentPane().add(this.versionSelection, BorderLayout.SOUTH);
