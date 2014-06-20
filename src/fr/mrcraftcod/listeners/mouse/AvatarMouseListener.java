@@ -42,10 +42,12 @@ public class AvatarMouseListener implements MouseListener
 
 	private void openPopup(MouseEvent arg0)
 	{
+		if(Utils.mainFrame.getAvatarImage() == null)
+			return;
 		JPopupMenu popup = new JPopupMenu();
 		JMenuItem saveAvatar = new JMenuItem(Utils.resourceBundle.getString("save_avatar"));
 		saveAvatar.addActionListener(new ActionSaveAvatarListener());
 		popup.add(saveAvatar);
-		popup.show(Utils.mainFrame, arg0.getX(), arg0.getY());
+		popup.show(Utils.mainFrame.getAvatar(), arg0.getX(), arg0.getY());
 	}
 }

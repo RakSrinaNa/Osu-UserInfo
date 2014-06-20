@@ -72,6 +72,7 @@
 		<name>1.6b18</name>
 		<changes>
 		{+}Possibility to open the changelog for the current version from the 'About' section
+		{+}Possibility to save user avatar
 		</changes>
 	</version>
 </changelog>

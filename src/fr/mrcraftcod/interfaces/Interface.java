@@ -759,6 +759,16 @@ public class Interface extends JFrame
 	}
 
 	/**
+	 * Used to get the avatar panel.
+	 *
+	 * @return The avatar panel.
+	 */
+	public ImagePanel getAvatar()
+	{
+		return this.avatar;
+	}
+
+	/**
 	 * Used to get the avatar image.
 	 *
 	 * @return The avatar image.
