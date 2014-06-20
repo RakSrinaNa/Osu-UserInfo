@@ -4,6 +4,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to save changes before closing.
+ *
+ * @author MrCraftCod
+ */
 public class SettingsWindowListener implements WindowListener
 {
 	@Override

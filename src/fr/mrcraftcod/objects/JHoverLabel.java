@@ -8,6 +8,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 
+/**
+ * Used to create a Label as a link.
+ *
+ * @author MrCraftCod
+ */
 public class JHoverLabel extends JLabel
 {
 	private static final long serialVersionUID = 2021404415046675113L;
@@ -18,6 +23,13 @@ public class JHoverLabel extends JLabel
 	private Color colorBeforeClick = Color.blue;
 	private Color colorAfterClick = new Color(102, 14, 122);
 
+	/**
+	 * Constructor.
+	 *
+	 * @param text The text to print.
+	 *
+	 * @see JLabel#JLabel(String)
+	 */
 	public JHoverLabel(final String text)
 	{
 		super();
@@ -54,11 +66,22 @@ public class JHoverLabel extends JLabel
 		});
 	}
 
-	public String getLabel()
+	/**
+	 * Used to get the printed text.
+	 *
+	 * @return The printed text.
+	 */
+	@Override
+	public String getText()
 	{
 		return this.text;
 	}
 
+	/**
+	 * Used to draw component.
+	 *
+	 * @see JLabel#paint(Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -70,22 +93,42 @@ public class JHoverLabel extends JLabel
 		}
 	}
 
+	/**
+	 * Used to set the colour when the text has been clicked.
+	 *
+	 * @param color The colour to set.
+	 */
 	public void setColorAfterClick(Color color)
 	{
 		this.colorAfterClick = color;
 	}
 
+	/**
+	 * Used to set the colour when the text hasn't been clicked.
+	 *
+	 * @param color The colour to set.
+	 */
 	public void setColorBeforeClick(Color color)
 	{
 		this.colorBeforeClick = color;
 		setForeground(color);
 	}
 
+	/**
+	 * Used to activate or not the hand when mouse is on the text.
+	 *
+	 * @param flag The status of this function.
+	 */
 	public void setHandCursorWhenHovered(boolean flag)
 	{
 		this.handCursorWhenHovered = flag;
 	}
 
+	/**
+	 * Used to activate or not the underline of the text when mouse is on it.
+	 *
+	 * @param flag The status of this function.
+	 */
 	public void setUnderlinedWhenHovered(boolean flag)
 	{
 		this.underlinedWhenHovered = flag;

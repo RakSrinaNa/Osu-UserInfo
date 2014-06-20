@@ -4,6 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to set the mode to Standard.
+ *
+ * @author MrCraftCod
+ */
 public class ModeStandardActionListener implements ActionListener
 {
 	@Override

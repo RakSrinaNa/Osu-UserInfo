@@ -4,6 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to set the mode to CTB.
+ *
+ * @author MrCraftCod
+ */
 public class ModeCTBActionListener implements ActionListener
 {
 	@Override

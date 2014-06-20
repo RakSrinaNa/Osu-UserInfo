@@ -7,17 +7,33 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Panel for the changelog. Show image difference with text.
+ *
+ * @author MrCraftCod
+ */
 public class JChangelogPanel extends JPanel
 {
 	private static final long serialVersionUID = 4398380577611424335L;
 
-	public JChangelogPanel(ArrayList<String> arrayList)
+	/**
+	 * Constructor.
+	 *
+	 * @param changes Difference texts.
+	 */
+	public JChangelogPanel(ArrayList<String> changes)
 	{
-		setLayout(new GridLayout(arrayList.size(), 1));
-		for(String change : arrayList)
+		setLayout(new GridLayout(changes.size(), 1));
+		for(String change : changes)
 			this.add(processChange(change));
 	}
 
+	/**
+	 * Used to get the icon of a difference.
+	 *
+	 * @param change The difference text.
+	 * @return The corresponding icon.
+	 */
 	private Icon getIconForChange(String change)
 	{
 		if(change.contains("color=\"green\""))
@@ -29,6 +45,12 @@ public class JChangelogPanel extends JPanel
 		return null;
 	}
 
+	/**
+	 * Used to process a changes. Add the image with the text.
+	 *
+	 * @param change The change to process.
+	 * @return A Label with the icon and text.
+	 */
 	private JLabel processChange(String change)
 	{
 		JLabel panel = new JLabel("<html>" + change + "</html>");

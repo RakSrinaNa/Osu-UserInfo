@@ -6,6 +6,11 @@ import java.awt.event.WindowListener;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to exit the program.
+ *
+ * @author MrCraftCod
+ */
 public class MainWindowListener implements WindowListener
 {
 	@Override

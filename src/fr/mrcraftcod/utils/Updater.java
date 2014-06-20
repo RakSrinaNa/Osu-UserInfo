@@ -77,7 +77,7 @@ public class Updater
 		if(result == UPDATEDPUBLIC || result == UPDATEDDEV)
 			try
 			{
-				Utils.startup.setPercent(100);
+				Utils.startup.setBarProgress(100);
 				JOptionPane.showMessageDialog(context, String.format(Utils.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
 				Utils.exit(false);
 				String javaHome = System.getProperty("java.home");

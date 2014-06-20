@@ -4,6 +4,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to open changelog frame.
+ *
+ * @author MrCraftCod
+ */
 public class ChangelogMouseListener implements MouseListener
 {
 	@Override

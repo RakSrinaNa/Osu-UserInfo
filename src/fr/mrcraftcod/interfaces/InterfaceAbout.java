@@ -48,17 +48,17 @@ public class InterfaceAbout extends JFrame
 		super(Utils.resourceBundle.getString("menu_bar_help_about"));
 		this.traducers = new HashMap<String, String>();
 		this.traducers.put(Utils.resourceBundle.getString("italian"), "TheHowl");
-		getFrame().setVisible(false);
-		getFrame().setLayout(new BorderLayout());
-		getFrame().setPreferredSize(new Dimension(400, 200));
-		getFrame().setMinimumSize(new Dimension(400, 200));
-		getFrame().setAlwaysOnTop(false);
-		getFrame().setIconImages(Utils.icons);
-		getFrame().getContentPane().setBackground(Utils.backColor);
-		getFrame().addWindowListener(new AboutWindowListener());
+		setVisible(false);
+		setLayout(new BorderLayout());
+		setPreferredSize(new Dimension(400, 200));
+		setMinimumSize(new Dimension(400, 200));
+		setAlwaysOnTop(false);
+		setIconImages(Utils.icons);
+		getContentPane().setBackground(Utils.backColor);
+		addWindowListener(new AboutWindowListener());
 		JLabel text = new JLabel(Utils.resourceBundle.getString("about_text"));
 		text.setBackground(Utils.backColor);
-		getFrame().add(text, BorderLayout.NORTH);
+		add(text, BorderLayout.NORTH);
 		this.model = new JTableUneditableModel(setValuesTable(getTraducers()), new String[] {Utils.resourceBundle.getString("language"), Utils.resourceBundle.getString("traducer")});
 		this.table = new JTable(this.model);
 		this.table.setBackground(Color.WHITE);
@@ -93,30 +93,24 @@ public class InterfaceAbout extends JFrame
 		footer.add(changelog, BorderLayout.PAGE_START);
 		footer.add(linkAuthor, BorderLayout.WEST);
 		footer.add(linkOsu, BorderLayout.EAST);
-		getFrame().add(this.scrollPane, BorderLayout.CENTER);
-		getFrame().add(footer, BorderLayout.SOUTH);
-		getFrame().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getFrame().setLocationRelativeTo(parent);
-		getFrame().pack();
-		getFrame().setVisible(true);
-		getFrame().toFront();
+		add(this.scrollPane, BorderLayout.CENTER);
+		add(footer, BorderLayout.SOUTH);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(parent);
+		pack();
+		setVisible(true);
+		toFront();
 		Utils.mainFrame.hideFrame();
 	}
 
+	/**
+	 * Used to get the current values in the Table.
+	 *
+	 * @return The values in the table.
+	 */
 	public String[][] getValuesTable()
 	{
 		return this.valuesTable;
-	}
-
-	public String[][] setValuesTable(String[][] valuesTable)
-	{
-		this.valuesTable = valuesTable;
-		return valuesTable;
-	}
-
-	private InterfaceAbout getFrame()
-	{
-		return this;
 	}
 
 	/**
@@ -134,5 +128,17 @@ public class InterfaceAbout extends JFrame
 			values[i++][1] = this.traducers.get(language);
 		}
 		return values;
+	}
+
+	/**
+	 * Used to set the values in the table.
+	 *
+	 * @param valuesTable The values to set.
+	 * @return The values to set.
+	 */
+	private String[][] setValuesTable(String[][] valuesTable)
+	{
+		this.valuesTable = valuesTable;
+		return valuesTable;
 	}
 }

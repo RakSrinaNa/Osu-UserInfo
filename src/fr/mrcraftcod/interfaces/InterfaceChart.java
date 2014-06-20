@@ -31,11 +31,24 @@ import org.jfree.util.Rotation;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Interface showing graphs for a user.
+ *
+ * @author MrCraftCod
+ */
 public class InterfaceChart extends JFrame
 {
 	private static final long serialVersionUID = -5220915498588371099L;
 	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED;
 
+	/**
+	 * Constructor.
+	 * Create graphs for given stats.
+	 *
+	 * @param user The name of the user.
+	 * @param mode The mode of the graphs.
+	 * @param stats The stats to process.
+	 */
 	public InterfaceChart(String user, String mode, List<Stats> stats)
 	{
 		super();
@@ -66,11 +79,15 @@ public class InterfaceChart extends JFrame
 		pack();
 	}
 
-	public InterfaceChart getFrame()
-	{
-		return this;
-	}
-
+	/**
+	 * Used to create the accuracy graph.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @param shape The shape of the points.
+	 * @return The graph.
+	 */
 	private JFreeChart createAccuracyChart(String title, String user, List<Stats> stats, Shape shape)
 	{
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "%", null, true, true, false);
@@ -101,6 +118,14 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to create the hits pie.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @return The graph.
+	 */
 	private JFreeChart createHitsChart(String title, String user, List<Stats> stats)
 	{
 		JFreeChart chart = ChartFactory.createPieChart3D(title + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsHits(stats), true, false, false);
@@ -120,6 +145,15 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to create the level graph.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @param shape The shape of the points.
+	 * @return The graph.
+	 */
 	private JFreeChart createLevelChart(String title, String user, List<Stats> stats, Shape shape)
 	{
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
@@ -150,6 +184,15 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to create the play count graph.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @param shape The shape of the points.
+	 * @return The graph.
+	 */
 	private JFreeChart createPlayCountChart(String title, String user, List<Stats> stats, Shape shape)
 	{
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
@@ -180,6 +223,15 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to create the pp with rank graph.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @param shape The shape of the points.
+	 * @return The graph.
+	 */
 	private JFreeChart createRankAndPPChart(String title, String user, List<Stats> stats, Shape shape)
 	{
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
@@ -227,6 +279,15 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to create the ranked score graph.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @param shape The shape of the points.
+	 * @return The graph.
+	 */
 	private JFreeChart createRankedScoreChart(String title, String user, List<Stats> stats, Shape shape)
 	{
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
@@ -257,6 +318,14 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to create the ranks pie.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @return The graph.
+	 */
 	private JFreeChart createRanksChart(String title, String user, List<Stats> stats)
 	{
 		JFreeChart chart = ChartFactory.createPieChart3D(title + " (" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(stats.get(stats.size() - 1).getDate())) + ")", processStatsRanks(stats), true, false, false);
@@ -276,6 +345,15 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to create the total score graph.
+	 *
+	 * @param title The title of the graph.
+	 * @param user The name of the user.
+	 * @param stats The stats to process.
+	 * @param shape The shape of the points.
+	 * @return The graph.
+	 */
 	private JFreeChart createTotalScoreChart(String title, String user, List<Stats> stats, Shape shape)
 	{
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, null, "", null, true, true, false);
@@ -304,6 +382,12 @@ public class InterfaceChart extends JFrame
 		return chart;
 	}
 
+	/**
+	 * Used to get a panel with a graph inside.
+	 *
+	 * @param chart The graph to set inside.
+	 * @return The panel.
+	 */
 	private ChartPanel getChartInPannel(JFreeChart chart)
 	{
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -313,6 +397,12 @@ public class InterfaceChart extends JFrame
 		return chartPanel;
 	}
 
+	/**
+	 * Used to process the accuracy stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
 	private XYDataset processStatsAccuracy(List<Stats> stats)
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("accuracy"));
@@ -323,6 +413,12 @@ public class InterfaceChart extends JFrame
 		return collection;
 	}
 
+	/**
+	 * Used to process the hits stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for pies.
+	 */
 	private PieDataset processStatsHits(List<Stats> stats)
 	{
 		DefaultPieDataset data = new DefaultPieDataset();
@@ -332,6 +428,12 @@ public class InterfaceChart extends JFrame
 		return data;
 	}
 
+	/**
+	 * Used to process the level stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
 	private XYDataset processStatsLevel(List<Stats> stats)
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("graph_level"));
@@ -342,6 +444,12 @@ public class InterfaceChart extends JFrame
 		return collection;
 	}
 
+	/**
+	 * Used to process the play count stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
 	private XYDataset processStatsPlayCount(List<Stats> stats)
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("play_count"));
@@ -352,6 +460,12 @@ public class InterfaceChart extends JFrame
 		return collection;
 	}
 
+	/**
+	 * Used to process the PP stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
 	private XYDataset processStatsPP(List<Stats> stats)
 	{
 		TimeSeries serie = new TimeSeries("PP");
@@ -362,6 +476,12 @@ public class InterfaceChart extends JFrame
 		return collection;
 	}
 
+	/**
+	 * Used to process the rank stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
 	private XYDataset processStatsRank(List<Stats> stats)
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("rank"));
@@ -372,6 +492,12 @@ public class InterfaceChart extends JFrame
 		return collection;
 	}
 
+	/**
+	 * Used to process the ranked score stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
 	private XYDataset processStatsRankedScore(List<Stats> stats)
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("ranked_score"));
@@ -382,6 +508,12 @@ public class InterfaceChart extends JFrame
 		return collection;
 	}
 
+	/**
+	 * Used to process the ranks stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for pies.
+	 */
 	private PieDataset processStatsRanks(List<Stats> stats)
 	{
 		DefaultPieDataset data = new DefaultPieDataset();
@@ -391,6 +523,12 @@ public class InterfaceChart extends JFrame
 		return data;
 	}
 
+	/**
+	 * Used to process the total score stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
 	private XYDataset processStatsTotalScore(List<Stats> stats)
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("total_score"));

@@ -14,24 +14,40 @@ import javax.swing.WindowConstants;
 import fr.mrcraftcod.listeners.actions.CloseNotificationActionListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Interface to show a notification.
+ *
+ * @author MrCraftCod
+ */
 public class InterfaceNotification extends JFrame implements Runnable
 {
 	private static final long serialVersionUID = 8870236400957609469L;
 	private final static int cooldown = 7000;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param name The name of the notification.
+	 * @param textRank The text of the notification.
+	 * @param rank The rank to show.
+	 * @param pp The PP to show.
+	 * @param playCount The play count to show.
+	 * @param totalScore The total score to show.
+	 * @param rankedScore The ranked score to show.
+	 */
 	public InterfaceNotification(String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
 	{
 		super();
 		int offset = 0, arc = 15;
-		getFrame().setTitle("New stats!");
-		getFrame().setSize(400, 75);
-		getFrame().setUndecorated(true);
-		getFrame().setShape(new RoundRectangle2D.Double(offset, offset, offset + getFrame().getSize().getWidth(), offset + getFrame().getSize().getHeight(), arc, arc));
-		getFrame().setLayout(new GridBagLayout());
-		getFrame().setIconImages(Utils.icons);
-		getFrame().setBackground(Utils.backColor);
-		getFrame().getContentPane().setBackground(Utils.backColor);
-		getFrame().setAlwaysOnTop(true);
+		setTitle("New stats!");
+		setSize(400, 75);
+		setUndecorated(true);
+		setShape(new RoundRectangle2D.Double(offset, offset, offset + getSize().getWidth(), offset + getSize().getHeight(), arc, arc));
+		setLayout(new GridBagLayout());
+		setIconImages(Utils.icons);
+		setBackground(Utils.backColor);
+		getContentPane().setBackground(Utils.backColor);
+		setAlwaysOnTop(true);
 		JButton closeButton = new JButton("X");
 		closeButton.addActionListener(new CloseNotificationActionListener());
 		closeButton.setFocusable(false);
@@ -50,7 +66,7 @@ public class InterfaceNotification extends JFrame implements Runnable
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.insets = new Insets(-offset, 1, 1, -offset);
-		getFrame().add(closeButton, constraints);
+		add(closeButton, constraints);
 		constraints.gridx = 0;
 		constraints.gridy++;
 		constraints.gridheight = 2;
@@ -58,23 +74,28 @@ public class InterfaceNotification extends JFrame implements Runnable
 		constraints.weighty = 5;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.insets = new Insets(1, 1, 1, 2);
-		getFrame().add(messageLabel, constraints);
-		getFrame().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		getFrame().setVisible(true);
-		getFrame().toFront();
+		add(messageLabel, constraints);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setVisible(true);
+		toFront();
 		new Thread(this).start();
 	}
 
+	/**
+	 * Used to make the frame showing up and down.
+	 *
+	 * @see Thread#run()
+	 */
 	@Override
 	public void run()
 	{
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(getFrame().getGraphicsConfiguration());
-		int x = scrSize.width - getFrame().getWidth() - 2;
+		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+		int x = scrSize.width - getWidth() - 2;
 		int y = scrSize.height;
-		for(int i = 0; i < getFrame().getHeight() + toolHeight.bottom; i++)
+		for(int i = 0; i < getHeight() + toolHeight.bottom; i++)
 		{
-			getFrame().setLocation(x, y - i);
+			setLocation(x, y - i);
 			try
 			{
 				Thread.sleep(5);
@@ -92,9 +113,9 @@ public class InterfaceNotification extends JFrame implements Runnable
 		{
 			e.printStackTrace();
 		}
-		for(int i = getFrame().getHeight() + toolHeight.bottom; i > 0; i--)
+		for(int i = getHeight() + toolHeight.bottom; i > 0; i--)
 		{
-			getFrame().setLocation(x, y - i);
+			setLocation(x, y - i);
 			try
 			{
 				Thread.sleep(5);
@@ -104,14 +125,21 @@ public class InterfaceNotification extends JFrame implements Runnable
 				e.printStackTrace();
 			}
 		}
-		getFrame().dispose();
+		dispose();
 	}
 
-	private InterfaceNotification getFrame()
-	{
-		return this;
-	}
-
+	/**
+	 * Used to process the text to show.
+	 *
+	 * @param name The name of the notification.
+	 * @param textRank The text of the notification.
+	 * @param rank The rank to show.
+	 * @param pp The PP to show.
+	 * @param playCount The play count to show.
+	 * @param totalScore The total score to show.
+	 * @param rankedScore The ranked score to show.
+	 * @return the formatted text.
+	 */
 	private String processText(String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
 	{
 		NumberFormat format = NumberFormat.getInstance(Utils.locale);

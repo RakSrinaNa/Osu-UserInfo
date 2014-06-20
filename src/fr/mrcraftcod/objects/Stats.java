@@ -456,6 +456,11 @@ public class Stats implements Serializable, Cloneable
 		return this.totalScore;
 	}
 
+	/**
+	 * Used to get the version of the Stats object.
+	 *
+	 * @return The version.
+	 */
 	public int getVersion()
 	{
 		return this.version;

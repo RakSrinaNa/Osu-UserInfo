@@ -28,6 +28,9 @@ public class User implements Serializable
 	private transient int userID;
 	private transient String country;
 
+	/**
+	 * Constructor.
+	 */
 	public User()
 	{
 		this.version = USER_VERSION;

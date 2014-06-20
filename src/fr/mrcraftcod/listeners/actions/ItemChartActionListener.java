@@ -8,6 +8,11 @@ import fr.mrcraftcod.interfaces.InterfaceChart;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to open the graphs frame.
+ *
+ * @author MrCraftCod
+ */
 public class ItemChartActionListener extends AbstractAction
 {
 	private static final long serialVersionUID = -3935741960271142168L;

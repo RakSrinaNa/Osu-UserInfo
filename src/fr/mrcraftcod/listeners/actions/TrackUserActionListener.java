@@ -6,6 +6,11 @@ import java.io.IOException;
 import javax.swing.JCheckBox;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to track or untrack a user.
+ *
+ * @author MrCraftCod
+ */
 public class TrackUserActionListener implements ActionListener
 {
 	@Override
