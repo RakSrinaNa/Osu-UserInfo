@@ -68,7 +68,12 @@ import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.CountryCode;
 import fr.mrcraftcod.utils.Utils;
 
-public class Interface extends JFrame // TODO Javadoc
+/**
+ * The main interface of the program.
+ *
+ * @author MrCraftCod
+ */
+public class Interface extends JFrame
 {
 	private static final long serialVersionUID = -6393144716196499998L;
 	public final JTextComponent userNameFieldTextComponent;
@@ -98,26 +103,61 @@ public class Interface extends JFrame // TODO Javadoc
 	private final JLabel hitCount50;
 	private final JProgressBar levelBar;
 
+	/**
+	 * Constructor.
+	 *
+	 * @throws IOException If the frame cannot be created.
+	 */
 	public Interface() throws IOException
 	{
 		this(null);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param defaultMode The mode to set when the frame is opened.
+	 *
+	 * @throws IOException If the frame cannot be created.
+	 */
 	public Interface(int defaultMode) throws IOException
 	{
 		this(null, null, defaultMode);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param user Set the current user shown.
+	 *
+	 * @throws IOException If the frame cannot be created.
+	 */
 	public Interface(String user) throws IOException
 	{
 		this(user, null);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param user Set the current user shown.
+	 * @param parent Set the point where to open the frame.
+	 *
+	 * @throws IOException If the frame cannot be created.
+	 */
 	public Interface(String user, Point parent) throws IOException
 	{
 		this(user, parent, 0);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param user Set the current user shown.
+	 * @param parent Set the point where to open the frame.
+	 * @param defaultMode The mode to set when the frame is opened.
+	 * @throws IOException If the frame cannot be created.
+	 */
 	@SuppressWarnings("unchecked")
 	public Interface(String user, Point parent, int defaultMode) throws IOException
 	{
@@ -128,19 +168,19 @@ public class Interface extends JFrame // TODO Javadoc
 		this.iconSearch = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
 		/************** FRAME INFOS ********************/
 		Utils.logger.log(Level.INFO, "Setting frame options...");
-		getFrame().setBackground(Utils.backColor);
-		getFrame().setFocusable(true);
-		getFrame().setVisible(false);
-		getFrame().getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "getInfos");
-		getFrame().getRootPane().getActionMap().put("getInfos", new ActionRefreshStats());
-		getFrame().addWindowListener(new MainWindowListener());
-		getFrame().setLayout(new GridBagLayout());
-		getFrame().setMinimumSize(new Dimension(575, 725));
-		getFrame().setPreferredSize(new Dimension(575, 725));
-		getFrame().setAlwaysOnTop(false);
-		getFrame().setIconImages(Utils.icons);
-		getFrame().getContentPane().setBackground(Utils.backColor);
-		getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBackground(Utils.backColor);
+		setFocusable(true);
+		setVisible(false);
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "getInfos");
+		getRootPane().getActionMap().put("getInfos", new ActionRefreshStats());
+		addWindowListener(new MainWindowListener());
+		setLayout(new GridBagLayout());
+		setMinimumSize(new Dimension(575, 725));
+		setPreferredSize(new Dimension(575, 725));
+		setAlwaysOnTop(false);
+		setIconImages(Utils.icons);
+		getContentPane().setBackground(Utils.backColor);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/*************** FRMAE BAR ************************/
 		Utils.logger.log(Level.INFO, "Creating frame bar...");
 		Font menuBarFont = Utils.fontMain.deriveFont(Font.PLAIN, 13);
@@ -165,7 +205,7 @@ public class Interface extends JFrame // TODO Javadoc
 		menuHelp.add(itemAbout);
 		menuBar.add(menuFile);
 		menuBar.add(menuHelp);
-		getFrame().setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 		/*************** SEARCH PANEL **********************/
 		Utils.logger.log(Level.INFO, "Creating search panel...");
 		JPanel searchPanel = new JPanel(new GridBagLayout());
@@ -617,47 +657,55 @@ public class Interface extends JFrame // TODO Javadoc
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(searchPanel, constraint);
+		getContentPane().add(searchPanel, constraint);
 		constraint.insets = new Insets(1, 0, 2, 0);
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(modePanel, constraint);
+		getContentPane().add(modePanel, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(avatarPanel, constraint);
+		getContentPane().add(avatarPanel, constraint);
 		constraint.insets = new Insets(0, 0, 0, 0);
 		constraint.gridy = line++;
 		constraint.fill = GridBagConstraints.BOTH;
-		getFrame().getContentPane().add(levelUserPanel, constraint);
+		getContentPane().add(levelUserPanel, constraint);
 		constraint.gridy = line++;
 		constraint.insets = new Insets(2, 4, 2, 4);
-		getFrame().getContentPane().add(otherPanel, constraint);
+		getContentPane().add(otherPanel, constraint);
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(hitCountPanel, constraint);
+		getContentPane().add(hitCountPanel, constraint);
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(ranksUserPanel, constraint);
+		getContentPane().add(ranksUserPanel, constraint);
 		constraint.gridy = line++;
-		getFrame().getContentPane().add(trackUserPanel, constraint);
+		getContentPane().add(trackUserPanel, constraint);
 		Utils.logger.log(Level.INFO, "Packing frame...");
 		if(parent == null)
 		{
 			Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 			parent = new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2);
 		}
-		getFrame().setLocation(parent);
-		getFrame().pack();
-		getFrame().setVisible(true);
-		getFrame().toFront();
+		setLocation(parent);
+		pack();
+		setVisible(true);
+		toFront();
 		this.userNameField.requestFocusInWindow();
 		if(user != null)
 			Utils.getInfos(user, false, true);
 	}
 
+	/**
+	 * Used to activate the frame.
+	 */
 	public void activateFrame()
 	{
-		getFrame().setFocusable(true);
-		getFrame().setEnabled(true);
+		setFocusable(true);
+		setEnabled(true);
 	}
 
+	/**
+	 * Used to add a new tracked user in the list.
+	 *
+	 * @param user The new tracked user.
+	 */
 	public void addTrackedUser(User user)
 	{
 		this.userNameFieldModel.addElement(user.getUsername());
@@ -667,19 +715,31 @@ public class Interface extends JFrame // TODO Javadoc
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
 	}
 
+	/**
+	 * Used to show back the frame when exiting system tray mode.
+	 */
 	public void backFromTray()
 	{
-		getFrame().setState(JFrame.NORMAL);
+		setState(JFrame.NORMAL);
 		showFrame();
-		getFrame().toFront();
+		toFront();
 	}
 
-	public void desactivateFrame()
+	/**
+	 * Used to deactivate the frame.
+	 */
+	public void deactivateFrame()
 	{
-		getFrame().setFocusable(false);
-		getFrame().setEnabled(false);
+		setFocusable(false);
+		setEnabled(false);
 	}
 
+	/**
+	 * Used to display stats.
+	 *
+	 * @param user The user of the stats.
+	 * @param stats The stats to show.
+	 */
 	public void displayStats(User user, Stats stats)
 	{
 		updateLevel(stats.getLevel());
@@ -695,11 +755,11 @@ public class Interface extends JFrame // TODO Javadoc
 		this.hitCount50.setText(NumberFormat.getInstance(Utils.locale).format(stats.getCount50()) + " (" + decimalFormat.format(stats.getCount50() * 100f / stats.getTotalHits()) + "%)");
 	}
 
-	public Interface getFrame()
-	{
-		return this;
-	}
-
+	/**
+	 * Used to get the selected date.
+	 *
+	 * @return The selected date.
+	 */
 	public long getSelectedDate()
 	{
 		String date = this.lastStatsDateBox.getSelectedItem().toString();
@@ -711,6 +771,11 @@ public class Interface extends JFrame // TODO Javadoc
 		return formatter.parseDateTime(date).toDate().getTime();
 	}
 
+	/**
+	 * Used to get the selected mode.
+	 *
+	 * @return The selected mode.
+	 */
 	public int getSelectedMode()
 	{
 		if(!this.buttonTaiko.isEnabled())
@@ -722,12 +787,20 @@ public class Interface extends JFrame // TODO Javadoc
 		return 0;
 	}
 
+	/**
+	 * Used to hide the frame.
+	 */
 	public void hideFrame()
 	{
-		getFrame().setEnabled(false);
-		getFrame().setFocusable(false);
+		setEnabled(false);
+		setFocusable(false);
 	}
 
+	/**
+	 * Used to remove a tracked user from the list.
+	 *
+	 * @param user The user to remove.
+	 */
 	public void removeTrackedUser(User user)
 	{
 		this.userNameField.setSelectedItem(user.getUsername());
@@ -737,6 +810,11 @@ public class Interface extends JFrame // TODO Javadoc
 		this.autoUpdateCheck.setSelected(false);
 	}
 
+	/**
+	 * Used to set the flag and the avatar in the frame for the user.
+	 *
+	 * @param user The user.
+	 */
 	public void setFlagAndAvatar(final User user)
 	{
 		this.avatar.setImage(null);
@@ -769,6 +847,17 @@ public class Interface extends JFrame // TODO Javadoc
 		new Thread(task, "ThreadImages").start();
 	}
 
+	/**
+	 * Used to set the icon of the valid button.
+	 *
+	 * @param string <html>The stats of the button:
+	 *            <ul>
+	 *            <li>R : refresh</li>
+	 *            <li>All other than R : search</li>
+	 *            </ul>
+	 *            </html>
+	 *
+	 */
 	public void setValidButonIcon(String string)
 	{
 		if(string.equalsIgnoreCase("R"))
@@ -777,13 +866,22 @@ public class Interface extends JFrame // TODO Javadoc
 			this.validButon.setIcon(this.iconSearch);
 	}
 
+	/**
+	 * Used to show the frame.
+	 */
 	public void showFrame()
 	{
-		getFrame().setEnabled(true);
-		getFrame().setFocusable(true);
-		getFrame().setVisible(true);
+		setEnabled(true);
+		setFocusable(true);
+		setVisible(true);
 	}
 
+	/**
+	 * Used to change the selected mode.
+	 *
+	 * @param mode The mode to select.
+	 * @param checkInfos True if need to refresh infos.
+	 */
 	public void switchMode(int mode, boolean checkInfos)
 	{
 		Utils.config.writeVar("lastmode", mode);
@@ -810,16 +908,31 @@ public class Interface extends JFrame // TODO Javadoc
 			Utils.getInfos(Utils.lastUser.getUsername(), false, false);
 	}
 
+	/**
+	 * Used to modify the status of the autocompletion.
+	 *
+	 * @param status The status.
+	 */
 	public void updateAutoCompletionStatus(boolean status)
 	{
 		this.userNameField.setAutoCompletion(status);
 	}
 
+	/**
+	 * Used to update the infos for the user.
+	 *
+	 * @param showerror //TODO
+	 */
 	public void updateInfos(boolean showerror)
 	{
 		Utils.getInfos(Utils.lastUser.getUsername(), showerror, false);
 	}
 
+	/**
+	 * Used to update the available stats dates for the user.
+	 *
+	 * @param user The user.
+	 */
 	public void updateStatsDates(User user)
 	{
 		String lastDate = (String) this.statsDateModel.getSelectedItem();
@@ -833,11 +946,22 @@ public class Interface extends JFrame // TODO Javadoc
 			this.lastStatsDateBox.setSelectedIndex(this.statsDateModel.getSize() - 1);
 	}
 
+	/**
+	 * Used to update tracked infos.
+	 */
 	public void updateTrackedInfos()
 	{
 		updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate(), Utils.lastStats), true);
 	}
 
+	/**
+	 * Used to update tracked infos.
+	 *
+	 * @param user The user.
+	 * @param currentStats The current stats.
+	 * @param previousStats The stats to compare with.
+	 * @param showNotification Show the notification popup if there is changes or not.
+	 */
 	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
@@ -851,6 +975,11 @@ public class Interface extends JFrame // TODO Javadoc
 			new InterfaceNotification(user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
+	/**
+	 * Used to update the level bar.
+	 *
+	 * @param level The level to set.
+	 */
 	private void updateLevel(double level)
 	{
 		Utils.logger.log(Level.INFO, "Setting level to " + level);
