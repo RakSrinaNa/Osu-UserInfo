@@ -29,10 +29,12 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.interfaces.Interface;
@@ -436,6 +438,35 @@ public class Utils
 	}
 
 	/**
+	 * Used to get a new file object from the user.
+	 *
+	 * @param lastFile Where to open the frame.
+	 * @param mode The mode of the selection.
+	 * @param filter The filter to set.
+	 * @return The selected file.
+	 */
+	public static File getNewFilePatch(File lastFile, int mode, FileNameExtensionFilter filter)
+	{
+		File file = null;
+		try
+		{
+			File repertoireCourant = new File(System.getProperty("user.home")).getCanonicalFile();
+			if(lastFile != null)
+				repertoireCourant = lastFile.getCanonicalFile();
+			Utils.logger.log(Level.FINE, "Previous folder: " + repertoireCourant.getAbsolutePath());
+			final JFileChooser dialogue = new JFileChooser(repertoireCourant);
+			dialogue.setFileFilter(filter);
+			dialogue.setFileSelectionMode(mode);
+			if(dialogue.showSaveDialog(null) == JFileChooser.CANCEL_OPTION)
+				return null;
+			file = dialogue.getSelectedFile();
+		}
+		catch(final Exception e)
+		{}
+		return file;
+	}
+
+	/**
 	 * Used to get the progress for a level.
 	 *
 	 * @param level The level.
@@ -725,6 +756,26 @@ public class Utils
 		value = value * factor;
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
+	}
+
+	/**
+	 * Used to save a buffered image to a file.
+	 *
+	 * @param image the image to save.
+	 * @param file The file to create.
+	 * @throws IOException
+	 */
+	public static void saveImage(BufferedImage image, File file) throws IOException
+	{
+		if(image == null)
+			return;
+		if(file.exists())
+		{
+			JOptionPane.showMessageDialog(mainFrame, resourceBundle.getString("avatar_error"), resourceBundle.getString("avatar_error_title"), JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		file.mkdirs();
+		ImageIO.write(image, "png", file);
 	}
 
 	/**

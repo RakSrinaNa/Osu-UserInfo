@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -57,6 +58,7 @@ import fr.mrcraftcod.listeners.actions.TrackUserActionListener;
 import fr.mrcraftcod.listeners.actions.ValidButtonActionListener;
 import fr.mrcraftcod.listeners.components.ModesComponentListener;
 import fr.mrcraftcod.listeners.components.SearchPanelComponentListener;
+import fr.mrcraftcod.listeners.mouse.AvatarMouseListener;
 import fr.mrcraftcod.listeners.mouse.OpenProfileMouseListener;
 import fr.mrcraftcod.listeners.windows.MainWindowListener;
 import fr.mrcraftcod.objects.AutoComboBox;
@@ -102,6 +104,7 @@ public class Interface extends JFrame
 	private final JLabel hitCount100;
 	private final JLabel hitCount50;
 	private final JProgressBar levelBar;
+	private BufferedImage avatarImage;
 
 	/**
 	 * Constructor.
@@ -529,7 +532,7 @@ public class Interface extends JFrame
 		this.avatar.setMinimumSize(new Dimension(avatarSize, avatarSize));
 		this.avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		this.avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
-		this.avatar.addMouseListener(new OpenProfileMouseListener());
+		this.avatar.addMouseListener(new AvatarMouseListener());
 		this.username = new JLabel(" ");
 		this.username.setToolTipText(Utils.resourceBundle.getString("open_profile"));
 		this.username.addMouseListener(new OpenProfileMouseListener());
@@ -756,6 +759,16 @@ public class Interface extends JFrame
 	}
 
 	/**
+	 * Used to get the avatar image.
+	 *
+	 * @return The avatar image.
+	 */
+	public BufferedImage getAvatarImage()
+	{
+		return this.avatarImage;
+	}
+
+	/**
 	 * Used to get the selected date.
 	 *
 	 * @return The selected date.
@@ -836,7 +849,7 @@ public class Interface extends JFrame
 				try
 				{
 					Interface.this.countryFlag.setImage(Utils.resizeBufferedImage(Utils.getCountryFlag(user.getCountry()), 16, 16));
-					Interface.this.avatar.setImage(Utils.resizeBufferedImage(Utils.getAvatar(String.valueOf(user.getUserID())), 128, 128));
+					Interface.this.avatar.setImage(Utils.resizeBufferedImage(Interface.this.avatarImage = Utils.getAvatar(String.valueOf(user.getUserID())), 128, 128));
 				}
 				catch(Exception e)
 				{
