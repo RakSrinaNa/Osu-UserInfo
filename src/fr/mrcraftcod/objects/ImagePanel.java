@@ -2,7 +2,10 @@ package fr.mrcraftcod.objects;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
+import fr.mrcraftcod.interfaces.ImageChangeListener;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -13,6 +16,7 @@ import fr.mrcraftcod.utils.Utils;
 public class ImagePanel extends JPanel
 {
 	private static final long serialVersionUID = -6952599309580686281L;
+	List<ImageChangeListener> listeners = new ArrayList<ImageChangeListener>();
 	private BufferedImage image;
 	private boolean printLoading;
 
@@ -57,6 +61,11 @@ public class ImagePanel extends JPanel
 		this.printLoading = printLoading;
 	}
 
+	public void addImageChangeListener(ImageChangeListener toAdd)
+	{
+		this.listeners.add(toAdd);
+	}
+
 	/**
 	 * Used to know if the loading text is activated.
 	 *
@@ -75,6 +84,8 @@ public class ImagePanel extends JPanel
 	public void setImage(BufferedImage image)
 	{
 		this.image = image;
+		for(ImageChangeListener l : this.listeners)
+			l.onImageChanged(new ImageEvent(this, image));
 		this.repaint();
 		invalidate();
 	}

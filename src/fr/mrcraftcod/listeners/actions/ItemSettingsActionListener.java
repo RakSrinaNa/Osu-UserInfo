@@ -2,7 +2,7 @@ package fr.mrcraftcod.listeners.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import fr.mrcraftcod.interfaces.InterfaceSettings;
+import fr.mrcraftcod.frames.InterfaceSettings;
 import fr.mrcraftcod.utils.Utils;
 
 /**

@@ -1,4 +1,4 @@
-package fr.mrcraftcod.interfaces;
+package fr.mrcraftcod.frames;
 
 import java.awt.Color;
 import java.awt.Dimension;

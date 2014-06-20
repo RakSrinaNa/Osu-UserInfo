@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
-import fr.mrcraftcod.interfaces.InterfaceChart;
+import fr.mrcraftcod.frames.InterfaceChart;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
 

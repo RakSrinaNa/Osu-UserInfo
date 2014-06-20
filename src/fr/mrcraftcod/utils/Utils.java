@@ -37,11 +37,11 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.interfaces.Interface;
-import fr.mrcraftcod.interfaces.InterfaceAbout;
-import fr.mrcraftcod.interfaces.InterfaceChangelog;
-import fr.mrcraftcod.interfaces.InterfaceSettings;
-import fr.mrcraftcod.interfaces.InterfaceStartup;
+import fr.mrcraftcod.frames.Interface;
+import fr.mrcraftcod.frames.InterfaceAbout;
+import fr.mrcraftcod.frames.InterfaceChangelog;
+import fr.mrcraftcod.frames.InterfaceSettings;
+import fr.mrcraftcod.frames.InterfaceStartup;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
@@ -455,6 +455,8 @@ public class Utils
 				repertoireCourant = lastFile.getCanonicalFile();
 			Utils.logger.log(Level.FINE, "Previous folder: " + repertoireCourant.getAbsolutePath());
 			final JFileChooser dialogue = new JFileChooser(repertoireCourant);
+			dialogue.setDialogTitle(resourceBundle.getString("get_folder_avatar_save_title"));
+			dialogue.setLocale(locale);
 			dialogue.setFileFilter(filter);
 			dialogue.setFileSelectionMode(mode);
 			if(dialogue.showSaveDialog(null) == JFileChooser.CANCEL_OPTION)
@@ -771,7 +773,7 @@ public class Utils
 			return;
 		if(file.exists())
 		{
-			JOptionPane.showMessageDialog(mainFrame, resourceBundle.getString("avatar_error"), resourceBundle.getString("avatar_error_title"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, String.format(resourceBundle.getString("avatar_error"), file.getName()), resourceBundle.getString("avatar_error_title"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		file.mkdirs();

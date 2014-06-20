@@ -1,4 +1,4 @@
-package fr.mrcraftcod.interfaces;
+package fr.mrcraftcod.frames;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -44,6 +44,7 @@ import org.joda.time.format.DateTimeFormatter;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionRefreshStats;
 import fr.mrcraftcod.listeners.AutoUpdateItemListener;
+import fr.mrcraftcod.listeners.AvatarImageChange;
 import fr.mrcraftcod.listeners.UserNameFieldDocumentListener;
 import fr.mrcraftcod.listeners.UserNameTextFieldKeyListener;
 import fr.mrcraftcod.listeners.actions.ItemAboutActionListener;
@@ -533,6 +534,7 @@ public class Interface extends JFrame
 		this.avatar.setPreferredSize(new Dimension(avatarSize, avatarSize));
 		this.avatar.setMaximumSize(new Dimension(avatarSize, avatarSize));
 		this.avatar.addMouseListener(new AvatarMouseListener());
+		this.avatar.addImageChangeListener(new AvatarImageChange());
 		this.username = new JLabel(" ");
 		this.username.setToolTipText(Utils.resourceBundle.getString("open_profile"));
 		this.username.addMouseListener(new OpenProfileMouseListener());
@@ -831,6 +833,16 @@ public class Interface extends JFrame
 		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setSelected(false);
+	}
+
+	/**
+	 * Used to set the avatar image.
+	 *
+	 * @param image The image to set.
+	 */
+	public void setAvatarImage(BufferedImage image)
+	{
+		this.avatarImage = image;
 	}
 
 	/**
