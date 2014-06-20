@@ -11,6 +11,11 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to open the traducers' profile page.
+ *
+ * @author MrCraftCod
+ */
 public class TraducersMouseListener implements MouseListener
 {
 	@Override
@@ -45,9 +50,9 @@ public class TraducersMouseListener implements MouseListener
 
 	/**
 	 * Used to open the profile of a traducer.
-	 * 
+	 *
 	 * @param selectedRow The row selected.
-	 * 
+	 *
 	 * @throws MalformedURLException If the profile URL isn't correct.
 	 * @throws IOException If the browser can't be opened.
 	 * @throws URISyntaxException If the profile URL isn't correct.

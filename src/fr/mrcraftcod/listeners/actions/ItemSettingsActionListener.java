@@ -5,6 +5,11 @@ import javax.swing.AbstractAction;
 import fr.mrcraftcod.interfaces.InterfaceSettings;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to open the settings frame.
+ *
+ * @author MrCraftCod
+ */
 public class ItemSettingsActionListener extends AbstractAction
 {
 	private static final long serialVersionUID = 151605064904946278L;
