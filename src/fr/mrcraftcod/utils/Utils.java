@@ -174,7 +174,7 @@ public class Utils
 	 */
 	public static void getAllChangelogFrame()
 	{
-		new InterfaceChangelog(Changelog.getAllChangelog(isCurrentVersionBeta()));
+		new InterfaceChangelog(Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean("devMode", false)));
 	}
 
 	/**
