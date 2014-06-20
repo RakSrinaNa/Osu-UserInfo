@@ -69,7 +69,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 		this.frame.pack();
 		try
 		{
-			Utils.mainFrame.desactivateFrame();
+			Utils.mainFrame.deactivateFrame();
 		}
 		catch(Exception e)
 		{}

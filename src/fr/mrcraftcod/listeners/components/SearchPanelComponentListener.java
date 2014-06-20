@@ -6,7 +6,7 @@ import java.awt.event.ComponentListener;
 import javax.swing.JPanel;
 
 /**
- * Used to correct a huge white space when frame is too big. Need to be fixed //TODO
+ * Used to correct a huge white space when frame is too big. Need to be fixed //TODO Fix blank gap
  *
  * @author MrCraftCod
  */

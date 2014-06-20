@@ -44,7 +44,7 @@ public class MainWindowListener implements WindowListener
 			{
 				SystemTrayOsuStats.add();
 				Utils.mainFrame.hideFrame();
-				Utils.mainFrame.getFrame().setVisible(false);
+				Utils.mainFrame.setVisible(false);
 			}
 		}
 		catch(final AWTException exception)

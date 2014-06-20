@@ -117,7 +117,7 @@ public class InterfaceSettings extends JFrame
 		setPreferredSize(new Dimension(frameWidth, frameHeight));
 		setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setLocationRelativeTo(Utils.mainFrame.getFrame());
+		setLocationRelativeTo(Utils.mainFrame);
 		Utils.mainFrame.hideFrame();
 		toFront();
 		pack();
