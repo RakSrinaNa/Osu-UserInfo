@@ -126,10 +126,11 @@ public class InterfaceChangelog extends JFrame
 	{
 		getContentPane().removeAll();
 		setTitle(String.format(Utils.resourceBundle.getString("changelog_for"), version));
-		getContentPane().add(this.panels.get(version), BorderLayout.CENTER);
+		JChangelogPanel panel = this.panels.containsKey(version) ? this.panels.get(version) : this.panels.get(this.panels.keySet().iterator().next());
+		getContentPane().add(panel, BorderLayout.CENTER);
 		if(this.panels.size() > 1)
 			getContentPane().add(this.versionSelection, BorderLayout.SOUTH);
-		Dimension d = this.panels.get(version).getPreferredSize();
+		Dimension d = panel.getPreferredSize();
 		d.height += 50 + this.versionSelection.getPreferredSize().height;
 		d.width += 20;
 		setPreferredSize(d);

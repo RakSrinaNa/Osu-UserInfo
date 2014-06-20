@@ -174,7 +174,7 @@ public class Utils
 	 */
 	public static void getAllChangelogFrame()
 	{
-		new InterfaceChangelog(Changelog.getAllChangelog());
+		new InterfaceChangelog(Changelog.getAllChangelog(isCurrentVersionBeta()));
 	}
 
 	/**
@@ -870,6 +870,16 @@ public class Utils
 	{
 		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
 		return colors[new Random().nextInt(colors.length)];
+	}
+
+	/**
+	 * Used to know if the current version is a beta.
+	 *
+	 * @return True if this is a beta, false if not.
+	 */
+	private static boolean isCurrentVersionBeta()
+	{
+		return Main.VERSION.contains("b");
 	}
 
 	/**

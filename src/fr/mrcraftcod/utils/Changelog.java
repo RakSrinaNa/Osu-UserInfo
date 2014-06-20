@@ -31,16 +31,17 @@ public class Changelog
 	 * Get the changelogs.
 	 *
 	 * @param version The version wanted.
+	 * @param processBetas Should return changelog for betas or not.
 	 * @return The changelog.
 	 */
-	public static LinkedHashMap<String, String> getAllChangelog()
+	public static LinkedHashMap<String, String> getAllChangelog(boolean processBetas)
 	{
 		LinkedHashMap<String, String> changelogs = null;
 		File changelogFile = new File(".", "changelog.xml");
 		getChangelogBitbucket(changelogFile, LINKXML);
 		try
 		{
-			changelogs = getAllChangelogText(changelogFile);
+			changelogs = getAllChangelogText(changelogFile, processBetas);
 		}
 		catch(SAXException | IOException | ParserConfigurationException e)
 		{}
@@ -74,15 +75,16 @@ public class Changelog
 	 *
 	 * @param changelogFile The XML file.
 	 * @param version The version to get.
+	 * @param processBetas Should return changelog for betas or not.
 	 * @return The changelog text of the wanted version.
 	 *
 	 * @throws SAXException If there were an error with the XML file.
 	 * @throws IOException If there were an error with the file.
 	 * @throws ParserConfigurationException If there were an error with the XML file.
 	 */
-	private static LinkedHashMap<String, String> getAllChangelogText(File changelogFile) throws SAXException, IOException, ParserConfigurationException
+	private static LinkedHashMap<String, String> getAllChangelogText(File changelogFile, boolean processBetas) throws SAXException, IOException, ParserConfigurationException
 	{
-		return parseVersions(changelogFile);
+		return parseVersions(changelogFile, processBetas);
 	}
 
 	/**
@@ -145,20 +147,21 @@ public class Changelog
 	 */
 	private static String getChangelogText(File changelogFile, String version) throws SAXException, IOException, ParserConfigurationException
 	{
-		return parseVersions(changelogFile).get(version);
+		return parseVersions(changelogFile, true).get(version);
 	}
 
 	/**
 	 * Used to extract versions and changelog from an XML file.
 	 *
 	 * @param file The XML file.
+	 * @param processBetas Should return changelog for betas or not.
 	 * @return An HashMap object containing the versions as key and changelog as values.
 	 *
 	 * @throws SAXException If there were an error with the XML file.
 	 * @throws IOException If there were an error with the file.
 	 * @throws ParserConfigurationException If there were an error with the XML file.
 	 */
-	private static LinkedHashMap<String, String> parseVersions(File file) throws SAXException, IOException, ParserConfigurationException
+	private static LinkedHashMap<String, String> parseVersions(File file, boolean processBetas) throws SAXException, IOException, ParserConfigurationException
 	{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -178,6 +181,8 @@ public class Changelog
 				NodeList numberList = versionElement.getElementsByTagName("changes");
 				Element numberElement = (Element) numberList.item(0);
 				NodeList textNuList = numberElement.getChildNodes();
+				if(textNaList.item(0).getNodeValue().trim().contains("b") && !processBetas)
+					continue;
 				changelogs.put(textNaList.item(0).getNodeValue().trim(), textNuList.item(0).getNodeValue().trim());
 			}
 		}
