@@ -22,7 +22,8 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	private JFrame frame;
 	private String user;
 	private boolean hard;
-	private boolean force;
+	private boolean forceDisplay;
+	private boolean forceFetch;
 
 	/**
 	 * Constructor.
@@ -31,12 +32,15 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	 * @param user The user to fetch (username).
 	 * @param hard Fetch the infos in 'hard mode'.
 	 * @param openFrame Open or not the loading frame.
+	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
+	 * @param forceFetch Force the program to fetch datas even if the cooldown time isn't finished?
 	 */
-	public LoadingWorker(Frame parent, String user, boolean hard, boolean openFrame, boolean force)
+	public LoadingWorker(Frame parent, String user, boolean hard, boolean openFrame, boolean forceDisplay, boolean forceFetch)
 	{
 		this.user = user;
 		this.hard = hard;
-		this.force = force;
+		this.forceDisplay = forceDisplay;
+		this.forceFetch = forceFetch;
 		if(openFrame)
 			initFrame(parent);
 	}
@@ -83,7 +87,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
-		return Utils.getInfosServer(this.user, this.hard, this.force);
+		return Utils.getInfosServer(this.user, this.hard, this.forceDisplay, this.forceFetch);
 	}
 
 	/**
