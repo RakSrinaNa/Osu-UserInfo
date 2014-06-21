@@ -78,7 +78,7 @@ public class Updater
 			try
 			{
 				Utils.startup.setBarProgress(100);
-				JOptionPane.showMessageDialog(context, String.format(Utils.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
+				// JOptionPane.showMessageDialog(context, String.format(Utils.resourceBundle.getString("update_complete"), "\n" + jarFile.getAbsolutePath() + "\n"));
 				Utils.exit(false);
 				String javaHome = System.getProperty("java.home");
 				File f = new File(javaHome);

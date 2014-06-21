@@ -288,11 +288,24 @@ public class Utils
 	 *
 	 * @param user The user to get the stats.
 	 * @param showerror //TODO
-	 * @param force Force the function to update stats on screen even if they are the same.
+	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
 	 */
-	public static void getInfos(String user, boolean showerror, boolean force)
+	public static void getInfos(String user, boolean showerror, boolean forceDisplay)
 	{
-		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true), force);
+		getInfos(user, showerror, forceDisplay, false);
+	}
+
+	/**
+	 * Used to get infos for a user.
+	 *
+	 * @param user The user to get the stats.
+	 * @param showerror //TODO
+	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
+	 * @param forceFetch Force the program to fetch datas even if the cooldown time isn't finished.
+	 */
+	public static void getInfos(String user, boolean showerror, boolean forceDisplay, boolean forceFetch)
+	{
+		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true), forceDisplay, forceFetch);
 		load.execute();
 	}
 
@@ -302,11 +315,12 @@ public class Utils
 	 * @param user The user to get the infos.
 	 * @param showerror //TODO
 	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
+	 * @param forceFetch Force the program to fetch datas even if the cooldown time isn't finished.
 	 * @return True if the stats have changed, false if the stats are the same or cannot be found.
 	 */
-	public static boolean getInfosServer(String user, boolean showerror, boolean forceDisplay)
+	public static boolean getInfosServer(String user, boolean showerror, boolean forceDisplay, boolean forceFetch)
 	{
-		if(!isValidTime() || !isValidUser(user))
+		if(forceFetch || !isValidTime() || !isValidUser(user))
 			return false;
 		Utils.logger.log(Level.INFO, "Getting user infos " + user);
 		Utils.lastPost = new Date();

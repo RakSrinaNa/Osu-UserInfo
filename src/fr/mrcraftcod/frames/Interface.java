@@ -940,7 +940,7 @@ public class Interface extends JFrame
 			break;
 		}
 		if(checkInfos)
-			Utils.getInfos(Utils.lastUser.getUsername(), false, false);
+			Utils.getInfos(Utils.lastUser.getUsername(), false, false, false);
 	}
 
 	/**
