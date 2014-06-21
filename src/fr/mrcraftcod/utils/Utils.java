@@ -276,7 +276,7 @@ public class Utils
 	/**
 	 * Used to get infos for a user.
 	 *
-	 * @param showerror //TODO
+	 * @param showerror Show or not the red bar if error is thrown.
 	 */
 	public static void getInfos(boolean showerror)
 	{
@@ -287,7 +287,7 @@ public class Utils
 	 * Used to get infos for a user.
 	 *
 	 * @param user The user to get the stats.
-	 * @param showerror //TODO
+	 * @param showerror Show or not the red bar if error is thrown.
 	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
 	 */
 	public static void getInfos(String user, boolean showerror, boolean forceDisplay)
@@ -299,7 +299,7 @@ public class Utils
 	 * Used to get infos for a user.
 	 *
 	 * @param user The user to get the stats.
-	 * @param showerror //TODO
+	 * @param showerror Show or not the red bar if error is thrown.
 	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
 	 * @param forceFetch Force the program to fetch datas even if the cooldown time isn't finished.
 	 */
@@ -313,7 +313,7 @@ public class Utils
 	 * Used to get infos for a user from the API.
 	 *
 	 * @param user The user to get the infos.
-	 * @param showerror //TODO
+	 * @param showerror Show or not the red bar if error is thrown.
 	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
 	 * @param forceFetch Force the program to fetch datas even if the cooldown time isn't finished.
 	 * @return True if the stats have changed, false if the stats are the same or cannot be found.
