@@ -128,6 +128,7 @@ public class InterfaceChangelog extends JFrame
 				updateVersion();
 			}
 		});
+		this.versionSelection.setSelectedItem(Main.VERSION);
 		setPanelChange(Main.VERSION);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(true);
