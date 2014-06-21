@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -597,7 +599,7 @@ public class Utils
 		iconChangelogAdd = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogAdd.png")), iconSize, iconSize));
 		iconChangelogRemove = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogRemove.png")), iconSize, iconSize));
 		iconChangelogModify = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogModify.png")), iconSize, iconSize));
-		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
+		fontMain = new Font("Arial", Font.PLAIN, 12);// fontMain = registerFont("", 12, Font.PLAIN);// TODO font
 		setLookAndFeel();
 		int currentStep = 0;
 		startup = new InterfaceStartup(4);
@@ -724,6 +726,25 @@ public class Utils
 			{
 				e.printStackTrace();
 			}
+	}
+
+	/**
+	 * Used to register a font.
+	 *
+	 * @param name The name of the font. "src/resources/fonts/<name>"
+	 * @param size The size of the font.
+	 * @param type The type of the font.
+	 * @return The registered font.
+	 *
+	 * @throws FontFormatException If the font cannot be registered.
+	 * @throws IOException If the file isn't found.
+	 */
+	public static Font registerFont(String name, int size, int type) throws FontFormatException, IOException
+	{
+		Font font = Font.createFont(Font.TRUETYPE_FONT, Utils.class.getClassLoader().getResource("resources/fonts/" + name).openStream()).deriveFont(type, size);
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge.registerFont(font);
+		return font;
 	}
 
 	/**
