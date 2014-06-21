@@ -956,7 +956,7 @@ public class Interface extends JFrame
 	/**
 	 * Used to update the infos for the user.
 	 *
-	 * @param showerror //TODO
+	 * @param showerror Show or not the red bar if error is thrown.
 	 */
 	public void updateInfos(boolean showerror)
 	{
