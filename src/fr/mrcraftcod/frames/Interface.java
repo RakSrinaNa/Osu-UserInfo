@@ -653,6 +653,24 @@ public class Interface extends JFrame
 		otherPanel.add(this.country, new CC().cell(2, line++, 2, 1).alignX("left").gapLeft("2"));
 		otherPanel.add(totalHitsLabel, new CC().cell(0, line).alignX("right"));
 		otherPanel.add(this.totalHits, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
+		/*************** HEADER PANEL ******************/
+		JPanel headerPanel = new JPanel(new GridBagLayout());
+		headerPanel.setBackground(Utils.backColor);
+		// Construct
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.PAGE_START;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		line = 0;
+		constraint.gridwidth = GridBagConstraints.REMAINDER;
+		constraint.gridheight = 1;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = line++;
+		headerPanel.add(searchPanel, constraint);
+		constraint.insets = new Insets(1, 0, 2, 0);
+		constraint.gridy = line++;
+		headerPanel.add(modePanel, constraint);
 		/*************** FRAME CONSTRUCT ******************/
 		Utils.logger.log(Level.INFO, "Creating frame panel...");
 		constraint = new GridBagConstraints();
@@ -665,10 +683,7 @@ public class Interface extends JFrame
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = line++;
-		getContentPane().add(searchPanel, constraint);
-		constraint.insets = new Insets(1, 0, 2, 0);
-		constraint.gridy = line++;
-		getContentPane().add(modePanel, constraint);
+		getContentPane().add(headerPanel, constraint);
 		constraint.insets = new Insets(10, 0, 0, 0);
 		constraint.gridy = line++;
 		getContentPane().add(avatarPanel, constraint);
