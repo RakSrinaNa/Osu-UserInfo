@@ -76,4 +76,10 @@
 		{+}Possibility to save user avatar
 		</changes>
 	</version>
+		<version>
+		<name>1.6b19 (dev)</name>
+		<changes>
+		{*}Fix white gap when expanding frame
+		</changes>
+	</version>
 </changelog>
