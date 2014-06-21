@@ -46,7 +46,6 @@ import fr.mrcraftcod.actions.ActionRefreshStats;
 import fr.mrcraftcod.listeners.AutoUpdateItemListener;
 import fr.mrcraftcod.listeners.AvatarImageChange;
 import fr.mrcraftcod.listeners.UserNameFieldDocumentListener;
-import fr.mrcraftcod.listeners.UserNameTextFieldKeyListener;
 import fr.mrcraftcod.listeners.actions.ItemAboutActionListener;
 import fr.mrcraftcod.listeners.actions.ItemChartActionListener;
 import fr.mrcraftcod.listeners.actions.ItemSettingsActionListener;
@@ -58,7 +57,7 @@ import fr.mrcraftcod.listeners.actions.StatsDateActionListener;
 import fr.mrcraftcod.listeners.actions.TrackUserActionListener;
 import fr.mrcraftcod.listeners.actions.ValidButtonActionListener;
 import fr.mrcraftcod.listeners.components.ModesComponentListener;
-import fr.mrcraftcod.listeners.components.SearchPanelComponentListener;
+import fr.mrcraftcod.listeners.key.UserNameTextFieldKeyListener;
 import fr.mrcraftcod.listeners.mouse.AvatarMouseListener;
 import fr.mrcraftcod.listeners.mouse.OpenProfileMouseListener;
 import fr.mrcraftcod.listeners.windows.MainWindowListener;
@@ -80,7 +79,7 @@ public class Interface extends JFrame
 {
 	private static final long serialVersionUID = -6393144716196499998L;
 	public final JTextComponent userNameFieldTextComponent;
-	public final AutoComboBox userNameField;
+	public final AutoComboBox usernameField;
 	public final JComboBox<String> lastStatsDateBox;
 	public final JLabel lastStatsDate;
 	public final JLabel username;
@@ -214,42 +213,41 @@ public class Interface extends JFrame
 		Utils.logger.log(Level.INFO, "Creating search panel...");
 		JPanel searchPanel = new JPanel(new GridBagLayout());
 		searchPanel.setBackground(Utils.searchBarColor);
-		searchPanel.setMaximumSize(new Dimension(9999, 36));
-		searchPanel.addComponentListener(new SearchPanelComponentListener());
-		JLabel usernameAsk = new JLabel(Utils.resourceBundle.getString("username") + " : ");
-		usernameAsk.setFont(Utils.fontMain);
-		usernameAsk.setHorizontalAlignment(JLabel.CENTER);
-		usernameAsk.setVerticalAlignment(JLabel.CENTER);
-		this.userNameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean("autoCompletion", false));
-		this.userNameField.setFont(Utils.fontMain);
-		this.userNameFieldModel = this.userNameField.getDefModel();
+		JLabel usernameLabel = new JLabel(Utils.resourceBundle.getString("username") + " : ");
+		usernameLabel.setFont(Utils.fontMain);
+		usernameLabel.setHorizontalAlignment(JLabel.CENTER);
+		usernameLabel.setVerticalAlignment(JLabel.CENTER);
+		this.usernameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean("autoCompletion", false));
+		this.usernameField.setFont(Utils.fontMain);
+		this.userNameFieldModel = this.usernameField.getDefModel();
 		this.userNameFieldModel.addElement(null);
-		this.userNameField.setEditable(true);
-		this.userNameField.setPreferredSize(new Dimension(200, 30));
-		this.userNameField.setSelectedItem(null);
-		this.userNameFieldTextComponent = (JTextComponent) this.userNameField.getEditor().getEditorComponent();
+		this.usernameField.setEditable(true);
+		this.usernameField.setPreferredSize(new Dimension(200, 30));
+		this.usernameField.setSelectedItem(null);
+		this.userNameFieldTextComponent = (JTextComponent) this.usernameField.getEditor().getEditorComponent();
 		this.userNameFieldTextComponent.getDocument().addDocumentListener(new UserNameFieldDocumentListener());
-		new GhostText((JTextField) this.userNameField.getEditor().getEditorComponent(), Utils.resourceBundle.getString("ghost_username_field"));
-		((JTextField) this.userNameField.getEditor().getEditorComponent()).addKeyListener(new UserNameTextFieldKeyListener());
+		new GhostText((JTextField) this.usernameField.getEditor().getEditorComponent(), Utils.resourceBundle.getString("ghost_username_field"));
+		((JTextField) this.usernameField.getEditor().getEditorComponent()).addKeyListener(new UserNameTextFieldKeyListener());
 		this.validButon = new JButton(this.iconSearch);
 		this.validButon.setFont(Utils.fontMain);
 		this.validButon.setToolTipText(Utils.resourceBundle.getString("button_search_tooltip_text"));
 		this.validButon.addActionListener(new ValidButtonActionListener());
 		JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
-		separator.setPreferredSize(new Dimension(100, 100));
+		separator.setPreferredSize(new Dimension(100, 2));
 		// Construct panel
 		GridBagConstraints constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.LINE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridheight = 1;
 		constraint.gridwidth = 1;
 		constraint.weightx = 0.1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
-		searchPanel.add(usernameAsk, constraint);
+		searchPanel.add(usernameLabel, constraint);
 		constraint.weightx = 0.7;
 		constraint.gridx = 1;
-		searchPanel.add(this.userNameField, constraint);
+		searchPanel.add(this.usernameField, constraint);
 		constraint.gridx = 2;
 		constraint.weightx = 0.1;
 		searchPanel.add(this.validButon, constraint);
@@ -316,6 +314,7 @@ public class Interface extends JFrame
 		constraint.anchor = GridBagConstraints.LINE_START;
 		constraint.fill = GridBagConstraints.BOTH;
 		constraint.gridwidth = 1;
+		constraint.gridheight = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
@@ -365,25 +364,26 @@ public class Interface extends JFrame
 		this.autoUpdateCheck.setSelected(false);
 		this.autoUpdateCheck.addItemListener(new AutoUpdateItemListener());
 		// Construct
-		int lign = 0;
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.LINE_START;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = lign++;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = 1;
-		trackUserPanel.add(this.track, c);
-		c.gridy = lign++;
-		trackUserPanel.add(this.autoUpdateCheck, c);
-		c.gridwidth = 1;
-		c.gridy = lign++;
-		c.weightx = 0.1;
-		trackUserPanel.add(this.lastStatsDate, c);
-		c.gridx = 1;
-		c.weightx = 1;
-		trackUserPanel.add(this.lastStatsDateBox, c);
+		int line = 0;
+		constraint = new GridBagConstraints();
+		constraint.anchor = GridBagConstraints.LINE_START;
+		constraint.fill = GridBagConstraints.HORIZONTAL;
+		constraint.gridx = 0;
+		constraint.gridy = line++;
+		constraint.gridwidth = 2;
+		constraint.gridheight = 1;
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		trackUserPanel.add(this.track, constraint);
+		constraint.gridy = line++;
+		trackUserPanel.add(this.autoUpdateCheck, constraint);
+		constraint.gridwidth = 1;
+		constraint.gridy = line++;
+		constraint.weightx = 0.1;
+		trackUserPanel.add(this.lastStatsDate, constraint);
+		constraint.gridx = 1;
+		constraint.weightx = 1;
+		trackUserPanel.add(this.lastStatsDateBox, constraint);
 		/***************** HITS PANEL ********************/
 		Utils.logger.log(Level.INFO, "Creating hits panel...");
 		JPanel hitCountPanel = new JPanel(new GridBagLayout());
@@ -444,6 +444,7 @@ public class Interface extends JFrame
 		constraint.anchor = GridBagConstraints.CENTER;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.gridwidth = 1;
+		constraint.gridheight = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
@@ -512,6 +513,7 @@ public class Interface extends JFrame
 		constraint.anchor = GridBagConstraints.LINE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
 		constraint.gridwidth = 1;
+		constraint.gridheight = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
@@ -547,6 +549,7 @@ public class Interface extends JFrame
 		constraint.fill = GridBagConstraints.LINE_START;
 		constraint.anchor = GridBagConstraints.CENTER;
 		constraint.gridwidth = 3;
+		constraint.gridheight = 1;
 		constraint.weightx = 0.1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
@@ -558,7 +561,6 @@ public class Interface extends JFrame
 		/**************** OTHERS PANEL *********************/
 		Utils.logger.log(Level.INFO, "Creating other panel...");
 		JPanel otherPanel = new JPanel(new MigLayout());
-		otherPanel.setBackground(Utils.noticeColor);
 		otherPanel.setBackground(Utils.noticeColor);
 		TitledBorder borderOther = BorderFactory.createTitledBorder(Utils.noticeBorder, Utils.resourceBundle.getString("stats"));
 		borderOther.setTitleJustification(TitledBorder.CENTER);
@@ -635,29 +637,30 @@ public class Interface extends JFrame
 		this.totalHits.setHorizontalAlignment(JLabel.LEFT);
 		this.totalHits.setVerticalAlignment(JLabel.CENTER);
 		// Construct
-		lign = 0;
-		otherPanel.add(playCountLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(this.playCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
-		otherPanel.add(rankedScoreLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(this.rankedScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
-		otherPanel.add(totalScoreLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(this.totalScore, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
-		otherPanel.add(ppCountLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(this.ppCount, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
-		otherPanel.add(accuracyLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(this.accuracy, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
-		otherPanel.add(countryLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(this.countryFlag, new CC().cell(1, lign).alignX("left").gapLeft("5"));
-		otherPanel.add(this.country, new CC().cell(2, lign++, 2, 1).alignX("left").gapLeft("2"));
-		otherPanel.add(totalHitsLabel, new CC().cell(0, lign).alignX("right"));
-		otherPanel.add(this.totalHits, new CC().cell(1, lign++, 2, 1).alignX("left").gapLeft("5"));
+		line = 0;
+		otherPanel.add(playCountLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.playCount, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(rankedScoreLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.rankedScore, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(totalScoreLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.totalScore, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(ppCountLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.ppCount, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(accuracyLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.accuracy, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
+		otherPanel.add(countryLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.countryFlag, new CC().cell(1, line).alignX("left").gapLeft("5"));
+		otherPanel.add(this.country, new CC().cell(2, line++, 2, 1).alignX("left").gapLeft("2"));
+		otherPanel.add(totalHitsLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.totalHits, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** FRAME CONSTRUCT ******************/
 		Utils.logger.log(Level.INFO, "Creating frame panel...");
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.PAGE_START;
 		constraint.fill = GridBagConstraints.HORIZONTAL;
-		int line = 0;
+		line = 0;
 		constraint.gridwidth = GridBagConstraints.REMAINDER;
+		constraint.gridheight = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
 		constraint.gridx = 0;
@@ -692,7 +695,7 @@ public class Interface extends JFrame
 		pack();
 		setVisible(true);
 		toFront();
-		this.userNameField.requestFocusInWindow();
+		this.usernameField.requestFocusInWindow();
 		if(user != null)
 			Utils.getInfos(user, false, true);
 	}
@@ -714,7 +717,7 @@ public class Interface extends JFrame
 	public void addTrackedUser(User user)
 	{
 		this.userNameFieldModel.addElement(user.getUsername());
-		this.userNameField.setSelectedItem(user.getUsername());
+		this.usernameField.setSelectedItem(user.getUsername());
 		this.lastStatsDate.setEnabled(this.track.isSelected());
 		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
@@ -828,7 +831,7 @@ public class Interface extends JFrame
 	 */
 	public void removeTrackedUser(User user)
 	{
-		this.userNameField.setSelectedItem(user.getUsername());
+		this.usernameField.setSelectedItem(user.getUsername());
 		this.lastStatsDate.setEnabled(this.track.isSelected());
 		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
@@ -950,7 +953,7 @@ public class Interface extends JFrame
 	 */
 	public void updateAutoCompletionStatus(boolean status)
 	{
-		this.userNameField.setAutoCompletion(status);
+		this.usernameField.setAutoCompletion(status);
 	}
 
 	/**
