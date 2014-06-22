@@ -1,4 +1,4 @@
-package fr.mrcraftcod.listeners;
+package fr.mrcraftcod.listeners.key;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

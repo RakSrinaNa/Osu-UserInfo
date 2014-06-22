@@ -55,7 +55,7 @@ public class InterfaceChart extends JFrame
 		setIconImages(Utils.icons);
 		setTitle(user);
 		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
-		int shapeOffset = 4;
+		int shapeOffset = 3;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
 		ChartPanel chartPPAndRankPanel = getChartInPannel(createRankAndPPChart(title, user, stats, shape));
 		ChartPanel chartAccuracyPanel = getChartInPannel(createAccuracyChart(title, user, stats, shape));

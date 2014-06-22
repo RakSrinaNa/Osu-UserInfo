@@ -324,7 +324,7 @@ public class Utils
 			return false;
 		Utils.logger.log(Level.INFO, "Getting user infos " + user);
 		Utils.lastPost = new Date();
-		mainFrame.userNameField.setBackground(null);
+		mainFrame.usernameField.setBackground(null);
 		mainFrame.userNameFieldTextComponent.setBackground(null);
 		try
 		{
@@ -394,7 +394,7 @@ public class Utils
 			if(showerror)
 			{
 				Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
-				mainFrame.userNameField.setBackground(Color.RED);
+				mainFrame.usernameField.setBackground(Color.RED);
 				mainFrame.userNameFieldTextComponent.setBackground(Color.RED);
 			}
 			return false;
