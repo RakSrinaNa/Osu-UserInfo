@@ -4,6 +4,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to open the user's profile page.
+ *
+ * @author MrCraftCod
+ */
 public class OpenProfileMouseListener implements MouseListener
 {
 	@Override
@@ -22,7 +27,7 @@ public class OpenProfileMouseListener implements MouseListener
 	public void mousePressed(MouseEvent arg0)
 	{
 		if(arg0.getClickCount() > 1)
-			Utils.mainFrame.openUserProfile();
+			Utils.openUserProfile(Utils.lastUser);
 	}
 
 	@Override

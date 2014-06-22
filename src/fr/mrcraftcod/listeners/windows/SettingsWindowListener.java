@@ -4,17 +4,16 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to save changes before closing.
+ *
+ * @author MrCraftCod
+ */
 public class SettingsWindowListener implements WindowListener
 {
 	@Override
-	public void windowOpened(WindowEvent e)
+	public void windowActivated(WindowEvent e)
 	{}
-
-	@Override
-	public void windowClosing(final WindowEvent e)
-	{
-		Utils.configFrame.closeFrame();
-	}
 
 	@Override
 	public void windowClosed(WindowEvent e)
@@ -23,7 +22,13 @@ public class SettingsWindowListener implements WindowListener
 	}
 
 	@Override
-	public void windowIconified(WindowEvent e)
+	public void windowClosing(final WindowEvent e)
+	{
+		Utils.configFrame.closeFrame();
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e)
 	{}
 
 	@Override
@@ -31,10 +36,10 @@ public class SettingsWindowListener implements WindowListener
 	{}
 
 	@Override
-	public void windowActivated(WindowEvent e)
+	public void windowIconified(WindowEvent e)
 	{}
 
 	@Override
-	public void windowDeactivated(WindowEvent e)
+	public void windowOpened(WindowEvent e)
 	{}
 }

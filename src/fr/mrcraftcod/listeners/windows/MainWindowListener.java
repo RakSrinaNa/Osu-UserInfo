@@ -6,6 +6,11 @@ import java.awt.event.WindowListener;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to exit the program.
+ *
+ * @author MrCraftCod
+ */
 public class MainWindowListener implements WindowListener
 {
 	@Override
@@ -39,7 +44,7 @@ public class MainWindowListener implements WindowListener
 			{
 				SystemTrayOsuStats.add();
 				Utils.mainFrame.hideFrame();
-				Utils.mainFrame.getFrame().setVisible(false);
+				Utils.mainFrame.setVisible(false);
 			}
 		}
 		catch(final AWTException exception)

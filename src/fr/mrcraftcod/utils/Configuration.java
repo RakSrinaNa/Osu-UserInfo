@@ -14,7 +14,7 @@ import fr.mrcraftcod.Main;
 
 /**
  * Configuration object, used to store and get variables.
- * 
+ *
  * @author MrCraftCod
  */
 public class Configuration
@@ -25,7 +25,7 @@ public class Configuration
 
 	/**
 	 * Constructor.
-	 * Will create a new file in %appdata%/APPNAME/vars.ors.
+	 * Will create a new file in %appdata%/[APPNAME]/vars.ors.
 	 */
 	public Configuration()
 	{
@@ -35,7 +35,7 @@ public class Configuration
 	/**
 	 * Constructor.
 	 * Will create a new file in %appdata%/[APPNAME]/[filename].
-	 * 
+	 *
 	 * @param fileName The name of the config file.
 	 */
 	public Configuration(String fileName)
@@ -43,58 +43,61 @@ public class Configuration
 		appData = new File(System.getenv("APPDATA"), Main.APPNAME);
 		if(!appData.exists())
 			appData.mkdir();
-		configFile = new File(appData, fileName);
-		Utils.logger.log(Level.INFO, "Opening config file " + configFile.getAbsolutePath());
+		this.configFile = new File(appData, fileName);
+		Utils.logger.log(Level.INFO, "Opening config file " + this.configFile.getAbsolutePath());
 		try
 		{
-			currentConfig = readSmallTextFile(configFile);
+			this.currentConfig = readSmallTextFile(this.configFile);
 		}
 		catch(IOException e)
 		{}
 	}
 
 	/**
-	 * Used to get the string associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @return The String associated with the given key, null if the key doesn't exist.
+	 * Used to delete a key in the config file.
+	 *
+	 * @param key The key to delete.
+	 * @return A boolean showing if the action has been done or not.
 	 */
-	public String getVar(String key)
+	public synchronized boolean deleteVar(String key)
 	{
-		if(configFile.exists())
-			try
+		Utils.logger.log(Level.INFO, "Deletting var " + key);
+		List<String> oldConfiguration = null;
+		oldConfiguration = this.currentConfig;
+		FileWriter fileWriter;
+		try
+		{
+			fileWriter = new FileWriter(this.configFile, false);
+		}
+		catch(final IOException exception)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
+			return false;
+		}
+		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
+		if(oldConfiguration != null)
+			for(String string : oldConfiguration)
 			{
-				for(String string : currentConfig)
-					if(string.startsWith(key + ":"))
-					{
-						if(key.equals("api_key"))
-							Utils.logger.log(Level.INFO, "Found key " + key);
-						else
-							Utils.logger.log(Level.INFO, "Found key " + key + " in " + string);
-						return string.substring((key + ":").length());
-					}
+				if(string.startsWith(key + ":"))
+					continue;
+				printWriter.println(string);
 			}
-			catch(final Exception exception)
-			{}
-		return null;
-	}
-
-	/**
-	 * Used to get the String associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The String associated with the given key, defaultValue if the key doesn't exist.
-	 */
-	public String getString(String key, String defaultValue)
-	{
-		String value = getVar(key);
-		return value == null ? defaultValue : value;
+		printWriter.close();
+		try
+		{
+			this.currentConfig = readSmallTextFile(this.configFile);
+		}
+		catch(IOException e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
+		}
+		Utils.logger.log(Level.INFO, "Config file wrote");
+		return true;
 	}
 
 	/**
 	 * Used to get the boolean associated with the given key in the config file.
-	 * 
+	 *
 	 * @param key The key of what to get.
 	 * @param defaultValue The value to return if the key wasn't found.
 	 * @return The boolean associated with the given key, defaultValue if the key doesn't exist.
@@ -115,101 +118,120 @@ public class Configuration
 	}
 
 	/**
-	 * Used to write an object to the config file.
-	 * 
-	 * @param key The key to store the value.
-	 * @param obj The object to save (as string).
-	 * @return A boolean showing if the operation has been done or not.
+	 * Used to get config file.
+	 *
+	 * @return The config file currently used by this object.
 	 */
-	public synchronized boolean writeVar(String key, Object obj)
+	public File getConfigFile()
 	{
-		Utils.logger.log(Level.INFO, "Writting var " + key);
-		String value = obj == null ? "" : obj.toString();
-		List<String> oldConfiguration = null;
-		oldConfiguration = currentConfig;
-		FileWriter fileWriter;
-		try
-		{
-			fileWriter = new FileWriter(configFile, false);
-		}
-		catch(final IOException exception)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
-			return false;
-		}
-		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
-		boolean writted = false;
-		if(oldConfiguration != null)
-			for(String string : oldConfiguration)
-				if(string.startsWith(key + ":"))
-				{
-					writted = true;
-					printWriter.println(key + ":" + (value == null ? "" : value));
-				}
-				else
-					printWriter.println(string);
-		if(!writted)
-			printWriter.println(key + ":" + (value == null ? "" : value));
-		printWriter.close();
-		try
-		{
-			currentConfig = readSmallTextFile(configFile);
-		}
-		catch(IOException e)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
-		}
-		Utils.logger.log(Level.INFO, "Config file wrote");
-		return true;
+		return this.configFile;
 	}
 
 	/**
-	 * Used to delete a key in the config file.
-	 * 
-	 * @param key The key to delete.
-	 * @return A boolean showing if the action has been done or not.
+	 * Used to get the double associated with the given key in the config file.
+	 *
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The double associated with the given key, defaultValue if the key doesn't exist.
 	 */
-	public synchronized boolean deleteVar(String key)
+	public double getDouble(String key, double defaultValue)
 	{
-		Utils.logger.log(Level.INFO, "Deletting var " + key);
-		List<String> oldConfiguration = null;
-		oldConfiguration = currentConfig;
-		FileWriter fileWriter;
 		try
 		{
-			fileWriter = new FileWriter(configFile, false);
+			return Double.parseDouble(getVar(key));
 		}
-		catch(final IOException exception)
+		catch(Exception e)
 		{
-			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
-			return false;
+			Utils.logger.log(Level.WARNING, "Failed to parse to double!", e);
 		}
-		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
-		if(oldConfiguration != null)
-			for(String string : oldConfiguration)
+		return defaultValue;
+	}
+
+	/**
+	 * Used to get the integer associated with the given key in the config file.
+	 *
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The integer associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public int getInt(String key, int defaultValue)
+	{
+		try
+		{
+			return Integer.parseInt(getVar(key));
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to parse to integer!", e);
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * Used to get the long associated with the given key in the config file.
+	 *
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The long associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public long getLong(String key, long defaultValue)
+	{
+		try
+		{
+			return Long.parseLong(getVar(key));
+		}
+		catch(Exception e)
+		{
+			Utils.logger.log(Level.WARNING, "Failed to parse to long!", e);
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * Used to get the String associated with the given key in the config file.
+	 *
+	 * @param key The key of what to get.
+	 * @param defaultValue The value to return if the key wasn't found.
+	 * @return The String associated with the given key, defaultValue if the key doesn't exist.
+	 */
+	public String getString(String key, String defaultValue)
+	{
+		String value = getVar(key);
+		return value == null ? defaultValue : value;
+	}
+
+	/**
+	 * Used to get the string associated with the given key in the config file.
+	 *
+	 * @param key The key of what to get.
+	 * @return The String associated with the given key, null if the key doesn't exist.
+	 */
+	public String getVar(String key)
+	{
+		if(this.configFile.exists())
+			try
 			{
-				if(string.startsWith(key + ":"))
-					continue;
-				printWriter.println(string);
+				for(String string : this.currentConfig)
+					if(string.startsWith(key + ":"))
+					{
+						if(key.equals("api_key"))
+							Utils.logger.log(Level.INFO, "Found key " + key);
+						else
+							Utils.logger.log(Level.INFO, "Found key " + key + " in " + string);
+						return string.substring((key + ":").length());
+					}
 			}
-		printWriter.close();
-		try
-		{
-			currentConfig = readSmallTextFile(configFile);
-		}
-		catch(IOException e)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
-		}
-		Utils.logger.log(Level.INFO, "Config file wrote");
-		return true;
+			catch(final Exception exception)
+			{}
+		return null;
 	}
 
 	/**
 	 * Used to read the config file.
-	 * 
+	 *
 	 * @param configFile The File object pointing to the config file.
 	 * @return A list representing the read file.
+	 *
 	 * @throws IOException If the file cannot be read or is not found.
 	 */
 	public List<String> readSmallTextFile(final File configFile) throws IOException
@@ -232,77 +254,56 @@ public class Configuration
 		{
 			bufferedReader.close();
 		}
-		currentConfig = fileLines;
+		this.currentConfig = fileLines;
 		return fileLines;
 	}
 
 	/**
-	 * Used to get the double associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The double associated with the given key, defaultValue if the key doesn't exist.
+	 * Used to write an object to the config file.
+	 *
+	 * @param key The key to store the value.
+	 * @param obj The object to save (as string).
+	 * @return A boolean showing if the operation has been done or not.
 	 */
-	public double getDouble(String key, double defaultValue)
+	public synchronized boolean writeVar(String key, Object obj)
 	{
+		Utils.logger.log(Level.INFO, "Writting var " + key);
+		String value = obj == null ? "" : obj.toString();
+		List<String> oldConfiguration = null;
+		oldConfiguration = this.currentConfig;
+		FileWriter fileWriter;
 		try
 		{
-			return Double.parseDouble(getVar(key));
+			fileWriter = new FileWriter(this.configFile, false);
 		}
-		catch(Exception e)
+		catch(final IOException exception)
 		{
-			Utils.logger.log(Level.WARNING, "Failed to parse to double!", e);
+			Utils.logger.log(Level.WARNING, "Failed to write config file!", exception);
+			return false;
 		}
-		return defaultValue;
-	}
-
-	/**
-	 * Used to get the long associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The long associated with the given key, defaultValue if the key doesn't exist.
-	 */
-	public long getLong(String key, long defaultValue)
-	{
+		final PrintWriter printWriter = new PrintWriter(new BufferedWriter(fileWriter));
+		boolean writted = false;
+		if(oldConfiguration != null)
+			for(String string : oldConfiguration)
+				if(string.startsWith(key + ":"))
+				{
+					writted = true;
+					printWriter.println(key + ":" + (value == null ? "" : value));
+				}
+				else
+					printWriter.println(string);
+		if(!writted)
+			printWriter.println(key + ":" + (value == null ? "" : value));
+		printWriter.close();
 		try
 		{
-			return Long.parseLong(getVar(key));
+			this.currentConfig = readSmallTextFile(this.configFile);
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
-			Utils.logger.log(Level.WARNING, "Failed to parse to long!", e);
+			Utils.logger.log(Level.WARNING, "Failed to read config file!", e);
 		}
-		return defaultValue;
-	}
-
-	/**
-	 * Used to get the integer associated with the given key in the config file.
-	 * 
-	 * @param key The key of what to get.
-	 * @param defaultValue The value to return if the key wasn't found.
-	 * @return The integer associated with the given key, defaultValue if the key doesn't exist.
-	 */
-	public int getInt(String key, int defaultValue)
-	{
-		try
-		{
-			return Integer.parseInt(getVar(key));
-		}
-		catch(Exception e)
-		{
-			Utils.logger.log(Level.WARNING, "Failed to parse to integer!", e);
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Used to get config file.
-	 * 
-	 * @return The config file currently used by this object.
-	 */
-	public File getConfigFile()
-	{
-		return configFile;
+		Utils.logger.log(Level.INFO, "Config file wrote");
+		return true;
 	}
 }

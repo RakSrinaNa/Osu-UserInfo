@@ -43,12 +43,16 @@ import fr.mrcraftcod.utils.Utils;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.6b16";
+	public final static String VERSION = "1.6b19";
 
 	/**
 	 * Start the program.
 	 *
-	 * @param args Not used.
+	 * @param args <ul>
+	 *            <li>nosocket : Allow to run multiple instances of the program</li>
+	 *            <li>noupdate : Don't check updates</li>
+	 *            <li>noapi : Don't verify the API key</li>
+	 *            </ul>
 	 * @throws IOException If there were an error during startup.
 	 */
 	public static void main(String[] args) throws IOException

@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  * Used to set the cells not editable in a JTable.
- * 
+ *
  * @author MrCraftCod
  */
 public class JTableUneditableModel extends DefaultTableModel
@@ -13,7 +13,7 @@ public class JTableUneditableModel extends DefaultTableModel
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @see DefaultTableModel#DefaultTableModel(Object[], Object[])
 	 */
 	public JTableUneditableModel(Object[][] tableData, Object[] colNames)
@@ -23,12 +23,13 @@ public class JTableUneditableModel extends DefaultTableModel
 
 	/**
 	 * Set each cell as not editable.
-	 * 
+	 *
 	 * @param row The row of the cell.
 	 * @param column The column of the cell.
-	 * 
+	 *
 	 * @see DefaultTableModel#isCellEditable(int, int)
 	 */
+	@Override
 	public boolean isCellEditable(int row, int column)
 	{
 		return false;

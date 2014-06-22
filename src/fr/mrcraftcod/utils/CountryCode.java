@@ -572,53 +572,20 @@ public enum CountryCode
 	}
 
 	/**
-	 * Get the country name.
+	 * Get a CountryCode that corresponds to a given
+	 * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric">ISO 3166-1
+	 * numeric</a> code.
+	 *
+	 * @param code
+	 *            An <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric"
+	 *            >ISO 3166-1 numeric</a> code.
 	 *
 	 * @return
-	 *         The country name.
+	 *         A CountryCode instance, or null if not found.
 	 */
-	public String getName()
+	public static CountryCode getByCode(int code)
 	{
-		return name;
-	}
-
-	/**
-	 * Get the <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
-	 * >ISO 3166-1 alpha-2</a> code.
-	 *
-	 * @return
-	 *         The <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
-	 *         >ISO 3166-1 alpha-2</a> code.
-	 */
-	public String getAlpha2()
-	{
-		return name();
-	}
-
-	/**
-	 * Get the <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
-	 * >ISO 3166-1 alpha-3</a> code.
-	 *
-	 * @return
-	 *         The <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
-	 *         >ISO 3166-1 alpha-3</a> code.
-	 */
-	public String getAlpha3()
-	{
-		return alpha3;
-	}
-
-	/**
-	 * Get the <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric"
-	 * >ISO 3166-1 numeric</a> code.
-	 *
-	 * @return
-	 *         The <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric"
-	 *         >ISO 3166-1 numeric</a> code.
-	 */
-	public int getNumeric()
-	{
-		return numeric;
+		return numericMap.get(code);
 	}
 
 	/**
@@ -669,19 +636,52 @@ public enum CountryCode
 	}
 
 	/**
-	 * Get a CountryCode that corresponds to a given
-	 * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric">ISO 3166-1
-	 * numeric</a> code.
-	 *
-	 * @param code
-	 *            An <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric"
-	 *            >ISO 3166-1 numeric</a> code.
+	 * Get the <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
+	 * >ISO 3166-1 alpha-2</a> code.
 	 *
 	 * @return
-	 *         A CountryCode instance, or null if not found.
+	 *         The <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
+	 *         >ISO 3166-1 alpha-2</a> code.
 	 */
-	public static CountryCode getByCode(int code)
+	public String getAlpha2()
 	{
-		return numericMap.get(code);
+		return name();
+	}
+
+	/**
+	 * Get the <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
+	 * >ISO 3166-1 alpha-3</a> code.
+	 *
+	 * @return
+	 *         The <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
+	 *         >ISO 3166-1 alpha-3</a> code.
+	 */
+	public String getAlpha3()
+	{
+		return alpha3;
+	}
+
+	/**
+	 * Get the country name.
+	 *
+	 * @return
+	 *         The country name.
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * Get the <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric"
+	 * >ISO 3166-1 numeric</a> code.
+	 *
+	 * @return
+	 *         The <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric"
+	 *         >ISO 3166-1 numeric</a> code.
+	 */
+	public int getNumeric()
+	{
+		return numeric;
 	}
 }

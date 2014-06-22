@@ -7,8 +7,21 @@ import java.awt.event.ComponentListener;
 import javax.swing.JPanel;
 import fr.mrcraftcod.objects.JButtonMode;
 
+/**
+ * Used to resize modes buttons to the correct width (all 4 have the same)
+ *
+ * @author MrCraftCod
+ */
 public class ModesComponentListener implements ComponentListener
 {
+	@Override
+	public void componentHidden(ComponentEvent e)
+	{}
+
+	@Override
+	public void componentMoved(ComponentEvent e)
+	{}
+
 	@Override
 	public void componentResized(ComponentEvent e)
 	{
@@ -21,7 +34,7 @@ public class ModesComponentListener implements ComponentListener
 				{
 					JButtonMode but = (JButtonMode) comp;
 					Dimension dim = but.getSize();
-					dim.setSize((panel.getSize().getWidth() / panel.getComponentCount()) - offset, dim.getHeight());
+					dim.setSize(panel.getSize().getWidth() / panel.getComponentCount() - offset, dim.getHeight());
 					but.setSize(dim);
 					but.setMinimumSize(dim);
 					but.setPreferredSize(dim);
@@ -31,14 +44,6 @@ public class ModesComponentListener implements ComponentListener
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent e)
-	{}
-
-	@Override
 	public void componentShown(ComponentEvent e)
-	{}
-
-	@Override
-	public void componentHidden(ComponentEvent e)
 	{}
 }

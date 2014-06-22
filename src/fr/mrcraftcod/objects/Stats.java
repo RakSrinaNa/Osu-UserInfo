@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
-import java.util.Locale;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -18,9 +17,9 @@ import fr.mrcraftcod.utils.Utils;
 public class Stats implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -3548705459172185871L;
-	private static final int STATS_VERSION = 2;
+	private static final int STATS_VERSION = 3;
 	private transient long totalHits;
-	private transient double level;
+	private double level;
 	private long rankedScore;
 	private long totalScore;
 	private long date;
@@ -61,6 +60,9 @@ public class Stats implements Serializable, Cloneable
 		this.count50 = 0;
 	}
 
+	/**
+	 * @see Object#clone()
+	 */
 	@Override
 	public Stats clone()
 	{
@@ -80,7 +82,7 @@ public class Stats implements Serializable, Cloneable
 		double delta = getAccuracy() - previousStats.getAccuracy();
 		if(Utils.round(delta, 2) == 0D)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -93,10 +95,10 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return "";
-		int delta = getPlaycount() - previousStats.getPlaycount();
+		int delta = getPlayCount() - previousStats.getPlayCount();
 		if(delta == 0)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -112,7 +114,7 @@ public class Stats implements Serializable, Cloneable
 		double delta = getPp() - previousStats.getPp();
 		if(delta == 0D)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -128,7 +130,7 @@ public class Stats implements Serializable, Cloneable
 		double delta = previousStats.getRank() - getRank();
 		if(delta == 0D)
 			return "";
-		return "<font color=" + (delta >= 0 ? "green" : "red") + ">(" + getArrow(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")</font>";
+		return "<font color=" + (delta >= 0 ? "green" : "red") + ">(" + getArrow(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")</font>";
 	}
 
 	/**
@@ -144,7 +146,7 @@ public class Stats implements Serializable, Cloneable
 		long delta = getRankedScore() - previousStats.getRankedScore();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -160,7 +162,7 @@ public class Stats implements Serializable, Cloneable
 		long delta = getTotalHits() - previousStats.getTotalHits();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
 	/**
@@ -176,18 +178,26 @@ public class Stats implements Serializable, Cloneable
 		long delta = getTotalScore() - previousStats.getTotalScore();
 		if(delta == 0L)
 			return "";
-		return " (" + getSign(delta) + NumberFormat.getInstance(Locale.getDefault()).format(Math.abs(delta)) + ")";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
 	}
 
+	/**
+	 * Used to know if two Stats objects are the same.
+	 *
+	 * @param stats the Stats to compare with.
+	 * @return True if stats are the same, false if not.
+	 */
 	public boolean equals(Stats stats)
 	{
 		if(stats == null)
 			return false;
-		if(getPlaycount() != stats.getPlaycount())
+		if(getPlayCount() != stats.getPlayCount())
 			return false;
 		if(getTotalHits() != stats.getTotalHits())
 			return false;
 		if(getTotalScore() != stats.getTotalScore())
+			return false;
+		if(getRank() != stats.getRank())
 			return false;
 		return true;
 	}
@@ -203,43 +213,60 @@ public class Stats implements Serializable, Cloneable
 	}
 
 	/**
-	 * Used to get the arrow of a number.
+	 * Used to get the count of 100 hits.
 	 *
-	 * @param number The number to get the sign.
-	 * @return A String of the arrow.
+	 * @return The count of 100 hits.
 	 */
-	private String getArrow(double number)
-	{
-		if(number >= 0)
-			return "\u2191";
-		return "\u2193";
-	}
-
 	public long getCount100()
 	{
 		return this.count100;
 	}
 
+	/**
+	 * Used to get the count of 300 hits.
+	 *
+	 * @return The count of 300 hits.
+	 */
 	public long getCount300()
 	{
 		return this.count300;
 	}
 
+	/**
+	 * Used to get the count of 50 hits.
+	 *
+	 * @return The count of 50 hits.
+	 */
 	public long getCount50()
 	{
 		return this.count50;
 	}
 
+	/**
+	 * Used to get the count of A ranks.
+	 *
+	 * @return The count of A ranks.
+	 */
 	public int getCountA()
 	{
 		return this.countA;
 	}
 
+	/**
+	 * Used to get the count of S ranks.
+	 *
+	 * @return The count of S ranks.
+	 */
 	public int getCountS()
 	{
 		return this.countS;
 	}
 
+	/**
+	 * Used to get the count of SS ranks.
+	 *
+	 * @return The count of SS ranks.
+	 */
 	public int getCountSS()
 	{
 		return this.countSS;
@@ -255,13 +282,25 @@ public class Stats implements Serializable, Cloneable
 		return this.date;
 	}
 
+	/**
+	 * Used to get the difference of play count between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public int getDiffPlayCount(Stats previousStats)
 	{
 		if(previousStats == null)
 			return 0;
-		return getPlaycount() - previousStats.getPlaycount();
+		return getPlayCount() - previousStats.getPlayCount();
 	}
 
+	/**
+	 * Used to get the difference of PP between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public double getDiffPP(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -269,6 +308,12 @@ public class Stats implements Serializable, Cloneable
 		return getPp() - previousStats.getPp();
 	}
 
+	/**
+	 * Used to get the difference of rank between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public double getDiffRank(Stats previousStats)
 	{
 		if(previousStats == null)
@@ -276,11 +321,43 @@ public class Stats implements Serializable, Cloneable
 		return previousStats.getRank() - getRank();
 	}
 
+	/**
+	 * Used to get the difference of ranked score between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
+	public long getDiffRankedScore(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return getRankedScore() - previousStats.getRankedScore();
+	}
+
+	/**
+	 * Used to get the difference of total hits between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
 	public long getDiffTotalHits(Stats previousStats)
 	{
 		if(previousStats == null)
 			return 0;
 		return getTotalHits() - previousStats.getTotalHits();
+	}
+
+	/**
+	 * Used to get the difference of total score between stats.
+	 *
+	 * @param previousStats The stats to compare with.
+	 * @return The difference.
+	 */
+	public long getDiffTotalScore(Stats previousStats)
+	{
+		if(previousStats == null)
+			return 0;
+		return getTotalScore() - previousStats.getTotalScore();
 	}
 
 	/**
@@ -296,9 +373,14 @@ public class Stats implements Serializable, Cloneable
 		long lastDate = stats.getDate();
 		if(lastDate <= 0)
 			return "";
-		return String.format(Utils.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault()).format(new Date(lastDate)));
+		return String.format(Utils.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Utils.locale).format(new Date(lastDate)));
 	}
 
+	/**
+	 * Used to get the level.
+	 *
+	 * @return The level.
+	 */
 	public double getLevel()
 	{
 		return this.level;
@@ -319,7 +401,7 @@ public class Stats implements Serializable, Cloneable
 	 *
 	 * @return The play count.
 	 */
-	public int getPlaycount()
+	public int getPlayCount()
 	{
 		return this.playcount;
 	}
@@ -355,19 +437,6 @@ public class Stats implements Serializable, Cloneable
 	}
 
 	/**
-	 * Used to get the sign of a number.
-	 *
-	 * @param number The number to get the sign.
-	 * @return A String of the sign.
-	 */
-	private String getSign(double number)
-	{
-		if(number >= 0)
-			return "+";
-		return "-";
-	}
-
-	/**
 	 * Used to get the number of hits.
 	 *
 	 * @return The number of hits.
@@ -387,33 +456,14 @@ public class Stats implements Serializable, Cloneable
 		return this.totalScore;
 	}
 
+	/**
+	 * Used to get the version of the Stats object.
+	 *
+	 * @return The version.
+	 */
 	public int getVersion()
 	{
 		return this.version;
-	}
-
-	private void readObject(ObjectInputStream ois) throws IOException
-	{
-		this.version = STATS_VERSION;
-		int version = ois.readInt();
-		if(version >= 2)
-		{
-			this.mode = ois.readInt();
-			this.date = ois.readLong();
-			this.playcount = ois.readInt();
-			this.rankedScore = ois.readLong();
-			this.totalScore = ois.readLong();
-			this.rank = ois.readDouble();
-			this.pp = ois.readDouble();
-			this.accuracy = ois.readDouble();
-			this.countSS = ois.readInt();
-			this.countS = ois.readInt();
-			this.countA = ois.readInt();
-			this.count300 = ois.readLong();
-			this.count100 = ois.readLong();
-			this.count50 = ois.readLong();
-		}
-		updateTotalHits();
 	}
 
 	/**
@@ -426,31 +476,64 @@ public class Stats implements Serializable, Cloneable
 		this.accuracy = accuracy;
 	}
 
+	/**
+	 * Used to set the number of 100 hits.
+	 *
+	 * @param accuracy The number of 100 hits to set.
+	 */
 	public void setCount100(long count100)
 	{
 		this.count100 = count100;
+		updateTotalHits();
 	}
 
+	/**
+	 * Used to set the number of 300 hits.
+	 *
+	 * @param accuracy The number of 300 hits to set.
+	 */
 	public void setCount300(long count300)
 	{
 		this.count300 = count300;
+		updateTotalHits();
 	}
 
+	/**
+	 * Used to set the number of 50 hits.
+	 *
+	 * @param accuracy The number of 50 hits to set.
+	 */
 	public void setCount50(long count50)
 	{
 		this.count50 = count50;
+		updateTotalHits();
 	}
 
+	/**
+	 * Used to set the number of A ranks.
+	 *
+	 * @param accuracy The number of A ranks to set.
+	 */
 	public void setCountA(int countA)
 	{
 		this.countA = countA;
 	}
 
+	/**
+	 * Used to set the number of S ranks.
+	 *
+	 * @param accuracy The number of S ranks to set.
+	 */
 	public void setCountS(int countS)
 	{
 		this.countS = countS;
 	}
 
+	/**
+	 * Used to set the number of SS ranks.
+	 *
+	 * @param accuracy The number of SS ranks to set.
+	 */
 	public void setCountSS(int countSS)
 	{
 		this.countSS = countSS;
@@ -476,6 +559,11 @@ public class Stats implements Serializable, Cloneable
 		this.date = date;
 	}
 
+	/**
+	 * Used to set the level.
+	 *
+	 * @param level The level to set.
+	 */
 	public void setLevel(double level)
 	{
 		this.level = level;
@@ -551,11 +639,78 @@ public class Stats implements Serializable, Cloneable
 		this.totalScore = totalScore;
 	}
 
+	/**
+	 * Used to update the number of total hits.
+	 */
 	public void updateTotalHits()
 	{
 		setTotalHits(getCount300() + getCount100() + getCount50());
 	}
 
+	/**
+	 * Used to get the arrow of a number.
+	 *
+	 * @param number The number to get the sign.
+	 * @return A String of the arrow.
+	 */
+	private String getArrow(double number)
+	{
+		if(number >= 0)
+			return "\u2191";
+		return "\u2193";
+	}
+
+	/**
+	 * Used to get the sign of a number.
+	 *
+	 * @param number The number to get the sign.
+	 * @return A String of the sign.
+	 */
+	private String getSign(double number)
+	{
+		if(number >= 0)
+			return "+";
+		return "-";
+	}
+
+	/**
+	 * Called to read object from a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
+	private void readObject(ObjectInputStream ois) throws IOException
+	{
+		this.version = STATS_VERSION;
+		int version = ois.readInt();
+		if(version >= 2)
+		{
+			this.mode = ois.readInt();
+			this.date = ois.readLong();
+			this.playcount = ois.readInt();
+			this.rankedScore = ois.readLong();
+			this.totalScore = ois.readLong();
+			this.rank = ois.readDouble();
+			this.pp = ois.readDouble();
+			this.accuracy = ois.readDouble();
+			this.countSS = ois.readInt();
+			this.countS = ois.readInt();
+			this.countA = ois.readInt();
+			this.count300 = ois.readLong();
+			this.count100 = ois.readLong();
+			this.count50 = ois.readLong();
+		}
+		if(version >= 3)
+			this.level = ois.readDouble();
+		updateTotalHits();
+	}
+
+	/**
+	 * Called to write the object in a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
 	private void writeObject(ObjectOutputStream oos) throws IOException
 	{
 		oos.writeInt(this.version);
@@ -573,6 +728,7 @@ public class Stats implements Serializable, Cloneable
 		oos.writeLong(this.count300);
 		oos.writeLong(this.count100);
 		oos.writeLong(this.count50);
+		oos.writeDouble(this.level);
 		oos.flush();
 	}
 }

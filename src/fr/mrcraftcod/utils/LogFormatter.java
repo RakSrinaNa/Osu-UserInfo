@@ -9,6 +9,11 @@ import java.util.TimeZone;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * Format the messages in the log file.
+ *
+ * @author MrCraftCod
+ */
 public final class LogFormatter extends Formatter
 {
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -16,15 +21,15 @@ public final class LogFormatter extends Formatter
 
 	/**
 	 * Used to format the logger.
-	 * 
+	 *
 	 * @return The new string to print in the console.
 	 */
 	@Override
 	public String format(final LogRecord record)
 	{
-		dateFormat.setTimeZone(TimeZone.getDefault());
+		this.dateFormat.setTimeZone(TimeZone.getDefault());
 		final StringBuilder sb = new StringBuilder();
-		sb.append("[").append(dateFormat.format(new Date(record.getMillis()))).append("]\t").append(record.getLevel().getLocalizedName()).append("\t").append(record.getSourceMethodName()).append(" (").append(record.getSourceClassName().replace("fr.tours.mrcraftcod.", "")).append(") -> ").append(formatMessage(record)).append(LINE_SEPARATOR);
+		sb.append("[").append(this.dateFormat.format(new Date(record.getMillis()))).append("]\t").append(record.getLevel().getLocalizedName()).append("\t").append(record.getSourceMethodName()).append(" (").append(record.getSourceClassName().replace("fr.tours.mrcraftcod.", "")).append(") -> ").append(formatMessage(record)).append(this.LINE_SEPARATOR);
 		if(record.getThrown() != null)
 			try
 			{

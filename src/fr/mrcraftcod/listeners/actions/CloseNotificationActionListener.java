@@ -4,6 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
+/**
+ * Used to close the notification frame.
+ *
+ * @author MrCraftCod
+ */
 public class CloseNotificationActionListener implements ActionListener
 {
 	@Override

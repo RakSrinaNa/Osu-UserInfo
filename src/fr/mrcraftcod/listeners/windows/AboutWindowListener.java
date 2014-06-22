@@ -4,6 +4,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Used to show back the main frame.
+ *
+ * @author MrCraftCod
+ */
 public class AboutWindowListener implements WindowListener
 {
 	@Override

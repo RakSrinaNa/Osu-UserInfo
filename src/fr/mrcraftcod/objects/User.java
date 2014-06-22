@@ -22,6 +22,23 @@ public class User implements Serializable
 {
 	private static final long serialVersionUID = 9114477464694621621L;
 	private static final int USER_VERSION = 2;
+	private ArrayList<Stats> stats_normal, stats_taiko, stats_ctb, stats_mania;
+	private String username = "";
+	private int version;
+	private transient int userID;
+	private transient String country;
+
+	/**
+	 * Constructor.
+	 */
+	public User()
+	{
+		this.version = USER_VERSION;
+		this.stats_normal = new ArrayList<Stats>();
+		this.stats_taiko = new ArrayList<Stats>();
+		this.stats_ctb = new ArrayList<Stats>();
+		this.stats_mania = new ArrayList<Stats>();
+	}
 
 	/**
 	 * Used to deserialize a serialised User object.
@@ -39,21 +56,6 @@ public class User implements Serializable
 		User user = (User) ois.readObject();
 		ois.close();
 		return user;
-	}
-
-	private ArrayList<Stats> stats_normal, stats_taiko, stats_ctb, stats_mania;
-	private String username = "";
-	private int version;
-	private transient int userID;
-	private transient String country;
-
-	public User()
-	{
-		this.version = USER_VERSION;
-		this.stats_normal = new ArrayList<Stats>();
-		this.stats_taiko = new ArrayList<Stats>();
-		this.stats_ctb = new ArrayList<Stats>();
-		this.stats_mania = new ArrayList<Stats>();
 	}
 
 	/**
@@ -100,13 +102,18 @@ public class User implements Serializable
 			return null;
 		if(stats.size() > 0)
 			stats.remove(stats.size() - 1);
-		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Utils.locale);
 		String[] dates = new String[stats.size()];
 		for(int i = 0; i < stats.size(); i++)
 			dates[i] = formatter.format(stats.get(i).getDate());
 		return dates;
 	}
 
+	/**
+	 * Used to get the country of the user.
+	 *
+	 * @return The country.
+	 */
 	public String getCountry()
 	{
 		return this.country;
@@ -286,27 +293,17 @@ public class User implements Serializable
 		return !newStats.equals(previousStats);
 	}
 
-	@SuppressWarnings("unchecked")
-	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
+	/**
+	 * Used to know if two User objects represents the same user.
+	 *
+	 * @param lastUser The user to compare with.
+	 * @return True if they are same user, false if not.
+	 */
+	public boolean isSameUser(User lastUser)
 	{
-		this.version = USER_VERSION;
-		int version = ois.readInt();
-		if(version >= 2)
-		{
-			this.username = ois.readUTF();
-			this.stats_normal = (ArrayList<Stats>) ois.readObject();
-			this.stats_taiko = (ArrayList<Stats>) ois.readObject();
-			this.stats_ctb = (ArrayList<Stats>) ois.readObject();
-			this.stats_mania = (ArrayList<Stats>) ois.readObject();
-		}
-		if(this.stats_normal == null)
-			this.stats_normal = new ArrayList<Stats>();
-		if(this.stats_taiko == null)
-			this.stats_taiko = new ArrayList<Stats>();
-		if(this.stats_ctb == null)
-			this.stats_ctb = new ArrayList<Stats>();
-		if(this.stats_mania == null)
-			this.stats_mania = new ArrayList<Stats>();
+		if(lastUser == null)
+			return false;
+		return this.username.equals(lastUser.getUsername());
 	}
 
 	/**
@@ -325,6 +322,11 @@ public class User implements Serializable
 		oos.close();
 	}
 
+	/**
+	 * Used to set the country of the user.
+	 *
+	 * @param country The country to set.
+	 */
 	public void setCountry(String country)
 	{
 		this.country = country;
@@ -472,6 +474,41 @@ public class User implements Serializable
 		this.username = username;
 	}
 
+	/**
+	 * Called to read object from a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
+	{
+		this.version = USER_VERSION;
+		int version = ois.readInt();
+		if(version >= 2)
+		{
+			this.username = ois.readUTF();
+			this.stats_normal = (ArrayList<Stats>) ois.readObject();
+			this.stats_taiko = (ArrayList<Stats>) ois.readObject();
+			this.stats_ctb = (ArrayList<Stats>) ois.readObject();
+			this.stats_mania = (ArrayList<Stats>) ois.readObject();
+		}
+		if(this.stats_normal == null)
+			this.stats_normal = new ArrayList<Stats>();
+		if(this.stats_taiko == null)
+			this.stats_taiko = new ArrayList<Stats>();
+		if(this.stats_ctb == null)
+			this.stats_ctb = new ArrayList<Stats>();
+		if(this.stats_mania == null)
+			this.stats_mania = new ArrayList<Stats>();
+	}
+
+	/**
+	 * Called to write the object in a file.
+	 *
+	 * @param ois
+	 * @throws IOException
+	 */
 	private void writeObject(ObjectOutputStream oos) throws IOException
 	{
 		oos.writeInt(this.version);
