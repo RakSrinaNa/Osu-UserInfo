@@ -54,7 +54,7 @@
 			{*}Modify the way to select mode (now like on the user profile page)
 			{*}Show differences between stats when refreshing user info if the user is not tracked
 			{+}Possibility to open the changelog for the current version from the 'About' section
-			{+}Possibility to save user avatar
+			{+}Possibility to save user avatar (right click on it)
 		</changes>
 	</version>
 	<version>
