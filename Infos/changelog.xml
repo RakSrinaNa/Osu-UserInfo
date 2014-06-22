@@ -77,7 +77,7 @@
 		</changes>
 	</version>
 		<version>
-		<name>1.6b19 (dev)</name>
+		<name>1.6b19</name>
 		<changes>
 		{*}Fix white gap when expanding frame
 		{*}Fix changelog frame that wasn't showing the correct changelog when opening and that the changelog contains newer versions
