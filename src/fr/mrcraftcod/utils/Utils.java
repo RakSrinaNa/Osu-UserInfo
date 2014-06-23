@@ -800,7 +800,7 @@ public class Utils
 			return;
 		if(file.exists())
 		{
-			JOptionPane.showMessageDialog(mainFrame, String.format(resourceBundle.getString("avatar_error"), file.getName()), resourceBundle.getString("avatar_error_title"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, String.format(resourceBundle.getString("save_error"), file.getName()), resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		file.mkdirs();

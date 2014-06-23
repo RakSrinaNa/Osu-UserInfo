@@ -28,6 +28,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.util.Rotation;
+import fr.mrcraftcod.objects.ChartPopupMenu;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
 
@@ -57,14 +58,14 @@ public class InterfaceChart extends JFrame
 		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
 		int shapeOffset = 3;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
-		ChartPanel chartPPAndRankPanel = getChartInPannel(createRankAndPPChart(title, user, stats, shape));
-		ChartPanel chartAccuracyPanel = getChartInPannel(createAccuracyChart(title, user, stats, shape));
-		ChartPanel chartRankedScorePanel = getChartInPannel(createRankedScoreChart(title, user, stats, shape));
-		ChartPanel chartTotalScorePanel = getChartInPannel(createTotalScoreChart(title, user, stats, shape));
-		ChartPanel chartPlayCountPanel = getChartInPannel(createPlayCountChart(title, user, stats, shape));
-		ChartPanel chartLevelPanel = getChartInPannel(createLevelChart(title, user, stats, shape));
-		ChartPanel chartHitsPanel = getChartInPannel(createHitsChart(title, user, stats));
-		ChartPanel chartRanksPanel = getChartInPannel(createRanksChart(title, user, stats));
+		ChartPanel chartPPAndRankPanel = getChartInPannel(user, "PP_" + Utils.resourceBundle.getString("rank"), createRankAndPPChart(title, user, stats, shape));
+		ChartPanel chartAccuracyPanel = getChartInPannel(user, Utils.resourceBundle.getString("accuracy"), createAccuracyChart(title, user, stats, shape));
+		ChartPanel chartRankedScorePanel = getChartInPannel(user, Utils.resourceBundle.getString("ranked_score"), createRankedScoreChart(title, user, stats, shape));
+		ChartPanel chartTotalScorePanel = getChartInPannel(user, Utils.resourceBundle.getString("total_score"), createTotalScoreChart(title, user, stats, shape));
+		ChartPanel chartPlayCountPanel = getChartInPannel(user, Utils.resourceBundle.getString("play_count"), createPlayCountChart(title, user, stats, shape));
+		ChartPanel chartLevelPanel = getChartInPannel(user, Utils.resourceBundle.getString("graph_level"), createLevelChart(title, user, stats, shape));
+		ChartPanel chartHitsPanel = getChartInPannel(user, Utils.resourceBundle.getString("total_hits"), createHitsChart(title, user, stats));
+		ChartPanel chartRanksPanel = getChartInPannel(user, Utils.resourceBundle.getString("ranks"), createRanksChart(title, user, stats));
 		JTabbedPane contentPane = new JTabbedPane();
 		contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
 		contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
@@ -385,15 +386,18 @@ public class InterfaceChart extends JFrame
 	/**
 	 * Used to get a panel with a graph inside.
 	 *
+	 * @param user The name of the user.
+	 * @param type What the graph is about.
 	 * @param chart The graph to set inside.
 	 * @return The panel.
 	 */
-	private ChartPanel getChartInPannel(JFreeChart chart)
+	private ChartPanel getChartInPannel(String user, String type, JFreeChart chart)
 	{
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new Dimension(500, 270));
 		chartPanel.setDomainZoomable(true);
 		chartPanel.setRangeZoomable(true);
+		chartPanel.setPopupMenu(new ChartPopupMenu(chart, user, type));
 		return chartPanel;
 	}
 
