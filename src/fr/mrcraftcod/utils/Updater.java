@@ -290,6 +290,8 @@ public class Updater
 				return false;
 			else if(actualSubVersion < upToDateSubVersion)
 				return false;
+			else if(actualGlobalVersion == upToDateGlobalVersion && actualSubVersion == upToDateSubVersion && Utils.isCurrentVersionBeta())
+				return false;
 		}
 		catch(Exception e)
 		{}

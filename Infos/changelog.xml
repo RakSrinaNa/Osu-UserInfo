@@ -83,4 +83,10 @@
 		{*}Fix changelog frame that wasn't showing the correct changelog when opening and that the changelog contains newer versions
 		</changes>
 	</version>
+	<version>
+		<name>1.6b20</name>
+		<changes>
+		{*}Fix updater not updating from dev to public when new version available
+		</changes>
+	</version>
 </changelog>
