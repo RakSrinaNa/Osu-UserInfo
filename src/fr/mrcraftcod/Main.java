@@ -36,8 +36,7 @@ import fr.mrcraftcod.utils.Utils;
  * If you find any bugs, please <a href="https://bitbucket.org/MrCraftCod/osuuserinfo/issues">report them here</a> <br>
  * If you want, you can translate this project. <a href="https://bitbucket.org/MrCraftCod/osuuserinfo/fork">Fork the repository</a> and add your language file in src/resources/lang/
  * </p>
- * avalible
- * 
+ *
  * @author MrCraftCod
  * @version 1.6
  */
