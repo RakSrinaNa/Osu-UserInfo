@@ -12,12 +12,24 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import fr.mrcraftcod.utils.Utils;
 
+/**
+ * Called when the user want to save a graph.
+ *
+ * @author MrCraftCod
+ */
 public class SaveChartActionListener implements ActionListener
 {
 	private JFreeChart chart;
 	private String user;
 	private String type;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param chart The chart to save.
+	 * @param user The name of the user.
+	 * @param type What the graph is about.
+	 */
 	public SaveChartActionListener(JFreeChart chart, String user, String type)
 	{
 		this.chart = chart;
