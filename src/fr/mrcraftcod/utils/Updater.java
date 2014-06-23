@@ -256,7 +256,7 @@ public class Updater
 				return false;
 			else if(actualSubVersion < upToDateSubVersion)
 				return false;
-			if(actualBetaVersion < upToDateBetaVersion)
+			if((actualGlobalVersion != upToDateGlobalVersion || actualSubVersion != upToDateSubVersion) && actualBetaVersion < upToDateBetaVersion)
 				return false;
 		}
 		catch(Exception e)
