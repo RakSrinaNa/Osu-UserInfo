@@ -320,7 +320,7 @@ public class Utils
 	 */
 	public static boolean getInfosServer(String user, boolean showerror, boolean forceDisplay, boolean forceFetch)
 	{
-		if(forceFetch || !isValidTime() || !isValidUser(user))
+		if(!forceFetch && !isValidTime() || !isValidUser(user))
 			return false;
 		Utils.logger.log(Level.INFO, "Getting user infos " + user);
 		Utils.lastPost = new Date();
