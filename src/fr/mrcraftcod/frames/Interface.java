@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -86,7 +87,7 @@ public class Interface extends JFrame
 	public final JCheckBox track;
 	public final JCheckBox autoUpdateCheck;
 	private final ImageIcon iconRefresh, iconSearch;
-	private final ImagePanel avatar, countryFlag;
+	private final ImagePanel avatar, countryFlag, count300Picture, count100Picture, count50Picture;
 	private final DefaultComboBoxModel<String> statsDateModel, userNameFieldModel;
 	private final JButton validButon;
 	private final JButtonMode buttonStandard, buttonTaiko, buttonCTB, buttonMania;
@@ -103,7 +104,9 @@ public class Interface extends JFrame
 	private final JLabel hitCount300;
 	private final JLabel hitCount100;
 	private final JLabel hitCount50;
+	private final JPanel count300Panel, count100Panel, count50Panel;
 	private final JProgressBar levelBar;
+	private final HashMap<String, BufferedImage> hitsImages;
 	private BufferedImage avatarImage;
 
 	/**
@@ -169,6 +172,24 @@ public class Interface extends JFrame
 		Utils.logger.log(Level.INFO, "Loading icons...");
 		this.iconRefresh = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/refresh.png")), pictureButtonSize, pictureButtonSize));
 		this.iconSearch = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/search.png")), pictureButtonSize, pictureButtonSize));
+		this.hitsImages = new HashMap<String, BufferedImage>();
+		// Standard 0xxx
+		this.hitsImages.put("0300", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")));
+		this.hitsImages.put("0100", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")));
+		this.hitsImages.put("050", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")));
+		// Taiko 1xxx
+		this.hitsImages.put("1300", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taikoHit300.png")));
+		this.hitsImages.put("1100", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taikoHit100.png")));
+		this.hitsImages.put("150", null);
+		// CTB 2xxx
+		this.hitsImages.put("2300", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctbHit300.png")));
+		this.hitsImages.put("2100", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctbHit100.png")));
+		this.hitsImages.put("250", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctbHit50.png")));
+		// Mania 3xxx
+		this.hitsImages.put("3300", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/maniaHit300.png")));
+		// this.hitsImages.put("3200", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/maniaHit200.png")));
+		this.hitsImages.put("3100", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/maniaHit100.png")));
+		this.hitsImages.put("350", ImageIO.read(Main.class.getClassLoader().getResource("resources/images/maniaHit50.png")));
 		/************** FRAME INFOS ********************/
 		Utils.logger.log(Level.INFO, "Setting frame options...");
 		setBackground(Utils.backColor);
@@ -308,7 +329,7 @@ public class Interface extends JFrame
 		this.buttonMania.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
 		this.buttonMania.setFocusPainted(false);
 		this.buttonMania.addActionListener(new ModeManiaActionListener());
-		switchMode(defaultMode, false);
+		switchMode(defaultMode, false, false);
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.LINE_START;
@@ -394,51 +415,49 @@ public class Interface extends JFrame
 		hitCountPanel.setBorder(borderHits);
 		float picturesSize = 40f;
 		// 300
-		JPanel count300Panel = new JPanel();
-		count300Panel.setBackground(hitCountPanel.getBackground());
-		final ImagePanel count300Picture = new ImagePanel();
-		count300Picture.setBackground(hitCountPanel.getBackground());
-		count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count300Picture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit300.png")));
+		this.count300Panel = new JPanel();
+		this.count300Panel.setBackground(hitCountPanel.getBackground());
+		this.count300Picture = new ImagePanel();
+		this.count300Picture.setBackground(hitCountPanel.getBackground());
+		this.count300Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.count300Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.count300Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		this.hitCount300 = new JLabel();
 		this.hitCount300.setFont(Utils.fontMain);
 		this.hitCount300.setHorizontalAlignment(JLabel.CENTER);
 		this.hitCount300.setVerticalAlignment(JLabel.CENTER);
-		count300Panel.add(count300Picture);
-		count300Panel.add(this.hitCount300);
+		this.count300Panel.add(this.count300Picture);
+		this.count300Panel.add(this.hitCount300);
 		// 100
-		JPanel count100Panel = new JPanel();
-		count100Panel.setBackground(hitCountPanel.getBackground());
-		final ImagePanel count100Picture = new ImagePanel();
-		count100Picture.setBackground(hitCountPanel.getBackground());
-		count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count100Picture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit100.png")));
+		this.count100Panel = new JPanel();
+		this.count100Panel.setBackground(hitCountPanel.getBackground());
+		this.count100Picture = new ImagePanel();
+		this.count100Picture.setBackground(hitCountPanel.getBackground());
+		this.count100Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.count100Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.count100Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		this.hitCount100 = new JLabel();
 		this.hitCount100.setFont(Utils.fontMain);
 		this.hitCount100.setHorizontalAlignment(JLabel.CENTER);
 		this.hitCount100.setVerticalAlignment(JLabel.CENTER);
-		count100Panel.add(count100Picture);
-		count100Panel.add(this.hitCount100);
+		this.count100Panel.add(this.count100Picture);
+		this.count100Panel.add(this.hitCount100);
 		// 50
-		JPanel count50Panel = new JPanel();
-		count50Panel.setBackground(hitCountPanel.getBackground());
+		this.count50Panel = new JPanel();
+		this.count50Panel.setBackground(hitCountPanel.getBackground());
 		picturesSize = 30f;
-		final ImagePanel count50Picture = new ImagePanel();
-		count50Picture.setBackground(hitCountPanel.getBackground());
-		count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
-		count50Picture.setImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/hit50.png")));
+		this.count50Picture = new ImagePanel();
+		this.count50Picture.setBackground(hitCountPanel.getBackground());
+		this.count50Picture.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.count50Picture.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
+		this.count50Picture.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		this.hitCount50 = new JLabel();
 		this.hitCount50.setFont(Utils.fontMain);
 		this.hitCount50.setHorizontalAlignment(JLabel.CENTER);
 		this.hitCount50.setVerticalAlignment(JLabel.CENTER);
-		count50Panel.add(count50Picture);
-		count50Panel.add(this.hitCount50);
+		this.count50Panel.add(this.count50Picture);
+		this.count50Panel.add(this.hitCount50);
+		updateHitsImages();
 		// Construct
 		constraint = new GridBagConstraints();
 		constraint.anchor = GridBagConstraints.CENTER;
@@ -449,11 +468,11 @@ public class Interface extends JFrame
 		constraint.weighty = 1;
 		constraint.gridx = 0;
 		constraint.gridy = 0;
-		hitCountPanel.add(count300Panel, constraint);
+		hitCountPanel.add(this.count300Panel, constraint);
 		constraint.gridx = 1;
-		hitCountPanel.add(count100Panel, constraint);
+		hitCountPanel.add(this.count100Panel, constraint);
 		constraint.gridx = 2;
-		hitCountPanel.add(count50Panel, constraint);
+		hitCountPanel.add(this.count50Panel, constraint);
 		/***************** RANK PANEL ********************/
 		Utils.logger.log(Level.INFO, "Creating rank panel...");
 		JPanel ranksUserPanel = new JPanel(new GridBagLayout());
@@ -937,6 +956,18 @@ public class Interface extends JFrame
 	 */
 	public void switchMode(int mode, boolean checkInfos)
 	{
+		switchMode(mode, checkInfos, true);
+	}
+
+	/**
+	 * Used to change the selected mode.
+	 *
+	 * @param mode The mode to select.
+	 * @param checkInfos True if need to refresh infos.
+	 * @param updateImages Should or not update hits images.
+	 */
+	public void switchMode(int mode, boolean checkInfos, boolean updateImages)
+	{
 		Utils.config.writeVar("lastmode", mode);
 		this.buttonStandard.setEnabled(true);
 		this.buttonTaiko.setEnabled(true);
@@ -957,8 +988,10 @@ public class Interface extends JFrame
 				this.buttonMania.setEnabled(false);
 			break;
 		}
+		if(updateImages)
+			updateHitsImages();
 		if(checkInfos)
-			Utils.getInfos(Utils.lastUser.getUsername(), false, false, false);
+			Utils.getInfos(Utils.lastUser.getUsername(), false, false, true);
 	}
 
 	/**
@@ -1026,6 +1059,20 @@ public class Interface extends JFrame
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 			new InterfaceNotification(user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
+	}
+
+	/**
+	 * Used to update the mode hits images.
+	 */
+	private void updateHitsImages()
+	{
+		this.count300Picture.setImage(this.hitsImages.get(String.valueOf(getSelectedMode()) + "300"));
+		this.count100Picture.setImage(this.hitsImages.get(String.valueOf(getSelectedMode()) + "100"));
+		this.count50Picture.setImage(this.hitsImages.get(String.valueOf(getSelectedMode()) + "50"));
+		if(getSelectedMode() == 1)
+			this.count50Panel.setVisible(false);
+		else
+			this.count50Panel.setVisible(true);
 	}
 
 	/**
