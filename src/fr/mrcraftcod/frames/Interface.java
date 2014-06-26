@@ -1061,6 +1061,9 @@ public class Interface extends JFrame
 			new InterfaceNotification(user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
+	/**
+	 * Used to update the mode hits images.
+	 */
 	private void updateHitsImages()
 	{
 		this.count300Picture.setImage(this.hitsImages.get(String.valueOf(getSelectedMode()) + "300"));

@@ -38,12 +38,12 @@ import fr.mrcraftcod.utils.Utils;
  * </p>
  *
  * @author MrCraftCod
- * @version 1.6
+ * @version 1.7
  */
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.7b2";
+	public final static String VERSION = "1.7b3";
 
 	/**
 	 * Start the program.

@@ -95,4 +95,10 @@
 			{*}Fix updater constantly getting developer version even if the public version is released
 		</changes>
 	</version>
+	<version>
+		<name>1.7b3</name>
+		<changes>
+			{+}Add Taiko/CTB/Mania hits images
+		</changes>
+	</version>
 </changelog>
