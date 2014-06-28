@@ -58,7 +58,7 @@ public class Updater
 			return UPDATEERROR;
 		}
 		updateFile.delete();
-		boolean devMode = Utils.config.getBoolean("devMode", false);
+		boolean devMode = Utils.config.getBoolean(Configuration.DEVMODE, false);
 		int result = NOUPDATE;
 		if(versionsUTD == null)
 			result = UPDATEERROR;
