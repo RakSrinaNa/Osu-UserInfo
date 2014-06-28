@@ -177,7 +177,7 @@ public class Utils
 	 */
 	public static void getAllChangelogFrame()
 	{
-		new InterfaceChangelog(Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean("devMode", false)));
+		new InterfaceChangelog(Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean(Configuration.DEVMODE, false)));
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class Utils
 	 */
 	public static void getInfos(String user, boolean showerror, boolean forceDisplay, boolean forceFetch)
 	{
-		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true), forceDisplay, forceFetch);
+		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean(Configuration.LOADINGSCREEN, true), forceDisplay, forceFetch);
 		load.execute();
 	}
 
@@ -533,7 +533,7 @@ public class Utils
 	public static ArrayList<String> getTrackedUsers()
 	{
 		ArrayList<String> trackedList = new ArrayList<String>();
-		String tracked = Utils.config.getString("tracked_users", "");
+		String tracked = Utils.config.getString(Configuration.TRACKEDUSERS, "");
 		for(String user : tracked.split(","))
 			trackedList.add(user);
 		return trackedList;
@@ -569,7 +569,7 @@ public class Utils
 		if(resetedLog)
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
-		locale = getLocaleByName(config.getString("locale", null));
+		locale = getLocaleByName(config.getString(Configuration.LOCALE, null));
 		logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "nosocket"))
@@ -607,7 +607,7 @@ public class Utils
 			try
 			{
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
-				String tempApiKey = config.getString("api_key", "");
+				String tempApiKey = config.getString(Configuration.APIKEY, "");
 				if(tempApiKey.equals(""))
 					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
 				logger.log(Level.INFO, "Verifying API key...");
@@ -616,13 +616,13 @@ public class Utils
 				{
 					logger.log(Level.WARNING, "Wrong API key!");
 					JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
-					config.deleteVar("api_key");
+					config.deleteVar(Configuration.APIKEY);
 					System.exit(0);
 				}
-				config.writeVar("api_key", tempApiKey);
+				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
-				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
+				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 10);
 				logger.log(Level.INFO, "Launching interface...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
 				backColor = new Color(240, 236, 250);
@@ -630,10 +630,10 @@ public class Utils
 				noticeColor = Color.WHITE;
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
-				if(isNewVersion(config.getString("last_version", Main.VERSION)))
+				if(isNewVersion(config.getString(Configuration.LASTVERSION, Main.VERSION)))
 					getChangelogFrame();
-				config.writeVar("last_version", Main.VERSION);
-				mainFrame = new Interface(config.getInt("lastmode", 0));
+				config.writeVar(Configuration.LASTVERSION, Main.VERSION);
+				mainFrame = new Interface(config.getInt(Configuration.LASTMODE, 0));
 			}
 			catch(Exception exception)
 			{
@@ -893,7 +893,7 @@ public class Utils
 			if(!user.equals(""))
 				sb.append(user).append(",");
 		sb.deleteCharAt(sb.length() - 1);
-		config.writeVar("tracked_users", sb.toString());
+		config.writeVar(Configuration.TRACKEDUSERS, sb.toString());
 	}
 
 	/**

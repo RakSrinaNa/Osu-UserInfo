@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import fr.mrcraftcod.listeners.actions.ButtonReturnSettingsActionListener;
 import fr.mrcraftcod.listeners.windows.SettingsWindowListener;
 import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
+import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -52,26 +53,26 @@ public class InterfaceSettings extends JFrame
 		getContentPane().setBackground(Utils.backColor);
 		addWindowListener(new SettingsWindowListener());
 		this.languageBox = new JComboBox<String>(getLanguages());
-		this.languageBox.setSelectedItem(getLang(Utils.config.getString("locale", null)));
+		this.languageBox.setSelectedItem(getLang(Utils.config.getString(Configuration.LOCALE, null)));
 		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language"));
 		this.loadingCheck = new JCheckBox();
 		this.loadingCheck.setText(Utils.resourceBundle.getString("settings_loading_screen"));
-		this.loadingCheck.setSelected(Utils.config.getBoolean("loadingScreen", true));
+		this.loadingCheck.setSelected(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true));
 		this.keepDateCheck = new JCheckBox();
 		this.keepDateCheck.setText(Utils.resourceBundle.getString("settings_keep_date"));
-		this.keepDateCheck.setSelected(Utils.config.getBoolean("keepDate", false));
+		this.keepDateCheck.setSelected(Utils.config.getBoolean(Configuration.KEEPDATE, false));
 		this.notificationCheck = new JCheckBox();
 		this.notificationCheck.setText(Utils.resourceBundle.getString("settings_notifications"));
-		this.notificationCheck.setSelected(Utils.config.getBoolean("showNotification", false));
+		this.notificationCheck.setSelected(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false));
 		this.autoCompletionCheck = new JCheckBox();
 		this.autoCompletionCheck.setText(Utils.resourceBundle.getString("settings_auto_completion"));
-		this.autoCompletionCheck.setSelected(Utils.config.getBoolean("autoCompletion", false));
+		this.autoCompletionCheck.setSelected(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false));
 		this.devModeCheck = new JCheckBox();
 		this.devModeCheck.setText(Utils.resourceBundle.getString("settings_dev_mode"));
-		this.devModeCheck.setSelected(Utils.config.getBoolean("devMode", false));
+		this.devModeCheck.setSelected(Utils.config.getBoolean(Configuration.DEVMODE, false));
 		this.systemTrayCheck = new JCheckBox();
 		this.systemTrayCheck.setText(Utils.resourceBundle.getString("settings_reduce_tray"));
-		this.systemTrayCheck.setSelected(Utils.config.getBoolean("reduceTray", false));
+		this.systemTrayCheck.setSelected(Utils.config.getBoolean(Configuration.REDUCETRAY, false));
 		this.buttonReturn = new JButton(Utils.resourceBundle.getString("settings_confirm"));
 		this.buttonReturn.addActionListener(new ButtonReturnSettingsActionListener());
 		this.textNumberKeepStats = new JLabel(Utils.resourceBundle.getString("settings_number_stats_to_keep"));
@@ -159,7 +160,7 @@ public class InterfaceSettings extends JFrame
 	 */
 	public boolean isLocaleModified()
 	{
-		return !Utils.config.getString("locale", null).equals(this.languages.get(this.languageBox.getSelectedItem()));
+		return !Utils.config.getString(Configuration.LOCALE, null).equals(this.languages.get(this.languageBox.getSelectedItem()));
 	}
 
 	/**
@@ -169,7 +170,7 @@ public class InterfaceSettings extends JFrame
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Utils.config.getBoolean("showNotification", false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean("keepDate", false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean("loadingScreen", true) == this.loadingCheck.isSelected()) || !(Utils.config.getString("locale", null) != this.languages.get(this.languageBox.getSelectedItem())) || !(Utils.config.getBoolean("reduceTray", false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean("devMode", false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean("autoCompletion", false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
+		return !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || !(Utils.config.getString(Configuration.LOCALE, null) != this.languages.get(this.languageBox.getSelectedItem())) || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
 	}
 
 	/**
@@ -191,16 +192,16 @@ public class InterfaceSettings extends JFrame
 	public void save()
 	{
 		boolean newInterface = isLocaleModified();
-		Utils.config.writeVar("autoCompletion", String.valueOf(this.autoCompletionCheck.isSelected()));
-		Utils.config.writeVar("devMode", String.valueOf(this.devModeCheck.isSelected()));
-		Utils.config.writeVar("reduceTray", String.valueOf(this.systemTrayCheck.isSelected()));
-		Utils.config.writeVar("loadingScreen", String.valueOf(this.loadingCheck.isSelected()));
-		Utils.config.writeVar("keepDate", String.valueOf(this.keepDateCheck.isSelected()));
-		Utils.config.writeVar("showNotification", String.valueOf(this.notificationCheck.isSelected()));
-		Utils.config.writeVar("locale", this.languages.get(this.languageBox.getSelectedItem()));
+		Utils.config.writeVar(Configuration.AUTOCOMPLETION, String.valueOf(this.autoCompletionCheck.isSelected()));
+		Utils.config.writeVar(Configuration.DEVMODE, String.valueOf(this.devModeCheck.isSelected()));
+		Utils.config.writeVar(Configuration.REDUCETRAY, String.valueOf(this.systemTrayCheck.isSelected()));
+		Utils.config.writeVar(Configuration.LOADINGSCREEN, String.valueOf(this.loadingCheck.isSelected()));
+		Utils.config.writeVar(Configuration.KEEPDATE, String.valueOf(this.keepDateCheck.isSelected()));
+		Utils.config.writeVar(Configuration.SHOWNOTIFICATION, String.valueOf(this.notificationCheck.isSelected()));
+		Utils.config.writeVar(Configuration.LOCALE, this.languages.get(this.languageBox.getSelectedItem()));
 		if(!this.numberKeepStats.getText().equals("") && !this.numberKeepStats.getText().equals("0"))
 		{
-			Utils.config.writeVar("statsToKeep", this.numberKeepStats.getText());
+			Utils.config.writeVar(Configuration.STATSTOKEEP, this.numberKeepStats.getText());
 			Utils.numberTrackedStatsToKeep = Integer.valueOf(this.numberKeepStats.getText());
 		}
 		Utils.mainFrame.updateAutoCompletionStatus(this.autoCompletionCheck.isSelected());

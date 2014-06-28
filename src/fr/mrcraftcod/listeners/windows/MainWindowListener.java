@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
+import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -40,7 +41,7 @@ public class MainWindowListener implements WindowListener
 	{
 		try
 		{
-			if(Utils.config.getBoolean("reduceTray", false))
+			if(Utils.config.getBoolean(Configuration.REDUCETRAY, false))
 			{
 				SystemTrayOsuStats.add();
 				Utils.mainFrame.hideFrame();

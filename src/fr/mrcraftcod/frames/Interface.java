@@ -68,6 +68,7 @@ import fr.mrcraftcod.objects.ImagePanel;
 import fr.mrcraftcod.objects.JButtonMode;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.User;
+import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.CountryCode;
 import fr.mrcraftcod.utils.Utils;
 
@@ -238,7 +239,7 @@ public class Interface extends JFrame
 		usernameLabel.setFont(Utils.fontMain);
 		usernameLabel.setHorizontalAlignment(JLabel.CENTER);
 		usernameLabel.setVerticalAlignment(JLabel.CENTER);
-		this.usernameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean("autoCompletion", false));
+		this.usernameField = new AutoComboBox(Utils.getTrackedUsers(), Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false));
 		this.usernameField.setFont(Utils.fontMain);
 		this.userNameFieldModel = this.usernameField.getDefModel();
 		this.userNameFieldModel.addElement(null);
@@ -968,7 +969,7 @@ public class Interface extends JFrame
 	 */
 	public void switchMode(int mode, boolean checkInfos, boolean updateImages)
 	{
-		Utils.config.writeVar("lastmode", mode);
+		Utils.config.writeVar(Configuration.LASTMODE, mode);
 		this.buttonStandard.setEnabled(true);
 		this.buttonTaiko.setEnabled(true);
 		this.buttonCTB.setEnabled(true);
@@ -1026,7 +1027,7 @@ public class Interface extends JFrame
 		for(String date : user.getAvalidbleStatsDates(getSelectedMode()))
 			this.statsDateModel.addElement(date);
 		this.statsDateModel.addElement(Utils.resourceBundle.getString("last_date_saved"));
-		if(Utils.config.getBoolean("keepDate", false) && lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
+		if(Utils.config.getBoolean(Configuration.KEEPDATE, false) && lastDate != null && !lastDate.equalsIgnoreCase("") && !lastDate.equalsIgnoreCase("null"))
 			this.lastStatsDateBox.setSelectedItem(lastDate);
 		else
 			this.lastStatsDateBox.setSelectedIndex(this.statsDateModel.getSize() - 1);
@@ -1057,7 +1058,7 @@ public class Interface extends JFrame
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
-		if(Utils.config.getBoolean("showNotification", false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
+		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 			new InterfaceNotification(user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
