@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.TimeZone;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
@@ -37,7 +38,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceChart extends JFrame
+public class InterfaceChart extends JDialog
 {
 	private static final long serialVersionUID = -5220915498588371099L;
 	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED;
@@ -46,13 +47,15 @@ public class InterfaceChart extends JFrame
 	 * Constructor.
 	 * Create graphs for given stats.
 	 *
+	 * @param parent The parent frame.
 	 * @param user The name of the user.
 	 * @param mode The mode of the graphs.
 	 * @param stats The stats to process.
 	 */
-	public InterfaceChart(String user, String mode, List<Stats> stats)
+	public InterfaceChart(JFrame parent, String user, String mode, List<Stats> stats)
 	{
-		super();
+		super(parent);
+		setModal(true);
 		setIconImages(Utils.icons);
 		setTitle(user);
 		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
@@ -75,6 +78,8 @@ public class InterfaceChart extends JFrame
 		contentPane.addTab(Utils.resourceBundle.getString("graph_level"), chartLevelPanel);
 		contentPane.addTab("300 / 100 / 50", chartHitsPanel);
 		contentPane.addTab("SS / S / A", chartRanksPanel);
+		setSize(new Dimension(800, 600));
+		setLocationRelativeTo(parent);
 		setContentPane(contentPane);
 		setVisible(true);
 		pack();

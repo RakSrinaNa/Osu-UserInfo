@@ -1059,7 +1059,7 @@ public class Interface extends JFrame
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
+			new InterfaceNotification(this, user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
 	/**
