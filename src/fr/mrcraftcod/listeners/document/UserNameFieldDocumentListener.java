@@ -1,4 +1,4 @@
-package fr.mrcraftcod.listeners;
+package fr.mrcraftcod.listeners.document;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;

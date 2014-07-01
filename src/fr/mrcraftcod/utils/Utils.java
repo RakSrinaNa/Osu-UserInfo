@@ -41,6 +41,7 @@ import fr.mrcraftcod.Main;
 import fr.mrcraftcod.frames.Interface;
 import fr.mrcraftcod.frames.InterfaceAbout;
 import fr.mrcraftcod.frames.InterfaceChangelog;
+import fr.mrcraftcod.frames.InterfaceChart;
 import fr.mrcraftcod.frames.InterfaceSettings;
 import fr.mrcraftcod.frames.InterfaceStartup;
 import fr.mrcraftcod.objects.Stats;
@@ -90,6 +91,7 @@ public class Utils
 	public static Stats lastStats = new Stats();
 	public static InterfaceAbout aboutFrame;
 	public static InterfaceSettings configFrame;
+	public static InterfaceChart chartFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;

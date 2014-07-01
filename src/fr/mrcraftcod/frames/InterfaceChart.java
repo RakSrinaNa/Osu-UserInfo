@@ -35,6 +35,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.util.Rotation;
+import fr.mrcraftcod.listeners.change.GraphTabChangeListener;
 import fr.mrcraftcod.objects.ChartPopupMenu;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
@@ -48,6 +49,8 @@ public class InterfaceChart extends JFrame
 {
 	private static final long serialVersionUID = -5220915498588371099L;
 	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED;
+	private JTabbedPane contentPane;
+	private ChartPanel lastChart;
 
 	/**
 	 * Constructor.
@@ -73,29 +76,42 @@ public class InterfaceChart extends JFrame
 		ChartPanel chartLevelPanel = getChartInPannel(user, Utils.resourceBundle.getString("graph_level"), createLevelChart(title, user, stats, shape));
 		ChartPanel chartHitsPanel = getChartInPannel(user, Utils.resourceBundle.getString("total_hits"), createHitsChart(title, user, stats));
 		ChartPanel chartRanksPanel = getChartInPannel(user, Utils.resourceBundle.getString("ranks"), createRanksChart(title, user, stats));
-		JTabbedPane contentPane = new JTabbedPane();
-		contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
-		contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
-		contentPane.addTab(Utils.resourceBundle.getString("ranked_score"), chartRankedScorePanel);
-		contentPane.addTab(Utils.resourceBundle.getString("total_score"), chartTotalScorePanel);
-		contentPane.addTab(Utils.resourceBundle.getString("play_count"), chartPlayCountPanel);
-		contentPane.addTab(Utils.resourceBundle.getString("graph_level"), chartLevelPanel);
-		contentPane.addTab("300 / 100 / 50", chartHitsPanel);
-		contentPane.addTab("SS / S / A", chartRanksPanel);
+		this.contentPane = new JTabbedPane();
+		this.contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
+		this.contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
+		this.contentPane.addTab(Utils.resourceBundle.getString("ranked_score"), chartRankedScorePanel);
+		this.contentPane.addTab(Utils.resourceBundle.getString("total_score"), chartTotalScorePanel);
+		this.contentPane.addTab(Utils.resourceBundle.getString("play_count"), chartPlayCountPanel);
+		this.contentPane.addTab(Utils.resourceBundle.getString("graph_level"), chartLevelPanel);
+		this.contentPane.addTab("300 / 100 / 50", chartHitsPanel);
+		this.contentPane.addTab("SS / S / A", chartRanksPanel);
+		this.contentPane.addChangeListener(new GraphTabChangeListener());
 		KeyStroke ctrlTab = KeyStroke.getKeyStroke("ctrl TAB");
 		KeyStroke ctrlShiftTab = KeyStroke.getKeyStroke("ctrl shift TAB");
-		Set<AWTKeyStroke> forwardKeys = new HashSet<AWTKeyStroke>(contentPane.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+		Set<AWTKeyStroke> forwardKeys = new HashSet<AWTKeyStroke>(this.contentPane.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
 		forwardKeys.remove(ctrlTab);
-		contentPane.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
-		Set<AWTKeyStroke> backwardKeys = new HashSet<AWTKeyStroke>(contentPane.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
+		this.contentPane.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
+		Set<AWTKeyStroke> backwardKeys = new HashSet<AWTKeyStroke>(this.contentPane.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
 		backwardKeys.remove(ctrlShiftTab);
-		contentPane.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardKeys);
-		InputMap inputMap = contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		this.contentPane.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardKeys);
+		InputMap inputMap = this.contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		inputMap.put(ctrlTab, "navigateNext");
 		inputMap.put(ctrlShiftTab, "navigatePrevious");
-		setContentPane(contentPane);
+		setContentPane(this.contentPane);
 		setVisible(true);
 		pack();
+		updateLastChart();
+	}
+
+	public ChartPanel getLastChart()
+	{
+		return this.lastChart;
+	}
+
+	public void updateLastChart()
+	{
+		if(this.contentPane.getSelectedComponent() instanceof ChartPanel)
+			this.lastChart = (ChartPanel) this.contentPane.getSelectedComponent();
 	}
 
 	/**
