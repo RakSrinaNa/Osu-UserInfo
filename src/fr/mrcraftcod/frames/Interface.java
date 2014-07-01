@@ -108,7 +108,6 @@ public class Interface extends JFrame
 	private final JPanel count300Panel, count100Panel, count50Panel;
 	private final JProgressBar levelBar;
 	private final HashMap<String, BufferedImage> hitsImages;
-	private int lastSelectedMode;
 	private BufferedImage avatarImage;
 
 	/**
@@ -772,7 +771,6 @@ public class Interface extends JFrame
 		this.buttonTaiko.setEnabled(status);
 		this.buttonCTB.setEnabled(status);
 		this.buttonMania.setEnabled(status);
-		switchMode(this.lastSelectedMode, false, false);
 	}
 
 	/**
@@ -987,24 +985,23 @@ public class Interface extends JFrame
 	public void switchMode(int mode, boolean checkInfos, boolean updateImages)
 	{
 		Utils.config.writeVar(Configuration.LASTMODE, mode);
-		this.lastSelectedMode = mode;
-		this.buttonStandard.setEnabled(true);
-		this.buttonTaiko.setEnabled(true);
-		this.buttonCTB.setEnabled(true);
-		this.buttonMania.setEnabled(true);
+		this.buttonStandard.setSelected(true);
+		this.buttonTaiko.setSelected(true);
+		this.buttonCTB.setSelected(true);
+		this.buttonMania.setSelected(true);
 		switch(mode)
 		{
 			case 0:
-				this.buttonStandard.setEnabled(false);
+				this.buttonStandard.setSelected(false);
 			break;
 			case 1:
-				this.buttonTaiko.setEnabled(false);
+				this.buttonTaiko.setSelected(false);
 			break;
 			case 2:
-				this.buttonCTB.setEnabled(false);
+				this.buttonCTB.setSelected(false);
 			break;
 			case 3:
-				this.buttonMania.setEnabled(false);
+				this.buttonMania.setSelected(false);
 			break;
 		}
 		if(updateImages)

@@ -21,6 +21,7 @@ public class JButtonMode extends JButton
 	private static final long serialVersionUID = -6514627861897727157L;
 	private Color disabledBackgroundColor, disabledTextColor, borderColor;
 	private Icon iconMode, unselectedIconMode;
+	private boolean selected;
 	private int borderSize;
 	private int roundedFactor = 10, borderOffset = 3;
 
@@ -81,6 +82,12 @@ public class JButtonMode extends JButton
 		return this.unselectedIconMode;
 	}
 
+	@Override
+	public boolean isSelected()
+	{
+		return this.selected;
+	}
+
 	/**
 	 * Draw the button.
 	 *
@@ -96,12 +103,12 @@ public class JButtonMode extends JButton
 		Dimension d = this.getSize();
 		g2.setColor(this.borderColor);
 		g2.fillRoundRect(this.borderOffset, this.borderOffset, getWidth() - this.borderOffset, getHeight() - this.borderOffset, this.roundedFactor, this.roundedFactor);
-		if(isEnabled())
+		if(isSelected())
 			g2.setColor(getBackground());
 		else
 			g2.setColor(this.disabledBackgroundColor);
 		g2.fillRoundRect(this.borderOffset + this.borderSize, this.borderOffset + this.borderSize, getWidth() - (this.borderOffset + 2 * this.borderSize), getHeight() - (this.borderOffset + 2 * this.borderSize), this.roundedFactor, this.roundedFactor);
-		if(isEnabled())
+		if(isSelected())
 		{
 			g2.setFont(getFont());
 			g2.setColor(getForeground());
@@ -115,7 +122,7 @@ public class JButtonMode extends JButton
 		int x = (d.width - fm.stringWidth(getText()) + this.iconMode.getIconWidth()) / 2;
 		int y = fm.getAscent() + (d.height - (fm.getAscent() + fm.getDescent())) / 2;
 		g2.drawString(getText(), x, y);
-		if(isEnabled())
+		if(isSelected())
 			this.iconMode.paintIcon(this, g2, (int) (x - 1.2 * this.iconMode.getIconWidth()), y - this.iconMode.getIconHeight() / 2 - 4);
 		else
 			this.unselectedIconMode.paintIcon(this, g2, (int) (x - 1.2 * this.iconMode.getIconWidth()), y - this.iconMode.getIconHeight() / 2 - 4);
@@ -159,6 +166,13 @@ public class JButtonMode extends JButton
 	public void setIconMode(Icon iconMode)
 	{
 		this.iconMode = iconMode;
+	}
+
+	@Override
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+		invalidate();
 	}
 
 	/**
