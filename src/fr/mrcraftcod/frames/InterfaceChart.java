@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.TimeZone;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
@@ -39,7 +38,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceChart extends JDialog
+public class InterfaceChart extends JFrame
 {
 	private static final long serialVersionUID = -5220915498588371099L;
 	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED;
@@ -55,10 +54,8 @@ public class InterfaceChart extends JDialog
 	 */
 	public InterfaceChart(JFrame parent, String user, String mode, List<Stats> stats)
 	{
-		super(parent);
+		super();
 		getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-		setModal(true);
-		setModalityType(ModalityType.MODELESS);
 		setIconImages(Utils.icons);
 		setTitle(user);
 		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
