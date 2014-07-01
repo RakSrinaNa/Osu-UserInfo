@@ -17,6 +17,6 @@ public class ItemSettingsActionListener extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		Utils.configFrame = new InterfaceSettings();
+		Utils.configFrame = new InterfaceSettings(Utils.mainFrame);
 	}
 }

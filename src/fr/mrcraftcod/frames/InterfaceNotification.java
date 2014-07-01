@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.geom.RoundRectangle2D;
 import java.text.NumberFormat;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
@@ -19,7 +20,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceNotification extends JFrame implements Runnable
+public class InterfaceNotification extends JDialog implements Runnable
 {
 	private static final long serialVersionUID = 8870236400957609469L;
 	private final static int cooldown = 7000;
@@ -27,6 +28,7 @@ public class InterfaceNotification extends JFrame implements Runnable
 	/**
 	 * Constructor.
 	 *
+	 * @param parent The parent frame.
 	 * @param name The name of the notification.
 	 * @param textRank The text of the notification.
 	 * @param rank The rank to show.
@@ -35,10 +37,11 @@ public class InterfaceNotification extends JFrame implements Runnable
 	 * @param totalScore The total score to show.
 	 * @param rankedScore The ranked score to show.
 	 */
-	public InterfaceNotification(String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
+	public InterfaceNotification(JFrame parent, String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
 	{
-		super();
+		super(parent);
 		int offset = 0, arc = 15;
+		setModal(false);
 		setTitle("New stats!");
 		setSize(400, 75);
 		setUndecorated(true);
@@ -76,8 +79,8 @@ public class InterfaceNotification extends JFrame implements Runnable
 		constraints.insets = new Insets(1, 1, 1, 2);
 		add(messageLabel, constraints);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setVisible(true);
 		toFront();
+		setVisible(true);
 		new Thread(this).start();
 	}
 

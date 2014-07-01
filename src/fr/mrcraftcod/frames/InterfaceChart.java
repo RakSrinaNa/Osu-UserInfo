@@ -16,6 +16,7 @@ import java.util.TimeZone;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import org.jfree.chart.ChartFactory;
@@ -56,13 +57,15 @@ public class InterfaceChart extends JFrame
 	 * Constructor.
 	 * Create graphs for given stats.
 	 *
+	 * @param parent The parent frame.
 	 * @param user The name of the user.
 	 * @param mode The mode of the graphs.
 	 * @param stats The stats to process.
 	 */
-	public InterfaceChart(String user, String mode, List<Stats> stats)
+	public InterfaceChart(JFrame parent, String user, String mode, List<Stats> stats)
 	{
 		super();
+		getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 		setIconImages(Utils.icons);
 		setTitle(user);
 		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
@@ -87,6 +90,8 @@ public class InterfaceChart extends JFrame
 		this.contentPane.addTab("SS / S / A", chartRanksPanel);
 		this.contentPane.addChangeListener(new GraphTabChangeListener());
 		KeyStroke ctrlTab = KeyStroke.getKeyStroke("ctrl TAB");
+		setSize(new Dimension(800, 600));
+		setLocationRelativeTo(parent);
 		KeyStroke ctrlShiftTab = KeyStroke.getKeyStroke("ctrl shift TAB");
 		Set<AWTKeyStroke> forwardKeys = new HashSet<AWTKeyStroke>(this.contentPane.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
 		forwardKeys.remove(ctrlTab);

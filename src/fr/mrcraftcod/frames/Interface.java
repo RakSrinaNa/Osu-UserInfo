@@ -759,6 +759,21 @@ public class Interface extends JFrame
 	}
 
 	/**
+	 * Used to allow or not the controls to start a new fetch.
+	 *
+	 * @param status The status to set.
+	 */
+	public void allowNewSearch(boolean status)
+	{
+		this.usernameField.setEnabled(status);
+		this.validButon.setEnabled(status);
+		this.buttonStandard.setEnabled(status);
+		this.buttonTaiko.setEnabled(status);
+		this.buttonCTB.setEnabled(status);
+		this.buttonMania.setEnabled(status);
+	}
+
+	/**
 	 * Used to show back the frame when exiting system tray mode.
 	 */
 	public void backFromTray()
@@ -970,23 +985,23 @@ public class Interface extends JFrame
 	public void switchMode(int mode, boolean checkInfos, boolean updateImages)
 	{
 		Utils.config.writeVar(Configuration.LASTMODE, mode);
-		this.buttonStandard.setEnabled(true);
-		this.buttonTaiko.setEnabled(true);
-		this.buttonCTB.setEnabled(true);
-		this.buttonMania.setEnabled(true);
+		this.buttonStandard.setSelected(true);
+		this.buttonTaiko.setSelected(true);
+		this.buttonCTB.setSelected(true);
+		this.buttonMania.setSelected(true);
 		switch(mode)
 		{
 			case 0:
-				this.buttonStandard.setEnabled(false);
+				this.buttonStandard.setSelected(false);
 			break;
 			case 1:
-				this.buttonTaiko.setEnabled(false);
+				this.buttonTaiko.setSelected(false);
 			break;
 			case 2:
-				this.buttonCTB.setEnabled(false);
+				this.buttonCTB.setSelected(false);
 			break;
 			case 3:
-				this.buttonMania.setEnabled(false);
+				this.buttonMania.setSelected(false);
 			break;
 		}
 		if(updateImages)
@@ -1059,7 +1074,7 @@ public class Interface extends JFrame
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
 		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
+			new InterfaceNotification(this, user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
 	/**

@@ -26,7 +26,7 @@ public class ChangelogMouseListener implements MouseListener
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		Utils.getAllChangelogFrame();
+		Utils.getAllChangelogFrame(Utils.mainFrame);
 	}
 
 	@Override
