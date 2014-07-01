@@ -101,4 +101,10 @@
 			{+}Add Taiko/CTB/Mania hits images
 		</changes>
 	</version>
+		<version>
+		<name>1.7b4</name>
+		<changes>
+			{+}Ctrl + Tab and Ctrl + Shift + Tab to navigate in the graphs frame
+		</changes>
+	</version>
 </changelog>
