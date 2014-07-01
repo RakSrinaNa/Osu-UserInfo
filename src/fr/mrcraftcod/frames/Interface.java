@@ -856,11 +856,11 @@ public class Interface extends JFrame
 	 */
 	public int getSelectedMode()
 	{
-		if(!this.buttonTaiko.isEnabled())
+		if(!this.buttonTaiko.isSelected())
 			return 1;
-		if(!this.buttonCTB.isEnabled())
+		if(!this.buttonCTB.isSelected())
 			return 2;
-		if(!this.buttonMania.isEnabled())
+		if(!this.buttonMania.isSelected())
 			return 3;
 		return 0;
 	}

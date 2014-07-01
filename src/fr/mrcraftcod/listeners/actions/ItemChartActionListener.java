@@ -24,6 +24,6 @@ public class ItemChartActionListener extends AbstractAction
 		if(stats == null || stats.size() < 1)
 			JOptionPane.showMessageDialog(Utils.mainFrame, Utils.resourceBundle.getString("select_user_chart"), Utils.resourceBundle.getString("select_user_chart_title"), JOptionPane.ERROR_MESSAGE);
 		else
-			Utils.chartFrame = new InterfaceChart(Utils.lastUser.getUsername(), "Osu!", stats);
+			Utils.chartFrame = new InterfaceChart(Utils.mainFrame, Utils.lastUser.getUsername(), "Osu!", stats);
 	}
 }
