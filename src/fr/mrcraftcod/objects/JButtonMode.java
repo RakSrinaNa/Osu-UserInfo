@@ -101,22 +101,22 @@ public class JButtonMode extends JButton
 		qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2.setRenderingHints(qualityHints);
 		Dimension d = this.getSize();
-		g2.setColor(this.borderColor);
+		g2.setColor(processEnabledColor(this.borderColor));
 		g2.fillRoundRect(this.borderOffset, this.borderOffset, getWidth() - this.borderOffset, getHeight() - this.borderOffset, this.roundedFactor, this.roundedFactor);
 		if(isSelected())
-			g2.setColor(getBackground());
+			g2.setColor(processEnabledColor(getBackground()));
 		else
-			g2.setColor(this.disabledBackgroundColor);
+			g2.setColor(processEnabledColor(this.disabledBackgroundColor));
 		g2.fillRoundRect(this.borderOffset + this.borderSize, this.borderOffset + this.borderSize, getWidth() - (this.borderOffset + 2 * this.borderSize), getHeight() - (this.borderOffset + 2 * this.borderSize), this.roundedFactor, this.roundedFactor);
 		if(isSelected())
 		{
 			g2.setFont(getFont());
-			g2.setColor(getForeground());
+			g2.setColor(processEnabledColor(getForeground()));
 		}
 		else
 		{
 			g2.setFont(getFont().deriveFont(Font.BOLD));
-			g2.setColor(this.disabledTextColor);
+			g2.setColor(processEnabledColor(this.disabledTextColor));
 		}
 		FontMetrics fm = g2.getFontMetrics();
 		int x = (d.width - fm.stringWidth(getText()) + this.iconMode.getIconWidth()) / 2;
@@ -183,5 +183,12 @@ public class JButtonMode extends JButton
 	public void setUnselectedIconMode(Icon unselectedIconMode)
 	{
 		this.unselectedIconMode = unselectedIconMode;
+	}
+
+	private Color processEnabledColor(Color c)
+	{
+		if(isEnabled())
+			return c;
+		return c.darker();
 	}
 }
