@@ -296,8 +296,8 @@ public class Interface extends JFrame
 		this.buttonStandard.setBorderColor(colorButtonBorder);
 		this.buttonStandard.setDisabledTextColor(colorTextUnselected);
 		this.buttonStandard.setForeground(colorTextSelected);
-		this.buttonStandard.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize)));
-		this.buttonStandard.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize)));
+		this.buttonStandard.setUnselectedIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/standard.png")), iconSize, iconSize));
+		this.buttonStandard.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize));
 		this.buttonStandard.setFocusPainted(false);
 		this.buttonStandard.addActionListener(new ModeStandardActionListener());
 		this.buttonTaiko = new JButtonMode("Taiko");
@@ -306,8 +306,8 @@ public class Interface extends JFrame
 		this.buttonTaiko.setBorderColor(colorButtonBorder);
 		this.buttonTaiko.setDisabledTextColor(colorTextUnselected);
 		this.buttonTaiko.setForeground(colorTextSelected);
-		this.buttonTaiko.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize)));
-		this.buttonTaiko.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize)));
+		this.buttonTaiko.setUnselectedIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/taiko.png")), iconSize, iconSize));
+		this.buttonTaiko.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize));
 		this.buttonTaiko.setFocusPainted(false);
 		this.buttonTaiko.addActionListener(new ModeTaikoActionListener());
 		this.buttonCTB = new JButtonMode("Catch The Beat");
@@ -316,8 +316,8 @@ public class Interface extends JFrame
 		this.buttonCTB.setBorderColor(colorButtonBorder);
 		this.buttonCTB.setDisabledTextColor(colorTextUnselected);
 		this.buttonCTB.setForeground(colorTextSelected);
-		this.buttonCTB.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize)));
-		this.buttonCTB.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize)));
+		this.buttonCTB.setUnselectedIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/ctb.png")), iconSize, iconSize));
+		this.buttonCTB.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize));
 		this.buttonCTB.setFocusPainted(false);
 		this.buttonCTB.addActionListener(new ModeCTBActionListener());
 		this.buttonMania = new JButtonMode("osu!mania");
@@ -326,8 +326,8 @@ public class Interface extends JFrame
 		this.buttonMania.setBorderColor(colorButtonBorder);
 		this.buttonMania.setDisabledTextColor(colorTextUnselected);
 		this.buttonMania.setForeground(colorTextSelected);
-		this.buttonMania.setUnselectedIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize)));
-		this.buttonMania.setIconMode(new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize)));
+		this.buttonMania.setUnselectedIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/mania.png")), iconSize, iconSize));
+		this.buttonMania.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_mania.png")), iconSize, iconSize));
 		this.buttonMania.setFocusPainted(false);
 		this.buttonMania.addActionListener(new ModeManiaActionListener());
 		switchMode(defaultMode, false, false);
