@@ -30,8 +30,6 @@ public class InterfaceLoading extends JDialog
 	public InterfaceLoading(JFrame parent)
 	{
 		super(parent);
-		// setModal(true); //TODO
-		// setModalityType(ModalityType.DOCUMENT_MODAL);
 		setUndecorated(true);
 		setContentPane(new TransparentPane(new BorderLayout()));
 		setTitle(Utils.resourceBundle.getString("loading"));

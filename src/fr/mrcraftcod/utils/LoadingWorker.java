@@ -50,7 +50,6 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
-		Thread.sleep(2000);
 		return Utils.getInfosServer(this.user, this.hard, this.forceDisplay, this.forceFetch);
 	}
 
