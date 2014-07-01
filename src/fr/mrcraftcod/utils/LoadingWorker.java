@@ -3,6 +3,7 @@ package fr.mrcraftcod.utils;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 import fr.mrcraftcod.frames.InterfaceLoading;
+import fr.mrcraftcod.listeners.components.FollowComponentListener;
 
 /**
  * Used to fetch user infos in the background.
@@ -33,8 +34,12 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 		this.hard = hard;
 		this.forceDisplay = forceDisplay;
 		this.forceFetch = forceFetch;
+		Utils.mainFrame.allowNewSearch(false);
 		if(openFrame)
+		{
 			this.frame = new InterfaceLoading(parent);
+			parent.addComponentListener(new FollowComponentListener(this.frame, this.frame.getIcon().getIconWidth(), this.frame.getIcon().getIconHeight()));
+		}
 	}
 
 	/**
@@ -45,6 +50,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	@Override
 	protected Boolean doInBackground() throws Exception
 	{
+		Thread.sleep(2000);
 		return Utils.getInfosServer(this.user, this.hard, this.forceDisplay, this.forceFetch);
 	}
 
@@ -56,6 +62,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 	@Override
 	protected void done()
 	{
+		Utils.mainFrame.allowNewSearch(true);
 		if(this.frame != null)
 			this.frame.dispose();
 	}

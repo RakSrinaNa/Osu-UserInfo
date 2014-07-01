@@ -759,6 +759,21 @@ public class Interface extends JFrame
 	}
 
 	/**
+	 * Used to allow or not the controls to start a new fetch.
+	 *
+	 * @param status The status to set.
+	 */
+	public void allowNewSearch(boolean status)
+	{
+		this.usernameField.setEnabled(status);
+		this.validButon.setEnabled(status);
+		this.buttonStandard.setEnabled(status);
+		this.buttonTaiko.setEnabled(status);
+		this.buttonCTB.setEnabled(status);
+		this.buttonMania.setEnabled(status);
+	}
+
+	/**
 	 * Used to show back the frame when exiting system tray mode.
 	 */
 	public void backFromTray()

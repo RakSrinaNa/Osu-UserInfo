@@ -20,6 +20,7 @@ import fr.mrcraftcod.utils.Utils;
 public class InterfaceLoading extends JDialog
 {
 	private static final long serialVersionUID = 6199248760028121570L;
+	private ImageIcon icon;
 
 	/**
 	 * Constructor.
@@ -36,19 +37,28 @@ public class InterfaceLoading extends JDialog
 		setTitle(Utils.resourceBundle.getString("loading"));
 		setIconImages(Utils.icons);
 		setBackground(new Color(255, 255, 255, 0));
-		ImageIcon icon = null;
-		icon = new ImageIcon(Main.class.getClassLoader().getResource("resources/images/loading.gif"));
+		this.icon = new ImageIcon(Main.class.getClassLoader().getResource("resources/images/loading.gif"));
 		JLabel label = new JLabel();
-		label.setIcon(icon);
-		icon.setImageObserver(label);
+		label.setIcon(this.icon);
+		this.icon.setImageObserver(label);
 		getContentPane().add(label, BorderLayout.CENTER);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+		setPreferredSize(new Dimension(this.icon.getIconWidth(), this.icon.getIconHeight()));
 		Point p = parent.getLocation();
-		p.setLocation(p.getX() + parent.getSize().getWidth() / 2 - icon.getIconWidth() / 2, p.getY() + parent.getSize().getHeight() / 2 - icon.getIconHeight() / 2);
+		p.setLocation(p.getX() + parent.getSize().getWidth() / 2 - this.icon.getIconWidth() / 2, p.getY() + parent.getSize().getHeight() / 2 - this.icon.getIconHeight() / 2);
 		setLocation(p);
 		setVisible(true);
 		pack();
 		toFront();
+	}
+
+	/**
+	 * Used to get the icon.
+	 *
+	 * @return The icon.
+	 */
+	public ImageIcon getIcon()
+	{
+		return this.icon;
 	}
 }
