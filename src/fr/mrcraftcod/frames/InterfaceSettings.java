@@ -49,7 +49,8 @@ public class InterfaceSettings extends JDialog
 		this.languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
 		setTitle(Utils.resourceBundle.getString("settings"));
-		// setModal(true);
+		setModal(true);
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		setIconImages(Utils.icons);
 		setLayout(new GridBagLayout());
 		setResizable(true);

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.TimeZone;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -55,7 +56,9 @@ public class InterfaceChart extends JDialog
 	public InterfaceChart(JFrame parent, String user, String mode, List<Stats> stats)
 	{
 		super(parent);
+		getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 		setModal(true);
+		setModalityType(ModalityType.MODELESS);
 		setIconImages(Utils.icons);
 		setTitle(user);
 		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
