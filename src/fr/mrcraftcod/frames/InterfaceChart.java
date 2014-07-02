@@ -36,8 +36,8 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.util.Rotation;
+import fr.mrcraftcod.frames.component.ChartPopupMenu;
 import fr.mrcraftcod.listeners.change.GraphTabChangeListener;
-import fr.mrcraftcod.objects.ChartPopupMenu;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
 

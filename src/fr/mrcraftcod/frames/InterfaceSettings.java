@@ -15,9 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import fr.mrcraftcod.frames.component.JTextFieldLimitNumbers;
 import fr.mrcraftcod.listeners.actions.ButtonReturnSettingsActionListener;
 import fr.mrcraftcod.listeners.windows.SettingsWindowListener;
-import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.Utils;
 

@@ -9,7 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.objects.TransparentPane;
+import fr.mrcraftcod.frames.component.TransparentPane;
 import fr.mrcraftcod.utils.Utils;
 
 /**

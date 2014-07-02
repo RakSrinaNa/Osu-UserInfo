@@ -1,4 +1,4 @@
-package fr.mrcraftcod.objects;
+package fr.mrcraftcod.frames.component;
 
 /* From http://java.sun.com/docs/books/tutorial/index.html */
 /*
@@ -44,7 +44,8 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
-import fr.mrcraftcod.objects.AutoComboBox.Java2sAutoTextField.AutoDocument;
+import fr.mrcraftcod.frames.component.AutoComboBox.Java2sAutoTextField.AutoDocument;
+import fr.mrcraftcod.objects.ComparatorIgnoreCase;
 
 @SuppressWarnings("rawtypes")
 public class AutoComboBox extends JComboBox

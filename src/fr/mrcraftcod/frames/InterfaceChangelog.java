@@ -15,7 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.objects.JChangelogPanel;
+import fr.mrcraftcod.frames.component.JChangelogPanel;
 import fr.mrcraftcod.utils.Utils;
 
 /**

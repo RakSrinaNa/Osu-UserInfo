@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import javax.swing.JPanel;
-import fr.mrcraftcod.objects.JButtonMode;
+import fr.mrcraftcod.frames.component.JButtonMode;
 
 /**
  * Used to resize modes buttons to the correct width (all 4 have the same)

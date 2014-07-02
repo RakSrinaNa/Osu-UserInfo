@@ -1,4 +1,4 @@
-package fr.mrcraftcod.objects;
+package fr.mrcraftcod.frames.component;
 
 import javax.swing.table.DefaultTableModel;
 

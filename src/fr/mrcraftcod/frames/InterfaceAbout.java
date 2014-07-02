@@ -15,10 +15,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.swingplus.JHyperlink;
+import fr.mrcraftcod.frames.component.JHoverLabel;
+import fr.mrcraftcod.frames.component.JTableUneditableModel;
 import fr.mrcraftcod.listeners.mouse.ChangelogMouseListener;
 import fr.mrcraftcod.listeners.mouse.TraducersMouseListener;
-import fr.mrcraftcod.objects.JHoverLabel;
-import fr.mrcraftcod.objects.JTableUneditableModel;
 import fr.mrcraftcod.objects.TableColumnAdjuster;
 import fr.mrcraftcod.utils.Utils;
 
