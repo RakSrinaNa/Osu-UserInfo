@@ -108,11 +108,17 @@
 			{+}Add Taiko/CTB/Mania hits images
 		</changes>
 	</version>
-		<version>
+	<version>
 		<name>1.7b4</name>
 		<changes>
 			{+}Ctrl + Tab and Ctrl + Shift + Tab to navigate in the graphs frame
 			{*}Modified the way frames works
+		</changes>
+	</version>
+	<version>
+		<name>1.7b5</name>
+		<changes>
+			{*}Fix settings frame that was freezing the program
 		</changes>
 	</version>
 </changelog>
