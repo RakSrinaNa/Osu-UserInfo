@@ -94,6 +94,8 @@
 		<changes>
 			{+}Add Taiko/CTB/Mania hits images
 			{+}Ctrl + Tab and Ctrl + Shift + Tab to navigate in the graphs frame
+			{*}Fix settings frame that was freezing the program
+			{*}Fix updater nor working correctly
 		</changes>
 	</version>
 	<version>
@@ -119,6 +121,12 @@
 		<name>1.7b5</name>
 		<changes>
 			{*}Fix settings frame that was freezing the program
+		</changes>
+	</version>
+	<version>
+		<name>1.7b6</name>
+		<changes>
+			{*}Fix updater nor working correctly
 		</changes>
 	</version>
 </changelog>
