@@ -195,7 +195,6 @@ public class JButtonMode extends JButton
 	{
 		this.unselectedIconMode = unselectedIconMode;
 		this.unselectedIconModeDark = getDarkerImage(unselectedIconMode);
-		System.out.println("a");
 	}
 
 	private BufferedImage copyBufferedImage(BufferedImage img)

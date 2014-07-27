@@ -49,6 +49,7 @@ public class InterfaceSettings extends JDialog
 		this.languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
 		setTitle(Utils.resourceBundle.getString("settings"));
+		setVisible(true);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setIconImages(Utils.icons);
@@ -126,7 +127,6 @@ public class InterfaceSettings extends JDialog
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
 		toFront();
-		setVisible(true);
 	}
 
 	/**
