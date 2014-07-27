@@ -10,13 +10,14 @@ import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import fr.mrcraftcod.frames.component.JTextFieldLimitNumbers;
 import fr.mrcraftcod.listeners.actions.ButtonReturnSettingsActionListener;
 import fr.mrcraftcod.listeners.windows.SettingsWindowListener;
-import fr.mrcraftcod.objects.JTextFieldLimitNumbers;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.Utils;
 
@@ -27,7 +28,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @since 1.4
  */
-public class InterfaceSettings extends JFrame
+public class InterfaceSettings extends JDialog
 {
 	private static final long serialVersionUID = -339025516182085233L;
 	private JCheckBox notificationCheck, keepDateCheck, autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
@@ -39,17 +40,22 @@ public class InterfaceSettings extends JFrame
 
 	/**
 	 * Constructor.
+	 *
+	 * @param parent The parent frame.
 	 */
-	public InterfaceSettings()
+	public InterfaceSettings(JFrame parent)
 	{
-		super(Utils.resourceBundle.getString("settings"));
+		super(parent);
 		this.languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
+		setTitle(Utils.resourceBundle.getString("settings"));
+		setVisible(true);
+		setModal(true);
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		setIconImages(Utils.icons);
 		setLayout(new GridBagLayout());
 		setResizable(true);
 		setAlwaysOnTop(false);
-		setVisible(true);
 		getContentPane().setBackground(Utils.backColor);
 		addWindowListener(new SettingsWindowListener());
 		this.languageBox = new JComboBox<String>(getLanguages());
@@ -88,40 +94,39 @@ public class InterfaceSettings extends JFrame
 		c.gridwidth = 2;
 		c.weightx = 1;
 		c.weighty = 1;
-		add(this.autoCompletionCheck, c);
+		getContentPane().add(this.autoCompletionCheck, c);
 		c.gridy = lign++;
-		add(this.devModeCheck, c);
+		getContentPane().add(this.devModeCheck, c);
 		c.gridy = lign++;
-		add(this.loadingCheck, c);
+		getContentPane().add(this.loadingCheck, c);
 		c.gridy = lign++;
-		add(this.keepDateCheck, c);
+		getContentPane().add(this.keepDateCheck, c);
 		c.gridy = lign++;
-		add(this.notificationCheck, c);
+		getContentPane().add(this.notificationCheck, c);
 		c.gridy = lign++;
-		add(this.systemTrayCheck, c);
+		getContentPane().add(this.systemTrayCheck, c);
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = lign++;
-		add(this.textNumberKeepStats, c);
+		getContentPane().add(this.textNumberKeepStats, c);
 		c.gridx = 1;
-		add(this.numberKeepStats, c);
+		getContentPane().add(this.numberKeepStats, c);
 		c.gridy = lign++;
 		c.gridx = 0;
-		add(languageText, c);
+		getContentPane().add(languageText, c);
 		c.gridx = 1;
-		add(this.languageBox, c);
+		getContentPane().add(this.languageBox, c);
 		c.gridwidth = 2;
 		c.gridy = lign++;
 		c.gridx = 0;
-		add(this.buttonReturn, c);
+		getContentPane().add(this.buttonReturn, c);
 		int frameHeight = lign * 30 + 20;
 		setPreferredSize(new Dimension(frameWidth, frameHeight));
 		setMinimumSize(new Dimension(frameWidth, frameHeight - 20));
+		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setLocationRelativeTo(Utils.mainFrame);
-		Utils.mainFrame.hideFrame();
-		toFront();
 		pack();
+		toFront();
 	}
 
 	/**
@@ -131,26 +136,15 @@ public class InterfaceSettings extends JFrame
 	{
 		if(isSettingsModified())
 		{
-			hideFrame();
 			int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
 			if(result == JOptionPane.YES_OPTION)
 			{
 				returnMain(false);
 				return;
 			}
-			showFrame();
 			return;
 		}
 		returnMain(false);
-	}
-
-	/**
-	 * Used to hide the frame.
-	 */
-	public void hideFrame()
-	{
-		setFocusable(false);
-		setEnabled(false);
 	}
 
 	/**
@@ -182,7 +176,6 @@ public class InterfaceSettings extends JFrame
 	{
 		if(save)
 			save();
-		Utils.mainFrame.showFrame();
 		dispose();
 	}
 
@@ -215,16 +208,6 @@ public class InterfaceSettings extends JFrame
 			{
 				Utils.logger.log(Level.SEVERE, "Error opening new frame!", e);
 			}
-	}
-
-	/**
-	 * Used to show the frame.
-	 */
-	public void showFrame()
-	{
-		setFocusable(true);
-		setEnabled(true);
-		toFront();
 	}
 
 	/**

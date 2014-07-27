@@ -2,9 +2,9 @@ package fr.mrcraftcod.frames;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.HashMap;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,11 +15,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.swingplus.JHyperlink;
+import fr.mrcraftcod.frames.component.JHoverLabel;
+import fr.mrcraftcod.frames.component.JTableUneditableModel;
 import fr.mrcraftcod.listeners.mouse.ChangelogMouseListener;
 import fr.mrcraftcod.listeners.mouse.TraducersMouseListener;
-import fr.mrcraftcod.listeners.windows.AboutWindowListener;
-import fr.mrcraftcod.objects.JHoverLabel;
-import fr.mrcraftcod.objects.JTableUneditableModel;
 import fr.mrcraftcod.objects.TableColumnAdjuster;
 import fr.mrcraftcod.utils.Utils;
 
@@ -28,7 +27,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceAbout extends JFrame
+public class InterfaceAbout extends JDialog
 {
 	private static final long serialVersionUID = 1321865080360423098L;
 	private HashMap<String, String> traducers;
@@ -43,19 +42,20 @@ public class InterfaceAbout extends JFrame
 	 *
 	 * @param parent The parent component.
 	 */
-	public InterfaceAbout(Component parent)
+	public InterfaceAbout(JFrame parent)
 	{
-		super(Utils.resourceBundle.getString("menu_bar_help_about"));
+		super(parent);
 		this.traducers = new HashMap<String, String>();
 		this.traducers.put(Utils.resourceBundle.getString("italian"), "TheHowl");
+		setTitle(Utils.resourceBundle.getString("menu_bar_help_about"));
 		setVisible(false);
+		setModal(true);
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(400, 200));
 		setMinimumSize(new Dimension(400, 200));
 		setAlwaysOnTop(false);
 		setIconImages(Utils.icons);
 		getContentPane().setBackground(Utils.backColor);
-		addWindowListener(new AboutWindowListener());
 		JLabel text = new JLabel(Utils.resourceBundle.getString("about_text"));
 		text.setBackground(Utils.backColor);
 		add(text, BorderLayout.NORTH);
@@ -100,7 +100,6 @@ public class InterfaceAbout extends JFrame
 		pack();
 		setVisible(true);
 		toFront();
-		Utils.mainFrame.hideFrame();
 	}
 
 	/**

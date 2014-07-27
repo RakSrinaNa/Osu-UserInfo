@@ -17,9 +17,7 @@ public class SettingsWindowListener implements WindowListener
 
 	@Override
 	public void windowClosed(WindowEvent e)
-	{
-		Utils.configFrame = null;
-	}
+	{}
 
 	@Override
 	public void windowClosing(final WindowEvent e)

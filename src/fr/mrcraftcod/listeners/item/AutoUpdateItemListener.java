@@ -1,4 +1,4 @@
-package fr.mrcraftcod.listeners;
+package fr.mrcraftcod.listeners.item;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;

@@ -1,4 +1,4 @@
-package fr.mrcraftcod.objects;
+package fr.mrcraftcod.frames.component;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import fr.mrcraftcod.interfaces.ImageChangeListener;
+import fr.mrcraftcod.objects.ImageEvent;
 import fr.mrcraftcod.utils.Utils;
 
 /**

@@ -1,4 +1,4 @@
-package fr.mrcraftcod.listeners;
+package fr.mrcraftcod.listeners.change;
 
 import fr.mrcraftcod.interfaces.ImageChangeListener;
 import fr.mrcraftcod.objects.ImageEvent;

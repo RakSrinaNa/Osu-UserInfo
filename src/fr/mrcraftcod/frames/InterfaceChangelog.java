@@ -11,10 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.objects.JChangelogPanel;
+import fr.mrcraftcod.frames.component.JChangelogPanel;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -22,7 +23,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceChangelog extends JFrame
+public class InterfaceChangelog extends JDialog
 {
 	private static final long serialVersionUID = -8709993783125141424L;
 	private LinkedHashMap<String, JChangelogPanel> panels;
@@ -31,28 +32,30 @@ public class InterfaceChangelog extends JFrame
 	/**
 	 * Constructor.
 	 *
+	 * @param The parent frame.
 	 * @param changelog The changelogs.
 	 */
-	public InterfaceChangelog(LinkedHashMap<String, String> changelog)
+	public InterfaceChangelog(JFrame parent, LinkedHashMap<String, String> changelog)
 	{
-		super("Changelog");
+		super(parent);
 		if(changelog == null)
 		{
 			dispose();
 			return;
 		}
-		initFrame(changelog);
+		initFrame(parent, changelog);
 	}
 
 	/**
 	 * Constructor.
 	 *
+	 * @param The parent frame.
 	 * @param version The version of the changelog.
 	 * @param changelog The changelog.
 	 */
-	public InterfaceChangelog(String version, String changelog)
+	public InterfaceChangelog(JFrame parent, String version, String changelog)
 	{
-		super("Changelog");
+		super(parent);
 		if(changelog == null)
 		{
 			dispose();
@@ -60,7 +63,7 @@ public class InterfaceChangelog extends JFrame
 		}
 		LinkedHashMap<String, String> changes = new LinkedHashMap<String, String>();
 		changes.put(version, changelog);
-		initFrame(changes);
+		initFrame(parent, changes);
 	}
 
 	/**
@@ -110,13 +113,16 @@ public class InterfaceChangelog extends JFrame
 	/**
 	 * Used to initialise the frame.
 	 *
+	 * @param The parent frame.
 	 * @param changelog The changelogs of the frame.
 	 */
-	private void initFrame(LinkedHashMap<String, String> changelog)
+	private void initFrame(JFrame parent, LinkedHashMap<String, String> changelog)
 	{
 		this.panels = processTexts(changelog);
 		setIconImages(Utils.icons);
 		setBackground(Utils.backColor);
+		setTitle("Changelog");
+		setModal(true);
 		getContentPane().setBackground(Utils.backColor);
 		getContentPane().setLayout(new BorderLayout());
 		this.versionSelection = new JComboBox<String>(this.panels.keySet().toArray(new String[this.panels.size()]));
@@ -130,8 +136,10 @@ public class InterfaceChangelog extends JFrame
 		});
 		this.versionSelection.setSelectedItem(Main.VERSION);
 		setPanelChange(Main.VERSION);
+		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(true);
+		pack();
 		setVisible(true);
 		toFront();
 	}

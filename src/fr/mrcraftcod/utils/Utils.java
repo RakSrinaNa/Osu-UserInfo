@@ -31,6 +31,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -41,6 +42,7 @@ import fr.mrcraftcod.Main;
 import fr.mrcraftcod.frames.Interface;
 import fr.mrcraftcod.frames.InterfaceAbout;
 import fr.mrcraftcod.frames.InterfaceChangelog;
+import fr.mrcraftcod.frames.InterfaceChart;
 import fr.mrcraftcod.frames.InterfaceSettings;
 import fr.mrcraftcod.frames.InterfaceStartup;
 import fr.mrcraftcod.objects.Stats;
@@ -90,6 +92,7 @@ public class Utils
 	public static Stats lastStats = new Stats();
 	public static InterfaceAbout aboutFrame;
 	public static InterfaceSettings configFrame;
+	public static InterfaceChart chartFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
@@ -174,10 +177,12 @@ public class Utils
 
 	/**
 	 * Used to create a new changelog frame.
+	 *
+	 * @param parent The parent frame.
 	 */
-	public static void getAllChangelogFrame()
+	public static void getAllChangelogFrame(JFrame parent)
 	{
-		new InterfaceChangelog(Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean(Configuration.DEVMODE, false)));
+		new InterfaceChangelog(parent, Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean(Configuration.DEVMODE, false)));
 	}
 
 	/**
@@ -203,10 +208,12 @@ public class Utils
 
 	/**
 	 * Used to create a new changelog frame for this version.
+	 *
+	 * @param parent The parent frame.
 	 */
-	public static void getChangelogFrame()
+	public static void getChangelogFrame(JFrame parent)
 	{
-		new InterfaceChangelog(Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
+		new InterfaceChangelog(parent, Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
 	}
 
 	/**
@@ -630,10 +637,10 @@ public class Utils
 				noticeColor = Color.WHITE;
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
-				if(isNewVersion(config.getString(Configuration.LASTVERSION, Main.VERSION)))
-					getChangelogFrame();
-				config.writeVar(Configuration.LASTVERSION, Main.VERSION);
 				mainFrame = new Interface(config.getInt(Configuration.LASTMODE, 0));
+				if(isNewVersion(config.getString(Configuration.LASTVERSION, Main.VERSION)))
+					getChangelogFrame(mainFrame);
+				config.writeVar(Configuration.LASTVERSION, Main.VERSION);
 			}
 			catch(Exception exception)
 			{

@@ -1,4 +1,4 @@
-package fr.mrcraftcod.objects;
+package fr.mrcraftcod.frames.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -6,8 +6,11 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
-import javax.swing.Icon;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
@@ -20,7 +23,8 @@ public class JButtonMode extends JButton
 {
 	private static final long serialVersionUID = -6514627861897727157L;
 	private Color disabledBackgroundColor, disabledTextColor, borderColor;
-	private Icon iconMode, unselectedIconMode;
+	private BufferedImage iconMode, unselectedIconMode, unselectedIconModeDark;
+	private boolean selected;
 	private int borderSize;
 	private int roundedFactor = 10, borderOffset = 3;
 
@@ -66,7 +70,7 @@ public class JButtonMode extends JButton
 	 *
 	 * @return The icon.
 	 */
-	public Icon getIconMode()
+	public BufferedImage getIconMode()
 	{
 		return this.iconMode;
 	}
@@ -76,9 +80,23 @@ public class JButtonMode extends JButton
 	 *
 	 * @return The unselected icon.
 	 */
-	public Icon getUnselectedIconMode()
+	public BufferedImage getUnselectedIconMode()
 	{
 		return this.unselectedIconMode;
+	}
+
+	@Override
+	public boolean isSelected()
+	{
+		return this.selected;
+	}
+
+	public boolean isTransparent(BufferedImage img, int x, int y)
+	{
+		int pixel = img.getRGB(x, y);
+		if(pixel >> 24 == 0x00)
+			return true;
+		return false;
 	}
 
 	/**
@@ -94,31 +112,31 @@ public class JButtonMode extends JButton
 		qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2.setRenderingHints(qualityHints);
 		Dimension d = this.getSize();
-		g2.setColor(this.borderColor);
+		g2.setColor(processEnabledColor(this.borderColor));
 		g2.fillRoundRect(this.borderOffset, this.borderOffset, getWidth() - this.borderOffset, getHeight() - this.borderOffset, this.roundedFactor, this.roundedFactor);
-		if(isEnabled())
-			g2.setColor(getBackground());
+		if(isSelected())
+			g2.setColor(processEnabledColor(getBackground()));
 		else
-			g2.setColor(this.disabledBackgroundColor);
+			g2.setColor(processEnabledColor(this.disabledBackgroundColor));
 		g2.fillRoundRect(this.borderOffset + this.borderSize, this.borderOffset + this.borderSize, getWidth() - (this.borderOffset + 2 * this.borderSize), getHeight() - (this.borderOffset + 2 * this.borderSize), this.roundedFactor, this.roundedFactor);
-		if(isEnabled())
+		if(isSelected())
 		{
 			g2.setFont(getFont());
-			g2.setColor(getForeground());
+			g2.setColor(processEnabledColor(getForeground()));
 		}
 		else
 		{
 			g2.setFont(getFont().deriveFont(Font.BOLD));
-			g2.setColor(this.disabledTextColor);
+			g2.setColor(processEnabledColor(this.disabledTextColor));
 		}
 		FontMetrics fm = g2.getFontMetrics();
-		int x = (d.width - fm.stringWidth(getText()) + this.iconMode.getIconWidth()) / 2;
+		int x = (d.width - fm.stringWidth(getText()) + this.iconMode.getWidth()) / 2;
 		int y = fm.getAscent() + (d.height - (fm.getAscent() + fm.getDescent())) / 2;
 		g2.drawString(getText(), x, y);
-		if(isEnabled())
-			this.iconMode.paintIcon(this, g2, (int) (x - 1.2 * this.iconMode.getIconWidth()), y - this.iconMode.getIconHeight() / 2 - 4);
+		if(isSelected())
+			g2.drawImage(this.iconMode, (int) (x - 1.2 * this.iconMode.getWidth()), y - this.iconMode.getHeight() / 2 - 4, null);
 		else
-			this.unselectedIconMode.paintIcon(this, g2, (int) (x - 1.2 * this.iconMode.getIconWidth()), y - this.iconMode.getIconHeight() / 2 - 4);
+			g2.drawImage(processUnselectedImage(), (int) (x - 1.2 * this.iconMode.getWidth()), y - this.iconMode.getHeight() / 2 - 4, null);
 	}
 
 	/**
@@ -156,9 +174,16 @@ public class JButtonMode extends JButton
 	 *
 	 * @param iconMode The icon.
 	 */
-	public void setIconMode(Icon iconMode)
+	public void setIconMode(BufferedImage iconMode)
 	{
 		this.iconMode = iconMode;
+	}
+
+	@Override
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+		invalidate();
 	}
 
 	/**
@@ -166,8 +191,57 @@ public class JButtonMode extends JButton
 	 *
 	 * @param unselectedIconMode The unselected icon.
 	 */
-	public void setUnselectedIconMode(Icon unselectedIconMode)
+	public void setUnselectedIconMode(BufferedImage unselectedIconMode)
 	{
 		this.unselectedIconMode = unselectedIconMode;
+		this.unselectedIconModeDark = getDarkerImage(unselectedIconMode);
+	}
+
+	private BufferedImage copyBufferedImage(BufferedImage img)
+	{
+		ColorModel colorModel = img.getColorModel();
+		boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
+		WritableRaster raster = img.copyData(null);
+		return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
+	}
+
+	private BufferedImage getDarkerImage(BufferedImage unselectedIconMode)
+	{
+		int shift = 100;
+		return shiftColor(copyBufferedImage(unselectedIconMode), shift, shift, shift);
+	}
+
+	private Color processEnabledColor(Color color)
+	{
+		if(isEnabled())
+			return color;
+		return color.darker();
+	}
+
+	private Image processUnselectedImage()
+	{
+		if(isEnabled())
+			return this.unselectedIconMode;
+		return this.unselectedIconModeDark;
+	}
+
+	private BufferedImage shiftColor(BufferedImage img, int rShift, int gShift, int bShift)
+	{
+		int width = img.getWidth();
+		int height = img.getHeight();
+		for(int i = 0; i < height; i++)
+			for(int j = 0; j < width; j++)
+			{
+				int c = img.getRGB(j, i);
+				int alpha = c >> 24 & 0xff;
+				int red = (c >> 16 & 0xff) - rShift;
+				int green = (c >> 8 & 0xff) - gShift;
+				int blue = (c & 0xff) - bShift;
+				red = red > 0 ? red : 0;
+				green = green > 0 ? green : 0;
+				blue = blue > 0 ? blue : 0;
+				img.setRGB(j, i, new Color(red, green, blue, alpha).getRGB());
+			}
+		return img;
 	}
 }
