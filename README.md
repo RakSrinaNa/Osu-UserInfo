@@ -1,7 +1,7 @@
 Osu!UserInfo
 =========
 
-[Osu!UserInfo](https://osu.ppy.sh/forum/p/3094583) is a simple program that will give you information (and track them) about a Osu! user!
+[Osu!UserInfo](https://osu.ppy.sh/forum/p/3094583) is a simple program that will give you information (and track them) about a Osu! user! This program also include the possibility to view those informations tracked on a graph.
 
 Informations given/tracked
 -----------------------
