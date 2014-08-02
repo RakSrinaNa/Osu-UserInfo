@@ -444,7 +444,7 @@ public class Utils
 				mainFrame.setFlagAndAvatar(currentUser);
 			if(currentStats.equals(Utils.lastStats))
 				return false;
-			mainFrame.userNameFieldTextComponent.setText(currentUser.getUsername());
+			mainFrame.setTextUser(currentUser.getUsername());
 			currentUser.setStats(!showerror, currentStats, mainFrame.getSelectedMode());
 			if(tracked)
 			{
