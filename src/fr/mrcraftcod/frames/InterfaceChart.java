@@ -49,7 +49,7 @@ import fr.mrcraftcod.utils.Utils;
 public class InterfaceChart extends JFrame
 {
 	private static final long serialVersionUID = -5220915498588371099L;
-	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED;
+	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED, colorLine3 = Color.BLACK;
 	private JTabbedPane contentPane;
 	private ChartPanel lastChart;
 
@@ -281,37 +281,54 @@ public class InterfaceChart extends JFrame
 		xyPlot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 		NumberAxis axisPP = new NumberAxis("PP");
 		NumberAxis axisRank = new NumberAxis(Utils.resourceBundle.getString("rank"));
+		NumberAxis axisCountryRank = new NumberAxis(Utils.resourceBundle.getString("country_rank"));
 		axisPP.setTickLabelPaint(colorLine1);
 		axisRank.setTickLabelPaint(colorLine2);
+		axisCountryRank.setTickLabelPaint(colorLine3);
 		axisPP.setAutoRangeIncludesZero(false);
 		axisRank.setAutoRangeIncludesZero(false);
-		axisRank.setTickLabelFont(Utils.fontMain);
+		axisCountryRank.setAutoRangeIncludesZero(false);
 		axisPP.setTickLabelFont(Utils.fontMain);
-		axisRank.setLabelFont(Utils.fontMain);
+		axisRank.setTickLabelFont(Utils.fontMain);
+		axisCountryRank.setTickLabelFont(Utils.fontMain);
 		axisPP.setLabelFont(Utils.fontMain);
+		axisRank.setLabelFont(Utils.fontMain);
+		axisCountryRank.setLabelFont(Utils.fontMain);
 		NumberFormat formatPP = NumberFormat.getInstance(Utils.locale);
 		NumberFormat formatRank = NumberFormat.getInstance(Utils.locale);
+		NumberFormat formatCountryRank = NumberFormat.getInstance(Utils.locale);
 		formatPP.setMaximumFractionDigits(2);
 		formatRank.setMaximumFractionDigits(0);
+		formatCountryRank.setMaximumFractionDigits(0);
 		axisPP.setNumberFormatOverride(formatPP);
 		axisRank.setNumberFormatOverride(formatRank);
+		axisCountryRank.setNumberFormatOverride(formatCountryRank);
 		axisRank.setInverted(true);
+		axisCountryRank.setInverted(true);
 		xyPlot.setRangeAxis(0, axisPP);
 		xyPlot.setRangeAxis(1, axisRank);
+		xyPlot.setRangeAxis(2, axisCountryRank);
 		xyPlot.setDataset(0, processStatsPP(stats));
 		xyPlot.setDataset(1, processStatsRank(stats));
+		xyPlot.setDataset(2, processStatsCountryRank(stats));
 		xyPlot.mapDatasetToRangeAxis(0, 0);
 		xyPlot.mapDatasetToRangeAxis(1, 1);
+		xyPlot.mapDatasetToRangeAxis(2, 2);
 		xyPlot.setRangeAxisLocation(0, AxisLocation.TOP_OR_RIGHT);
 		xyPlot.setRangeAxisLocation(1, AxisLocation.TOP_OR_RIGHT);
+		xyPlot.setRangeAxisLocation(2, AxisLocation.TOP_OR_RIGHT);
 		XYLineAndShapeRenderer rendererPP = new XYLineAndShapeRenderer();
 		XYLineAndShapeRenderer rendererRank = new XYLineAndShapeRenderer();
+		XYLineAndShapeRenderer rendererCountryRank = new XYLineAndShapeRenderer();
 		xyPlot.setRenderer(0, rendererPP);
 		xyPlot.setRenderer(1, rendererRank);
+		xyPlot.setRenderer(2, rendererCountryRank);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesPaint(0, colorLine1);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(1)).setSeriesPaint(0, colorLine2);
+		xyPlot.getRendererForDataset(xyPlot.getDataset(2)).setSeriesPaint(0, colorLine3);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(0)).setSeriesShape(0, shape);
 		xyPlot.getRendererForDataset(xyPlot.getDataset(1)).setSeriesShape(0, shape);
+		xyPlot.getRendererForDataset(xyPlot.getDataset(2)).setSeriesShape(0, shape);
 		DateAxis axisDate = (DateAxis) xyPlot.getDomainAxis();
 		axisDate.setDateFormatOverride(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
 		axisDate.setTickLabelFont(Utils.fontMain);
@@ -450,7 +467,31 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("accuracy"));
 		for(Stats stat : stats)
+		{
+			if(stat.getAccuracy() == 0)
+				continue;
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getAccuracy());
+		}
+		TimeSeriesCollection collection = new TimeSeriesCollection();
+		collection.addSeries(serie);
+		return collection;
+	}
+
+	/**
+	 * Used to process the country rank stats.
+	 *
+	 * @param stats The stats to process.
+	 * @return The dataset for graphs.
+	 */
+	private XYDataset processStatsCountryRank(List<Stats> stats)
+	{
+		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("country_rank"));
+		for(Stats stat : stats)
+		{
+			if(stat.getCountryRank() == 0)
+				continue;
+			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getCountryRank());
+		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serie);
 		return collection;
@@ -481,7 +522,11 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("graph_level"));
 		for(Stats stat : stats)
+		{
+			if(stat.getLevel() == 0)
+				continue;
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getLevel());
+		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serie);
 		return collection;
@@ -497,7 +542,11 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("play_count"));
 		for(Stats stat : stats)
+		{
+			if(stat.getPlayCount() == 0)
+				continue;
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getPlayCount());
+		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serie);
 		return collection;
@@ -513,7 +562,11 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serie = new TimeSeries("PP");
 		for(Stats stat : stats)
-			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getPp());
+		{
+			if(stat.getPP() == 0)
+				continue;
+			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getPP());
+		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serie);
 		return collection;
@@ -529,7 +582,11 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("rank"));
 		for(Stats stat : stats)
+		{
+			if(stat.getRank() == 0)
+				continue;
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getRank());
+		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serie);
 		return collection;
@@ -545,7 +602,11 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("ranked_score"));
 		for(Stats stat : stats)
+		{
+			if(stat.getRankedScore() == 0)
+				continue;
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getRankedScore());
+		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serie);
 		return collection;
@@ -576,7 +637,11 @@ public class InterfaceChart extends JFrame
 	{
 		TimeSeries serie = new TimeSeries(Utils.resourceBundle.getString("total_score"));
 		for(Stats stat : stats)
+		{
+			if(stat.getTotalScore() == 0)
+				continue;
 			serie.add(new Millisecond(new Date(stat.getDate()), TimeZone.getDefault(), Utils.locale), stat.getTotalScore());
+		}
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		collection.addSeries(serie);
 		return collection;

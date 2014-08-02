@@ -99,6 +99,8 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return "";
+		if(previousStats.getCountryRank() < 1)
+			return "";
 		double delta = previousStats.getCountryRank() - getCountryRank();
 		if(delta == 0D)
 			return "";
@@ -147,7 +149,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return "";
-		double delta = getPp() - previousStats.getPp();
+		double delta = getPP() - previousStats.getPP();
 		if(delta == 0D)
 			return "";
 		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
@@ -162,6 +164,8 @@ public class Stats implements Serializable, Cloneable
 	public String compareRank(Stats previousStats)
 	{
 		if(previousStats == null)
+			return "";
+		if(previousStats.rank == 0)
 			return "";
 		double delta = previousStats.getRank() - getRank();
 		if(delta == 0D)
@@ -346,7 +350,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return 0;
-		return getPp() - previousStats.getPp();
+		return getPP() - previousStats.getPP();
 	}
 
 	/**
@@ -460,7 +464,7 @@ public class Stats implements Serializable, Cloneable
 	 *
 	 * @return The amount of pp.
 	 */
-	public double getPp()
+	public double getPP()
 	{
 		return this.pp;
 	}

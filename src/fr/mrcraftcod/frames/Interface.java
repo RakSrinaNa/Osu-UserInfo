@@ -1097,7 +1097,7 @@ public class Interface extends JFrame
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		this.maximumCombo.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getMaximumCombo()) + currentStats.compareMaximumCombo(previousStats));
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
-		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
+		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPP()) + currentStats.comparePP(previousStats));
 		this.country.setText("<html><body><nobr>  " + CountryCode.getByCode(user.getCountry()).getName() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getCountryRank()) + currentStats.compareCountryRank(previousStats) + ")" + "  </nobr></body></html>");
 		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 			new InterfaceNotification(this, user.getUsername(), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
