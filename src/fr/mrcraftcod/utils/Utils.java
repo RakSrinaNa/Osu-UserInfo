@@ -98,6 +98,41 @@ public class Utils
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
 
 	/**
+	 * Used to cute String objects.
+	 *
+	 * @param string The string to cut.
+	 * @param deleteDelimiters True if delete delimiters, false if not.
+	 * @param ending The ending of the string.
+	 * @param begining The beginnings of the string.
+	 * @return The cutted String.
+	 *
+	 * @throws Exception The the String can't be cutted.
+	 */
+	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
+	{
+		if(!string.contains(ending))
+			throw new Exception();
+		boolean exists = false;
+		for(final String temp : begining)
+			if(string.contains(temp))
+				exists = true;
+		if(!exists)
+			throw new Exception();
+		int beginingIndex = 0;
+		for(final String temp : begining)
+			if((beginingIndex = string.indexOf(temp)) > -1)
+				break;
+		String result = string.substring(beginingIndex, string.indexOf(ending) + ending.length());
+		if(deleteDelimiters)
+		{
+			result = result.replace(ending, "");
+			for(final String temp : begining)
+				result = result.replace(temp, "");
+		}
+		return result;
+	}
+
+	/**
 	 * Used to cut a string.
 	 *
 	 * @param string The string to cut.
@@ -374,12 +409,36 @@ public class Utils
 			currentStats.setCount100(jsonResponse.getLong("count100"));
 			currentStats.setCount50(jsonResponse.getLong("count50"));
 			currentStats.updateTotalHits();
+			try
+			{
+				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m" + mainFrame.getSelectedMode());
+				try
+				{
+					currentStats.setCountryRank(Double.parseDouble(Utils.getNextLineCodeFromLink(pageProfile, 2, "<img class='flag' title='' src=").get(0).replace("#", "").replace(",", "")));
+				}
+				catch(Exception e)
+				{
+					logger.log(Level.WARNING, "Can't find country rank for user!", e);
+				}
+				try
+				{
+					currentStats.setMaximumCombo(Integer.parseInt(Utils.cutLine(Utils.getLineCodeFromLink(pageProfile, "<div class='profileStatLine' title='Highest combo achieved (hits in a row without a miss).'><b>Maximum Combo</b>"), true, "</div><br/>", "<b>Maximum Combo</b>: ").replace(",", "")));
+				}
+				catch(Exception e)
+				{
+					logger.log(Level.WARNING, "Can't find maximum combo for user!", e);
+				}
+			}
+			catch(Exception e)
+			{
+				logger.log(Level.INFO, "Can't get additional informations for user!", e);
+			}
 			if(!forceDisplay && currentStats.equals(Utils.lastStats))
 				return false;
 			mainFrame.username.setForeground(getRandomColor());
 			mainFrame.updateStatsDates(currentUser);
 			mainFrame.displayStats(currentUser, currentStats);
-			mainFrame.updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats, true);
+			mainFrame.updateTrackedInfos(currentUser, currentStats, previousStats, true);
 			mainFrame.setValidButonIcon("R");
 			if(forceDisplay || !currentUser.isSameUser(Utils.lastUser))
 				mainFrame.setFlagAndAvatar(currentUser);
@@ -431,7 +490,20 @@ public class Utils
 	 */
 	public static String getLineCodeFromLink(final String link, final String... gets) throws Exception
 	{
-		final String[] lines = getHTMLCode(link);
+		return getLineCodeFromLink(getHTMLCode(link), gets);
+	}
+
+	/**
+	 * Used to find a line from the HTML source code of a link.
+	 *
+	 * @param lines The HTML lines.
+	 * @param gets The parts to identify the wanted line.
+	 * @return The wanted line containing the text.
+	 *
+	 * @throws Exception If the line cannot be found.
+	 */
+	public static String getLineCodeFromLink(final String[] lines, final String... gets) throws Exception
+	{
 		for(final String get : gets)
 			for(final String tempLine : lines)
 				if(tempLine.contains(get))
@@ -488,6 +560,50 @@ public class Utils
 		catch(final Exception e)
 		{}
 		return file;
+	}
+
+	/**
+	 * Used to get lines from an HTML page with an offset from a "tag".
+	 *
+	 * @param link The link where to get the HTML source code.
+	 * @param offsetLine The offset between the "tag" and the lines to save.
+	 * @param gets The "tags"
+	 * @return An array of the found lines.
+	 *
+	 * @throws Exception If no lines were found.
+	 */
+	public static ArrayList<String> getNextLineCodeFromLink(final String link, final int offsetLine, final String... gets) throws Exception
+	{
+		return getNextLineCodeFromLink(getHTMLCode(link), offsetLine, gets);
+	}
+
+	/**
+	 * Used to get lines from an HTML page with an offset from a "tag".
+	 *
+	 * @param lines The HTML lines.
+	 * @param offsetLine The offset between the "tag" and the lines to save.
+	 * @param gets The "tags"
+	 * @return An array of the found lines.
+	 *
+	 * @throws Exception If no lines were found.
+	 */
+	public static ArrayList<String> getNextLineCodeFromLink(final String[] lines, final int offsetLine, final String... gets) throws Exception
+	{
+		ArrayList<String> allLines = new ArrayList<String>();
+		for(final String get : gets)
+			for(int i = 0; i < lines.length; i++)
+				if(lines[i].contains(get))
+					try
+					{
+						allLines.add(lines[i + offsetLine]);
+					}
+					catch(Exception e)
+					{
+						Utils.logger.log(Level.WARNING, "", e);
+					}
+		if(allLines.size() > 0)
+			return allLines;
+		throw new Exception("Cannot get code from link");
 	}
 
 	/**

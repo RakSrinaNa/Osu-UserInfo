@@ -93,6 +93,7 @@ public class Interface extends JFrame
 	private final JButton validButon;
 	private final JButtonMode buttonStandard, buttonTaiko, buttonCTB, buttonMania;
 	private final JLabel totalHits;
+	private final JLabel maximumCombo;
 	private final JLabel countSS;
 	private final JLabel countS;
 	private final JLabel countA;
@@ -647,6 +648,15 @@ public class Interface extends JFrame
 		this.countryFlag.setMinimumSize(new Dimension((int) picturesSize, (int) picturesSize));
 		this.countryFlag.setPreferredSize(new Dimension((int) picturesSize, (int) picturesSize));
 		this.countryFlag.setMaximumSize(new Dimension((int) picturesSize, (int) picturesSize));
+		// Max combo
+		JLabel maximumComboLabel = new JLabel(Utils.resourceBundle.getString("maximum_combo") + " : ");
+		maximumComboLabel.setFont(Utils.fontMain);
+		maximumComboLabel.setHorizontalAlignment(JLabel.RIGHT);
+		maximumComboLabel.setVerticalAlignment(JLabel.CENTER);
+		this.maximumCombo = new JLabel();
+		this.maximumCombo.setFont(Utils.fontMain);
+		this.maximumCombo.setHorizontalAlignment(JLabel.LEFT);
+		this.maximumCombo.setVerticalAlignment(JLabel.CENTER);
 		// Total hits
 		JLabel totalHitsLabel = new JLabel(Utils.resourceBundle.getString("total_hits") + " : ");
 		totalHitsLabel.setFont(Utils.fontMain);
@@ -671,6 +681,8 @@ public class Interface extends JFrame
 		otherPanel.add(countryLabel, new CC().cell(0, line).alignX("right"));
 		otherPanel.add(this.countryFlag, new CC().cell(1, line).alignX("left").gapLeft("5"));
 		otherPanel.add(this.country, new CC().cell(2, line++, 2, 1).alignX("left").gapLeft("2"));
+		otherPanel.add(maximumComboLabel, new CC().cell(0, line).alignX("right"));
+		otherPanel.add(this.maximumCombo, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
 		otherPanel.add(totalHitsLabel, new CC().cell(0, line).alignX("right"));
 		otherPanel.add(this.totalHits, new CC().cell(1, line++, 2, 1).alignX("left").gapLeft("5"));
 		/*************** HEADER PANEL ******************/
@@ -805,7 +817,6 @@ public class Interface extends JFrame
 		this.countS.setText(String.valueOf(stats.getCountS()));
 		this.countA.setText(String.valueOf(stats.getCountA()));
 		this.totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Utils.locale).format(stats.getTotalScore()), NumberFormat.getInstance(Utils.locale).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
-		this.country.setText(CountryCode.getByCode(user.getCountry()).getName());
 		DecimalFormat decimalFormat = new DecimalFormat();
 		decimalFormat.setMaximumFractionDigits(2);
 		this.hitCount300.setText(NumberFormat.getInstance(Utils.locale).format(stats.getCount300()) + " (" + decimalFormat.format(stats.getCount300() * 100f / stats.getTotalHits()) + "%)");
@@ -1053,7 +1064,7 @@ public class Interface extends JFrame
 	 */
 	public void updateTrackedInfos()
 	{
-		updateTrackedInfos(Utils.lastUser.getUsername(), Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate(), Utils.lastStats), true);
+		updateTrackedInfos(Utils.lastUser, Utils.lastUser.getLastStats(Utils.mainFrame.getSelectedMode()), Utils.lastUser.getStatsByModeAndDate(Utils.mainFrame.getSelectedMode(), Utils.mainFrame.getSelectedDate(), Utils.lastStats), true);
 	}
 
 	/**
@@ -1064,17 +1075,19 @@ public class Interface extends JFrame
 	 * @param previousStats The stats to compare with.
 	 * @param showNotification Show the notification popup if there is changes or not.
 	 */
-	public void updateTrackedInfos(String user, Stats currentStats, Stats previousStats, boolean showNotification)
+	public void updateTrackedInfos(User user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
-		this.username.setText("<html><body><nobr>  " + user + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
+		this.username.setText("<html><body><nobr>  " + user.getUsername() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		this.playCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
+		this.maximumCombo.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getMaximumCombo()) + currentStats.compareMaximumCombo(previousStats));
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPp()) + currentStats.comparePP(previousStats));
+		this.country.setText("<html><body><nobr>  " + CountryCode.getByCode(user.getCountry()).getName() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getCountryRank()) + currentStats.compareCountryRank(previousStats) + ")" + "  </nobr></body></html>");
 		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(this, user, currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
+			new InterfaceNotification(this, user.getUsername(), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
 	/**
