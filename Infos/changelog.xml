@@ -135,4 +135,11 @@
 			{*}Fix settings frame not saving in some cases
 		</changes>
 	</version>
+	<version>
+		<name>1.8b1</name>
+		<changes>
+			{+}Show country rank
+			{+}Show maximum combo
+		</changes>
+	</version>
 </changelog>
