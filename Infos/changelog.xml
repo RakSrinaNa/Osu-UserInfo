@@ -90,15 +90,6 @@
 		</changes>
 	</version>
 	<version>
-		<name>1.7</name>
-		<changes>
-			{+}Add Taiko/CTB/Mania hits images
-			{+}Ctrl + Tab and Ctrl + Shift + Tab to navigate in the graphs frame
-			{*}Fix settings frame that was freezing the program
-			{*}Fix updater nor working correctly
-		</changes>
-	</version>
-	<version>
 		<name>1.7b2</name>
 		<changes>
 			{*}Fix updater constantly getting developer version even if the public version is released
@@ -133,6 +124,15 @@
 		<name>1.7b7</name>
 		<changes>
 			{*}Fix settings frame not saving in some cases
+		</changes>
+	</version>
+	<version>
+		<name>1.7</name>
+		<changes>
+			{+}Add Taiko/CTB/Mania hits images
+			{+}Ctrl + Tab and Ctrl + Shift + Tab to navigate in the graphs frame
+			{*}Fix settings frame that was freezing the program
+			{*}Fix updater nor working correctly
 		</changes>
 	</version>
 	<version>
