@@ -148,4 +148,10 @@
 			{+}Add favourite user (F6 to fetch his stats)
 		</changes>
 	</version>
+	<version>
+		<name>1.8b3</name>
+		<changes>
+			{+}Add graph for national rank
+		</changes>
+	</version>
 </changelog>
