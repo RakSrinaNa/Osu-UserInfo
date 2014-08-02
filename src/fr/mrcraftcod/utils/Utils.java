@@ -723,6 +723,7 @@ public class Utils
 		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
 		setLookAndFeel();
 		int currentStep = 0;
+		boolean openChangelog = false;
 		startup = new InterfaceStartup(4);
 		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
 		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup);
@@ -755,7 +756,7 @@ public class Utils
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
 				mainFrame = new Interface(config.getInt(Configuration.LASTMODE, 0));
 				if(isNewVersion(config.getString(Configuration.LASTVERSION, Main.VERSION)))
-					getChangelogFrame(mainFrame);
+					openChangelog = true;
 				config.writeVar(Configuration.LASTVERSION, Main.VERSION);
 			}
 			catch(Exception exception)
@@ -763,6 +764,8 @@ public class Utils
 				exception.printStackTrace();
 			}
 		startup.exit();
+		if(openChangelog)
+			getChangelogFrame(mainFrame);
 	}
 
 	/**
