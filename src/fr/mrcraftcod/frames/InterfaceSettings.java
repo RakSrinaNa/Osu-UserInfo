@@ -154,7 +154,7 @@ public class InterfaceSettings extends JDialog
 	 */
 	public boolean isLocaleModified()
 	{
-		return !Utils.config.getString(Configuration.LOCALE, null).equals(this.languages.get(this.languageBox.getSelectedItem()));
+		return !Utils.config.getString(Configuration.LOCALE, "").equals(this.languages.get(this.languageBox.getSelectedItem()));
 	}
 
 	/**
