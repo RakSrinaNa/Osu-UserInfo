@@ -142,4 +142,10 @@
 			{+}Show maximum combo
 		</changes>
 	</version>
+	<version>
+		<name>1.8b2</name>
+		<changes>
+			{+}Add favourite user (F6 to fetch his stats)
+		</changes>
+	</version>
 </changelog>

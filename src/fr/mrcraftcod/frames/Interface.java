@@ -43,6 +43,7 @@ import net.miginfocom.swing.MigLayout;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import fr.mrcraftcod.Main;
+import fr.mrcraftcod.actions.ActionGetFavInfos;
 import fr.mrcraftcod.actions.ActionRefreshStats;
 import fr.mrcraftcod.frames.component.AutoComboBox;
 import fr.mrcraftcod.frames.component.GhostText;
@@ -199,6 +200,8 @@ public class Interface extends JFrame
 		setVisible(false);
 		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F5"), "getInfos");
 		getRootPane().getActionMap().put("getInfos", new ActionRefreshStats());
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F6"), "getFavInfos");
+		getRootPane().getActionMap().put("getFavInfos", new ActionGetFavInfos());
 		addWindowListener(new MainWindowListener());
 		setLayout(new GridBagLayout());
 		setMinimumSize(new Dimension(575, 725));
@@ -944,6 +947,16 @@ public class Interface extends JFrame
 			}
 		};
 		new Thread(task, "ThreadImages").start();
+	}
+
+	/**
+	 * Used to modify the user in the search bar.
+	 *
+	 * @param user The name to set.
+	 */
+	public void setTextUser(String user)
+	{
+		this.userNameFieldTextComponent.setText(user);
 	}
 
 	/**

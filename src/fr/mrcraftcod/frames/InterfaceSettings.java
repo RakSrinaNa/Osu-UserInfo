@@ -37,6 +37,7 @@ public class InterfaceSettings extends JDialog
 	private JButton buttonReturn;
 	private JLabel textNumberKeepStats;
 	private JTextField numberKeepStats;
+	private JTextField favouriteUser;
 
 	/**
 	 * Constructor.
@@ -60,7 +61,7 @@ public class InterfaceSettings extends JDialog
 		addWindowListener(new SettingsWindowListener());
 		this.languageBox = new JComboBox<String>(getLanguages());
 		this.languageBox.setSelectedItem(getLang(Utils.config.getString(Configuration.LOCALE, null)));
-		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language"));
+		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language") + ":");
 		this.loadingCheck = new JCheckBox();
 		this.loadingCheck.setText(Utils.resourceBundle.getString("settings_loading_screen"));
 		this.loadingCheck.setSelected(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true));
@@ -81,10 +82,13 @@ public class InterfaceSettings extends JDialog
 		this.systemTrayCheck.setSelected(Utils.config.getBoolean(Configuration.REDUCETRAY, false));
 		this.buttonReturn = new JButton(Utils.resourceBundle.getString("settings_confirm"));
 		this.buttonReturn.addActionListener(new ButtonReturnSettingsActionListener());
-		this.textNumberKeepStats = new JLabel(Utils.resourceBundle.getString("settings_number_stats_to_keep"));
+		this.textNumberKeepStats = new JLabel(Utils.resourceBundle.getString("settings_number_stats_to_keep") + ":");
 		this.numberKeepStats = new JTextField();
 		this.numberKeepStats.setDocument(new JTextFieldLimitNumbers(5));
 		this.numberKeepStats.setText(String.valueOf(Utils.numberTrackedStatsToKeep));
+		JLabel favouriteUserText = new JLabel(Utils.resourceBundle.getString("pref_fav_user") + ":");
+		this.favouriteUser = new JTextField();
+		this.favouriteUser.setText(Utils.config.getString(Configuration.FAVOURITEUSER, ""));
 		int lign = 0;
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.PAGE_START;
@@ -108,6 +112,11 @@ public class InterfaceSettings extends JDialog
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = lign++;
+		getContentPane().add(favouriteUserText, c);
+		c.gridx = 1;
+		getContentPane().add(this.favouriteUser, c);
+		c.gridy = lign++;
+		c.gridx = 0;
 		getContentPane().add(this.textNumberKeepStats, c);
 		c.gridx = 1;
 		getContentPane().add(this.numberKeepStats, c);
@@ -138,10 +147,7 @@ public class InterfaceSettings extends JDialog
 		{
 			int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
 			if(result == JOptionPane.YES_OPTION)
-			{
 				returnMain(false);
-				return;
-			}
 			return;
 		}
 		returnMain(false);
@@ -164,7 +170,7 @@ public class InterfaceSettings extends JDialog
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || !(Utils.config.getString(Configuration.LOCALE, null) != this.languages.get(this.languageBox.getSelectedItem())) || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
+		return !this.favouriteUser.getText().equals(Utils.config.getString(Configuration.FAVOURITEUSER, null)) || !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || !this.languages.get(this.languageBox.getSelectedItem()).equals(Utils.config.getString(Configuration.LOCALE, null)) || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
 	}
 
 	/**
@@ -197,6 +203,8 @@ public class InterfaceSettings extends JDialog
 			Utils.config.writeVar(Configuration.STATSTOKEEP, this.numberKeepStats.getText());
 			Utils.numberTrackedStatsToKeep = Integer.valueOf(this.numberKeepStats.getText());
 		}
+		if(!this.favouriteUser.getText().equals(""))
+			Utils.config.writeVar(Configuration.FAVOURITEUSER, this.favouriteUser.getText());
 		Utils.mainFrame.updateAutoCompletionStatus(this.autoCompletionCheck.isSelected());
 		if(newInterface)
 			try
