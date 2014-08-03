@@ -1091,14 +1091,14 @@ public class MainFrame extends JFrame
 	public void updateTrackedInfos(User user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
-		this.username.setText("<html><body><nobr>  " + user.getUsername() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
+		this.username.setText("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		this.playCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		this.maximumCombo.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getMaximumCombo()) + currentStats.compareMaximumCombo(previousStats));
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPP()) + currentStats.comparePP(previousStats));
-		this.country.setText("<html><body><nobr>  " + CountryCode.getByCode(user.getCountry()).getName() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getCountryRank()) + currentStats.compareCountryRank(previousStats) + ")" + "  </nobr></body></html>");
+		this.country.setText("<html><body><nobr>  " + CountryCode.getByCode(user.getCountry()).getName() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getCountryRank()) + " " + currentStats.compareCountryRank(previousStats) + "  </nobr></body></html>");
 		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
 			new NotificationFrame(this, user.getUsername(), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
