@@ -154,4 +154,10 @@
 			{+}Add graph for national rank
 		</changes>
 	</version>
+	<version>
+		<name>1.8b4</name>
+		<changes>
+			{*}Allow unlimited number of saved stats
+		</changes>
+	</version>
 </changelog>

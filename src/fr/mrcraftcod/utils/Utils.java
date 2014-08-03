@@ -746,7 +746,7 @@ public class Utils
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
-				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 10);
+				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
 				backColor = new Color(240, 236, 250);

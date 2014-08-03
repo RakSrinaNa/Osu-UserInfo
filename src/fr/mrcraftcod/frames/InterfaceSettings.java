@@ -198,7 +198,7 @@ public class InterfaceSettings extends JDialog
 		Utils.config.writeVar(Configuration.KEEPDATE, String.valueOf(this.keepDateCheck.isSelected()));
 		Utils.config.writeVar(Configuration.SHOWNOTIFICATION, String.valueOf(this.notificationCheck.isSelected()));
 		Utils.config.writeVar(Configuration.LOCALE, this.languages.get(this.languageBox.getSelectedItem()));
-		if(!this.numberKeepStats.getText().equals("") && !this.numberKeepStats.getText().equals("0"))
+		if(!this.numberKeepStats.getText().equals(""))
 		{
 			Utils.config.writeVar(Configuration.STATSTOKEEP, this.numberKeepStats.getText());
 			Utils.numberTrackedStatsToKeep = Integer.valueOf(this.numberKeepStats.getText());
