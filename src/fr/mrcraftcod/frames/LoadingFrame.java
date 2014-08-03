@@ -17,7 +17,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceLoading extends JDialog
+public class LoadingFrame extends JDialog
 {
 	private static final long serialVersionUID = 6199248760028121570L;
 	private ImageIcon icon;
@@ -27,7 +27,7 @@ public class InterfaceLoading extends JDialog
 	 *
 	 * @param parent The parent frame.
 	 */
-	public InterfaceLoading(JFrame parent)
+	public LoadingFrame(JFrame parent)
 	{
 		super(parent);
 		setUndecorated(true);

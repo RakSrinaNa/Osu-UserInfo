@@ -2,7 +2,7 @@ package fr.mrcraftcod.listeners.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import fr.mrcraftcod.frames.InterfaceSettings;
+import fr.mrcraftcod.frames.SettingsFrame;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -17,6 +17,6 @@ public class ItemSettingsActionListener extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		Utils.configFrame = new InterfaceSettings(Utils.mainFrame);
+		Utils.configFrame = new SettingsFrame(Utils.mainFrame);
 	}
 }

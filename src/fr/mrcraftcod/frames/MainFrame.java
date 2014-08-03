@@ -78,7 +78,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class Interface extends JFrame
+public class MainFrame extends JFrame
 {
 	private static final long serialVersionUID = -6393144716196499998L;
 	public final JTextComponent userNameFieldTextComponent;
@@ -117,7 +117,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface() throws IOException
+	public MainFrame() throws IOException
 	{
 		this(null);
 	}
@@ -129,7 +129,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface(int defaultMode) throws IOException
+	public MainFrame(int defaultMode) throws IOException
 	{
 		this(null, null, defaultMode);
 	}
@@ -141,7 +141,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface(String user) throws IOException
+	public MainFrame(String user) throws IOException
 	{
 		this(user, null);
 	}
@@ -154,7 +154,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface(String user, Point parent) throws IOException
+	public MainFrame(String user, Point parent) throws IOException
 	{
 		this(user, parent, 0);
 	}
@@ -168,7 +168,7 @@ public class Interface extends JFrame
 	 * @throws IOException If the frame cannot be created.
 	 */
 	@SuppressWarnings("unchecked")
-	public Interface(String user, Point parent, int defaultMode) throws IOException
+	public MainFrame(String user, Point parent, int defaultMode) throws IOException
 	{
 		super(Main.APPNAME + " v" + Main.VERSION);
 		int pictureButtonSize = 20;
@@ -937,8 +937,8 @@ public class Interface extends JFrame
 				}
 				try
 				{
-					Interface.this.countryFlag.setImage(Utils.getCountryFlag(user.getCountry()));
-					Interface.this.avatar.setImage(Utils.getAvatar(String.valueOf(user.getUserID())));
+					MainFrame.this.countryFlag.setImage(Utils.getCountryFlag(user.getCountry()));
+					MainFrame.this.avatar.setImage(Utils.getAvatar(String.valueOf(user.getUserID())));
 				}
 				catch(Exception e)
 				{
@@ -1100,7 +1100,7 @@ public class Interface extends JFrame
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPP()) + currentStats.comparePP(previousStats));
 		this.country.setText("<html><body><nobr>  " + CountryCode.getByCode(user.getCountry()).getName() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getCountryRank()) + currentStats.compareCountryRank(previousStats) + ")" + "  </nobr></body></html>");
 		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(this, user.getUsername(), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
+			new NotificationFrame(this, user.getUsername(), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
 	/**

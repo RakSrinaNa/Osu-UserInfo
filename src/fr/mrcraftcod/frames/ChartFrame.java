@@ -46,7 +46,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceChart extends JFrame
+public class ChartFrame extends JFrame
 {
 	private static final long serialVersionUID = -5220915498588371099L;
 	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED, colorLine3 = Color.BLACK;
@@ -62,7 +62,7 @@ public class InterfaceChart extends JFrame
 	 * @param mode The mode of the graphs.
 	 * @param stats The stats to process.
 	 */
-	public InterfaceChart(JFrame parent, String user, String mode, List<Stats> stats)
+	public ChartFrame(JFrame parent, String user, String mode, List<Stats> stats)
 	{
 		super();
 		getRootPane().setWindowDecorationStyle(JRootPane.FRAME);

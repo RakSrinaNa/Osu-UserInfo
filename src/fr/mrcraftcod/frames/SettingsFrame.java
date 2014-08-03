@@ -28,7 +28,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @since 1.4
  */
-public class InterfaceSettings extends JDialog
+public class SettingsFrame extends JDialog
 {
 	private static final long serialVersionUID = -339025516182085233L;
 	private JCheckBox notificationCheck, keepDateCheck, autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
@@ -44,7 +44,7 @@ public class InterfaceSettings extends JDialog
 	 *
 	 * @param parent The parent frame.
 	 */
-	public InterfaceSettings(JFrame parent)
+	public SettingsFrame(JFrame parent)
 	{
 		super(parent);
 		this.languages = new LinkedHashMap<String, String>();

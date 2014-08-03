@@ -27,7 +27,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceAbout extends JDialog
+public class AboutFrame extends JDialog
 {
 	private static final long serialVersionUID = 1321865080360423098L;
 	private HashMap<String, String> traducers;
@@ -42,7 +42,7 @@ public class InterfaceAbout extends JDialog
 	 *
 	 * @param parent The parent component.
 	 */
-	public InterfaceAbout(JFrame parent)
+	public AboutFrame(JFrame parent)
 	{
 		super(parent);
 		this.traducers = new HashMap<String, String>();
