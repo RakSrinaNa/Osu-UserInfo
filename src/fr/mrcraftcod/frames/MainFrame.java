@@ -739,7 +739,7 @@ public class MainFrame extends JFrame
 		if(parent == null)
 		{
 			Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-			parent = new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2);
+			parent = new Point((dimension.width - getWidth()) / 2, (dimension.height - getHeight()) / 2);
 		}
 		setLocation(parent);
 		pack();
