@@ -158,6 +158,7 @@
 		<name>1.8b4</name>
 		<changes>
 			{*}Allow unlimited number of saved stats
+			{*}Fix main frame not opening in center of screen
 		</changes>
 	</version>
 </changelog>
