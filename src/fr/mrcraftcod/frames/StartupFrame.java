@@ -17,7 +17,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceStartup extends JFrame
+public class StartupFrame extends JFrame
 {
 	private static final long serialVersionUID = -5316219219270463412L;
 	private JLabel label;
@@ -30,7 +30,7 @@ public class InterfaceStartup extends JFrame
 	 *
 	 * @param maxStep How many steps are in the startup.
 	 */
-	public InterfaceStartup(int maxStep)
+	public StartupFrame(int maxStep)
 	{
 		super();
 		this.percentMode = maxStep == 100;

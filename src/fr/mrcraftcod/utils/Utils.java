@@ -39,12 +39,12 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.frames.Interface;
-import fr.mrcraftcod.frames.InterfaceAbout;
-import fr.mrcraftcod.frames.InterfaceChangelog;
-import fr.mrcraftcod.frames.InterfaceChart;
-import fr.mrcraftcod.frames.InterfaceSettings;
-import fr.mrcraftcod.frames.InterfaceStartup;
+import fr.mrcraftcod.frames.MainFrame;
+import fr.mrcraftcod.frames.AboutFrame;
+import fr.mrcraftcod.frames.ChangelogFrame;
+import fr.mrcraftcod.frames.ChartFrame;
+import fr.mrcraftcod.frames.SettingsFrame;
+import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
@@ -80,8 +80,8 @@ public class Utils
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
-	public static InterfaceStartup startup;
-	public static Interface mainFrame;
+	public static StartupFrame startup;
+	public static MainFrame mainFrame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
@@ -90,9 +90,9 @@ public class Utils
 	public static Date lastPost = new Date(0);
 	public static User lastUser = new User();
 	public static Stats lastStats = new Stats();
-	public static InterfaceAbout aboutFrame;
-	public static InterfaceSettings configFrame;
-	public static InterfaceChart chartFrame;
+	public static AboutFrame aboutFrame;
+	public static SettingsFrame configFrame;
+	public static ChartFrame chartFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
@@ -217,7 +217,7 @@ public class Utils
 	 */
 	public static void getAllChangelogFrame(JFrame parent)
 	{
-		new InterfaceChangelog(parent, Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean(Configuration.DEVMODE, false)));
+		new ChangelogFrame(parent, Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean(Configuration.DEVMODE, false)));
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class Utils
 	 */
 	public static void getChangelogFrame(JFrame parent)
 	{
-		new InterfaceChangelog(parent, Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
+		new ChangelogFrame(parent, Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
 	}
 
 	/**
@@ -723,7 +723,8 @@ public class Utils
 		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
 		setLookAndFeel();
 		int currentStep = 0;
-		startup = new InterfaceStartup(4);
+		boolean openChangelog = false;
+		startup = new StartupFrame(4);
 		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
 		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup);
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
@@ -745,7 +746,7 @@ public class Utils
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
-				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 10);
+				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
 				backColor = new Color(240, 236, 250);
@@ -753,9 +754,9 @@ public class Utils
 				noticeColor = Color.WHITE;
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
-				mainFrame = new Interface(config.getInt(Configuration.LASTMODE, 0));
+				mainFrame = new MainFrame(config.getInt(Configuration.LASTMODE, 0));
 				if(isNewVersion(config.getString(Configuration.LASTVERSION, Main.VERSION)))
-					getChangelogFrame(mainFrame);
+					openChangelog = true;
 				config.writeVar(Configuration.LASTVERSION, Main.VERSION);
 			}
 			catch(Exception exception)
@@ -763,6 +764,8 @@ public class Utils
 				exception.printStackTrace();
 			}
 		startup.exit();
+		if(openChangelog)
+			getChangelogFrame(mainFrame);
 	}
 
 	/**
@@ -794,7 +797,7 @@ public class Utils
 	public static void newFrame() throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface();
+		mainFrame = new MainFrame();
 	}
 
 	/**
@@ -806,7 +809,7 @@ public class Utils
 	public static void newFrame(String user) throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface(user);
+		mainFrame = new MainFrame(user);
 	}
 
 	/**
@@ -819,7 +822,7 @@ public class Utils
 	public static void newFrame(String user, Point parent) throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface(user, parent);
+		mainFrame = new MainFrame(user, parent);
 	}
 
 	/**
@@ -833,7 +836,7 @@ public class Utils
 	public static void newFrame(String user, Point parent, int defaultMode) throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface(user, parent, defaultMode);
+		mainFrame = new MainFrame(user, parent, defaultMode);
 	}
 
 	/**

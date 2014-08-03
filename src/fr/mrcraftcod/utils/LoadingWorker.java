@@ -2,7 +2,7 @@ package fr.mrcraftcod.utils;
 
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
-import fr.mrcraftcod.frames.InterfaceLoading;
+import fr.mrcraftcod.frames.LoadingFrame;
 import fr.mrcraftcod.listeners.components.FollowComponentListener;
 
 /**
@@ -12,7 +12,7 @@ import fr.mrcraftcod.listeners.components.FollowComponentListener;
  */
 public class LoadingWorker extends SwingWorker<Boolean, String>
 {
-	private InterfaceLoading frame;
+	private LoadingFrame frame;
 	private String user;
 	private boolean hard;
 	private boolean forceDisplay;
@@ -37,7 +37,7 @@ public class LoadingWorker extends SwingWorker<Boolean, String>
 		Utils.mainFrame.allowNewSearch(false);
 		if(openFrame)
 		{
-			this.frame = new InterfaceLoading(parent);
+			this.frame = new LoadingFrame(parent);
 			parent.addComponentListener(new FollowComponentListener(this.frame, this.frame.getIcon().getIconWidth(), this.frame.getIcon().getIconHeight()));
 		}
 	}

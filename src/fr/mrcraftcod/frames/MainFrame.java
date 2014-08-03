@@ -78,7 +78,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class Interface extends JFrame
+public class MainFrame extends JFrame
 {
 	private static final long serialVersionUID = -6393144716196499998L;
 	public final JTextComponent userNameFieldTextComponent;
@@ -117,7 +117,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface() throws IOException
+	public MainFrame() throws IOException
 	{
 		this(null);
 	}
@@ -129,7 +129,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface(int defaultMode) throws IOException
+	public MainFrame(int defaultMode) throws IOException
 	{
 		this(null, null, defaultMode);
 	}
@@ -141,7 +141,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface(String user) throws IOException
+	public MainFrame(String user) throws IOException
 	{
 		this(user, null);
 	}
@@ -154,7 +154,7 @@ public class Interface extends JFrame
 	 *
 	 * @throws IOException If the frame cannot be created.
 	 */
-	public Interface(String user, Point parent) throws IOException
+	public MainFrame(String user, Point parent) throws IOException
 	{
 		this(user, parent, 0);
 	}
@@ -168,7 +168,7 @@ public class Interface extends JFrame
 	 * @throws IOException If the frame cannot be created.
 	 */
 	@SuppressWarnings("unchecked")
-	public Interface(String user, Point parent, int defaultMode) throws IOException
+	public MainFrame(String user, Point parent, int defaultMode) throws IOException
 	{
 		super(Main.APPNAME + " v" + Main.VERSION);
 		int pictureButtonSize = 20;
@@ -739,7 +739,7 @@ public class Interface extends JFrame
 		if(parent == null)
 		{
 			Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-			parent = new Point((dimension.width - 700) / 2, (dimension.height - 130) / 2);
+			parent = new Point((dimension.width - getWidth()) / 2, (dimension.height - getHeight()) / 2);
 		}
 		setLocation(parent);
 		pack();
@@ -937,8 +937,8 @@ public class Interface extends JFrame
 				}
 				try
 				{
-					Interface.this.countryFlag.setImage(Utils.getCountryFlag(user.getCountry()));
-					Interface.this.avatar.setImage(Utils.getAvatar(String.valueOf(user.getUserID())));
+					MainFrame.this.countryFlag.setImage(Utils.getCountryFlag(user.getCountry()));
+					MainFrame.this.avatar.setImage(Utils.getAvatar(String.valueOf(user.getUserID())));
 				}
 				catch(Exception e)
 				{
@@ -1091,16 +1091,16 @@ public class Interface extends JFrame
 	public void updateTrackedInfos(User user, Stats currentStats, Stats previousStats, boolean showNotification)
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
-		this.username.setText("<html><body><nobr>  " + user.getUsername() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + ")" + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
+		this.username.setText("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		this.playCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
 		this.maximumCombo.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getMaximumCombo()) + currentStats.compareMaximumCombo(previousStats));
 		this.totalHits.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getTotalHits()) + currentStats.compareTotalHits(previousStats));
 		this.ppCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPP()) + currentStats.comparePP(previousStats));
-		this.country.setText("<html><body><nobr>  " + CountryCode.getByCode(user.getCountry()).getName() + " (#" + NumberFormat.getInstance(Utils.locale).format(currentStats.getCountryRank()) + currentStats.compareCountryRank(previousStats) + ")" + "  </nobr></body></html>");
+		this.country.setText("<html><body><nobr>  " + CountryCode.getByCode(user.getCountry()).getName() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getCountryRank()) + " " + currentStats.compareCountryRank(previousStats) + "  </nobr></body></html>");
 		if(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) && showNotification && !(currentStats.getDiffRank(previousStats) == 0))
-			new InterfaceNotification(this, user.getUsername(), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
+			new NotificationFrame(this, user.getUsername(), currentStats.getDiffRank(previousStats) > 0 ? Utils.resourceBundle.getString("won") : Utils.resourceBundle.getString("lost"), Math.abs(currentStats.getDiffRank(previousStats)), currentStats.getDiffPP(previousStats), currentStats.getDiffPlayCount(previousStats), currentStats.getDiffTotalScore(previousStats), currentStats.getDiffRankedScore(previousStats));
 	}
 
 	/**

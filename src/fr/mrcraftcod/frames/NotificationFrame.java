@@ -20,7 +20,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceNotification extends JDialog implements Runnable
+public class NotificationFrame extends JDialog implements Runnable
 {
 	private static final long serialVersionUID = 8870236400957609469L;
 	private final static int cooldown = 7000;
@@ -37,7 +37,7 @@ public class InterfaceNotification extends JDialog implements Runnable
 	 * @param totalScore The total score to show.
 	 * @param rankedScore The ranked score to show.
 	 */
-	public InterfaceNotification(JFrame parent, String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
+	public NotificationFrame(JFrame parent, String name, String textRank, double rank, double pp, int playCount, long totalScore, long rankedScore)
 	{
 		super(parent);
 		int offset = 0, arc = 15;

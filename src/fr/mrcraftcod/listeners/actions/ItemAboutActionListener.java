@@ -2,7 +2,7 @@ package fr.mrcraftcod.listeners.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import fr.mrcraftcod.frames.InterfaceAbout;
+import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -17,6 +17,6 @@ public class ItemAboutActionListener extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		Utils.aboutFrame = new InterfaceAbout(Utils.mainFrame);
+		Utils.aboutFrame = new AboutFrame(Utils.mainFrame);
 	}
 }

@@ -46,7 +46,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceChart extends JFrame
+public class ChartFrame extends JFrame
 {
 	private static final long serialVersionUID = -5220915498588371099L;
 	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED, colorLine3 = Color.BLACK;
@@ -62,7 +62,7 @@ public class InterfaceChart extends JFrame
 	 * @param mode The mode of the graphs.
 	 * @param stats The stats to process.
 	 */
-	public InterfaceChart(JFrame parent, String user, String mode, List<Stats> stats)
+	public ChartFrame(JFrame parent, String user, String mode, List<Stats> stats)
 	{
 		super();
 		getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
@@ -71,21 +71,24 @@ public class InterfaceChart extends JFrame
 		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
 		int shapeOffset = 3;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
-		ChartPanel chartPPAndRankPanel = getChartInPannel(user, "PP_" + Utils.resourceBundle.getString("rank"), createRankAndPPChart(title, user, stats, shape));
-		ChartPanel chartAccuracyPanel = getChartInPannel(user, Utils.resourceBundle.getString("accuracy"), createAccuracyChart(title, user, stats, shape));
-		ChartPanel chartRankedScorePanel = getChartInPannel(user, Utils.resourceBundle.getString("ranked_score"), createRankedScoreChart(title, user, stats, shape));
-		ChartPanel chartTotalScorePanel = getChartInPannel(user, Utils.resourceBundle.getString("total_score"), createTotalScoreChart(title, user, stats, shape));
-		ChartPanel chartPlayCountPanel = getChartInPannel(user, Utils.resourceBundle.getString("play_count"), createPlayCountChart(title, user, stats, shape));
-		ChartPanel chartLevelPanel = getChartInPannel(user, Utils.resourceBundle.getString("graph_level"), createLevelChart(title, user, stats, shape));
+		this.contentPane = new JTabbedPane();
+		if(stats.size() > 1)
+		{
+			ChartPanel chartPPAndRankPanel = getChartInPannel(user, "PP_" + Utils.resourceBundle.getString("rank"), createRankAndPPChart(title, user, stats, shape));
+			ChartPanel chartAccuracyPanel = getChartInPannel(user, Utils.resourceBundle.getString("accuracy"), createAccuracyChart(title, user, stats, shape));
+			ChartPanel chartRankedScorePanel = getChartInPannel(user, Utils.resourceBundle.getString("ranked_score"), createRankedScoreChart(title, user, stats, shape));
+			ChartPanel chartTotalScorePanel = getChartInPannel(user, Utils.resourceBundle.getString("total_score"), createTotalScoreChart(title, user, stats, shape));
+			ChartPanel chartPlayCountPanel = getChartInPannel(user, Utils.resourceBundle.getString("play_count"), createPlayCountChart(title, user, stats, shape));
+			ChartPanel chartLevelPanel = getChartInPannel(user, Utils.resourceBundle.getString("graph_level"), createLevelChart(title, user, stats, shape));
+			this.contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
+			this.contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
+			this.contentPane.addTab(Utils.resourceBundle.getString("ranked_score"), chartRankedScorePanel);
+			this.contentPane.addTab(Utils.resourceBundle.getString("total_score"), chartTotalScorePanel);
+			this.contentPane.addTab(Utils.resourceBundle.getString("play_count"), chartPlayCountPanel);
+			this.contentPane.addTab(Utils.resourceBundle.getString("graph_level"), chartLevelPanel);
+		}
 		ChartPanel chartHitsPanel = getChartInPannel(user, Utils.resourceBundle.getString("total_hits"), createHitsChart(title, user, stats));
 		ChartPanel chartRanksPanel = getChartInPannel(user, Utils.resourceBundle.getString("ranks"), createRanksChart(title, user, stats));
-		this.contentPane = new JTabbedPane();
-		this.contentPane.addTab(Utils.resourceBundle.getString("rank") + " & PP", chartPPAndRankPanel);
-		this.contentPane.addTab(Utils.resourceBundle.getString("accuracy"), chartAccuracyPanel);
-		this.contentPane.addTab(Utils.resourceBundle.getString("ranked_score"), chartRankedScorePanel);
-		this.contentPane.addTab(Utils.resourceBundle.getString("total_score"), chartTotalScorePanel);
-		this.contentPane.addTab(Utils.resourceBundle.getString("play_count"), chartPlayCountPanel);
-		this.contentPane.addTab(Utils.resourceBundle.getString("graph_level"), chartLevelPanel);
 		this.contentPane.addTab("300 / 100 / 50", chartHitsPanel);
 		this.contentPane.addTab("SS / S / A", chartRanksPanel);
 		this.contentPane.addChangeListener(new GraphTabChangeListener());

@@ -23,7 +23,7 @@ import fr.mrcraftcod.utils.Utils;
  *
  * @author MrCraftCod
  */
-public class InterfaceChangelog extends JDialog
+public class ChangelogFrame extends JDialog
 {
 	private static final long serialVersionUID = -8709993783125141424L;
 	private LinkedHashMap<String, JChangelogPanel> panels;
@@ -35,7 +35,7 @@ public class InterfaceChangelog extends JDialog
 	 * @param The parent frame.
 	 * @param changelog The changelogs.
 	 */
-	public InterfaceChangelog(JFrame parent, LinkedHashMap<String, String> changelog)
+	public ChangelogFrame(JFrame parent, LinkedHashMap<String, String> changelog)
 	{
 		super(parent);
 		if(changelog == null)
@@ -53,7 +53,7 @@ public class InterfaceChangelog extends JDialog
 	 * @param version The version of the changelog.
 	 * @param changelog The changelog.
 	 */
-	public InterfaceChangelog(JFrame parent, String version, String changelog)
+	public ChangelogFrame(JFrame parent, String version, String changelog)
 	{
 		super(parent);
 		if(changelog == null)
