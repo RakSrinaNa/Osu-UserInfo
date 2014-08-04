@@ -1,4 +1,4 @@
-package fr.mrcraftcod.utils;
+package fr.mrcraftcod.enums;
 
 /*
  * Copyright (C) 2012 Neo Visionaries Inc.

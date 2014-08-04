@@ -3,9 +3,8 @@ package fr.mrcraftcod.frames;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -15,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import fr.mrcraftcod.enums.Fonts;
+import fr.mrcraftcod.enums.Language;
 import fr.mrcraftcod.frames.component.JTextFieldLimitNumbers;
 import fr.mrcraftcod.listeners.actions.ButtonReturnSettingsActionListener;
 import fr.mrcraftcod.listeners.windows.SettingsWindowListener;
@@ -32,8 +33,7 @@ public class SettingsFrame extends JDialog
 {
 	private static final long serialVersionUID = -339025516182085233L;
 	private JCheckBox notificationCheck, keepDateCheck, autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
-	private JComboBox<String> languageBox;
-	private LinkedHashMap<String, String> languages;
+	private JComboBox<String> languageBox, fontsBox;
 	private JButton buttonReturn;
 	private JLabel textNumberKeepStats;
 	private JTextField numberKeepStats;
@@ -47,10 +47,8 @@ public class SettingsFrame extends JDialog
 	public SettingsFrame(JFrame parent)
 	{
 		super(parent);
-		this.languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
 		setTitle(Utils.resourceBundle.getString("settings"));
-		setVisible(true);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setIconImages(Utils.icons);
@@ -59,9 +57,12 @@ public class SettingsFrame extends JDialog
 		setAlwaysOnTop(false);
 		getContentPane().setBackground(Utils.backColor);
 		addWindowListener(new SettingsWindowListener());
-		this.languageBox = new JComboBox<String>(getLanguages());
-		this.languageBox.setSelectedItem(getLang(Utils.config.getString(Configuration.LOCALE, null)));
+		this.languageBox = new JComboBox<String>(Language.getNames());
+		this.languageBox.setSelectedItem(Language.getLanguageByID(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getName());
 		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language") + ":");
+		this.fontsBox = new JComboBox<String>(Fonts.getNames());
+		this.fontsBox.setSelectedItem(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
+		JLabel fontsText = new JLabel(Utils.resourceBundle.getString("pref_font") + ":");
 		this.loadingCheck = new JCheckBox();
 		this.loadingCheck.setText(Utils.resourceBundle.getString("settings_loading_screen"));
 		this.loadingCheck.setSelected(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true));
@@ -109,6 +110,7 @@ public class SettingsFrame extends JDialog
 		getContentPane().add(this.notificationCheck, c);
 		c.gridy = lign++;
 		getContentPane().add(this.systemTrayCheck, c);
+		c.insets = new Insets(0, 3, 0, 0);
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = lign++;
@@ -125,6 +127,11 @@ public class SettingsFrame extends JDialog
 		getContentPane().add(languageText, c);
 		c.gridx = 1;
 		getContentPane().add(this.languageBox, c);
+		c.gridy = lign++;
+		c.gridx = 0;
+		getContentPane().add(fontsText, c);
+		c.gridx = 1;
+		getContentPane().add(this.fontsBox, c);
 		c.gridwidth = 2;
 		c.gridy = lign++;
 		c.gridx = 0;
@@ -135,6 +142,7 @@ public class SettingsFrame extends JDialog
 		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
+		setVisible(true);
 		toFront();
 	}
 
@@ -146,11 +154,20 @@ public class SettingsFrame extends JDialog
 		if(isSettingsModified())
 		{
 			int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
-			if(result == JOptionPane.YES_OPTION)
-				returnMain(false);
-			return;
+			if(!(result == JOptionPane.YES_OPTION))
+				return;
 		}
 		returnMain(false);
+	}
+
+	/**
+	 * Used to know if the font has been modified.
+	 *
+	 * @return True if modified, false of not.
+	 */
+	public boolean isFontModified()
+	{
+		return !((String) this.languageBox.getSelectedItem()).equals(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
 	}
 
 	/**
@@ -160,7 +177,7 @@ public class SettingsFrame extends JDialog
 	 */
 	public boolean isLocaleModified()
 	{
-		return !Utils.config.getString(Configuration.LOCALE, "").equals(this.languages.get(this.languageBox.getSelectedItem()));
+		return !Language.getLanguageByName((String) this.languageBox.getSelectedItem()).getID().equals(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID()));
 	}
 
 	/**
@@ -170,7 +187,7 @@ public class SettingsFrame extends JDialog
 	 */
 	public boolean isSettingsModified()
 	{
-		return !this.favouriteUser.getText().equals(Utils.config.getString(Configuration.FAVOURITEUSER, null)) || !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || !this.languages.get(this.languageBox.getSelectedItem()).equals(Utils.config.getString(Configuration.LOCALE, null)) || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
+		return !this.favouriteUser.getText().equals(Utils.config.getString(Configuration.FAVOURITEUSER, null)) || !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || isLocaleModified() || isFontModified() || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
 	}
 
 	/**
@@ -190,14 +207,15 @@ public class SettingsFrame extends JDialog
 	 */
 	public void save()
 	{
-		boolean newInterface = isLocaleModified();
+		boolean newInterface = isLocaleModified() || isFontModified();
 		Utils.config.writeVar(Configuration.AUTOCOMPLETION, String.valueOf(this.autoCompletionCheck.isSelected()));
 		Utils.config.writeVar(Configuration.DEVMODE, String.valueOf(this.devModeCheck.isSelected()));
 		Utils.config.writeVar(Configuration.REDUCETRAY, String.valueOf(this.systemTrayCheck.isSelected()));
 		Utils.config.writeVar(Configuration.LOADINGSCREEN, String.valueOf(this.loadingCheck.isSelected()));
 		Utils.config.writeVar(Configuration.KEEPDATE, String.valueOf(this.keepDateCheck.isSelected()));
 		Utils.config.writeVar(Configuration.SHOWNOTIFICATION, String.valueOf(this.notificationCheck.isSelected()));
-		Utils.config.writeVar(Configuration.LOCALE, this.languages.get(this.languageBox.getSelectedItem()));
+		Utils.config.writeVar(Configuration.LOCALE, Language.getLanguageByName((String) this.languageBox.getSelectedItem()).getID());
+		Utils.config.writeVar(Configuration.FONT, this.fontsBox.getSelectedItem());
 		if(!this.numberKeepStats.getText().equals(""))
 		{
 			Utils.config.writeVar(Configuration.STATSTOKEEP, this.numberKeepStats.getText());
@@ -209,41 +227,12 @@ public class SettingsFrame extends JDialog
 		if(newInterface)
 			try
 			{
-				Utils.reloadResourceBundleWithLocale(this.languages.get(this.languageBox.getSelectedItem()));
+				Utils.reloadResourceBundleWithLocale(Language.getLanguageByName((String) this.languageBox.getSelectedItem()));
 				Utils.newFrame(Utils.lastUser.getUsername(), Utils.mainFrame.getLocation(), Utils.mainFrame.getSelectedMode());
 			}
 			catch(IOException e)
 			{
 				Utils.logger.log(Level.SEVERE, "Error opening new frame!", e);
 			}
-	}
-
-	/**
-	 * Used to get the key of the name language.
-	 *
-	 * @param string The language key (fr, en, it ...).
-	 * @return The name of the language.
-	 */
-	private String getLang(String string)
-	{
-		for(Entry<String, String> s : this.languages.entrySet())
-			if(s.getValue() != null)
-				if(s.getValue().equals(string))
-					return s.getKey();
-		return "System language";
-	}
-
-	/**
-	 * Used to get the available languages.
-	 *
-	 * @return The languages.
-	 */
-	private String[] getLanguages()
-	{
-		this.languages.put(Utils.resourceBundle.getString("system_language"), null);
-		this.languages.put(Utils.resourceBundle.getString("english"), "en");
-		this.languages.put(Utils.resourceBundle.getString("french"), "fr");
-		this.languages.put(Utils.resourceBundle.getString("italian"), "it");
-		return this.languages.keySet().toArray(new String[this.languages.keySet().size()]);
 	}
 }

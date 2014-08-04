@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -39,11 +41,12 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.frames.MainFrame;
+import fr.mrcraftcod.enums.Fonts;
+import fr.mrcraftcod.enums.Language;
 import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
-import fr.mrcraftcod.frames.SettingsFrame;
+import fr.mrcraftcod.frames.MainFrame;
 import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
@@ -56,22 +59,6 @@ import fr.mrcraftcod.objects.User;
  */
 public class Utils
 {
-	public enum Mods
-	{
-		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
-		private long key;
-
-		Mods(long key)
-		{
-			this.key = key;
-		}
-
-		private long getKey()
-		{
-			return this.key;
-		}
-	}
-
 	public final static String[] UNITS = {"", "K", "M", "G", "T", "P"};
 	private final static String logFileName = "log.log";
 	private static ServerSocket socket;
@@ -82,6 +69,8 @@ public class Utils
 	public static ArrayList<Image> icons;
 	public static StartupFrame startup;
 	public static MainFrame mainFrame;
+	public static AboutFrame aboutFrame;
+	public static ChartFrame chartFrame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
@@ -90,9 +79,6 @@ public class Utils
 	public static Date lastPost = new Date(0);
 	public static User lastUser = new User();
 	public static Stats lastStats = new Stats();
-	public static AboutFrame aboutFrame;
-	public static SettingsFrame configFrame;
-	public static ChartFrame chartFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
@@ -692,7 +678,7 @@ public class Utils
 		if(resetedLog)
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
-		locale = getLocaleByName(config.getString(Configuration.LOCALE, null));
+		locale = Language.getLanguageByID(config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getLocale();
 		logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "nosocket"))
@@ -720,7 +706,7 @@ public class Utils
 		iconChangelogAdd = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogAdd.png")), iconSize, iconSize));
 		iconChangelogRemove = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogRemove.png")), iconSize, iconSize));
 		iconChangelogModify = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogModify.png")), iconSize, iconSize));
-		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
+		reloadFont();
 		setLookAndFeel();
 		int currentStep = 0;
 		boolean openChangelog = false;
@@ -746,6 +732,7 @@ public class Utils
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
+				reloadLanguagesNames();
 				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
@@ -863,15 +850,39 @@ public class Utils
 	}
 
 	/**
+	 * Used to register a font.
+	 *
+	 * @param name The name of the font. "src/resources/fonts/<name>"
+	 * @param size The size of the font.
+	 * @param type The type of the font.
+	 * @return The registered font.
+	 *
+	 * @throws FontFormatException If the font cannot be registered.
+	 * @throws IOException If the file isn't found.
+	 */
+	public static Font registerFont(String name, int size, int type) throws FontFormatException, IOException
+	{
+		if(name == null || name.equals(Fonts.DEFAULT.getName()))
+			return new Font("Arial", Font.PLAIN, 12);
+		Font font = Font.createFont(Font.TRUETYPE_FONT, Utils.class.getClassLoader().getResource("resources/fonts/" + name).openStream()).deriveFont(type, size);
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge.registerFont(font);
+		return font;
+	}
+
+	/**
 	 * Used to reload the resource bundle with a new locale.
 	 *
-	 * @param stringLocale The locale to set.
+	 * @param language The locale to set.
+	 * @throws IOException
 	 */
-	public static void reloadResourceBundleWithLocale(String stringLocale)
+	public static void reloadResourceBundleWithLocale(Language language) throws IOException
 	{
 		resourceBundle.clearCache();
-		locale = getLocaleByName(stringLocale);
+		locale = language.getLocale();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
+		reloadLanguagesNames();
+		reloadFont();
 	}
 
 	/**
@@ -1055,29 +1066,6 @@ public class Utils
 	}
 
 	/**
-	 * Used to get a locale by its name.
-	 *
-	 * @param localName The name of the locale.
-	 * @return The wanted locale.
-	 */
-	private static Locale getLocaleByName(String localName)
-	{
-		if(localName == null)
-			return Locale.getDefault();
-		switch(localName)
-		{
-			case "fr":
-				return Locale.FRENCH;
-			case "it":
-				return Locale.ITALIAN;
-			case "en":
-				return Locale.ENGLISH;
-			default:
-				return Locale.getDefault();
-		}
-	}
-
-	/**
 	 * Used to get a random colour.
 	 *
 	 * @return A random colour.
@@ -1133,6 +1121,27 @@ public class Utils
 	private static boolean isValidUser(String username)
 	{
 		return username.length() > 1;
+	}
+
+	private static void reloadFont() throws IOException
+	{
+		try
+		{
+			Fonts f = Fonts.getFontsByName(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
+			fontMain = registerFont(f.getFileName(), f.getSize(), Font.PLAIN);
+		}
+		catch(FontFormatException e)
+		{
+			fontMain = new Font("Arial", Font.PLAIN, 12);
+		}// TODO font
+	}
+
+	private static void reloadLanguagesNames()
+	{
+		Language.DEFAULT.setName(Utils.resourceBundle.getString("system_language"));
+		Language.ENGLISH.setName(Utils.resourceBundle.getString("english"));
+		Language.FRENCH.setName(Utils.resourceBundle.getString("french"));
+		Language.ITALIAN.setName(Utils.resourceBundle.getString("italian"));
 	}
 
 	/**

@@ -45,6 +45,7 @@ import org.joda.time.format.DateTimeFormatter;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionGetFavInfos;
 import fr.mrcraftcod.actions.ActionRefreshStats;
+import fr.mrcraftcod.enums.CountryCode;
 import fr.mrcraftcod.frames.component.AutoComboBox;
 import fr.mrcraftcod.frames.component.GhostText;
 import fr.mrcraftcod.frames.component.ImagePanel;
@@ -70,7 +71,6 @@ import fr.mrcraftcod.listeners.windows.MainWindowListener;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
-import fr.mrcraftcod.utils.CountryCode;
 import fr.mrcraftcod.utils.Utils;
 
 /**
@@ -295,6 +295,7 @@ public class MainFrame extends JFrame
 		modePanel.setBackground(Utils.backColor);
 		modePanel.addComponentListener(new ModesComponentListener());
 		this.buttonStandard = new JButtonMode("osu!");
+		this.buttonStandard.setFont(Utils.fontMain);
 		this.buttonStandard.setBackground(colorButtonModeSelected);
 		this.buttonStandard.setDisabledBackground(colorButtonModeUnselected);
 		this.buttonStandard.setBorderColor(colorButtonBorder);
@@ -305,6 +306,7 @@ public class MainFrame extends JFrame
 		this.buttonStandard.setFocusPainted(false);
 		this.buttonStandard.addActionListener(new ModeStandardActionListener());
 		this.buttonTaiko = new JButtonMode("Taiko");
+		this.buttonTaiko.setFont(Utils.fontMain);
 		this.buttonTaiko.setBackground(colorButtonModeSelected);
 		this.buttonTaiko.setDisabledBackground(colorButtonModeUnselected);
 		this.buttonTaiko.setBorderColor(colorButtonBorder);
@@ -315,6 +317,7 @@ public class MainFrame extends JFrame
 		this.buttonTaiko.setFocusPainted(false);
 		this.buttonTaiko.addActionListener(new ModeTaikoActionListener());
 		this.buttonCTB = new JButtonMode("Catch The Beat");
+		this.buttonCTB.setFont(Utils.fontMain);
 		this.buttonCTB.setBackground(colorButtonModeSelected);
 		this.buttonCTB.setDisabledBackground(colorButtonModeUnselected);
 		this.buttonCTB.setBorderColor(colorButtonBorder);
@@ -325,6 +328,7 @@ public class MainFrame extends JFrame
 		this.buttonCTB.setFocusPainted(false);
 		this.buttonCTB.addActionListener(new ModeCTBActionListener());
 		this.buttonMania = new JButtonMode("osu!mania");
+		this.buttonMania.setFont(Utils.fontMain);
 		this.buttonMania.setBackground(colorButtonModeSelected);
 		this.buttonMania.setDisabledBackground(colorButtonModeUnselected);
 		this.buttonMania.setBorderColor(colorButtonBorder);
@@ -357,12 +361,12 @@ public class MainFrame extends JFrame
 		JPanel levelUserPanel = new JPanel(new BorderLayout());
 		levelUserPanel.setBackground(Utils.backColor);
 		this.levelBar = new JProgressBar();
-		Dimension dim = this.levelBar.getPreferredSize();
-		dim.height += 3;
-		this.levelBar.setPreferredSize(dim);
 		this.levelBar.setMaximum(100);
 		this.levelBar.setStringPainted(true);
 		this.levelBar.setFont(Utils.fontMain.deriveFont(Font.BOLD, Utils.fontMain.getSize()));
+		Dimension dim = this.levelBar.getPreferredSize();
+		dim.height += 10;
+		this.levelBar.setPreferredSize(dim);
 		updateLevel(0D);
 		// Construct
 		levelUserPanel.add(this.levelBar, BorderLayout.CENTER);
@@ -1092,6 +1096,7 @@ public class MainFrame extends JFrame
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		this.username.setText("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
+		System.out.println("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		this.playCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
