@@ -45,19 +45,6 @@
 		</changes>
 	</version>
 	<version>
-		<name>1.6</name>
-		<changes>
-			{+}Add possibility to choose preferred language
-			{*}Add possibility to choose if the program should reduce in system tray or not
-			{+}Add possibility to automatically check updates stats the current use (if tracked) (will check every 15s)
-			{+}Add graphs
-			{*}Modify the way to select mode (now like on the user profile page)
-			{*}Show differences between stats when refreshing user info if the user is not tracked
-			{+}Possibility to open the changelog for the current version from the 'About' section
-			{+}Possibility to save user avatar
-		</changes>
-	</version>
-	<version>
 		<name>1.6b17</name>
 		<changes>
 		{*}Fix wrong values in notification popup
@@ -74,6 +61,104 @@
 		<changes>
 		{+}Possibility to open the changelog for the current version from the 'About' section
 		{+}Possibility to save user avatar
+		</changes>
+	</version>
+		<version>
+		<name>1.6b19</name>
+		<changes>
+		{*}Fix white gap when expanding frame
+		{*}Fix changelog frame that wasn't showing the correct changelog when opening and that the changelog contains newer versions
+		</changes>
+	</version>
+	<version>
+		<name>1.6b20</name>
+		<changes>
+		{*}Fix updater not updating from dev to public when new version available
+		</changes>
+	</version>
+	<version>
+		<name>1.6</name>
+		<changes>
+			{+}Add possibility to choose preferred language
+			{*}Add possibility to choose if the program should reduce in system tray or not
+			{+}Add possibility to automatically check updates stats the current use (if tracked) (will check every 15s)
+			{+}Add graphs
+			{*}Modify the way to select mode (now like on the user profile page)
+			{*}Show differences between stats when refreshing user info if the user is not tracked
+			{+}Possibility to open the changelog for the current version from the 'About' section
+			{+}Possibility to save user avatar (right click on it)
+		</changes>
+	</version>
+	<version>
+		<name>1.7b2</name>
+		<changes>
+			{*}Fix updater constantly getting developer version even if the public version is released
+		</changes>
+	</version>
+	<version>
+		<name>1.7b3</name>
+		<changes>
+			{+}Add Taiko/CTB/Mania hits images
+		</changes>
+	</version>
+	<version>
+		<name>1.7b4</name>
+		<changes>
+			{+}Ctrl + Tab and Ctrl + Shift + Tab to navigate in the graphs frame
+			{*}Modified the way frames works
+		</changes>
+	</version>
+	<version>
+		<name>1.7b5</name>
+		<changes>
+			{*}Fix settings frame that was freezing the program
+		</changes>
+	</version>
+	<version>
+		<name>1.7b6</name>
+		<changes>
+			{*}Fix updater not working correctly
+		</changes>
+	</version>
+	<version>
+		<name>1.7b7</name>
+		<changes>
+			{*}Fix settings frame not saving in some cases
+		</changes>
+	</version>
+	<version>
+		<name>1.7</name>
+		<changes>
+			{+}Add Taiko/CTB/Mania hits images
+			{+}Ctrl + Tab and Ctrl + Shift + Tab to navigate in the graphs frame
+			{*}Fix settings frame that was freezing the program
+			{*}Fix updater nor working correctly
+		</changes>
+	</version>
+	<version>
+		<name>1.8b1</name>
+		<changes>
+			{+}Show country rank
+			{+}Show maximum combo
+		</changes>
+	</version>
+	<version>
+		<name>1.8b2</name>
+		<changes>
+			{+}Add favourite user (F6 to fetch his stats)
+		</changes>
+	</version>
+	<version>
+		<name>1.8b3</name>
+		<changes>
+			{+}Add graph for national rank
+		</changes>
+	</version>
+	<version>
+		<name>1.8b4</name>
+		<changes>
+			{*}Allow unlimited number of saved stats
+			{*}Fix main frame not opening in center of screen
 		</changes>
 	</version>
 </changelog>

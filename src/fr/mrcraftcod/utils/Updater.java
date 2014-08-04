@@ -23,6 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import fr.mrcraftcod.Main;
+import fr.mrcraftcod.objects.Version;
 
 /**
  * Used to fetch and download new versions.
@@ -33,7 +34,7 @@ public class Updater
 {
 	public final static int DEVELOPER = 1, PUBLIC = 2, PUBLICFDEV = 3, NOUPDATE = 0, UPDATEDDEV = 1, UPDATEDPUBLIC = 2, UPDATEERROR = 3;
 	private final static String DEVELOPERTAG = "DEVELOPER", PUBLICTAG = "PUBLIC", LINKXML = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/lastVersion.xml", LINKPUBLIC = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Public/Osu!UserInfo.jar", LINKDEV = "https://bitbucket.org/api/1.0/repositories/mrcraftcod/osuuserinfo/raw/master/Infos/Jars/Developer/Osu!UserInfo.jar";
-	private static HashMap<String, String> versionsUTD;
+	private static HashMap<String, Version> versionsUTD;
 	private static JFrame context;
 
 	/**
@@ -58,7 +59,7 @@ public class Updater
 			return UPDATEERROR;
 		}
 		updateFile.delete();
-		boolean devMode = Utils.config.getBoolean("devMode", false);
+		boolean devMode = Utils.config.getBoolean(Configuration.DEVMODE, false);
 		int result = NOUPDATE;
 		if(versionsUTD == null)
 			result = UPDATEERROR;
@@ -68,9 +69,9 @@ public class Updater
 			Utils.logger.log(Level.INFO, "Version " + key + " latest is " + versionsUTD.get(key) + ", you are in " + Main.VERSION);
 		if(!devMode && Main.VERSION.contains("b"))
 			result = update(jarFile, PUBLICFDEV);
-		if(devMode && !isDevUpToDate())
+		else if(devMode && versionsUTD.get(DEVELOPERTAG).isNewer(new Version(Main.VERSION)))
 			result = update(jarFile, DEVELOPER);
-		else if(!isPublicUpToDate(devMode))
+		else if(versionsUTD.get(PUBLICTAG).isNewer(new Version(Main.VERSION)))
 			result = update(jarFile, PUBLIC);
 		else
 			result = NOUPDATE;
@@ -229,74 +230,6 @@ public class Updater
 	}
 
 	/**
-	 * Used to know if the developer version is up to date.
-	 *
-	 * @return True if up to date, false if not.
-	 */
-	private static boolean isDevUpToDate()
-	{
-		try
-		{
-			String upToDateVersion = versionsUTD.get(DEVELOPERTAG);
-			int actualGlobalVersion = Integer.parseInt(Main.VERSION.split("\\.")[0]);
-			int upToDateGlobalVersion = Integer.parseInt(upToDateVersion.split("\\.")[0]);
-			int actualSubVersion = -1;
-			int upToDateSubVersion = -1;
-			String actualSubVersionS = Main.VERSION.split("\\.")[1];
-			String upToDateSubVersionS = upToDateVersion.split("\\.")[1];
-			if(actualSubVersionS.contains("b"))
-				actualSubVersionS = actualSubVersionS.substring(0, actualSubVersionS.indexOf("b"));
-			if(upToDateSubVersionS.contains("b"))
-				upToDateSubVersionS = upToDateSubVersionS.substring(0, upToDateSubVersionS.indexOf("b"));
-			actualSubVersion = Integer.parseInt(actualSubVersionS);
-			upToDateSubVersion = Integer.parseInt(upToDateSubVersionS);
-			int actualBetaVersion = Main.VERSION.contains("b") ? Integer.parseInt(Main.VERSION.split("b")[1]) : -1;
-			int upToDateBetaVersion = upToDateVersion.contains("b") ? Integer.parseInt(upToDateVersion.split("b")[1]) : -1;
-			if(actualGlobalVersion < upToDateGlobalVersion)
-				return false;
-			else if(actualSubVersion < upToDateSubVersion)
-				return false;
-			if(actualBetaVersion < upToDateBetaVersion)
-				return false;
-		}
-		catch(Exception e)
-		{}
-		return true;
-	}
-
-	/**
-	 * Used to know if the public version is up to date.
-	 *
-	 * @return True if up to date, false if not.
-	 */
-	private static boolean isPublicUpToDate(boolean devMode)
-	{
-		try
-		{
-			String upToDateVersion = versionsUTD.get(PUBLICTAG);
-			int actualGlobalVersion = Integer.parseInt(Main.VERSION.split("\\.")[0]);
-			int upToDateGlobalVersion = Integer.parseInt(upToDateVersion.split("\\.")[0]);
-			int actualSubVersion = -1;
-			int upToDateSubVersion = -1;
-			String actualSubVersionS = Main.VERSION.split("\\.")[1];
-			String upToDateSubVersionS = upToDateVersion.split("\\.")[1];
-			if(actualSubVersionS.contains("b"))
-				actualSubVersionS = actualSubVersionS.substring(0, actualSubVersionS.indexOf("b"));
-			if(upToDateSubVersionS.contains("b"))
-				upToDateSubVersionS = upToDateSubVersionS.substring(0, upToDateSubVersionS.indexOf("b"));
-			actualSubVersion = Integer.parseInt(actualSubVersionS);
-			upToDateSubVersion = Integer.parseInt(upToDateSubVersionS);
-			if(actualGlobalVersion < upToDateGlobalVersion)
-				return false;
-			else if(actualSubVersion < upToDateSubVersion)
-				return false;
-		}
-		catch(Exception e)
-		{}
-		return true;
-	}
-
-	/**
 	 * Used to parse an XML file to versionsUTD.
 	 *
 	 * @param file The XML file.
@@ -312,7 +245,7 @@ public class Updater
 		Document doc = docBuilder.parse(file);
 		doc.getDocumentElement().normalize();
 		NodeList listVersion = doc.getElementsByTagName("version");
-		versionsUTD = new HashMap<String, String>();
+		versionsUTD = new HashMap<String, Version>();
 		for(int s = 0; s < listVersion.getLength(); s++)
 		{
 			Node versionNode = listVersion.item(s);
@@ -325,7 +258,7 @@ public class Updater
 				NodeList numberList = versionElement.getElementsByTagName("number");
 				Element numberElement = (Element) numberList.item(0);
 				NodeList textNuList = numberElement.getChildNodes();
-				versionsUTD.put(textNaList.item(0).getNodeValue().trim(), textNuList.item(0).getNodeValue().trim());
+				versionsUTD.put(textNaList.item(0).getNodeValue().trim(), new Version(textNuList.item(0).getNodeValue().trim()));
 			}
 		}
 	}
@@ -345,7 +278,7 @@ public class Updater
 			switch(version)
 			{
 				case DEVELOPER:
-					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_dev") + "\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_dev") + "(" + versionsUTD.get(DEVELOPERTAG) + ")\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(newFile, LINKDEV);
 					else
@@ -354,7 +287,7 @@ public class Updater
 						return UPDATEERROR;
 					return UPDATEDDEV;
 				case PUBLIC:
-					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_public") + "\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					reply = JOptionPane.showConfirmDialog(context, Utils.resourceBundle.getString("new_update_public") + "(" + versionsUTD.get(PUBLICTAG) + ")\n\n" + Utils.resourceBundle.getString("new_update_want_to_update"), Utils.resourceBundle.getString("new_update"), JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					if(reply == JOptionPane.YES_OPTION)
 						result = getLastJAR(newFile, LINKPUBLIC);
 					else

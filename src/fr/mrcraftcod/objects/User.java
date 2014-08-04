@@ -375,8 +375,9 @@ public class User implements Serializable
 	 */
 	public void setStatsCTB(boolean hard, Stats stats)
 	{
-		while(this.stats_ctb.size() > Utils.numberTrackedStatsToKeep + 1)
-			this.stats_ctb.remove(0);
+		if(Utils.numberTrackedStatsToKeep > 0)
+			while(this.stats_ctb.size() > Utils.numberTrackedStatsToKeep + 1)
+				this.stats_ctb.remove(0);
 		if(hasStatsChanged(hard, getLastStats(2), stats))
 			this.stats_ctb.add(stats);
 		else
@@ -397,8 +398,9 @@ public class User implements Serializable
 	 */
 	public void setStatsOsuMania(boolean hard, Stats stats)
 	{
-		while(this.stats_mania.size() > Utils.numberTrackedStatsToKeep + 1)
-			this.stats_mania.remove(0);
+		if(Utils.numberTrackedStatsToKeep > 0)
+			while(this.stats_mania.size() > Utils.numberTrackedStatsToKeep + 1)
+				this.stats_mania.remove(0);
 		if(hasStatsChanged(hard, getLastStats(3), stats))
 			this.stats_mania.add(stats);
 		else
@@ -419,8 +421,9 @@ public class User implements Serializable
 	 */
 	public void setStatsOsuStandard(boolean hard, Stats stats)
 	{
-		while(this.stats_normal.size() > Utils.numberTrackedStatsToKeep + 1)
-			this.stats_normal.remove(0);
+		if(Utils.numberTrackedStatsToKeep > 0)
+			while(this.stats_normal.size() > Utils.numberTrackedStatsToKeep + 1)
+				this.stats_normal.remove(0);
 		if(hasStatsChanged(hard, getLastStats(0), stats))
 			this.stats_normal.add(stats);
 		else
@@ -441,8 +444,9 @@ public class User implements Serializable
 	 */
 	public void setStatsTaiko(boolean hard, Stats stats)
 	{
-		while(this.stats_taiko.size() > Utils.numberTrackedStatsToKeep + 1)
-			this.stats_taiko.remove(0);
+		if(Utils.numberTrackedStatsToKeep > 0)
+			while(this.stats_taiko.size() > Utils.numberTrackedStatsToKeep + 1)
+				this.stats_taiko.remove(0);
 		if(hasStatsChanged(hard, getLastStats(1), stats))
 			this.stats_taiko.add(stats);
 		else

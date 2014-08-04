@@ -17,7 +17,7 @@ import fr.mrcraftcod.utils.Utils;
 public class Stats implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -3548705459172185871L;
-	private static final int STATS_VERSION = 3;
+	private static final int STATS_VERSION = 5;
 	private transient long totalHits;
 	private double level;
 	private long rankedScore;
@@ -32,8 +32,10 @@ public class Stats implements Serializable, Cloneable
 	private int countSS;
 	private int countS;
 	private int countA;
+	private int maximumCombo;
 	private double pp;
 	private double rank;
+	private double countryRank;
 	private double accuracy;
 
 	/**
@@ -49,7 +51,9 @@ public class Stats implements Serializable, Cloneable
 		this.pp = 0;
 		this.accuracy = 0;
 		this.totalHits = 0;
+		this.maximumCombo = 0;
 		this.rank = 0;
+		this.countryRank = 0;
 		this.date = 0;
 		this.level = 0;
 		this.countSS = 0;
@@ -86,6 +90,40 @@ public class Stats implements Serializable, Cloneable
 	}
 
 	/**
+	 * Used to get a string showing the differences of the country rank between this stats and an other one.
+	 *
+	 * @param previousStats The stats to compare data.
+	 * @return A String representing this difference, an empty string if there isn't any changes.
+	 */
+	public String compareCountryRank(Stats previousStats)
+	{
+		if(previousStats == null)
+			return "";
+		if(previousStats.getCountryRank() < 1)
+			return "";
+		double delta = previousStats.getCountryRank() - getCountryRank();
+		if(delta == 0D)
+			return "";
+		return "<font color=" + (delta >= 0 ? "green" : "red") + ">(" + getArrow(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")</font>";
+	}
+
+	/**
+	 * Used to get a string showing the differences of the maximum combo between this stats and an other one.
+	 *
+	 * @param previousStats The stats to compare data.
+	 * @return A String representing this difference, an empty string if there isn't any changes.
+	 */
+	public String compareMaximumCombo(Stats previousStats)
+	{
+		if(previousStats == null)
+			return "";
+		long delta = getMaximumCombo() - previousStats.getMaximumCombo();
+		if(delta == 0L)
+			return "";
+		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
+	}
+
+	/**
 	 * Used to get a string showing the differences of the play count between this stats and an other one.
 	 *
 	 * @param previousStats The stats to compare data.
@@ -111,7 +149,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return "";
-		double delta = getPp() - previousStats.getPp();
+		double delta = getPP() - previousStats.getPP();
 		if(delta == 0D)
 			return "";
 		return " (" + getSign(delta) + NumberFormat.getInstance(Utils.locale).format(Math.abs(delta)) + ")";
@@ -126,6 +164,8 @@ public class Stats implements Serializable, Cloneable
 	public String compareRank(Stats previousStats)
 	{
 		if(previousStats == null)
+			return "";
+		if(previousStats.rank == 0)
 			return "";
 		double delta = previousStats.getRank() - getRank();
 		if(delta == 0D)
@@ -252,6 +292,11 @@ public class Stats implements Serializable, Cloneable
 		return this.countA;
 	}
 
+	public double getCountryRank()
+	{
+		return this.countryRank;
+	}
+
 	/**
 	 * Used to get the count of S ranks.
 	 *
@@ -305,7 +350,7 @@ public class Stats implements Serializable, Cloneable
 	{
 		if(previousStats == null)
 			return 0;
-		return getPp() - previousStats.getPp();
+		return getPP() - previousStats.getPP();
 	}
 
 	/**
@@ -387,6 +432,14 @@ public class Stats implements Serializable, Cloneable
 	}
 
 	/**
+	 * @return the maximumCombo
+	 */
+	public int getMaximumCombo()
+	{
+		return this.maximumCombo;
+	}
+
+	/**
 	 * Used to get the mode of the stats.
 	 *
 	 * @return The number of the mode.
@@ -411,7 +464,7 @@ public class Stats implements Serializable, Cloneable
 	 *
 	 * @return The amount of pp.
 	 */
-	public double getPp()
+	public double getPP()
 	{
 		return this.pp;
 	}
@@ -519,6 +572,11 @@ public class Stats implements Serializable, Cloneable
 		this.countA = countA;
 	}
 
+	public void setCountryRank(double countryRank)
+	{
+		this.countryRank = countryRank;
+	}
+
 	/**
 	 * Used to set the number of S ranks.
 	 *
@@ -567,6 +625,14 @@ public class Stats implements Serializable, Cloneable
 	public void setLevel(double level)
 	{
 		this.level = level;
+	}
+
+	/**
+	 * @param maximumCombo the maximumCombo to set
+	 */
+	public void setMaximumCombo(int maximumCombo)
+	{
+		this.maximumCombo = maximumCombo;
 	}
 
 	/**
@@ -702,6 +768,10 @@ public class Stats implements Serializable, Cloneable
 		}
 		if(version >= 3)
 			this.level = ois.readDouble();
+		if(version >= 4)
+			this.maximumCombo = ois.readInt();
+		if(version >= 5)
+			this.countryRank = ois.readDouble();
 		updateTotalHits();
 	}
 
@@ -729,6 +799,8 @@ public class Stats implements Serializable, Cloneable
 		oos.writeLong(this.count100);
 		oos.writeLong(this.count50);
 		oos.writeDouble(this.level);
+		oos.writeInt(this.maximumCombo);
+		oos.writeDouble(this.countryRank);
 		oos.flush();
 	}
 }

@@ -33,6 +33,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -40,11 +41,12 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.frames.Interface;
-import fr.mrcraftcod.frames.InterfaceAbout;
-import fr.mrcraftcod.frames.InterfaceChangelog;
-import fr.mrcraftcod.frames.InterfaceSettings;
-import fr.mrcraftcod.frames.InterfaceStartup;
+import fr.mrcraftcod.frames.MainFrame;
+import fr.mrcraftcod.frames.AboutFrame;
+import fr.mrcraftcod.frames.ChangelogFrame;
+import fr.mrcraftcod.frames.ChartFrame;
+import fr.mrcraftcod.frames.SettingsFrame;
+import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
 import fr.mrcraftcod.objects.User;
@@ -80,8 +82,8 @@ public class Utils
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
-	public static InterfaceStartup startup;
-	public static Interface mainFrame;
+	public static StartupFrame startup;
+	public static MainFrame mainFrame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
@@ -90,11 +92,47 @@ public class Utils
 	public static Date lastPost = new Date(0);
 	public static User lastUser = new User();
 	public static Stats lastStats = new Stats();
-	public static InterfaceAbout aboutFrame;
-	public static InterfaceSettings configFrame;
+	public static AboutFrame aboutFrame;
+	public static SettingsFrame configFrame;
+	public static ChartFrame chartFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
+
+	/**
+	 * Used to cute String objects.
+	 *
+	 * @param string The string to cut.
+	 * @param deleteDelimiters True if delete delimiters, false if not.
+	 * @param ending The ending of the string.
+	 * @param begining The beginnings of the string.
+	 * @return The cutted String.
+	 *
+	 * @throws Exception The the String can't be cutted.
+	 */
+	public static String cutLine(final String string, final boolean deleteDelimiters, final String ending, final String... begining) throws Exception
+	{
+		if(!string.contains(ending))
+			throw new Exception();
+		boolean exists = false;
+		for(final String temp : begining)
+			if(string.contains(temp))
+				exists = true;
+		if(!exists)
+			throw new Exception();
+		int beginingIndex = 0;
+		for(final String temp : begining)
+			if((beginingIndex = string.indexOf(temp)) > -1)
+				break;
+		String result = string.substring(beginingIndex, string.indexOf(ending) + ending.length());
+		if(deleteDelimiters)
+		{
+			result = result.replace(ending, "");
+			for(final String temp : begining)
+				result = result.replace(temp, "");
+		}
+		return result;
+	}
 
 	/**
 	 * Used to cut a string.
@@ -176,10 +214,12 @@ public class Utils
 
 	/**
 	 * Used to create a new changelog frame.
+	 *
+	 * @param parent The parent frame.
 	 */
-	public static void getAllChangelogFrame()
+	public static void getAllChangelogFrame(JFrame parent)
 	{
-		new InterfaceChangelog(Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean("devMode", false)));
+		new ChangelogFrame(parent, Changelog.getAllChangelog(isCurrentVersionBeta() || config.getBoolean(Configuration.DEVMODE, false)));
 	}
 
 	/**
@@ -205,10 +245,12 @@ public class Utils
 
 	/**
 	 * Used to create a new changelog frame for this version.
+	 *
+	 * @param parent The parent frame.
 	 */
-	public static void getChangelogFrame()
+	public static void getChangelogFrame(JFrame parent)
 	{
-		new InterfaceChangelog(Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
+		new ChangelogFrame(parent, Main.VERSION, Changelog.getChangelogForVersion(Main.VERSION));
 	}
 
 	/**
@@ -307,7 +349,7 @@ public class Utils
 	 */
 	public static void getInfos(String user, boolean showerror, boolean forceDisplay, boolean forceFetch)
 	{
-		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean("loadingScreen", true), forceDisplay, forceFetch);
+		LoadingWorker load = new LoadingWorker(mainFrame, user, showerror, Utils.config.getBoolean(Configuration.LOADINGSCREEN, true), forceDisplay, forceFetch);
 		load.execute();
 	}
 
@@ -322,11 +364,11 @@ public class Utils
 	 */
 	public static boolean getInfosServer(String user, boolean showerror, boolean forceDisplay, boolean forceFetch)
 	{
-		if(forceFetch || !isValidTime() || !isValidUser(user))
+		if(!forceFetch && !isValidTime() || !isValidUser(user))
 			return false;
 		Utils.logger.log(Level.INFO, "Getting user infos " + user);
 		Utils.lastPost = new Date();
-		mainFrame.userNameField.setBackground(null);
+		mainFrame.usernameField.setBackground(null);
 		mainFrame.userNameFieldTextComponent.setBackground(null);
 		try
 		{
@@ -369,18 +411,42 @@ public class Utils
 			currentStats.setCount100(jsonResponse.getLong("count100"));
 			currentStats.setCount50(jsonResponse.getLong("count50"));
 			currentStats.updateTotalHits();
+			try
+			{
+				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m" + mainFrame.getSelectedMode());
+				try
+				{
+					currentStats.setCountryRank(Double.parseDouble(Utils.getNextLineCodeFromLink(pageProfile, 2, "<img class='flag' title='' src=").get(0).replace("#", "").replace(",", "")));
+				}
+				catch(Exception e)
+				{
+					logger.log(Level.WARNING, "Can't find country rank for user!", e);
+				}
+				try
+				{
+					currentStats.setMaximumCombo(Integer.parseInt(Utils.cutLine(Utils.getLineCodeFromLink(pageProfile, "<div class='profileStatLine' title='Highest combo achieved (hits in a row without a miss).'><b>Maximum Combo</b>"), true, "</div><br/>", "<b>Maximum Combo</b>: ").replace(",", "")));
+				}
+				catch(Exception e)
+				{
+					logger.log(Level.WARNING, "Can't find maximum combo for user!", e);
+				}
+			}
+			catch(Exception e)
+			{
+				logger.log(Level.INFO, "Can't get additional informations for user!", e);
+			}
 			if(!forceDisplay && currentStats.equals(Utils.lastStats))
 				return false;
 			mainFrame.username.setForeground(getRandomColor());
 			mainFrame.updateStatsDates(currentUser);
 			mainFrame.displayStats(currentUser, currentStats);
-			mainFrame.updateTrackedInfos(currentUser.getUsername(), currentStats, previousStats, true);
+			mainFrame.updateTrackedInfos(currentUser, currentStats, previousStats, true);
 			mainFrame.setValidButonIcon("R");
 			if(forceDisplay || !currentUser.isSameUser(Utils.lastUser))
 				mainFrame.setFlagAndAvatar(currentUser);
 			if(currentStats.equals(Utils.lastStats))
 				return false;
-			mainFrame.userNameFieldTextComponent.setText(currentUser.getUsername());
+			mainFrame.setTextUser(currentUser.getUsername());
 			currentUser.setStats(!showerror, currentStats, mainFrame.getSelectedMode());
 			if(tracked)
 			{
@@ -396,7 +462,7 @@ public class Utils
 			if(showerror)
 			{
 				Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
-				mainFrame.userNameField.setBackground(Color.RED);
+				mainFrame.usernameField.setBackground(Color.RED);
 				mainFrame.userNameFieldTextComponent.setBackground(Color.RED);
 			}
 			return false;
@@ -426,7 +492,20 @@ public class Utils
 	 */
 	public static String getLineCodeFromLink(final String link, final String... gets) throws Exception
 	{
-		final String[] lines = getHTMLCode(link);
+		return getLineCodeFromLink(getHTMLCode(link), gets);
+	}
+
+	/**
+	 * Used to find a line from the HTML source code of a link.
+	 *
+	 * @param lines The HTML lines.
+	 * @param gets The parts to identify the wanted line.
+	 * @return The wanted line containing the text.
+	 *
+	 * @throws Exception If the line cannot be found.
+	 */
+	public static String getLineCodeFromLink(final String[] lines, final String... gets) throws Exception
+	{
 		for(final String get : gets)
 			for(final String tempLine : lines)
 				if(tempLine.contains(get))
@@ -486,6 +565,50 @@ public class Utils
 	}
 
 	/**
+	 * Used to get lines from an HTML page with an offset from a "tag".
+	 *
+	 * @param link The link where to get the HTML source code.
+	 * @param offsetLine The offset between the "tag" and the lines to save.
+	 * @param gets The "tags"
+	 * @return An array of the found lines.
+	 *
+	 * @throws Exception If no lines were found.
+	 */
+	public static ArrayList<String> getNextLineCodeFromLink(final String link, final int offsetLine, final String... gets) throws Exception
+	{
+		return getNextLineCodeFromLink(getHTMLCode(link), offsetLine, gets);
+	}
+
+	/**
+	 * Used to get lines from an HTML page with an offset from a "tag".
+	 *
+	 * @param lines The HTML lines.
+	 * @param offsetLine The offset between the "tag" and the lines to save.
+	 * @param gets The "tags"
+	 * @return An array of the found lines.
+	 *
+	 * @throws Exception If no lines were found.
+	 */
+	public static ArrayList<String> getNextLineCodeFromLink(final String[] lines, final int offsetLine, final String... gets) throws Exception
+	{
+		ArrayList<String> allLines = new ArrayList<String>();
+		for(final String get : gets)
+			for(int i = 0; i < lines.length; i++)
+				if(lines[i].contains(get))
+					try
+					{
+						allLines.add(lines[i + offsetLine]);
+					}
+					catch(Exception e)
+					{
+						Utils.logger.log(Level.WARNING, "", e);
+					}
+		if(allLines.size() > 0)
+			return allLines;
+		throw new Exception("Cannot get code from link");
+	}
+
+	/**
 	 * Used to get the progress for a level.
 	 *
 	 * @param level The level.
@@ -535,7 +658,7 @@ public class Utils
 	public static ArrayList<String> getTrackedUsers()
 	{
 		ArrayList<String> trackedList = new ArrayList<String>();
-		String tracked = Utils.config.getString("tracked_users", "");
+		String tracked = Utils.config.getString(Configuration.TRACKEDUSERS, "");
 		for(String user : tracked.split(","))
 			trackedList.add(user);
 		return trackedList;
@@ -571,7 +694,7 @@ public class Utils
 		if(resetedLog)
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
-		locale = getLocaleByName(config.getString("locale", null));
+		locale = getLocaleByName(config.getString(Configuration.LOCALE, null));
 		logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "nosocket"))
@@ -602,14 +725,15 @@ public class Utils
 		fontMain = new Font("Arial", Font.PLAIN, 12);// fontMain = registerFont("", 12, Font.PLAIN);// TODO font
 		setLookAndFeel();
 		int currentStep = 0;
-		startup = new InterfaceStartup(4);
+		boolean openChangelog = false;
+		startup = new StartupFrame(4);
 		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
 		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup);
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
 			try
 			{
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
-				String tempApiKey = config.getString("api_key", "");
+				String tempApiKey = config.getString(Configuration.APIKEY, "");
 				if(tempApiKey.equals(""))
 					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
 				logger.log(Level.INFO, "Verifying API key...");
@@ -618,13 +742,13 @@ public class Utils
 				{
 					logger.log(Level.WARNING, "Wrong API key!");
 					JOptionPane.showMessageDialog(null, resourceBundle.getString("startup_wrong_api_key"), resourceBundle.getString("startup_wrong_api_key_title"), JOptionPane.ERROR_MESSAGE);
-					config.deleteVar("api_key");
+					config.deleteVar(Configuration.APIKEY);
 					System.exit(0);
 				}
-				config.writeVar("api_key", tempApiKey);
+				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
-				numberTrackedStatsToKeep = config.getInt("statsToKeep", 10);
+				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
 				backColor = new Color(240, 236, 250);
@@ -632,16 +756,28 @@ public class Utils
 				noticeColor = Color.WHITE;
 				noticeBorderColor = new Color(221, 221, 221);
 				noticeBorder = BorderFactory.createLineBorder(noticeBorderColor);
-				if(isNewVersion(config.getString("last_version", Main.VERSION)))
-					getChangelogFrame();
-				config.writeVar("last_version", Main.VERSION);
-				mainFrame = new Interface(config.getInt("lastmode", 0));
+				mainFrame = new MainFrame(config.getInt(Configuration.LASTMODE, 0));
+				if(isNewVersion(config.getString(Configuration.LASTVERSION, Main.VERSION)))
+					openChangelog = true;
+				config.writeVar(Configuration.LASTVERSION, Main.VERSION);
 			}
 			catch(Exception exception)
 			{
 				exception.printStackTrace();
 			}
 		startup.exit();
+		if(openChangelog)
+			getChangelogFrame(mainFrame);
+	}
+
+	/**
+	 * Used to know if the current version is a beta.
+	 *
+	 * @return True if this is a beta, false if not.
+	 */
+	public static boolean isCurrentVersionBeta()
+	{
+		return Main.VERSION.contains("b");
 	}
 
 	/**
@@ -663,7 +799,7 @@ public class Utils
 	public static void newFrame() throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface();
+		mainFrame = new MainFrame();
 	}
 
 	/**
@@ -675,7 +811,7 @@ public class Utils
 	public static void newFrame(String user) throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface(user);
+		mainFrame = new MainFrame(user);
 	}
 
 	/**
@@ -688,7 +824,7 @@ public class Utils
 	public static void newFrame(String user, Point parent) throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface(user, parent);
+		mainFrame = new MainFrame(user, parent);
 	}
 
 	/**
@@ -702,7 +838,7 @@ public class Utils
 	public static void newFrame(String user, Point parent, int defaultMode) throws IOException
 	{
 		mainFrame.dispose();
-		mainFrame = new Interface(user, parent, defaultMode);
+		mainFrame = new MainFrame(user, parent, defaultMode);
 	}
 
 	/**
@@ -821,7 +957,7 @@ public class Utils
 			return;
 		if(file.exists())
 		{
-			JOptionPane.showMessageDialog(mainFrame, String.format(resourceBundle.getString("avatar_error"), file.getName()), resourceBundle.getString("avatar_error_title"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, String.format(resourceBundle.getString("save_error"), file.getName()), resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		file.mkdirs();
@@ -904,7 +1040,7 @@ public class Utils
 			if(!user.equals(""))
 				sb.append(user).append(",");
 		sb.deleteCharAt(sb.length() - 1);
-		config.writeVar("tracked_users", sb.toString());
+		config.writeVar(Configuration.TRACKEDUSERS, sb.toString());
 	}
 
 	/**
@@ -971,16 +1107,6 @@ public class Utils
 	{
 		Color[] colors = new Color[] {Color.BLACK, Color.BLUE, Color.GRAY, Color.RED, Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK};
 		return colors[new Random().nextInt(colors.length)];
-	}
-
-	/**
-	 * Used to know if the current version is a beta.
-	 *
-	 * @return True if this is a beta, false if not.
-	 */
-	private static boolean isCurrentVersionBeta()
-	{
-		return Main.VERSION.contains("b");
 	}
 
 	/**

@@ -19,6 +19,7 @@ import fr.mrcraftcod.Main;
  */
 public class Configuration
 {
+	public static final String FAVOURITEUSER = "favouriteUser", LASTMODE = "lastmode", SHOWNOTIFICATION = "showNotification", KEEPDATE = "keepDate", LOADINGSCREEN = "loadingScreen", LOCALE = "locale", REDUCETRAY = "reduceTray", APIKEY = "api_key", DEVMODE = "devMode", LASTVERSION = "last_version", AUTOCOMPLETION = "autoCompletion", TRACKEDUSERS = "tracked_users", STATSTOKEEP = "statsToKeep";
 	public static File appData;
 	private File configFile;
 	private List<String> currentConfig;
@@ -214,7 +215,7 @@ public class Configuration
 				for(String string : this.currentConfig)
 					if(string.startsWith(key + ":"))
 					{
-						if(key.equals("api_key"))
+						if(key.equals(Configuration.APIKEY))
 							Utils.logger.log(Level.INFO, "Found key " + key);
 						else
 							Utils.logger.log(Level.INFO, "Found key " + key + " in " + string);
