@@ -45,7 +45,6 @@ import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
 import fr.mrcraftcod.frames.MainFrame;
-import fr.mrcraftcod.frames.SettingsFrame;
 import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
@@ -72,6 +71,14 @@ public class Utils
 			this.size = size;
 		}
 
+		public static String[] getNames()
+		{
+			ArrayList<String> names = new ArrayList<String>();
+			for(Fonts f : Fonts.values())
+				names.add(f.getName());
+			return names.toArray(new String[names.size()]);
+		}
+
 		public String getFileName()
 		{
 			return this.fileName;
@@ -87,7 +94,7 @@ public class Utils
 			return this.size;
 		}
 	}
-	
+
 	public enum Language
 	{
 		DEFAULT("system", Locale.getDefault(), ""), ENGLISH("en", Locale.ENGLISH, ""), FRENCH("fr", Locale.FRENCH, ""), ITALIAN("it", Locale.ITALIAN, "");
@@ -362,6 +369,14 @@ public class Utils
 		}
 		String result = format.format(size) + " " + UNITS[unit] + "B";
 		return result;
+	}
+
+	public static Fonts getFontsByName(String name)
+	{
+		for(Fonts f : Fonts.values())
+			if(f.getName().equals(name))
+				return f;
+		return Fonts.DEFAULT;
 	}
 
 	/**
@@ -980,7 +995,7 @@ public class Utils
 	 */
 	public static Font registerFont(String name, int size, int type) throws FontFormatException, IOException
 	{
-		if(name == null)
+		if(name == null || name.equals(Fonts.DEFAULT.getName()))
 			return new Font("Arial", Font.PLAIN, 12);
 		Font font = Font.createFont(Font.TRUETYPE_FONT, Utils.class.getClassLoader().getResource("resources/fonts/" + name).openStream()).deriveFont(type, size);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -992,13 +1007,15 @@ public class Utils
 	 * Used to reload the resource bundle with a new locale.
 	 *
 	 * @param language The locale to set.
+	 * @throws IOException
 	 */
-	public static void reloadResourceBundleWithLocale(Language language)
+	public static void reloadResourceBundleWithLocale(Language language) throws IOException
 	{
 		resourceBundle.clearCache();
 		locale = language.getLocale();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		reloadLanguagesNames();
+		reloadFont();
 	}
 
 	/**
@@ -1181,14 +1198,6 @@ public class Utils
 		Utils.setTrackedUser(users);
 	}
 
-	private static Fonts getFontByName(String name)
-	{
-		for(Fonts f : Fonts.values())
-			if(f.getName().equals(name))
-				return f;
-		return Fonts.DEFAULT;
-	}
-
 	/**
 	 * Used to get a random colour.
 	 *
@@ -1245,6 +1254,19 @@ public class Utils
 	private static boolean isValidUser(String username)
 	{
 		return username.length() > 1;
+	}
+
+	private static void reloadFont() throws IOException
+	{
+		try
+		{
+			Fonts f = getFontsByName(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
+			fontMain = registerFont(f.getFileName(), f.getSize(), Font.PLAIN);
+		}
+		catch(FontFormatException e)
+		{
+			fontMain = new Font("Arial", Font.PLAIN, 12);
+		}// TODO font
 	}
 
 	private static void reloadLanguagesNames()
