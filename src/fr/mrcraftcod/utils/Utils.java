@@ -41,10 +41,10 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.frames.MainFrame;
 import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
+import fr.mrcraftcod.frames.MainFrame;
 import fr.mrcraftcod.frames.SettingsFrame;
 import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
@@ -722,7 +722,14 @@ public class Utils
 		iconChangelogAdd = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogAdd.png")), iconSize, iconSize));
 		iconChangelogRemove = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogRemove.png")), iconSize, iconSize));
 		iconChangelogModify = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogModify.png")), iconSize, iconSize));
-		fontMain = new Font("Arial", Font.PLAIN, 12);// fontMain = registerFont("", 12, Font.PLAIN);// TODO font
+		try
+		{
+			fontMain = registerFont("Comfortaa-Regular.ttf", 13, Font.PLAIN);
+		}
+		catch(FontFormatException e)
+		{
+			fontMain = new Font("Arial", Font.PLAIN, 12);
+		}// TODO font
 		setLookAndFeel();
 		int currentStep = 0;
 		boolean openChangelog = false;
