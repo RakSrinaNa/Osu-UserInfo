@@ -43,7 +43,7 @@ import fr.mrcraftcod.utils.Utils;
 public class Main
 {
 	public final static String APPNAME = "Osu!UserInfo";
-	public final static String VERSION = "1.8b4";
+	public final static String VERSION = "1.8b5";
 
 	/**
 	 * Start the program.

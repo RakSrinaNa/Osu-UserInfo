@@ -165,6 +165,19 @@
 		<name>1.8b5</name>
 		<changes>
 			{*}Fix setting frame freezing main window in some cases
+			{+}Add support for fonts (more to come)
+		</changes>
+	</version>
+	<version>
+		<name>1.8</name>
+		<changes>
+			{+}Show country rank
+			{+}Show maximum combo
+			{+}Add favourite user (F6 to fetch his stats)
+			{*}Allow unlimited number of saved stats
+			{*}Fix main frame not opening in centre of screen
+			{*}Fix setting frame freezing main window in some cases
+			{+}Add support for fonts (more to come)
 		</changes>
 	</version>
 </changelog>
