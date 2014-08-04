@@ -87,6 +87,49 @@ public class Utils
 			return this.size;
 		}
 	}
+	
+	public enum Language
+	{
+		DEFAULT("system", Locale.getDefault(), ""), ENGLISH("en", Locale.ENGLISH, ""), FRENCH("fr", Locale.FRENCH, ""), ITALIAN("it", Locale.ITALIAN, "");
+		private String name;
+		private String ID;
+		private Locale locale;
+
+		Language(String ID, Locale locale, String name)
+		{
+			this.ID = ID;
+			this.locale = locale;
+			this.name = name;
+		}
+
+		public static String[] getNames()
+		{
+			ArrayList<String> names = new ArrayList<String>();
+			for(Language l : Language.values())
+				names.add(l.getName());
+			return names.toArray(new String[names.size()]);
+		}
+
+		public String getID()
+		{
+			return this.ID;
+		}
+
+		public Locale getLocale()
+		{
+			return this.locale;
+		}
+
+		public String getName()
+		{
+			return this.name;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+	}
 
 	public enum Mods
 	{
@@ -114,6 +157,8 @@ public class Utils
 	public static ArrayList<Image> icons;
 	public static StartupFrame startup;
 	public static MainFrame mainFrame;
+	public static AboutFrame aboutFrame;
+	public static ChartFrame chartFrame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
@@ -122,9 +167,6 @@ public class Utils
 	public static Date lastPost = new Date(0);
 	public static User lastUser = new User();
 	public static Stats lastStats = new Stats();
-	public static AboutFrame aboutFrame;
-	public static SettingsFrame configFrame;
-	public static ChartFrame chartFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
@@ -501,6 +543,36 @@ public class Utils
 	}
 
 	/**
+	 * Used to get the a language by its ID.
+	 *
+	 * @param ID The language key (fr, en, it ...).
+	 * @return The language.
+	 */
+	public static Language getLanguageByID(String ID)
+	{
+		for(Language l : Language.values())
+			if(l.getID() != null)
+				if(l.getID().equals(ID))
+					return l;
+		return Language.DEFAULT;
+	}
+
+	/**
+	 * Used to get the a language by its name.
+	 *
+	 * @param ID The language name.
+	 * @return The language.
+	 */
+	public static Language getLanguageByName(String name)
+	{
+		for(Language l : Language.values())
+			if(l.getName() != null)
+				if(l.getName().equals(name))
+					return l;
+		return Language.DEFAULT;
+	}
+
+	/**
 	 * Used to get the level.
 	 *
 	 * @param level The level where to get the level.
@@ -724,7 +796,7 @@ public class Utils
 		if(resetedLog)
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
-		locale = getLocaleByName(config.getString(Configuration.LOCALE, null));
+		locale = getLanguageByID(config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getLocale();
 		logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "nosocket"))
@@ -778,6 +850,7 @@ public class Utils
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
+				reloadLanguagesNames();
 				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
@@ -918,15 +991,14 @@ public class Utils
 	/**
 	 * Used to reload the resource bundle with a new locale.
 	 *
-	 * @param stringLocale The locale to set.
-	 * @throws IOException
+	 * @param language The locale to set.
 	 */
-	public static void reloadResourceBundleWithLocale(String stringLocale) throws IOException
+	public static void reloadResourceBundleWithLocale(Language language)
 	{
 		resourceBundle.clearCache();
-		locale = getLocaleByName(stringLocale);
+		locale = language.getLocale();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
-		reloadFont();
+		reloadLanguagesNames();
 	}
 
 	/**
@@ -1118,29 +1190,6 @@ public class Utils
 	}
 
 	/**
-	 * Used to get a locale by its name.
-	 *
-	 * @param localName The name of the locale.
-	 * @return The wanted locale.
-	 */
-	private static Locale getLocaleByName(String localName)
-	{
-		if(localName == null)
-			return Locale.getDefault();
-		switch(localName)
-		{
-			case "fr":
-				return Locale.FRENCH;
-			case "it":
-				return Locale.ITALIAN;
-			case "en":
-				return Locale.ENGLISH;
-			default:
-				return Locale.getDefault();
-		}
-	}
-
-	/**
 	 * Used to get a random colour.
 	 *
 	 * @return A random colour.
@@ -1198,17 +1247,12 @@ public class Utils
 		return username.length() > 1;
 	}
 
-	private static void reloadFont() throws IOException
+	private static void reloadLanguagesNames()
 	{
-		try
-		{
-			Fonts f = getFontByName(Utils.config.getString(Configuration.FONT, Fonts.COMFORTAA.getName()));
-			fontMain = registerFont(f.getFileName(), f.getSize(), Font.PLAIN);
-		}
-		catch(FontFormatException e)
-		{
-			fontMain = new Font("Arial", Font.PLAIN, 12);
-		}// TODO font
+		Language.DEFAULT.setName(Utils.resourceBundle.getString("system_language"));
+		Language.ENGLISH.setName(Utils.resourceBundle.getString("english"));
+		Language.FRENCH.setName(Utils.resourceBundle.getString("french"));
+		Language.ITALIAN.setName(Utils.resourceBundle.getString("italian"));
 	}
 
 	/**

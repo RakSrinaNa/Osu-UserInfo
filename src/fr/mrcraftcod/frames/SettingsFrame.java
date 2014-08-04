@@ -4,8 +4,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -20,6 +18,7 @@ import fr.mrcraftcod.listeners.actions.ButtonReturnSettingsActionListener;
 import fr.mrcraftcod.listeners.windows.SettingsWindowListener;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.Utils;
+import fr.mrcraftcod.utils.Utils.Language;
 
 /**
  * Show a frame to modify settings.
@@ -33,7 +32,6 @@ public class SettingsFrame extends JDialog
 	private static final long serialVersionUID = -339025516182085233L;
 	private JCheckBox notificationCheck, keepDateCheck, autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
 	private JComboBox<String> languageBox;
-	private LinkedHashMap<String, String> languages;
 	private JButton buttonReturn;
 	private JLabel textNumberKeepStats;
 	private JTextField numberKeepStats;
@@ -47,10 +45,8 @@ public class SettingsFrame extends JDialog
 	public SettingsFrame(JFrame parent)
 	{
 		super(parent);
-		this.languages = new LinkedHashMap<String, String>();
 		int frameWidth = 400;
 		setTitle(Utils.resourceBundle.getString("settings"));
-		setVisible(true);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setIconImages(Utils.icons);
@@ -59,8 +55,8 @@ public class SettingsFrame extends JDialog
 		setAlwaysOnTop(false);
 		getContentPane().setBackground(Utils.backColor);
 		addWindowListener(new SettingsWindowListener());
-		this.languageBox = new JComboBox<String>(getLanguages());
-		this.languageBox.setSelectedItem(getLang(Utils.config.getString(Configuration.LOCALE, null)));
+		this.languageBox = new JComboBox<String>(Language.getNames());
+		this.languageBox.setSelectedItem(Utils.getLanguageByID(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getName());
 		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language") + ":");
 		this.loadingCheck = new JCheckBox();
 		this.loadingCheck.setText(Utils.resourceBundle.getString("settings_loading_screen"));
@@ -135,6 +131,7 @@ public class SettingsFrame extends JDialog
 		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
+		setVisible(true);
 		toFront();
 	}
 
@@ -146,9 +143,8 @@ public class SettingsFrame extends JDialog
 		if(isSettingsModified())
 		{
 			int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
-			if(result == JOptionPane.YES_OPTION)
-				returnMain(false);
-			return;
+			if(!(result == JOptionPane.YES_OPTION))
+				return;
 		}
 		returnMain(false);
 	}
@@ -160,7 +156,7 @@ public class SettingsFrame extends JDialog
 	 */
 	public boolean isLocaleModified()
 	{
-		return !Utils.config.getString(Configuration.LOCALE, "").equals(this.languages.get(this.languageBox.getSelectedItem()));
+		return !Utils.getLanguageByName((String) this.languageBox.getSelectedItem()).getID().equals(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID()));
 	}
 
 	/**
@@ -170,7 +166,7 @@ public class SettingsFrame extends JDialog
 	 */
 	public boolean isSettingsModified()
 	{
-		return !this.favouriteUser.getText().equals(Utils.config.getString(Configuration.FAVOURITEUSER, null)) || !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || !this.languages.get(this.languageBox.getSelectedItem()).equals(Utils.config.getString(Configuration.LOCALE, null)) || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
+		return !this.favouriteUser.getText().equals(Utils.config.getString(Configuration.FAVOURITEUSER, null)) || !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || isLocaleModified() || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
 	}
 
 	/**
@@ -197,7 +193,7 @@ public class SettingsFrame extends JDialog
 		Utils.config.writeVar(Configuration.LOADINGSCREEN, String.valueOf(this.loadingCheck.isSelected()));
 		Utils.config.writeVar(Configuration.KEEPDATE, String.valueOf(this.keepDateCheck.isSelected()));
 		Utils.config.writeVar(Configuration.SHOWNOTIFICATION, String.valueOf(this.notificationCheck.isSelected()));
-		Utils.config.writeVar(Configuration.LOCALE, this.languages.get(this.languageBox.getSelectedItem()));
+		Utils.config.writeVar(Configuration.LOCALE, Utils.getLanguageByName((String) this.languageBox.getSelectedItem()).getID());
 		if(!this.numberKeepStats.getText().equals(""))
 		{
 			Utils.config.writeVar(Configuration.STATSTOKEEP, this.numberKeepStats.getText());
@@ -209,41 +205,12 @@ public class SettingsFrame extends JDialog
 		if(newInterface)
 			try
 			{
-				Utils.reloadResourceBundleWithLocale(this.languages.get(this.languageBox.getSelectedItem()));
+				Utils.reloadResourceBundleWithLocale(Utils.getLanguageByName((String) this.languageBox.getSelectedItem()));
 				Utils.newFrame(Utils.lastUser.getUsername(), Utils.mainFrame.getLocation(), Utils.mainFrame.getSelectedMode());
 			}
 			catch(IOException e)
 			{
 				Utils.logger.log(Level.SEVERE, "Error opening new frame!", e);
 			}
-	}
-
-	/**
-	 * Used to get the key of the name language.
-	 *
-	 * @param string The language key (fr, en, it ...).
-	 * @return The name of the language.
-	 */
-	private String getLang(String string)
-	{
-		for(Entry<String, String> s : this.languages.entrySet())
-			if(s.getValue() != null)
-				if(s.getValue().equals(string))
-					return s.getKey();
-		return "System language";
-	}
-
-	/**
-	 * Used to get the available languages.
-	 *
-	 * @return The languages.
-	 */
-	private String[] getLanguages()
-	{
-		this.languages.put(Utils.resourceBundle.getString("system_language"), null);
-		this.languages.put(Utils.resourceBundle.getString("english"), "en");
-		this.languages.put(Utils.resourceBundle.getString("french"), "fr");
-		this.languages.put(Utils.resourceBundle.getString("italian"), "it");
-		return this.languages.keySet().toArray(new String[this.languages.keySet().size()]);
 	}
 }
