@@ -45,6 +45,7 @@ import org.joda.time.format.DateTimeFormatter;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionGetFavInfos;
 import fr.mrcraftcod.actions.ActionRefreshStats;
+import fr.mrcraftcod.enums.CountryCode;
 import fr.mrcraftcod.frames.component.AutoComboBox;
 import fr.mrcraftcod.frames.component.GhostText;
 import fr.mrcraftcod.frames.component.ImagePanel;
@@ -70,7 +71,6 @@ import fr.mrcraftcod.listeners.windows.MainWindowListener;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.User;
 import fr.mrcraftcod.utils.Configuration;
-import fr.mrcraftcod.utils.CountryCode;
 import fr.mrcraftcod.utils.Utils;
 
 /**

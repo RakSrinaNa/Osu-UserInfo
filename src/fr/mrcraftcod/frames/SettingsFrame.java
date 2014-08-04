@@ -14,13 +14,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import fr.mrcraftcod.enums.Fonts;
+import fr.mrcraftcod.enums.Language;
 import fr.mrcraftcod.frames.component.JTextFieldLimitNumbers;
 import fr.mrcraftcod.listeners.actions.ButtonReturnSettingsActionListener;
 import fr.mrcraftcod.listeners.windows.SettingsWindowListener;
 import fr.mrcraftcod.utils.Configuration;
 import fr.mrcraftcod.utils.Utils;
-import fr.mrcraftcod.utils.Utils.Fonts;
-import fr.mrcraftcod.utils.Utils.Language;
 
 /**
  * Show a frame to modify settings.
@@ -58,7 +58,7 @@ public class SettingsFrame extends JDialog
 		getContentPane().setBackground(Utils.backColor);
 		addWindowListener(new SettingsWindowListener());
 		this.languageBox = new JComboBox<String>(Language.getNames());
-		this.languageBox.setSelectedItem(Utils.getLanguageByID(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getName());
+		this.languageBox.setSelectedItem(Language.getLanguageByID(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getName());
 		JLabel languageText = new JLabel(Utils.resourceBundle.getString("pref_language") + ":");
 		this.fontsBox = new JComboBox<String>(Fonts.getNames());
 		this.fontsBox.setSelectedItem(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
@@ -177,7 +177,7 @@ public class SettingsFrame extends JDialog
 	 */
 	public boolean isLocaleModified()
 	{
-		return !Utils.getLanguageByName((String) this.languageBox.getSelectedItem()).getID().equals(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID()));
+		return !Language.getLanguageByName((String) this.languageBox.getSelectedItem()).getID().equals(Utils.config.getString(Configuration.LOCALE, Language.DEFAULT.getID()));
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class SettingsFrame extends JDialog
 		Utils.config.writeVar(Configuration.LOADINGSCREEN, String.valueOf(this.loadingCheck.isSelected()));
 		Utils.config.writeVar(Configuration.KEEPDATE, String.valueOf(this.keepDateCheck.isSelected()));
 		Utils.config.writeVar(Configuration.SHOWNOTIFICATION, String.valueOf(this.notificationCheck.isSelected()));
-		Utils.config.writeVar(Configuration.LOCALE, Utils.getLanguageByName((String) this.languageBox.getSelectedItem()).getID());
+		Utils.config.writeVar(Configuration.LOCALE, Language.getLanguageByName((String) this.languageBox.getSelectedItem()).getID());
 		Utils.config.writeVar(Configuration.FONT, this.fontsBox.getSelectedItem());
 		if(!this.numberKeepStats.getText().equals(""))
 		{
@@ -227,7 +227,7 @@ public class SettingsFrame extends JDialog
 		if(newInterface)
 			try
 			{
-				Utils.reloadResourceBundleWithLocale(Utils.getLanguageByName((String) this.languageBox.getSelectedItem()));
+				Utils.reloadResourceBundleWithLocale(Language.getLanguageByName((String) this.languageBox.getSelectedItem()));
 				Utils.newFrame(Utils.lastUser.getUsername(), Utils.mainFrame.getLocation(), Utils.mainFrame.getSelectedMode());
 			}
 			catch(IOException e)

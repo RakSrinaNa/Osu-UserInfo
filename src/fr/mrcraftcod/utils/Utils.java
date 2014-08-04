@@ -41,6 +41,8 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
+import fr.mrcraftcod.enums.Fonts;
+import fr.mrcraftcod.enums.Language;
 import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
@@ -57,103 +59,6 @@ import fr.mrcraftcod.objects.User;
  */
 public class Utils
 {
-	public enum Fonts
-	{
-		DEFAULT(null, "Default", 12), COMFORTAA("Comfortaa-Regular.ttf", "Comfortaa", 13);
-		private String name;
-		private String fileName;
-		private int size;
-
-		Fonts(String fileName, String name, int size)
-		{
-			this.fileName = fileName;
-			this.name = name;
-			this.size = size;
-		}
-
-		public static String[] getNames()
-		{
-			ArrayList<String> names = new ArrayList<String>();
-			for(Fonts f : Fonts.values())
-				names.add(f.getName());
-			return names.toArray(new String[names.size()]);
-		}
-
-		public String getFileName()
-		{
-			return this.fileName;
-		}
-
-		public String getName()
-		{
-			return this.name;
-		}
-
-		public int getSize()
-		{
-			return this.size;
-		}
-	}
-
-	public enum Language
-	{
-		DEFAULT("system", Locale.getDefault(), ""), ENGLISH("en", Locale.ENGLISH, ""), FRENCH("fr", Locale.FRENCH, ""), ITALIAN("it", Locale.ITALIAN, "");
-		private String name;
-		private String ID;
-		private Locale locale;
-
-		Language(String ID, Locale locale, String name)
-		{
-			this.ID = ID;
-			this.locale = locale;
-			this.name = name;
-		}
-
-		public static String[] getNames()
-		{
-			ArrayList<String> names = new ArrayList<String>();
-			for(Language l : Language.values())
-				names.add(l.getName());
-			return names.toArray(new String[names.size()]);
-		}
-
-		public String getID()
-		{
-			return this.ID;
-		}
-
-		public Locale getLocale()
-		{
-			return this.locale;
-		}
-
-		public String getName()
-		{
-			return this.name;
-		}
-
-		public void setName(String name)
-		{
-			this.name = name;
-		}
-	}
-
-	public enum Mods
-	{
-		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
-		private long key;
-
-		Mods(long key)
-		{
-			this.key = key;
-		}
-
-		private long getKey()
-		{
-			return this.key;
-		}
-	}
-
 	public final static String[] UNITS = {"", "K", "M", "G", "T", "P"};
 	private final static String logFileName = "log.log";
 	private static ServerSocket socket;
@@ -371,14 +276,6 @@ public class Utils
 		return result;
 	}
 
-	public static Fonts getFontsByName(String name)
-	{
-		for(Fonts f : Fonts.values())
-			if(f.getName().equals(name))
-				return f;
-		return Fonts.DEFAULT;
-	}
-
 	/**
 	 * Used to get the HTML source code from a link.
 	 *
@@ -555,36 +452,6 @@ public class Utils
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * Used to get the a language by its ID.
-	 *
-	 * @param ID The language key (fr, en, it ...).
-	 * @return The language.
-	 */
-	public static Language getLanguageByID(String ID)
-	{
-		for(Language l : Language.values())
-			if(l.getID() != null)
-				if(l.getID().equals(ID))
-					return l;
-		return Language.DEFAULT;
-	}
-
-	/**
-	 * Used to get the a language by its name.
-	 *
-	 * @param ID The language name.
-	 * @return The language.
-	 */
-	public static Language getLanguageByName(String name)
-	{
-		for(Language l : Language.values())
-			if(l.getName() != null)
-				if(l.getName().equals(name))
-					return l;
-		return Language.DEFAULT;
 	}
 
 	/**
@@ -811,7 +678,7 @@ public class Utils
 		if(resetedLog)
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
-		locale = getLanguageByID(config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getLocale();
+		locale = Language.getLanguageByID(config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getLocale();
 		logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "nosocket"))
@@ -1260,7 +1127,7 @@ public class Utils
 	{
 		try
 		{
-			Fonts f = getFontsByName(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
+			Fonts f = Fonts.getFontsByName(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
 			fontMain = registerFont(f.getFileName(), f.getSize(), Font.PLAIN);
 		}
 		catch(FontFormatException e)
