@@ -2,7 +2,7 @@ package fr.mrcraftcod.listeners.windows;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import fr.mrcraftcod.utils.Utils;
+import fr.mrcraftcod.frames.SettingsFrame;
 
 /**
  * Used to save changes before closing.
@@ -22,7 +22,7 @@ public class SettingsWindowListener implements WindowListener
 	@Override
 	public void windowClosing(final WindowEvent e)
 	{
-		Utils.configFrame.closeFrame();
+		((SettingsFrame) e.getSource()).closeFrame();
 	}
 
 	@Override

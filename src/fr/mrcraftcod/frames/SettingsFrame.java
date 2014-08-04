@@ -47,7 +47,6 @@ public class SettingsFrame extends JDialog
 		super(parent);
 		int frameWidth = 400;
 		setTitle(Utils.resourceBundle.getString("settings"));
-		setVisible(true);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setIconImages(Utils.icons);
@@ -132,6 +131,7 @@ public class SettingsFrame extends JDialog
 		setLocationRelativeTo(parent);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
+		setVisible(true);
 		toFront();
 	}
 
@@ -143,9 +143,8 @@ public class SettingsFrame extends JDialog
 		if(isSettingsModified())
 		{
 			int result = JOptionPane.showConfirmDialog(null, Utils.resourceBundle.getString("settings_save_changes"), Utils.resourceBundle.getString("settings_save_changes_title"), JOptionPane.YES_NO_OPTION);
-			if(result == JOptionPane.YES_OPTION)
-				returnMain(false);
-			return;
+			if(!(result == JOptionPane.YES_OPTION))
+				return;
 		}
 		returnMain(false);
 	}

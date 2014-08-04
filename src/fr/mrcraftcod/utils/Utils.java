@@ -43,7 +43,6 @@ import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
 import fr.mrcraftcod.frames.MainFrame;
-import fr.mrcraftcod.frames.SettingsFrame;
 import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.objects.SystemTrayOsuStats;
@@ -125,6 +124,8 @@ public class Utils
 	public static ArrayList<Image> icons;
 	public static StartupFrame startup;
 	public static MainFrame mainFrame;
+	public static AboutFrame aboutFrame;
+	public static ChartFrame chartFrame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;
 	public static Color backColor, searchBarColor, noticeColor, noticeBorderColor;
@@ -133,9 +134,6 @@ public class Utils
 	public static Date lastPost = new Date(0);
 	public static User lastUser = new User();
 	public static Stats lastStats = new Stats();
-	public static AboutFrame aboutFrame;
-	public static SettingsFrame configFrame;
-	public static ChartFrame chartFrame;
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
