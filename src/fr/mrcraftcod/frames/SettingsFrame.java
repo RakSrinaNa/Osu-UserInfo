@@ -167,7 +167,7 @@ public class SettingsFrame extends JDialog
 	 */
 	public boolean isFontModified()
 	{
-		return !((String) this.languageBox.getSelectedItem()).equals(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
+		return !((String) this.fontsBox.getSelectedItem()).equals(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
 	}
 
 	/**
