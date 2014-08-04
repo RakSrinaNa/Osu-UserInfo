@@ -58,6 +58,36 @@ import fr.mrcraftcod.objects.User;
  */
 public class Utils
 {
+	public enum Fonts
+	{
+		DEFAULT(null, "Default", 12), COMFORTAA("Comfortaa-Regular.ttf", "Comfortaa", 13);
+		private String name;
+		private String fileName;
+		private int size;
+
+		Fonts(String fileName, String name, int size)
+		{
+			this.fileName = fileName;
+			this.name = name;
+			this.size = size;
+		}
+
+		public String getFileName()
+		{
+			return this.fileName;
+		}
+
+		public String getName()
+		{
+			return this.name;
+		}
+
+		public int getSize()
+		{
+			return this.size;
+		}
+	}
+
 	public enum Mods
 	{
 		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
@@ -722,14 +752,7 @@ public class Utils
 		iconChangelogAdd = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogAdd.png")), iconSize, iconSize));
 		iconChangelogRemove = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogRemove.png")), iconSize, iconSize));
 		iconChangelogModify = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogModify.png")), iconSize, iconSize));
-		try
-		{
-			fontMain = registerFont("Comfortaa-Regular.ttf", 13, Font.PLAIN);
-		}
-		catch(FontFormatException e)
-		{
-			fontMain = new Font("Arial", Font.PLAIN, 12);
-		}// TODO font
+		reloadFont();
 		setLookAndFeel();
 		int currentStep = 0;
 		boolean openChangelog = false;
@@ -884,6 +907,8 @@ public class Utils
 	 */
 	public static Font registerFont(String name, int size, int type) throws FontFormatException, IOException
 	{
+		if(name == null)
+			return new Font("Arial", Font.PLAIN, 12);
 		Font font = Font.createFont(Font.TRUETYPE_FONT, Utils.class.getClassLoader().getResource("resources/fonts/" + name).openStream()).deriveFont(type, size);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		ge.registerFont(font);
@@ -894,12 +919,14 @@ public class Utils
 	 * Used to reload the resource bundle with a new locale.
 	 *
 	 * @param stringLocale The locale to set.
+	 * @throws IOException
 	 */
-	public static void reloadResourceBundleWithLocale(String stringLocale)
+	public static void reloadResourceBundleWithLocale(String stringLocale) throws IOException
 	{
 		resourceBundle.clearCache();
 		locale = getLocaleByName(stringLocale);
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
+		reloadFont();
 	}
 
 	/**
@@ -1082,6 +1109,14 @@ public class Utils
 		Utils.setTrackedUser(users);
 	}
 
+	private static Fonts getFontByName(String name)
+	{
+		for(Fonts f : Fonts.values())
+			if(f.getName().equals(name))
+				return f;
+		return Fonts.DEFAULT;
+	}
+
 	/**
 	 * Used to get a locale by its name.
 	 *
@@ -1161,6 +1196,19 @@ public class Utils
 	private static boolean isValidUser(String username)
 	{
 		return username.length() > 1;
+	}
+
+	private static void reloadFont() throws IOException
+	{
+		try
+		{
+			Fonts f = getFontByName(Utils.config.getString(Configuration.FONT, Fonts.COMFORTAA.getName()));
+			fontMain = registerFont(f.getFileName(), f.getSize(), Font.PLAIN);
+		}
+		catch(FontFormatException e)
+		{
+			fontMain = new Font("Arial", Font.PLAIN, 12);
+		}// TODO font
 	}
 
 	/**
