@@ -39,10 +39,10 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONObject;
 import fr.mrcraftcod.Main;
-import fr.mrcraftcod.frames.MainFrame;
 import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
+import fr.mrcraftcod.frames.MainFrame;
 import fr.mrcraftcod.frames.SettingsFrame;
 import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
@@ -56,6 +56,49 @@ import fr.mrcraftcod.objects.User;
  */
 public class Utils
 {
+	public enum Language
+	{
+		DEFAULT("system", Locale.getDefault(), ""), ENGLISH("en", Locale.ENGLISH, ""), FRENCH("fr", Locale.FRENCH, ""), ITALIAN("it", Locale.ITALIAN, "");
+		private String name;
+		private String ID;
+		private Locale locale;
+
+		Language(String ID, Locale locale, String name)
+		{
+			this.ID = ID;
+			this.locale = locale;
+			this.name = name;
+		}
+
+		public static String[] getNames()
+		{
+			ArrayList<String> names = new ArrayList<String>();
+			for(Language l : Language.values())
+				names.add(l.getName());
+			return names.toArray(new String[names.size()]);
+		}
+
+		public String getID()
+		{
+			return this.ID;
+		}
+
+		public Locale getLocale()
+		{
+			return this.locale;
+		}
+
+		public String getName()
+		{
+			return this.name;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+	}
+
 	public enum Mods
 	{
 		None(0), NoFail(1), Easy(2), NoVideo(4), Hidden(8), HardRock(16), SuddenDeath(32), DoubleTime(64), Relax(128), HalfTime(256), Nightcore(512), Flashlight(1024), Autoplay(2048), SpunOut(4096), Relax2(8192), Perfect(16384), Key4(32768), Key5(5536), Key6(131072), Key7(262144), Key8(524288), keyMod(Key4.getKey() | Key5.getKey() | Key6.getKey() | Key7.getKey() | Key8.getKey()), FadeIn(1048576), Random(2097152), LastMod(4194304), FreeModAllowed(NoFail.getKey() | Easy.getKey() | Hidden.getKey() | HardRock.getKey() | SuddenDeath.getKey() | Flashlight.getKey() | FadeIn.getKey() | Relax.getKey() | Relax2.getKey() | SpunOut.getKey() | keyMod.getKey());
@@ -469,6 +512,36 @@ public class Utils
 	}
 
 	/**
+	 * Used to get the a language by its ID.
+	 *
+	 * @param ID The language key (fr, en, it ...).
+	 * @return The language.
+	 */
+	public static Language getLanguageByID(String ID)
+	{
+		for(Language l : Language.values())
+			if(l.getID() != null)
+				if(l.getID().equals(ID))
+					return l;
+		return Language.DEFAULT;
+	}
+
+	/**
+	 * Used to get the a language by its name.
+	 *
+	 * @param ID The language name.
+	 * @return The language.
+	 */
+	public static Language getLanguageByName(String name)
+	{
+		for(Language l : Language.values())
+			if(l.getName() != null)
+				if(l.getName().equals(name))
+					return l;
+		return Language.DEFAULT;
+	}
+
+	/**
 	 * Used to get the level.
 	 *
 	 * @param level The level where to get the level.
@@ -692,7 +765,7 @@ public class Utils
 		if(resetedLog)
 			logger.log(Level.INFO, "\nLog file reseted, previous was over 2.5MB\n");
 		config = new Configuration();
-		locale = getLocaleByName(config.getString(Configuration.LOCALE, null));
+		locale = getLanguageByID(config.getString(Configuration.LOCALE, Language.DEFAULT.getID())).getLocale();
 		logger.log(Level.INFO, "Opening resource bundle...");
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		if(!isModeSet(args, "nosocket"))
@@ -746,6 +819,7 @@ public class Utils
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
+				reloadLanguagesNames();
 				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_construct_frame"));
@@ -865,13 +939,14 @@ public class Utils
 	/**
 	 * Used to reload the resource bundle with a new locale.
 	 *
-	 * @param stringLocale The locale to set.
+	 * @param language The locale to set.
 	 */
-	public static void reloadResourceBundleWithLocale(String stringLocale)
+	public static void reloadResourceBundleWithLocale(Language language)
 	{
 		resourceBundle.clearCache();
-		locale = getLocaleByName(stringLocale);
+		locale = language.getLocale();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
+		reloadLanguagesNames();
 	}
 
 	/**
@@ -1055,29 +1130,6 @@ public class Utils
 	}
 
 	/**
-	 * Used to get a locale by its name.
-	 *
-	 * @param localName The name of the locale.
-	 * @return The wanted locale.
-	 */
-	private static Locale getLocaleByName(String localName)
-	{
-		if(localName == null)
-			return Locale.getDefault();
-		switch(localName)
-		{
-			case "fr":
-				return Locale.FRENCH;
-			case "it":
-				return Locale.ITALIAN;
-			case "en":
-				return Locale.ENGLISH;
-			default:
-				return Locale.getDefault();
-		}
-	}
-
-	/**
 	 * Used to get a random colour.
 	 *
 	 * @return A random colour.
@@ -1133,6 +1185,14 @@ public class Utils
 	private static boolean isValidUser(String username)
 	{
 		return username.length() > 1;
+	}
+
+	private static void reloadLanguagesNames()
+	{
+		Language.DEFAULT.setName(Utils.resourceBundle.getString("system_language"));
+		Language.ENGLISH.setName(Utils.resourceBundle.getString("english"));
+		Language.FRENCH.setName(Utils.resourceBundle.getString("french"));
+		Language.ITALIAN.setName(Utils.resourceBundle.getString("italian"));
 	}
 
 	/**
