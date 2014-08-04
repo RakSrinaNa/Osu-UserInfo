@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -55,6 +57,44 @@ import fr.mrcraftcod.objects.User;
  */
 public class Utils
 {
+	public enum Fonts
+	{
+		DEFAULT(null, "Default", 12), COMFORTAA("Comfortaa-Regular.ttf", "Comfortaa", 13);
+		private String name;
+		private String fileName;
+		private int size;
+
+		Fonts(String fileName, String name, int size)
+		{
+			this.fileName = fileName;
+			this.name = name;
+			this.size = size;
+		}
+
+		public static String[] getNames()
+		{
+			ArrayList<String> names = new ArrayList<String>();
+			for(Fonts f : Fonts.values())
+				names.add(f.getName());
+			return names.toArray(new String[names.size()]);
+		}
+
+		public String getFileName()
+		{
+			return this.fileName;
+		}
+
+		public String getName()
+		{
+			return this.name;
+		}
+
+		public int getSize()
+		{
+			return this.size;
+		}
+	}
+
 	public enum Language
 	{
 		DEFAULT("system", Locale.getDefault(), ""), ENGLISH("en", Locale.ENGLISH, ""), FRENCH("fr", Locale.FRENCH, ""), ITALIAN("it", Locale.ITALIAN, "");
@@ -329,6 +369,14 @@ public class Utils
 		}
 		String result = format.format(size) + " " + UNITS[unit] + "B";
 		return result;
+	}
+
+	public static Fonts getFontsByName(String name)
+	{
+		for(Fonts f : Fonts.values())
+			if(f.getName().equals(name))
+				return f;
+		return Fonts.DEFAULT;
 	}
 
 	/**
@@ -791,7 +839,7 @@ public class Utils
 		iconChangelogAdd = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogAdd.png")), iconSize, iconSize));
 		iconChangelogRemove = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogRemove.png")), iconSize, iconSize));
 		iconChangelogModify = new ImageIcon(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/chanhelogModify.png")), iconSize, iconSize));
-		fontMain = new Font("Arial", Font.PLAIN, 12); // TODO font
+		reloadFont();
 		setLookAndFeel();
 		int currentStep = 0;
 		boolean openChangelog = false;
@@ -935,16 +983,39 @@ public class Utils
 	}
 
 	/**
+	 * Used to register a font.
+	 *
+	 * @param name The name of the font. "src/resources/fonts/<name>"
+	 * @param size The size of the font.
+	 * @param type The type of the font.
+	 * @return The registered font.
+	 *
+	 * @throws FontFormatException If the font cannot be registered.
+	 * @throws IOException If the file isn't found.
+	 */
+	public static Font registerFont(String name, int size, int type) throws FontFormatException, IOException
+	{
+		if(name == null || name.equals(Fonts.DEFAULT.getName()))
+			return new Font("Arial", Font.PLAIN, 12);
+		Font font = Font.createFont(Font.TRUETYPE_FONT, Utils.class.getClassLoader().getResource("resources/fonts/" + name).openStream()).deriveFont(type, size);
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge.registerFont(font);
+		return font;
+	}
+
+	/**
 	 * Used to reload the resource bundle with a new locale.
 	 *
 	 * @param language The locale to set.
+	 * @throws IOException
 	 */
-	public static void reloadResourceBundleWithLocale(Language language)
+	public static void reloadResourceBundleWithLocale(Language language) throws IOException
 	{
 		resourceBundle.clearCache();
 		locale = language.getLocale();
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		reloadLanguagesNames();
+		reloadFont();
 	}
 
 	/**
@@ -1183,6 +1254,19 @@ public class Utils
 	private static boolean isValidUser(String username)
 	{
 		return username.length() > 1;
+	}
+
+	private static void reloadFont() throws IOException
+	{
+		try
+		{
+			Fonts f = getFontsByName(Utils.config.getString(Configuration.FONT, Fonts.DEFAULT.getName()));
+			fontMain = registerFont(f.getFileName(), f.getSize(), Font.PLAIN);
+		}
+		catch(FontFormatException e)
+		{
+			fontMain = new Font("Arial", Font.PLAIN, 12);
+		}// TODO font
 	}
 
 	private static void reloadLanguagesNames()
