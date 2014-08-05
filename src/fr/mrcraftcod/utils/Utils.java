@@ -397,7 +397,7 @@ public class Utils
 			currentStats.updateTotalHits();
 			try
 			{
-				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m" + mainFrame.getSelectedMode());
+				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m=" + mainFrame.getSelectedMode());
 				try
 				{
 					currentStats.setCountryRank(Double.parseDouble(Utils.getNextLineCodeFromLink(pageProfile, 2, "<img class='flag' title='' src=").get(0).replace("#", "").replace(",", "")));
