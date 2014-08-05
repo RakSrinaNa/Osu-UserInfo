@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
+import fr.mrcraftcod.enums.GameMode;
 import fr.mrcraftcod.frames.ChartFrame;
 import fr.mrcraftcod.objects.Stats;
 import fr.mrcraftcod.utils.Utils;
@@ -24,6 +25,6 @@ public class ItemChartActionListener extends AbstractAction
 		if(stats == null || stats.size() < 1)
 			JOptionPane.showMessageDialog(Utils.mainFrame, Utils.resourceBundle.getString("select_user_chart"), Utils.resourceBundle.getString("select_user_chart_title"), JOptionPane.ERROR_MESSAGE);
 		else
-			Utils.chartFrame = new ChartFrame(Utils.mainFrame, Utils.lastUser.getUsername(), "Osu!", stats);
+			Utils.chartFrame = new ChartFrame(Utils.mainFrame, Utils.lastUser.getUsername(), GameMode.getModByID(Utils.mainFrame.getSelectedMode()), stats);
 	}
 }

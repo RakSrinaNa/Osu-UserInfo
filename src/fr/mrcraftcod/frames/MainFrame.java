@@ -46,6 +46,7 @@ import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionGetFavInfos;
 import fr.mrcraftcod.actions.ActionRefreshStats;
 import fr.mrcraftcod.enums.CountryCode;
+import fr.mrcraftcod.enums.GameMode;
 import fr.mrcraftcod.frames.component.AutoComboBox;
 import fr.mrcraftcod.frames.component.GhostText;
 import fr.mrcraftcod.frames.component.ImagePanel;
@@ -294,7 +295,7 @@ public class MainFrame extends JFrame
 		JPanel modePanel = new JPanel(new GridBagLayout());
 		modePanel.setBackground(Utils.backColor);
 		modePanel.addComponentListener(new ModesComponentListener());
-		this.buttonStandard = new JButtonMode("osu!");
+		this.buttonStandard = new JButtonMode(GameMode.STANDARD.getName());
 		this.buttonStandard.setFont(Utils.fontMain);
 		this.buttonStandard.setBackground(colorButtonModeSelected);
 		this.buttonStandard.setDisabledBackground(colorButtonModeUnselected);
@@ -305,7 +306,7 @@ public class MainFrame extends JFrame
 		this.buttonStandard.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize));
 		this.buttonStandard.setFocusPainted(false);
 		this.buttonStandard.addActionListener(new ModeStandardActionListener());
-		this.buttonTaiko = new JButtonMode("Taiko");
+		this.buttonTaiko = new JButtonMode(GameMode.TAIKO.getName());
 		this.buttonTaiko.setFont(Utils.fontMain);
 		this.buttonTaiko.setBackground(colorButtonModeSelected);
 		this.buttonTaiko.setDisabledBackground(colorButtonModeUnselected);
@@ -316,7 +317,7 @@ public class MainFrame extends JFrame
 		this.buttonTaiko.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize));
 		this.buttonTaiko.setFocusPainted(false);
 		this.buttonTaiko.addActionListener(new ModeTaikoActionListener());
-		this.buttonCTB = new JButtonMode("Catch The Beat");
+		this.buttonCTB = new JButtonMode(GameMode.CTB.getName());
 		this.buttonCTB.setFont(Utils.fontMain);
 		this.buttonCTB.setBackground(colorButtonModeSelected);
 		this.buttonCTB.setDisabledBackground(colorButtonModeUnselected);
@@ -327,7 +328,7 @@ public class MainFrame extends JFrame
 		this.buttonCTB.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize));
 		this.buttonCTB.setFocusPainted(false);
 		this.buttonCTB.addActionListener(new ModeCTBActionListener());
-		this.buttonMania = new JButtonMode("osu!mania");
+		this.buttonMania = new JButtonMode(GameMode.MANIA.getName());
 		this.buttonMania.setFont(Utils.fontMain);
 		this.buttonMania.setBackground(colorButtonModeSelected);
 		this.buttonMania.setDisabledBackground(colorButtonModeUnselected);

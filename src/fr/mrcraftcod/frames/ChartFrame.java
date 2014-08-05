@@ -36,6 +36,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.util.Rotation;
+import fr.mrcraftcod.enums.GameMode;
 import fr.mrcraftcod.frames.component.ChartPopupMenu;
 import fr.mrcraftcod.listeners.change.GraphTabChangeListener;
 import fr.mrcraftcod.objects.Stats;
@@ -52,6 +53,7 @@ public class ChartFrame extends JFrame
 	private static final Color colorLine1 = Color.BLUE, colorLine2 = Color.RED, colorLine3 = Color.BLACK;
 	private JTabbedPane contentPane;
 	private ChartPanel lastChart;
+	private GameMode gameMode;
 
 	/**
 	 * Constructor.
@@ -62,9 +64,10 @@ public class ChartFrame extends JFrame
 	 * @param mode The mode of the graphs.
 	 * @param stats The stats to process.
 	 */
-	public ChartFrame(JFrame parent, String user, String mode, List<Stats> stats)
+	public ChartFrame(JFrame parent, String user, GameMode mode, List<Stats> stats)
 	{
 		super();
+		this.gameMode = mode;
 		getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 		setIconImages(Utils.icons);
 		setTitle(user);
@@ -89,7 +92,7 @@ public class ChartFrame extends JFrame
 		}
 		ChartPanel chartHitsPanel = getChartInPannel(user, Utils.resourceBundle.getString("total_hits"), createHitsChart(title, user, stats));
 		ChartPanel chartRanksPanel = getChartInPannel(user, Utils.resourceBundle.getString("ranks"), createRanksChart(title, user, stats));
-		this.contentPane.addTab("300 / 100 / 50", chartHitsPanel);
+		this.contentPane.addTab(this.gameMode.getC1() + " / " + this.gameMode.getC2() + (this.gameMode.getC3().equals("") ? "" : " / " + this.gameMode.getC3()), chartHitsPanel);
 		this.contentPane.addTab("SS / S / A", chartRanksPanel);
 		this.contentPane.addChangeListener(new GraphTabChangeListener());
 		KeyStroke ctrlTab = KeyStroke.getKeyStroke("ctrl TAB");
@@ -509,9 +512,10 @@ public class ChartFrame extends JFrame
 	private PieDataset processStatsHits(List<Stats> stats)
 	{
 		DefaultPieDataset data = new DefaultPieDataset();
-		data.setValue("300", stats.get(stats.size() - 1).getCount300());
-		data.setValue("100", stats.get(stats.size() - 1).getCount100());
-		data.setValue("50", stats.get(stats.size() - 1).getCount50());
+		data.setValue(this.gameMode.getC1(), stats.get(stats.size() - 1).getCount300());
+		data.setValue(this.gameMode.getC2(), stats.get(stats.size() - 1).getCount100());
+		if(!this.gameMode.getC3().equals(""))
+			data.setValue(this.gameMode.getC3(), stats.get(stats.size() - 1).getCount50());
 		return data;
 	}
 
