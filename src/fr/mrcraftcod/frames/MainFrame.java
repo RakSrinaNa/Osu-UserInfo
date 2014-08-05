@@ -883,6 +883,11 @@ public class MainFrame extends JFrame
 		return 0;
 	}
 
+	public String getUsernameSearched()
+	{
+		return this.userNameFieldTextComponent.getText();
+	}
+
 	/**
 	 * Used to hide the frame.
 	 */
@@ -1035,7 +1040,7 @@ public class MainFrame extends JFrame
 		if(updateImages)
 			updateHitsImages();
 		if(checkInfos)
-			Utils.getInfos(Utils.lastUser.getUsername(), false, false, true);
+			Utils.getInfos(getUsernameSearched(), false, false, true);
 	}
 
 	/**

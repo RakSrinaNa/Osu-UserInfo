@@ -308,7 +308,7 @@ public class Utils
 	 */
 	public static void getInfos(boolean showerror)
 	{
-		getInfos(mainFrame.userNameFieldTextComponent.getText(), showerror, false);
+		getInfos(mainFrame.getUsernameSearched(), showerror, false);
 	}
 
 	/**
