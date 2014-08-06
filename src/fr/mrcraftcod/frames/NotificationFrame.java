@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.geom.RoundRectangle2D;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -148,6 +149,6 @@ public class NotificationFrame extends JDialog implements Runnable
 		NumberFormat format = NumberFormat.getInstance(Utils.locale);
 		NumberFormat formatt = NumberFormat.getInstance(Utils.locale);
 		formatt.setMaximumFractionDigits(2);
-		return String.format(Utils.resourceBundle.getString("notification_text"), name, textRank, format.format(rank), formatt.format(pp), format.format(playCount), format.format(totalScore), format.format(rankedScore));
+		return MessageFormat.format(Utils.resourceBundle.getString("notification_text"), name, textRank, format.format(rank), formatt.format(pp), format.format(playCount), format.format(totalScore), format.format(rankedScore));
 	}
 }

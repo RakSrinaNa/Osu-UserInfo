@@ -19,6 +19,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -947,7 +948,7 @@ public class Utils
 			return;
 		if(file.exists())
 		{
-			JOptionPane.showMessageDialog(mainFrame, String.format(resourceBundle.getString("save_error"), file.getName()), resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, MessageFormat.format(resourceBundle.getString("save_error"), file.getName()), resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		file.mkdirs();

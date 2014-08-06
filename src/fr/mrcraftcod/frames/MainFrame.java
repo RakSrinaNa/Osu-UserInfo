@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -824,7 +825,7 @@ public class MainFrame extends JFrame
 		this.countSS.setText(String.valueOf(stats.getCountSS()));
 		this.countS.setText(String.valueOf(stats.getCountS()));
 		this.countA.setText(String.valueOf(stats.getCountA()));
-		this.totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Utils.locale).format(stats.getTotalScore()), NumberFormat.getInstance(Utils.locale).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
+		this.totalScore.setText(MessageFormat.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Utils.locale).format(stats.getTotalScore()), NumberFormat.getInstance(Utils.locale).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
 		DecimalFormat decimalFormat = new DecimalFormat();
 		decimalFormat.setMaximumFractionDigits(2);
 		this.hitCount300.setText(NumberFormat.getInstance(Utils.locale).format(stats.getCount300()) + " (" + decimalFormat.format(stats.getCount300() * 100f / stats.getTotalHits()) + "%)");
@@ -1138,6 +1139,6 @@ public class MainFrame extends JFrame
 		Utils.logger.log(Level.INFO, "Setting level to " + level);
 		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
 		this.levelBar.setValue((int) progress);
-		this.levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
+		this.levelBar.setString(MessageFormat.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
 	}
 }

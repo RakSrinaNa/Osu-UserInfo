@@ -3,6 +3,7 @@ package fr.mrcraftcod.frames;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -83,7 +84,7 @@ public class AboutFrame extends JDialog
 		this.scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JPanel footer = new JPanel(new BorderLayout());
 		footer.setBackground(Utils.backColor);
-		JHyperlink linkAuthor = new JHyperlink(String.format(Utils.resourceBundle.getString("about_app_by"), "MrCraftCod"), "https://osu.ppy.sh/u/2313737");
+		JHyperlink linkAuthor = new JHyperlink(MessageFormat.format(Utils.resourceBundle.getString("about_app_by"), "MrCraftCod"), "https://osu.ppy.sh/u/2313737");
 		linkAuthor.setBorder(new EmptyBorder(3, 3, 3, 3));
 		JHyperlink linkOsu = new JHyperlink(Utils.resourceBundle.getString("about_game_osu"), "https://osu.ppy.sh/");
 		linkOsu.setBorder(new EmptyBorder(3, 3, 3, 3));

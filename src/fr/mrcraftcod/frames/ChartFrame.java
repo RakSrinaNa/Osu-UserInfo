@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.sql.Date;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.List;
@@ -71,7 +72,7 @@ public class ChartFrame extends JFrame
 		getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 		setIconImages(Utils.icons);
 		setTitle(user);
-		String title = String.format(Utils.resourceBundle.getString("stats_for"), user);
+		String title = MessageFormat.format(Utils.resourceBundle.getString("stats_for"), user);
 		int shapeOffset = 3;
 		Shape shape = new Rectangle(-shapeOffset / 2, -shapeOffset / 2, shapeOffset, shapeOffset);
 		this.contentPane = new JTabbedPane();
