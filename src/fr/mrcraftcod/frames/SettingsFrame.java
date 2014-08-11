@@ -221,6 +221,7 @@ public class SettingsFrame extends JDialog
 		Utils.config.writeVar(Configuration.LOADINGSCREEN, String.valueOf(this.loadingCheck.isSelected()));
 		Utils.config.writeVar(Configuration.KEEPDATE, String.valueOf(this.keepDateCheck.isSelected()));
 		Utils.config.writeVar(Configuration.SHOWNOTIFICATION, String.valueOf(this.notificationCheck.isSelected()));
+		Utils.config.writeVar(Configuration.ANONINFOS, String.valueOf(this.anonCheck.isSelected()));
 		Utils.config.writeVar(Configuration.LOCALE, Language.getLanguageByName((String) this.languageBox.getSelectedItem()).getID());
 		Utils.config.writeVar(Configuration.FONT, this.fontsBox.getSelectedItem());
 		if(!this.numberKeepStats.getText().equals(""))
