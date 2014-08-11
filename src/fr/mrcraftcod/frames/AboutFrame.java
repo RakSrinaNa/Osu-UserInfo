@@ -48,11 +48,12 @@ public class AboutFrame extends JDialog
 		super(parent);
 		this.traducers = new HashMap<String, String>();
 		this.traducers.put(Utils.resourceBundle.getString("italian"), "TheHowl");
+		this.traducers.put(Utils.resourceBundle.getString("bulgarian"), "DanielDimitrov(MCDaniel98)");
 		setTitle(Utils.resourceBundle.getString("menu_bar_help_about"));
 		setVisible(false);
 		setModal(true);
 		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(400, 200));
+		setPreferredSize(new Dimension(400, 225));
 		setMinimumSize(new Dimension(400, 200));
 		setAlwaysOnTop(false);
 		setIconImages(Utils.icons);
@@ -71,7 +72,7 @@ public class AboutFrame extends JDialog
 		this.table.getTableHeader().setResizingAllowed(true);
 		this.table.getTableHeader().setBackground(Utils.backColor);
 		this.table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		this.table.setRowHeight(0, 40);
+		this.table.setRowHeight(40);
 		this.table.setShowGrid(true);
 		this.table.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 		this.table.setGridColor(Color.BLACK);

@@ -881,6 +881,7 @@ public class Utils
 	{
 		resourceBundle.clearCache();
 		locale = language.getLocale();
+		System.out.println(locale);
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		reloadLanguagesNames();
 		reloadFont();
@@ -1143,6 +1144,7 @@ public class Utils
 		Language.ENGLISH.setName(Utils.resourceBundle.getString("english"));
 		Language.FRENCH.setName(Utils.resourceBundle.getString("french"));
 		Language.ITALIAN.setName(Utils.resourceBundle.getString("italian"));
+		Language.BULGARIAN.setName(Utils.resourceBundle.getString("bulgarian"));
 	}
 
 	/**
