@@ -20,6 +20,7 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class Utils
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
-	private static fr.mrcraftcod.utils.SQLManager sql;
+	public static SQLManager sql;
 
 	/**
 	 * Used to cute String objects.
@@ -756,7 +757,7 @@ public class Utils
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
 				if(config.getBoolean(Configuration.ANONINFOS, true))
-					sql = new SQLManager("db4free.net", 3306, "mrcraftcod", "mrcraftcod", MYSQLPASS);
+					initSQL();
 				reloadLanguagesNames();
 				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
@@ -778,6 +779,11 @@ public class Utils
 		startup.exit();
 		if(openChangelog)
 			getChangelogFrame(mainFrame);
+	}
+
+	public static void initSQL() throws SQLException
+	{
+		sql = new SQLManager("db4free.net", 3306, "mrcraftcod", "mrcraftcod", MYSQLPASS);
 	}
 
 	/**
