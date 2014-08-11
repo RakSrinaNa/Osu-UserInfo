@@ -64,6 +64,8 @@ public class TraducersMouseListener implements MouseListener
 		{
 			case "TheHowl":
 				url = "http://osu.ppy.sh/u/2751672";
+			case "DanielDimitrov(MCDaniel98)":
+				url = "https://osu.ppy.sh/u/3932131";
 			break;
 		}
 		if(url.equals(""))
