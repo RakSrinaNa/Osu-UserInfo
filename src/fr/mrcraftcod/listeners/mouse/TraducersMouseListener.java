@@ -59,15 +59,14 @@ public class TraducersMouseListener implements MouseListener
 	 */
 	public void openProfile(int selectedRow) throws MalformedURLException, IOException, URISyntaxException
 	{
-		String url = "";
 		switch(Utils.aboutFrame.getValuesTable()[selectedRow][1])
 		{
 			case "TheHowl":
-				url = "http://osu.ppy.sh/u/2751672";
+				Desktop.getDesktop().browse(new URL("http://osu.ppy.sh/u/2751672").toURI());
+			break;
+			case "DanielDimitrov(MCDaniel98)":
+				Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/u/3932131").toURI());
 			break;
 		}
-		if(url.equals(""))
-			return;
-		Desktop.getDesktop().browse(new URL(url).toURI());
 	}
 }

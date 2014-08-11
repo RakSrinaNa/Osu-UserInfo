@@ -5,7 +5,7 @@ import java.util.Locale;
 
 public enum Language
 {
-	DEFAULT("system", Locale.getDefault(), ""), ENGLISH("en", Locale.ENGLISH, ""), FRENCH("fr", Locale.FRENCH, ""), ITALIAN("it", Locale.ITALIAN, "");
+	DEFAULT("system", Locale.getDefault(), ""), ENGLISH("en", Locale.ENGLISH, ""), FRENCH("fr", Locale.FRENCH, ""), ITALIAN("it", Locale.ITALIAN, ""), BULGARIAN("bg", new Locale("bg"), "");
 	private String name;
 	private String ID;
 	private Locale locale;

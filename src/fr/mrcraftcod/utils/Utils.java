@@ -19,6 +19,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -308,7 +309,7 @@ public class Utils
 	 */
 	public static void getInfos(boolean showerror)
 	{
-		getInfos(mainFrame.userNameFieldTextComponent.getText(), showerror, false);
+		getInfos(mainFrame.getUsernameSearched(), showerror, false);
 	}
 
 	/**
@@ -397,7 +398,7 @@ public class Utils
 			currentStats.updateTotalHits();
 			try
 			{
-				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m" + mainFrame.getSelectedMode());
+				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m=" + mainFrame.getSelectedMode());
 				try
 				{
 					currentStats.setCountryRank(Double.parseDouble(Utils.getNextLineCodeFromLink(pageProfile, 2, "<img class='flag' title='' src=").get(0).replace("#", "").replace(",", "")));
@@ -880,6 +881,7 @@ public class Utils
 	{
 		resourceBundle.clearCache();
 		locale = language.getLocale();
+		System.out.println(locale);
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		reloadLanguagesNames();
 		reloadFont();
@@ -947,7 +949,7 @@ public class Utils
 			return;
 		if(file.exists())
 		{
-			JOptionPane.showMessageDialog(mainFrame, String.format(resourceBundle.getString("save_error"), file.getName()), resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, MessageFormat.format(resourceBundle.getString("save_error"), file.getName()), resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		file.mkdirs();
@@ -1142,6 +1144,7 @@ public class Utils
 		Language.ENGLISH.setName(Utils.resourceBundle.getString("english"));
 		Language.FRENCH.setName(Utils.resourceBundle.getString("french"));
 		Language.ITALIAN.setName(Utils.resourceBundle.getString("italian"));
+		Language.BULGARIAN.setName(Utils.resourceBundle.getString("bulgarian"));
 	}
 
 	/**

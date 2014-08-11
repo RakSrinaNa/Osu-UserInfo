@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ import fr.mrcraftcod.Main;
 import fr.mrcraftcod.actions.ActionGetFavInfos;
 import fr.mrcraftcod.actions.ActionRefreshStats;
 import fr.mrcraftcod.enums.CountryCode;
+import fr.mrcraftcod.enums.GameMode;
 import fr.mrcraftcod.frames.component.AutoComboBox;
 import fr.mrcraftcod.frames.component.GhostText;
 import fr.mrcraftcod.frames.component.ImagePanel;
@@ -294,7 +296,7 @@ public class MainFrame extends JFrame
 		JPanel modePanel = new JPanel(new GridBagLayout());
 		modePanel.setBackground(Utils.backColor);
 		modePanel.addComponentListener(new ModesComponentListener());
-		this.buttonStandard = new JButtonMode("osu!");
+		this.buttonStandard = new JButtonMode(GameMode.STANDARD.getName());
 		this.buttonStandard.setFont(Utils.fontMain);
 		this.buttonStandard.setBackground(colorButtonModeSelected);
 		this.buttonStandard.setDisabledBackground(colorButtonModeUnselected);
@@ -305,7 +307,7 @@ public class MainFrame extends JFrame
 		this.buttonStandard.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_standard.png")), iconSize, iconSize));
 		this.buttonStandard.setFocusPainted(false);
 		this.buttonStandard.addActionListener(new ModeStandardActionListener());
-		this.buttonTaiko = new JButtonMode("Taiko");
+		this.buttonTaiko = new JButtonMode(GameMode.TAIKO.getName());
 		this.buttonTaiko.setFont(Utils.fontMain);
 		this.buttonTaiko.setBackground(colorButtonModeSelected);
 		this.buttonTaiko.setDisabledBackground(colorButtonModeUnselected);
@@ -316,7 +318,7 @@ public class MainFrame extends JFrame
 		this.buttonTaiko.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_taiko.png")), iconSize, iconSize));
 		this.buttonTaiko.setFocusPainted(false);
 		this.buttonTaiko.addActionListener(new ModeTaikoActionListener());
-		this.buttonCTB = new JButtonMode("Catch The Beat");
+		this.buttonCTB = new JButtonMode(GameMode.CTB.getName());
 		this.buttonCTB.setFont(Utils.fontMain);
 		this.buttonCTB.setBackground(colorButtonModeSelected);
 		this.buttonCTB.setDisabledBackground(colorButtonModeUnselected);
@@ -327,7 +329,7 @@ public class MainFrame extends JFrame
 		this.buttonCTB.setIconMode(Utils.resizeBufferedImage(ImageIO.read(Main.class.getClassLoader().getResource("resources/images/dark_ctb.png")), iconSize, iconSize));
 		this.buttonCTB.setFocusPainted(false);
 		this.buttonCTB.addActionListener(new ModeCTBActionListener());
-		this.buttonMania = new JButtonMode("osu!mania");
+		this.buttonMania = new JButtonMode(GameMode.MANIA.getName());
 		this.buttonMania.setFont(Utils.fontMain);
 		this.buttonMania.setBackground(colorButtonModeSelected);
 		this.buttonMania.setDisabledBackground(colorButtonModeUnselected);
@@ -823,7 +825,7 @@ public class MainFrame extends JFrame
 		this.countSS.setText(String.valueOf(stats.getCountSS()));
 		this.countS.setText(String.valueOf(stats.getCountS()));
 		this.countA.setText(String.valueOf(stats.getCountA()));
-		this.totalScore.setText(String.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Utils.locale).format(stats.getTotalScore()), NumberFormat.getInstance(Utils.locale).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
+		this.totalScore.setText(MessageFormat.format(Utils.resourceBundle.getString("total_score_value"), NumberFormat.getInstance(Utils.locale).format(stats.getTotalScore()), NumberFormat.getInstance(Utils.locale).format(Utils.getScoreToNextLevel(Utils.getLevel(stats.getLevel()), stats.getTotalScore())), Utils.getLevel(stats.getLevel()) + 1));
 		DecimalFormat decimalFormat = new DecimalFormat();
 		decimalFormat.setMaximumFractionDigits(2);
 		this.hitCount300.setText(NumberFormat.getInstance(Utils.locale).format(stats.getCount300()) + " (" + decimalFormat.format(stats.getCount300() * 100f / stats.getTotalHits()) + "%)");
@@ -881,6 +883,11 @@ public class MainFrame extends JFrame
 		if(!this.buttonMania.isSelected())
 			return 3;
 		return 0;
+	}
+
+	public String getUsernameSearched()
+	{
+		return this.userNameFieldTextComponent.getText();
 	}
 
 	/**
@@ -1035,7 +1042,7 @@ public class MainFrame extends JFrame
 		if(updateImages)
 			updateHitsImages();
 		if(checkInfos)
-			Utils.getInfos(Utils.lastUser.getUsername(), false, false, true);
+			Utils.getInfos(getUsernameSearched(), false, false, true);
 	}
 
 	/**
@@ -1132,6 +1139,6 @@ public class MainFrame extends JFrame
 		Utils.logger.log(Level.INFO, "Setting level to " + level);
 		double progress = Utils.round(Utils.getProgressLevel(level) * 100, 2);
 		this.levelBar.setValue((int) progress);
-		this.levelBar.setString(String.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
+		this.levelBar.setString(MessageFormat.format(Utils.resourceBundle.getString("level"), Utils.getLevel(level), progress));
 	}
 }

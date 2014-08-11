@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Date;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -51,7 +52,7 @@ public class SaveChartActionListener implements ActionListener
 		}
 		catch(IOException e1)
 		{
-			JOptionPane.showMessageDialog((Component) e.getSource(), String.format(Utils.resourceBundle.getString("save_error"), path.getName()), Utils.resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog((Component) e.getSource(), MessageFormat.format(Utils.resourceBundle.getString("save_error"), path.getName()), Utils.resourceBundle.getString("save_error_title"), JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

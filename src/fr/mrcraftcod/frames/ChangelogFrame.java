@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -178,7 +179,7 @@ public class ChangelogFrame extends JDialog
 	private void setPanelChange(String version)
 	{
 		getContentPane().removeAll();
-		setTitle(String.format(Utils.resourceBundle.getString("changelog_for"), version));
+		setTitle(MessageFormat.format(Utils.resourceBundle.getString("changelog_for"), version));
 		JChangelogPanel panel = this.panels.containsKey(version) ? this.panels.get(version) : this.panels.get(this.panels.keySet().iterator().next());
 		getContentPane().add(panel, BorderLayout.CENTER);
 		if(this.panels.size() > 1)

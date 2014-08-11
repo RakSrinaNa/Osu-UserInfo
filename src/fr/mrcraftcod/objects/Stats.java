@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import fr.mrcraftcod.utils.Utils;
@@ -403,22 +402,6 @@ public class Stats implements Serializable, Cloneable
 		if(previousStats == null)
 			return 0;
 		return getTotalScore() - previousStats.getTotalScore();
-	}
-
-	/**
-	 * Used to get a formated date of a stats object.
-	 *
-	 * @param stats The stats to get the date.
-	 * @return A formatted date string.
-	 */
-	public String getLastStatsDate(Stats stats)
-	{
-		if(stats == null)
-			return "";
-		long lastDate = stats.getDate();
-		if(lastDate <= 0)
-			return "";
-		return String.format(Utils.resourceBundle.getString("last_stats_date"), DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Utils.locale).format(new Date(lastDate)));
 	}
 
 	/**
