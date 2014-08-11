@@ -177,6 +177,7 @@
 		<name>1.8b6</name>
 		<changes>
 			{*}Fix maximum combo and country rank that were always fetched from standard mode
+			{+}Add bulgarian translation. Thanks to DanielDimitrov!
 		</changes>
 	</version>
 	<version>
@@ -189,6 +190,7 @@
 			{*}Fix main frame not opening in centre of screen
 			{*}Fix setting frame freezing main window in some cases
 			{+}Add support for fonts (more to come)
+			{+}Add bulgarian translation. Thanks to DanielDimitrov!
 		</changes>
 	</version>
 </changelog>
