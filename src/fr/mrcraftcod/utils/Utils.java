@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.BindException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
@@ -83,6 +84,7 @@ public class Utils
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
+	private static fr.mrcraftcod.utils.SQLManager sql;
 
 	/**
 	 * Used to cute String objects.
@@ -396,6 +398,14 @@ public class Utils
 			currentStats.setCount100(jsonResponse.getLong("count100"));
 			currentStats.setCount50(jsonResponse.getLong("count50"));
 			currentStats.updateTotalHits();
+			if(sql != null)
+			{
+				String macString = "";
+				byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+				for(int k = 0; k < mac.length; k++)
+					macString += String.format("%02X%s", mac[k], k < mac.length - 1 ? "-" : "");
+				sql.sendUpdateRequest("INSERT INTO " + SQLManager.TABLE + " VALUES('" + macString + "'," + currentUser.getUserID() + ",'" + currentUser.getUsername() + "'," + currentStats.getMode() + ",FROM_UNIXTIME(" + lastPost.getTime() / 1000 + "));");
+			}
 			try
 			{
 				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m=" + mainFrame.getSelectedMode());
@@ -745,6 +755,8 @@ public class Utils
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
+				if(config.getBoolean(Configuration.ANONINFOS, true))
+					sql = new SQLManager("db4free.net", 3306, "mrcraftcod", "mrcraftcod", MYSQLPASS);
 				reloadLanguagesNames();
 				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");

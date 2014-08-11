@@ -1103,7 +1103,6 @@ public class MainFrame extends JFrame
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		this.username.setText("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
-		System.out.println("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		this.playCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
