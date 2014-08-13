@@ -720,7 +720,19 @@ public class Utils
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
 				String tempApiKey = config.getString(Configuration.APIKEY, "");
 				if(tempApiKey.equals(""))
+				{
+					final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+					if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+						try
+						{
+							desktop.browse(new URL("https://osu.ppy.sh/p/api").toURI());
+						}
+						catch(final Exception e)
+						{
+							e.printStackTrace();
+						}
 					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+				}
 				logger.log(Level.INFO, "Verifying API key...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
 				if(!isModeSet(args, "noapi") && !verifyApiKey(tempApiKey))
