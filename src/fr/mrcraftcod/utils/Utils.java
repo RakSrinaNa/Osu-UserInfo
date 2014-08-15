@@ -63,7 +63,7 @@ import fr.mrcraftcod.objects.User;
 public class Utils
 {
 	public final static String[] UNITS = {"", "K", "M", "G", "T", "P"};
-	private final static String logFileName = "log.log";
+	private final static String logFileName = "log.log", MYSQLUSER = "osuuserinfo", MYSQLPASS = "osuuserinfopass";
 	private static ServerSocket socket;
 	private static TaskUpdater threadUpdater;
 	public static String API_KEY = "";
@@ -783,7 +783,7 @@ public class Utils
 
 	public static void initSQL() throws SQLException
 	{
-		sql = new SQLManager("osuuserinfo.csox69ljfp6h.eu-west-1.rds.amazonaws.com", 3306, "OsuUserInfo", "mrcraftcod", MYSQLPASS);
+		sql = new SQLManager("osuuserinfo.csox69ljfp6h.eu-west-1.rds.amazonaws.com", 3306, "OsuUserInfo", MYSQLUSER, MYSQLPASS);
 	}
 
 	/**
