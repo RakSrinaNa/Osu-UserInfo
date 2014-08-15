@@ -399,14 +399,6 @@ public class Utils
 			currentStats.setCount100(jsonResponse.getLong("count100"));
 			currentStats.setCount50(jsonResponse.getLong("count50"));
 			currentStats.updateTotalHits();
-			if(sql != null)
-			{
-				String macString = "";
-				byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
-				for(int k = 0; k < mac.length; k++)
-					macString += String.format("%02X%s", mac[k], k < mac.length - 1 ? "-" : "");
-				sql.sendUpdateRequest("INSERT INTO " + SQLManager.TABLE + " VALUES('" + macString + "'," + currentUser.getUserID() + ",'" + currentUser.getUsername() + "'," + currentStats.getMode() + ",FROM_UNIXTIME(" + lastPost.getTime() / 1000 + "));");
-			}
 			try
 			{
 				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m=" + mainFrame.getSelectedMode());
@@ -430,6 +422,14 @@ public class Utils
 			catch(Exception e)
 			{
 				logger.log(Level.INFO, "Can't get additional informations for user!", e);
+			}
+			if(sql != null)
+			{
+				String macString = "";
+				byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+				for(int k = 0; k < mac.length; k++)
+					macString += String.format("%02X%s", mac[k], k < mac.length - 1 ? "-" : "");
+				sql.sendUser(currentUser, currentStats, macString);
 			}
 			if(!forceDisplay && currentStats.equals(Utils.lastStats))
 				return false;
@@ -783,7 +783,7 @@ public class Utils
 
 	public static void initSQL() throws SQLException
 	{
-		sql = new SQLManager("db4free.net", 3306, "mrcraftcod", "mrcraftcod", MYSQLPASS);
+		sql = new SQLManager("osuuserinfo.csox69ljfp6h.eu-west-1.rds.amazonaws.com", 3306, "OsuUserInfo", "mrcraftcod", MYSQLPASS);
 	}
 
 	/**
