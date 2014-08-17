@@ -367,16 +367,21 @@ public class Utils
 			mainFrame.username.setBackground(Utils.noticeColor);
 			mainFrame.username.setBorder(Utils.noticeBorder);
 			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
-			if(tracked)
-				try
-				{
-					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			else if(Utils.lastUser.getUsername().equalsIgnoreCase(user))
+			boolean newUser = !Utils.lastUser.getUsername().equalsIgnoreCase(user);
+			if(newUser)
+			{
+				if(tracked)
+					try
+					{
+						currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				currentUser.addMYSQLStats(mainFrame.getSelectedMode(), sql.getUserStats(jsonResponse.getInt("user_id"), mainFrame.getSelectedMode()));
+			}
+			else if(!newUser)
 				currentUser = Utils.lastUser;
 			Stats previousStats = currentUser.getLastStats(mainFrame.getSelectedMode());
 			mainFrame.track.setEnabled(true);
@@ -399,6 +404,7 @@ public class Utils
 			currentStats.setCount100(jsonResponse.getLong("count100"));
 			currentStats.setCount50(jsonResponse.getLong("count50"));
 			currentStats.updateTotalHits();
+			currentStats.setMode(mainFrame.getSelectedMode());
 			try
 			{
 				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m=" + mainFrame.getSelectedMode());
