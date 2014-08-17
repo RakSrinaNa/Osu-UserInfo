@@ -774,8 +774,6 @@ public class MainFrame extends JFrame
 	{
 		this.userNameFieldModel.addElement(user.getUsername());
 		this.usernameField.setSelectedItem(user.getUsername());
-		this.lastStatsDate.setEnabled(this.track.isSelected());
-		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
 	}
 
@@ -821,6 +819,7 @@ public class MainFrame extends JFrame
 	 */
 	public void displayStats(User user, Stats stats)
 	{
+		setDateBoxState(user.getAllStats(stats.getMode()).size() > 1);
 		updateLevel(stats.getLevel());
 		this.countSS.setText(String.valueOf(stats.getCountSS()));
 		this.countS.setText(String.valueOf(stats.getCountS()));
@@ -907,8 +906,6 @@ public class MainFrame extends JFrame
 	public void removeTrackedUser(User user)
 	{
 		this.usernameField.setSelectedItem(user.getUsername());
-		this.lastStatsDate.setEnabled(this.track.isSelected());
-		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setSelected(false);
 	}
@@ -921,6 +918,12 @@ public class MainFrame extends JFrame
 	public void setAvatarImage(BufferedImage image)
 	{
 		this.avatarImage = image;
+	}
+
+	public void setDateBoxState(boolean state)
+	{
+		this.lastStatsDate.setEnabled(state);
+		this.lastStatsDateBox.setEnabled(state);
 	}
 
 	/**
