@@ -21,7 +21,7 @@ public class SQLManager
 
 	public ResultSet getUserStats(int userID, int mode)
 	{
-		return sendQuerryRequest("SELECT Date,PP,Rank,Country_rank,Lvl,Ranked_score,Total_score,Count300,Count100,Count50,CountSS,CountS,CountA,Playcount,Maximum_combo,Accuracy FROM " + userID + "_" + mode + " ORDER BY Date ASC");
+		return sendQuerryRequest("SELECT Date,PP,Rank,Country_rank,Lvl,Ranked_score,Total_score,Count300,Count100,Count50,CountSS,CountS,CountA,Playcount,Maximum_combo,Accuracy FROM " + userID + "_" + mode + " ORDER BY Date ASC LIMIT " + Utils.numberTrackedStatsToKeep);
 	}
 
 	public ResultSet sendQuerryRequest(String request)
