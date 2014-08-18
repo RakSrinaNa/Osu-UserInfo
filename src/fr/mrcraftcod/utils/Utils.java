@@ -366,7 +366,7 @@ public class Utils
 			final JSONObject jsonResponse = new JSONObject(Utils.sendPost("get_user", Utils.API_KEY, user, mainFrame.getSelectedMode()));
 			mainFrame.username.setBackground(Utils.noticeColor);
 			mainFrame.username.setBorder(Utils.noticeBorder);
-			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
+			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username")) && false;
 			boolean newUser = !Utils.lastUser.getUsername().equalsIgnoreCase(user);
 			if(newUser)
 			{
@@ -451,11 +451,7 @@ public class Utils
 			mainFrame.setTextUser(currentUser.getUsername());
 			currentUser.setStats(!showerror, currentStats, mainFrame.getSelectedMode());
 			if(tracked)
-			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
-				mainFrame.lastStatsDate.setEnabled(mainFrame.track.isSelected());
-				mainFrame.lastStatsDateBox.setEnabled(mainFrame.track.isSelected());
-			}
 			Utils.lastStats = currentStats;
 			Utils.lastUser = currentUser;
 		}
