@@ -5,7 +5,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -33,7 +32,7 @@ import fr.mrcraftcod.utils.Utils;
 public class SettingsFrame extends JDialog
 {
 	private static final long serialVersionUID = -339025516182085233L;
-	private JCheckBox anonCheck, notificationCheck, keepDateCheck, autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
+	private JCheckBox notificationCheck, keepDateCheck, autoCompletionCheck, devModeCheck, systemTrayCheck, loadingCheck;
 	private JComboBox<String> languageBox, fontsBox;
 	private JButton buttonReturn;
 	private JLabel textNumberKeepStats;
@@ -79,9 +78,6 @@ public class SettingsFrame extends JDialog
 		this.devModeCheck = new JCheckBox();
 		this.devModeCheck.setText(Utils.resourceBundle.getString("settings_dev_mode"));
 		this.devModeCheck.setSelected(Utils.config.getBoolean(Configuration.DEVMODE, false));
-		this.anonCheck = new JCheckBox();
-		this.anonCheck.setText(Utils.resourceBundle.getString("settings_anon"));
-		this.anonCheck.setSelected(Utils.config.getBoolean(Configuration.ANONINFOS, true));
 		this.systemTrayCheck = new JCheckBox();
 		this.systemTrayCheck.setText(Utils.resourceBundle.getString("settings_reduce_tray"));
 		this.systemTrayCheck.setSelected(Utils.config.getBoolean(Configuration.REDUCETRAY, false));
@@ -114,8 +110,6 @@ public class SettingsFrame extends JDialog
 		getContentPane().add(this.notificationCheck, c);
 		c.gridy = lign++;
 		getContentPane().add(this.systemTrayCheck, c);
-		c.gridy = lign++;
-		getContentPane().add(this.anonCheck, c);
 		c.insets = new Insets(0, 3, 0, 0);
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -193,7 +187,7 @@ public class SettingsFrame extends JDialog
 	 */
 	public boolean isSettingsModified()
 	{
-		return !(Utils.config.getBoolean(Configuration.ANONINFOS, true) == this.anonCheck.isSelected()) || !this.favouriteUser.getText().equals(Utils.config.getString(Configuration.FAVOURITEUSER, null)) || !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || isLocaleModified() || isFontModified() || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
+		return !this.favouriteUser.getText().equals(Utils.config.getString(Configuration.FAVOURITEUSER, null)) || !(Utils.config.getBoolean(Configuration.SHOWNOTIFICATION, false) == this.notificationCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.KEEPDATE, false) == this.keepDateCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.LOADINGSCREEN, true) == this.loadingCheck.isSelected()) || isLocaleModified() || isFontModified() || !(Utils.config.getBoolean(Configuration.REDUCETRAY, false) == this.systemTrayCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.DEVMODE, false) == this.devModeCheck.isSelected()) || !(Utils.config.getBoolean(Configuration.AUTOCOMPLETION, false) == this.autoCompletionCheck.isSelected()) || !String.valueOf(Utils.numberTrackedStatsToKeep).equals(this.numberKeepStats.getText());
 	}
 
 	/**
@@ -214,14 +208,12 @@ public class SettingsFrame extends JDialog
 	public void save()
 	{
 		boolean newInterface = isLocaleModified() || isFontModified();
-		boolean newAnon = !(Utils.config.getBoolean(Configuration.ANONINFOS, true) == this.anonCheck.isSelected());
 		Utils.config.writeVar(Configuration.AUTOCOMPLETION, String.valueOf(this.autoCompletionCheck.isSelected()));
 		Utils.config.writeVar(Configuration.DEVMODE, String.valueOf(this.devModeCheck.isSelected()));
 		Utils.config.writeVar(Configuration.REDUCETRAY, String.valueOf(this.systemTrayCheck.isSelected()));
 		Utils.config.writeVar(Configuration.LOADINGSCREEN, String.valueOf(this.loadingCheck.isSelected()));
 		Utils.config.writeVar(Configuration.KEEPDATE, String.valueOf(this.keepDateCheck.isSelected()));
 		Utils.config.writeVar(Configuration.SHOWNOTIFICATION, String.valueOf(this.notificationCheck.isSelected()));
-		Utils.config.writeVar(Configuration.ANONINFOS, String.valueOf(this.anonCheck.isSelected()));
 		Utils.config.writeVar(Configuration.LOCALE, Language.getLanguageByName((String) this.languageBox.getSelectedItem()).getID());
 		Utils.config.writeVar(Configuration.FONT, this.fontsBox.getSelectedItem());
 		if(!this.numberKeepStats.getText().equals(""))
@@ -232,18 +224,6 @@ public class SettingsFrame extends JDialog
 		if(!this.favouriteUser.getText().equals(""))
 			Utils.config.writeVar(Configuration.FAVOURITEUSER, this.favouriteUser.getText());
 		Utils.mainFrame.updateAutoCompletionStatus(this.autoCompletionCheck.isSelected());
-		if(newAnon)
-			if(this.anonCheck.isSelected())
-				try
-				{
-					Utils.initSQL();
-				}
-				catch(SQLException e1)
-				{
-					e1.printStackTrace();
-				}
-			else
-				Utils.sql = null;
 		if(newInterface)
 			try
 			{

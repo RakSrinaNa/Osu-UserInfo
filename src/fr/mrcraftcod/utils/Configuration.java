@@ -19,7 +19,7 @@ import fr.mrcraftcod.Main;
  */
 public class Configuration
 {
-	public static final String ANONINFOS = "anoninfos", FONT = "font", FAVOURITEUSER = "favouriteUser", LASTMODE = "lastmode", SHOWNOTIFICATION = "showNotification", KEEPDATE = "keepDate", LOADINGSCREEN = "loadingScreen", LOCALE = "locale", REDUCETRAY = "reduceTray", APIKEY = "api_key", DEVMODE = "devMode", LASTVERSION = "last_version", AUTOCOMPLETION = "autoCompletion", TRACKEDUSERS = "tracked_users", STATSTOKEEP = "statsToKeep";
+	public static final String FONT = "font", FAVOURITEUSER = "favouriteUser", LASTMODE = "lastmode", SHOWNOTIFICATION = "showNotification", KEEPDATE = "keepDate", LOADINGSCREEN = "loadingScreen", LOCALE = "locale", REDUCETRAY = "reduceTray", APIKEY = "api_key", DEVMODE = "devMode", LASTVERSION = "last_version", AUTOCOMPLETION = "autoCompletion", TRACKEDUSERS = "tracked_users", STATSTOKEEP = "statsToKeep";
 	public static File appData;
 	private File configFile;
 	private List<String> currentConfig;
