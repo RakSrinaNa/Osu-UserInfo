@@ -406,7 +406,7 @@ public class MainFrame extends JFrame
 		constraint.gridheight = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
-		trackUserPanel.add(this.track, constraint);
+		// trackUserPanel.add(this.track, constraint);
 		constraint.gridy = line++;
 		trackUserPanel.add(this.autoUpdateCheck, constraint);
 		constraint.gridwidth = 1;
