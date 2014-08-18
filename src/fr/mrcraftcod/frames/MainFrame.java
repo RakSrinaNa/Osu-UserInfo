@@ -406,7 +406,7 @@ public class MainFrame extends JFrame
 		constraint.gridheight = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 1;
-		trackUserPanel.add(this.track, constraint);
+		// trackUserPanel.add(this.track, constraint);
 		constraint.gridy = line++;
 		trackUserPanel.add(this.autoUpdateCheck, constraint);
 		constraint.gridwidth = 1;
@@ -774,8 +774,6 @@ public class MainFrame extends JFrame
 	{
 		this.userNameFieldModel.addElement(user.getUsername());
 		this.usernameField.setSelectedItem(user.getUsername());
-		this.lastStatsDate.setEnabled(this.track.isSelected());
-		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
 	}
 
@@ -821,6 +819,7 @@ public class MainFrame extends JFrame
 	 */
 	public void displayStats(User user, Stats stats)
 	{
+		setDateBoxState(user.getAllStats(stats.getMode()).size() > 1);
 		updateLevel(stats.getLevel());
 		this.countSS.setText(String.valueOf(stats.getCountSS()));
 		this.countS.setText(String.valueOf(stats.getCountS()));
@@ -907,8 +906,6 @@ public class MainFrame extends JFrame
 	public void removeTrackedUser(User user)
 	{
 		this.usernameField.setSelectedItem(user.getUsername());
-		this.lastStatsDate.setEnabled(this.track.isSelected());
-		this.lastStatsDateBox.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setEnabled(this.track.isSelected());
 		this.autoUpdateCheck.setSelected(false);
 	}
@@ -921,6 +918,12 @@ public class MainFrame extends JFrame
 	public void setAvatarImage(BufferedImage image)
 	{
 		this.avatarImage = image;
+	}
+
+	public void setDateBoxState(boolean state)
+	{
+		this.lastStatsDate.setEnabled(state);
+		this.lastStatsDateBox.setEnabled(state);
 	}
 
 	/**
@@ -1103,7 +1106,6 @@ public class MainFrame extends JFrame
 	{
 		Utils.logger.log(Level.INFO, "Updating tracked infos...");
 		this.username.setText("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
-		System.out.println("<html><body><nobr>  " + user.getUsername() + " ~ #" + NumberFormat.getInstance(Utils.locale).format(currentStats.getRank()) + " " + currentStats.compareRank(previousStats) + "  </nobr></body></html>");
 		this.accuracy.setText(String.valueOf(Utils.round(currentStats.getAccuracy(), 2)) + "%" + currentStats.compareAccuracy(previousStats));
 		this.playCount.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getPlayCount()) + currentStats.comparePlayCount(previousStats));
 		this.rankedScore.setText(NumberFormat.getInstance(Utils.locale).format(currentStats.getRankedScore()) + currentStats.compareRankedScore(previousStats));
