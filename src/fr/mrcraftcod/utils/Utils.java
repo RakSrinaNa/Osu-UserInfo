@@ -724,7 +724,7 @@ public class Utils
 		setLookAndFeel();
 		int currentStep = 0;
 		boolean openChangelog = false;
-		startup = new StartupFrame(4);
+		startup = new StartupFrame(5);
 		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
 		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup);
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
@@ -758,8 +758,8 @@ public class Utils
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
 				SystemTrayOsuStats.init();
-				if(config.getBoolean(Configuration.ANONINFOS, true))
-					initSQL();
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_database_connect"));
+				initSQL();
 				reloadLanguagesNames();
 				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
