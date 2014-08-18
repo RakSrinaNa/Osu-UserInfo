@@ -910,7 +910,6 @@ public class Utils
 	{
 		resourceBundle.clearCache();
 		locale = language.getLocale();
-		System.out.println(locale);
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		reloadLanguagesNames();
 		reloadFont();

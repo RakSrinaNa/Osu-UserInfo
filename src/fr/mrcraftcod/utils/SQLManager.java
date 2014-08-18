@@ -26,7 +26,6 @@ public class SQLManager
 
 	public ResultSet sendQuerryRequest(String request)
 	{
-		System.out.println("REQUEST \n" + request);
 		ResultSet result = null;
 		try
 		{
@@ -42,7 +41,6 @@ public class SQLManager
 
 	public int sendUpdateRequest(String request)
 	{
-		System.out.println("UPDATE \n" + request);
 		int result = 0;
 		try
 		{
