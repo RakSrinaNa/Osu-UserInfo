@@ -66,7 +66,7 @@ public class Utils
 	private final static String logFileName = "log.log", MYSQLUSER = "osuuserinfo", MYSQLPASS = "osuuserinfopass";
 	private static ServerSocket socket;
 	private static TaskUpdater threadUpdater;
-	public static String API_KEY = "";
+	public static String API_KEY = "", UUID = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
@@ -430,13 +430,7 @@ public class Utils
 				logger.log(Level.INFO, "Can't get additional informations for user!", e);
 			}
 			if(sql != null)
-			{
-				String macString = "";
-				byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
-				for(int k = 0; k < mac.length; k++)
-					macString += String.format("%02X%s", mac[k], k < mac.length - 1 ? "-" : "");
-				sql.sendUser(currentUser, currentStats, macString);
-			}
+				sql.sendUser(currentUser, currentStats, UUID);
 			if(!forceDisplay && currentStats.equals(Utils.lastStats))
 				return false;
 			mainFrame.username.setForeground(getRandomColor());
@@ -757,6 +751,9 @@ public class Utils
 				}
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
+				byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+				for(int k = 0; k < mac.length; k++)
+					UUID += String.format("%02X%s", mac[k], k < mac.length - 1 ? "-" : "");
 				SystemTrayOsuStats.init();
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_database_connect"));
 				initSQL();
