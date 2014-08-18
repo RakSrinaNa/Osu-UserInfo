@@ -16,9 +16,11 @@ import java.io.InputStreamReader;
 import java.net.BindException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -61,10 +63,10 @@ import fr.mrcraftcod.objects.User;
 public class Utils
 {
 	public final static String[] UNITS = {"", "K", "M", "G", "T", "P"};
-	private final static String logFileName = "log.log";
+	private final static String logFileName = "log.log", MYSQLUSER = "osuuserinfo", MYSQLPASS = "osuuserinfopass";
 	private static ServerSocket socket;
 	private static TaskUpdater threadUpdater;
-	public static String API_KEY = "";
+	public static String API_KEY = "", UUID = "";
 	public static int numberTrackedStatsToKeep;
 	public static Configuration config;
 	public static ArrayList<Image> icons;
@@ -83,6 +85,7 @@ public class Utils
 	public static BufferedImage avatarDefaultImage;
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
+	public static SQLManager sql;
 
 	/**
 	 * Used to cute String objects.
@@ -363,17 +366,22 @@ public class Utils
 			final JSONObject jsonResponse = new JSONObject(Utils.sendPost("get_user", Utils.API_KEY, user, mainFrame.getSelectedMode()));
 			mainFrame.username.setBackground(Utils.noticeColor);
 			mainFrame.username.setBorder(Utils.noticeBorder);
-			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username"));
-			if(tracked)
-				try
-				{
-					currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			else if(Utils.lastUser.getUsername().equalsIgnoreCase(user))
+			boolean tracked = Utils.isUserTracked(jsonResponse.getString("username")) && false;
+			boolean newUser = !Utils.lastUser.getUsername().equalsIgnoreCase(user);
+			if(newUser)
+			{
+				if(tracked)
+					try
+					{
+						currentUser = User.deserialize(new File(Configuration.appData, jsonResponse.getString("username")));
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				currentUser.addMYSQLStats(mainFrame.getSelectedMode(), sql.getUserStats(jsonResponse.getInt("user_id"), mainFrame.getSelectedMode()));
+			}
+			else if(!newUser)
 				currentUser = Utils.lastUser;
 			Stats previousStats = currentUser.getLastStats(mainFrame.getSelectedMode());
 			mainFrame.track.setEnabled(true);
@@ -396,6 +404,7 @@ public class Utils
 			currentStats.setCount100(jsonResponse.getLong("count100"));
 			currentStats.setCount50(jsonResponse.getLong("count50"));
 			currentStats.updateTotalHits();
+			currentStats.setMode(mainFrame.getSelectedMode());
 			try
 			{
 				String[] pageProfile = getHTMLCode("https://osu.ppy.sh/pages/include/profile-general.php?u=" + currentUser.getUserID() + "&m=" + mainFrame.getSelectedMode());
@@ -420,6 +429,8 @@ public class Utils
 			{
 				logger.log(Level.INFO, "Can't get additional informations for user!", e);
 			}
+			if(sql != null)
+				sql.sendUser(currentUser, currentStats, UUID);
 			if(!forceDisplay && currentStats.equals(Utils.lastStats))
 				return false;
 			mainFrame.username.setForeground(getRandomColor());
@@ -434,11 +445,7 @@ public class Utils
 			mainFrame.setTextUser(currentUser.getUsername());
 			currentUser.setStats(!showerror, currentStats, mainFrame.getSelectedMode());
 			if(tracked)
-			{
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
-				mainFrame.lastStatsDate.setEnabled(mainFrame.track.isSelected());
-				mainFrame.lastStatsDateBox.setEnabled(mainFrame.track.isSelected());
-			}
 			Utils.lastStats = currentStats;
 			Utils.lastUser = currentUser;
 		}
@@ -711,7 +718,7 @@ public class Utils
 		setLookAndFeel();
 		int currentStep = 0;
 		boolean openChangelog = false;
-		startup = new StartupFrame(4);
+		startup = new StartupFrame(5);
 		startup.setStartupText(currentStep++, resourceBundle.getString("startup_fecth_updates"));
 		int result = isModeSet(args, "noupdate") ? Updater.NOUPDATE : Updater.update(startup);
 		if(result != Updater.UPDATEDDEV && result != Updater.UPDATEDPUBLIC)
@@ -720,7 +727,19 @@ public class Utils
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_getting_api_key"));
 				String tempApiKey = config.getString(Configuration.APIKEY, "");
 				if(tempApiKey.equals(""))
+				{
+					final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+					if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+						try
+						{
+							desktop.browse(new URL("https://osu.ppy.sh/p/api").toURI());
+						}
+						catch(final Exception e)
+						{
+							e.printStackTrace();
+						}
 					tempApiKey = JOptionPane.showInputDialog(null, resourceBundle.getString("startup_ask_api_key"), resourceBundle.getString("startup_ask_api_key_title"), JOptionPane.INFORMATION_MESSAGE);
+				}
 				logger.log(Level.INFO, "Verifying API key...");
 				startup.setStartupText(currentStep++, resourceBundle.getString("startup_verify_api_key"));
 				if(!isModeSet(args, "noapi") && !verifyApiKey(tempApiKey))
@@ -732,7 +751,12 @@ public class Utils
 				}
 				config.writeVar(Configuration.APIKEY, tempApiKey);
 				API_KEY = tempApiKey;
+				byte[] mac = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+				for(int k = 0; k < mac.length; k++)
+					UUID += String.format("%02X%s", mac[k], k < mac.length - 1 ? "-" : "");
 				SystemTrayOsuStats.init();
+				startup.setStartupText(currentStep++, resourceBundle.getString("startup_database_connect"));
+				initSQL();
 				reloadLanguagesNames();
 				numberTrackedStatsToKeep = config.getInt(Configuration.STATSTOKEEP, 0);
 				logger.log(Level.INFO, "Launching interface...");
@@ -754,6 +778,11 @@ public class Utils
 		startup.exit();
 		if(openChangelog)
 			getChangelogFrame(mainFrame);
+	}
+
+	public static void initSQL() throws SQLException
+	{
+		sql = new SQLManager("osuuserinfo.csox69ljfp6h.eu-west-1.rds.amazonaws.com", 3306, "OsuUserInfo", MYSQLUSER, MYSQLPASS);
 	}
 
 	/**
@@ -881,7 +910,6 @@ public class Utils
 	{
 		resourceBundle.clearCache();
 		locale = language.getLocale();
-		System.out.println(locale);
 		resourceBundle = ResourceBundle.getBundle("resources/lang/lang", locale);
 		reloadLanguagesNames();
 		reloadFont();

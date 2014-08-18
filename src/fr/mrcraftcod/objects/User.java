@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -56,6 +58,35 @@ public class User implements Serializable
 		User user = (User) ois.readObject();
 		ois.close();
 		return user;
+	}
+
+	public void addMYSQLStats(int mode, ResultSet results) throws SQLException
+	{
+		if(results == null)
+			return;
+		while(results.next())
+		{
+			Stats s = new Stats();
+			s.setMode(mode);
+			s.setDate(results.getLong(1));
+			s.setPp(results.getDouble(2));
+			s.setRank(results.getDouble(3));
+			s.setCountryRank(results.getDouble(4));
+			s.setLevel(results.getDouble(5));
+			s.setRankedScore(results.getLong(6));
+			s.setTotalScore(results.getLong(7));
+			s.setCount300(results.getLong(8));
+			s.setCount100(results.getLong(9));
+			s.setCount50(results.getLong(10));
+			s.setCountS(results.getInt(11));
+			s.setCountSS(results.getInt(12));
+			s.setCountA(results.getInt(13));
+			s.setPlaycount(results.getInt(14));
+			s.setMaximumCombo(results.getInt(15));
+			s.setAccuracy(results.getDouble(16));
+			s.updateTotalHits();
+			setStats(true, s, mode);
+		}
 	}
 
 	/**
