@@ -181,6 +181,13 @@
 		</changes>
 	</version>
 	<version>
+		<name>1.8b7</name>
+		<changes>
+			{+}Use database to store requested infos
+			{-}Old track system
+		</changes>
+	</version>
+	<version>
 		<name>1.8</name>
 		<changes>
 			{+}Show country rank
@@ -191,6 +198,7 @@
 			{*}Fix setting frame freezing main window in some cases
 			{+}Add support for fonts (more to come)
 			{+}Add bulgarian translation. Thanks to DanielDimitrov!
+			{*}Modify the way tracked users work, no more option to check
 		</changes>
 	</version>
 </changelog>
