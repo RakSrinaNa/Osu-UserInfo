@@ -188,6 +188,12 @@
 		</changes>
 	</version>
 	<version>
+		<name>1.8b8</name>
+		<changes>
+			{*}Update database resources
+		</changes>
+	</version>
+	<version>
 		<name>1.8</name>
 		<changes>
 			{+}Show country rank
@@ -199,6 +205,7 @@
 			{+}Add support for fonts (more to come)
 			{+}Add bulgarian translation. Thanks to DanielDimitrov!
 			{*}Modify the way tracked users work, no more option to check
+			{*}Now use online database
 		</changes>
 	</version>
 </changelog>
