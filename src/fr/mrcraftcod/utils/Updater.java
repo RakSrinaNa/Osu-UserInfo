@@ -104,6 +104,7 @@ public class Updater
 	private synchronized static boolean getLastJAR(File file, String link)
 	{
 		Utils.startup.addStartupText(Utils.resourceBundle.getString("downloading"));
+		Utils.startup.setTitle(Utils.resourceBundle.getString("updating"));
 		boolean result = false;
 		BufferedInputStream is = null;
 		FileOutputStream fos = null;
