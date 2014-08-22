@@ -345,12 +345,12 @@ public class Utils
 	 * Used to get infos for a user from the API.
 	 *
 	 * @param user The user to get the infos.
-	 * @param showerror Show or not the red bar if error is thrown.
+	 * @param forceNewStats Show or not the red bar if error is thrown.
 	 * @param forceDisplay Force the function to update stats on screen even if they are the same.
 	 * @param forceFetch Force the program to fetch datas even if the cooldown time isn't finished.
 	 * @return True if the stats have changed, false if the stats are the same or cannot be found.
 	 */
-	public static boolean getInfosServer(String user, boolean showerror, boolean forceDisplay, boolean forceFetch)
+	public static boolean getInfosServer(String user, boolean forceNewStats, boolean forceDisplay, boolean forceFetch)
 	{
 		if(!forceFetch && !isValidTime() || !isValidUser(user))
 			return false;
@@ -429,7 +429,7 @@ public class Utils
 			{
 				logger.log(Level.INFO, "Can't get additional informations for user!", e);
 			}
-			if(sql != null)
+			if(sql != null && currentUser.isNewStats(currentStats))
 				sql.sendUser(currentUser, currentStats, UUID);
 			if(!forceDisplay && currentStats.equals(Utils.lastStats))
 				return false;
@@ -443,7 +443,7 @@ public class Utils
 			if(currentStats.equals(Utils.lastStats))
 				return false;
 			mainFrame.setTextUser(currentUser.getUsername());
-			currentUser.setStats(!showerror, currentStats, mainFrame.getSelectedMode());
+			currentUser.setStats(!forceNewStats, currentStats, mainFrame.getSelectedMode());
 			if(tracked)
 				currentUser.serialize(new File(Configuration.appData, currentUser.getUsername()));
 			Utils.lastStats = currentStats;
@@ -451,7 +451,7 @@ public class Utils
 		}
 		catch(Exception e)
 		{
-			if(showerror)
+			if(forceNewStats)
 			{
 				Utils.logger.log(Level.SEVERE, "Error reading infos!", e);
 				mainFrame.usernameField.setBackground(Color.RED);
