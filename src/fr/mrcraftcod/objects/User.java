@@ -317,11 +317,18 @@ public class User implements Serializable
 	 *
 	 * @see Stats
 	 */
-	public boolean hasStatsChanged(boolean hard, Stats previousStats, Stats newStats)
+	public boolean hasStatsChanged(boolean forceNewStats, Stats previousStats, Stats newStats)
 	{
-		if(previousStats == null || !hard)
+		if(previousStats == null || !forceNewStats)
 			return true;
 		return !newStats.equals(previousStats);
+	}
+
+	public boolean isNewStats(Stats currentStats)
+	{
+		if(currentStats == null)
+			return true;
+		return !currentStats.equals(getLastStats(currentStats.getMode()));
 	}
 
 	/**
@@ -377,21 +384,21 @@ public class User implements Serializable
 	 *
 	 * @see Stats
 	 */
-	public void setStats(boolean hard, Stats stats, int mode)
+	public void setStats(boolean forceNewStats, Stats stats, int mode)
 	{
 		switch(mode)
 		{
 			case 0:
-				setStatsOsuStandard(hard, stats);
+				setStatsOsuStandard(forceNewStats, stats);
 				return;
 			case 1:
-				setStatsTaiko(hard, stats);
+				setStatsTaiko(forceNewStats, stats);
 				return;
 			case 2:
-				setStatsCTB(hard, stats);
+				setStatsCTB(forceNewStats, stats);
 				return;
 			case 3:
-				setStatsOsuMania(hard, stats);
+				setStatsOsuMania(forceNewStats, stats);
 				return;
 		}
 		throw new IllegalArgumentException("Mode must be between 0 and 3!");
@@ -404,12 +411,12 @@ public class User implements Serializable
 	 *
 	 * @see Stats
 	 */
-	public void setStatsCTB(boolean hard, Stats stats)
+	public void setStatsCTB(boolean forceNewStats, Stats stats)
 	{
 		if(Utils.numberTrackedStatsToKeep > 0)
 			while(this.stats_ctb.size() > Utils.numberTrackedStatsToKeep + 1)
 				this.stats_ctb.remove(0);
-		if(hasStatsChanged(hard, getLastStats(2), stats))
+		if(hasStatsChanged(forceNewStats, getLastStats(2), stats))
 			this.stats_ctb.add(stats);
 		else
 		{
@@ -427,12 +434,12 @@ public class User implements Serializable
 	 *
 	 * @see Stats
 	 */
-	public void setStatsOsuMania(boolean hard, Stats stats)
+	public void setStatsOsuMania(boolean forceNewStats, Stats stats)
 	{
 		if(Utils.numberTrackedStatsToKeep > 0)
 			while(this.stats_mania.size() > Utils.numberTrackedStatsToKeep + 1)
 				this.stats_mania.remove(0);
-		if(hasStatsChanged(hard, getLastStats(3), stats))
+		if(hasStatsChanged(forceNewStats, getLastStats(3), stats))
 			this.stats_mania.add(stats);
 		else
 		{
@@ -450,12 +457,12 @@ public class User implements Serializable
 	 *
 	 * @see Stats
 	 */
-	public void setStatsOsuStandard(boolean hard, Stats stats)
+	public void setStatsOsuStandard(boolean forceNewStats, Stats stats)
 	{
 		if(Utils.numberTrackedStatsToKeep > 0)
 			while(this.stats_normal.size() > Utils.numberTrackedStatsToKeep + 1)
 				this.stats_normal.remove(0);
-		if(hasStatsChanged(hard, getLastStats(0), stats))
+		if(hasStatsChanged(forceNewStats, getLastStats(0), stats))
 			this.stats_normal.add(stats);
 		else
 		{
@@ -473,12 +480,12 @@ public class User implements Serializable
 	 *
 	 * @see Stats
 	 */
-	public void setStatsTaiko(boolean hard, Stats stats)
+	public void setStatsTaiko(boolean forceNewStats, Stats stats)
 	{
 		if(Utils.numberTrackedStatsToKeep > 0)
 			while(this.stats_taiko.size() > Utils.numberTrackedStatsToKeep + 1)
 				this.stats_taiko.remove(0);
-		if(hasStatsChanged(hard, getLastStats(1), stats))
+		if(hasStatsChanged(forceNewStats, getLastStats(1), stats))
 			this.stats_taiko.add(stats);
 		else
 		{
