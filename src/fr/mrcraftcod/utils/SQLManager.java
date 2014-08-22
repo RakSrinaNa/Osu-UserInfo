@@ -26,6 +26,7 @@ public class SQLManager
 
 	public ResultSet sendQuerryRequest(String request)
 	{
+		Utils.logger.log(Level.INFO, "Sending MYSQL request...");
 		ResultSet result = null;
 		try
 		{
@@ -41,6 +42,7 @@ public class SQLManager
 
 	public int sendUpdateRequest(String request)
 	{
+		Utils.logger.log(Level.INFO, "Sending MYSQL update...");
 		int result = 0;
 		try
 		{
@@ -56,6 +58,7 @@ public class SQLManager
 
 	public int sendUser(User currentUser, Stats currentStats, String macString)
 	{
+		Utils.logger.log(Level.INFO, "Sending user to database...");
 		String table = currentUser.getUserID() + "_" + currentStats.getMode();
 		String request1 = "CREATE TABLE IF NOT EXISTS " + table + "(Date VARCHAR(20), Frm VARCHAR(17), PP DECIMAL(8,3) UNSIGNED, Rank INT(9) UNSIGNED, Country_rank INT(9), Lvl DECIMAL(10,5) UNSIGNED, Ranked_score VARCHAR(36), Total_score VARCHAR(36), Total_hits VARCHAR(36), Count300 VARCHAR(36), Count100 VARCHAR(36), Count50 VARCHAR(36), Playcount INT(7) UNSIGNED, CountSS INT(7) UNSIGNED, CountS INT(7) UNSIGNED, CountA INT(7) UNSIGNED, Maximum_combo INT(5) UNSIGNED, Accuracy VARCHAR(36)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		String request2 = "INSERT INTO " + table + " SET Date='" + currentStats.getDate() + "', Frm='" + macString + "', PP='" + currentStats.getPP() + "', Rank='" + currentStats.getRank() + "', Country_rank='" + currentStats.getCountryRank() + "', Lvl='" + currentStats.getLevel() + "', Ranked_score='" + currentStats.getRankedScore() + "', Total_score='" + currentStats.getTotalScore() + "', Total_hits='" + currentStats.getTotalHits() + "', Count300='" + currentStats.getCount300() + "', Count100='" + currentStats.getCount100() + "', Count50='" + currentStats.getCount50() + "', Playcount='" + currentStats.getPlayCount() + "', CountSS='" + currentStats.getCountSS() + "', CountS='" + currentStats.getCountS() + "', CountA='" + currentStats.getCountA() + "', Maximum_combo='" + currentStats.getMaximumCombo() + "', Accuracy='" + currentStats.getAccuracy() + "';";
