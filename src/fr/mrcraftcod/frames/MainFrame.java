@@ -238,7 +238,7 @@ public class MainFrame extends JFrame
 		menuFile.addSeparator();
 		menuFile.add(itemSettings);
 		menuHelp.add(itemAbout);
-		if(Utils.isCurrentVersionBeta())
+		if(Utils.config.getBoolean(Configuration.DEVMODE, false))
 			menuHelp.add(itemConsole);
 		menuBar.add(menuFile);
 		menuBar.add(menuHelp);
