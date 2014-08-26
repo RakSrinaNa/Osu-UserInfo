@@ -194,6 +194,13 @@
 		</changes>
 	</version>
 	<version>
+		<name>1.8b9</name>
+		<changes>
+			{+}Add console window
+			{*}Fix profiles not opening in about section
+		</changes>
+	</version>
+	<version>
 		<name>1.8</name>
 		<changes>
 			{+}Show country rank
