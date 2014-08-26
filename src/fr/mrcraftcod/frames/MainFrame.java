@@ -54,6 +54,7 @@ import fr.mrcraftcod.frames.component.ImagePanel;
 import fr.mrcraftcod.frames.component.JButtonMode;
 import fr.mrcraftcod.listeners.actions.ItemAboutActionListener;
 import fr.mrcraftcod.listeners.actions.ItemChartActionListener;
+import fr.mrcraftcod.listeners.actions.ItemConsoleActionListener;
 import fr.mrcraftcod.listeners.actions.ItemSettingsActionListener;
 import fr.mrcraftcod.listeners.actions.ModeCTBActionListener;
 import fr.mrcraftcod.listeners.actions.ModeManiaActionListener;
@@ -230,10 +231,15 @@ public class MainFrame extends JFrame
 		JMenuItem itemAbout = new JMenuItem(Utils.resourceBundle.getString("menu_bar_help_about"));
 		itemAbout.setFont(menuBarFont);
 		itemAbout.addActionListener(new ItemAboutActionListener());
+		JMenuItem itemConsole = new JMenuItem("Console");
+		itemConsole.setFont(menuBarFont);
+		itemConsole.addActionListener(new ItemConsoleActionListener());
 		menuFile.add(itemChart);
 		menuFile.addSeparator();
 		menuFile.add(itemSettings);
 		menuHelp.add(itemAbout);
+		if(Utils.isCurrentVersionBeta())
+			menuHelp.add(itemConsole);
 		menuBar.add(menuFile);
 		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
