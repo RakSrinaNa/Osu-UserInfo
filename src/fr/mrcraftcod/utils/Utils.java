@@ -49,6 +49,7 @@ import fr.mrcraftcod.enums.Language;
 import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
+import fr.mrcraftcod.frames.Console;
 import fr.mrcraftcod.frames.MainFrame;
 import fr.mrcraftcod.frames.StartupFrame;
 import fr.mrcraftcod.objects.Stats;
@@ -86,6 +87,11 @@ public class Utils
 	public static Locale locale;
 	public static Icon iconChangelogAdd, iconChangelogRemove, iconChangelogModify;
 	public static SQLManager sql;
+
+	public static void addConsoleText(String text)
+	{
+		Console.addtext(text);
+	}
 
 	/**
 	 * Used to cute String objects.

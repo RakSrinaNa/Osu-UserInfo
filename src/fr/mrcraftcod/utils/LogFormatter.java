@@ -41,6 +41,7 @@ public final class LogFormatter extends Formatter
 			}
 			catch(final Exception ex)
 			{}
+		Utils.addConsoleText(sb.toString());
 		return sb.toString();
 	}
 }
