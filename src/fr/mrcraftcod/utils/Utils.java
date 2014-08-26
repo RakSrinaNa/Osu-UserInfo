@@ -46,7 +46,6 @@ import org.json.JSONObject;
 import fr.mrcraftcod.Main;
 import fr.mrcraftcod.enums.Fonts;
 import fr.mrcraftcod.enums.Language;
-import fr.mrcraftcod.frames.AboutFrame;
 import fr.mrcraftcod.frames.ChangelogFrame;
 import fr.mrcraftcod.frames.ChartFrame;
 import fr.mrcraftcod.frames.Console;
@@ -73,7 +72,6 @@ public class Utils
 	public static ArrayList<Image> icons;
 	public static StartupFrame startup;
 	public static MainFrame mainFrame;
-	public static AboutFrame aboutFrame;
 	public static ChartFrame chartFrame;
 	public static ResourceBundle resourceBundle;
 	public static Logger logger;

@@ -1,5 +1,6 @@
 package fr.mrcraftcod.listeners.mouse;
 
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,7 +10,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import fr.mrcraftcod.utils.Utils;
+import fr.mrcraftcod.frames.AboutFrame;
 
 /**
  * Used to open the traducers' profile page.
@@ -24,7 +25,7 @@ public class TraducersMouseListener implements MouseListener
 		if(e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e))
 			try
 			{
-				openProfile(((JTable) e.getSource()).getSelectedRow());
+				openProfile(e);
 			}
 			catch(IOException | URISyntaxException e1)
 			{
@@ -57,9 +58,9 @@ public class TraducersMouseListener implements MouseListener
 	 * @throws IOException If the browser can't be opened.
 	 * @throws URISyntaxException If the profile URL isn't correct.
 	 */
-	public void openProfile(int selectedRow) throws MalformedURLException, IOException, URISyntaxException
+	public void openProfile(MouseEvent e) throws MalformedURLException, IOException, URISyntaxException
 	{
-		switch(Utils.aboutFrame.getValuesTable()[selectedRow][1])
+		switch(((AboutFrame) SwingUtilities.getRoot((Component) e.getSource())).getValuesTable()[((JTable) e.getSource()).getSelectedRow()][1])
 		{
 			case "TheHowl":
 				Desktop.getDesktop().browse(new URL("http://osu.ppy.sh/u/2751672").toURI());
