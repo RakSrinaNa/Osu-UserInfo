@@ -1,11 +1,11 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
-import mrcraftcod.osuuserinfo.Main;
+import fr.mrcraftcod.osuuserinfo.Main;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONObject;
 import java.io.InputStream;

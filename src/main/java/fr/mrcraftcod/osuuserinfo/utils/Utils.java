@@ -1,12 +1,12 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
-import mrcraftcod.osuuserinfo.Main;
-import mrcraftcod.osuuserinfo.enums.Fonts;
-import mrcraftcod.osuuserinfo.enums.Language;
-import mrcraftcod.osuuserinfo.frames.*;
-import mrcraftcod.osuuserinfo.objects.Stats;
-import mrcraftcod.osuuserinfo.objects.SystemTrayOsuStats;
-import mrcraftcod.osuuserinfo.objects.User;
+import fr.mrcraftcod.osuuserinfo.Main;
+import fr.mrcraftcod.osuuserinfo.enums.Fonts;
+import fr.mrcraftcod.osuuserinfo.enums.Language;
+import fr.mrcraftcod.osuuserinfo.frames.*;
+import fr.mrcraftcod.osuuserinfo.objects.Stats;
+import fr.mrcraftcod.osuuserinfo.objects.SystemTrayOsuStats;
+import fr.mrcraftcod.osuuserinfo.objects.User;
 import org.json.JSONObject;
 import javax.imageio.ImageIO;
 import javax.swing.*;

@@ -17,7 +17,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>mrcraftcod.osuuserinfo.Main</mainClass>
+                            <mainClass>fr.mrcraftcod.osuuserinfo.Main</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
@@ -41,7 +41,7 @@
                     <finalName>Osu!UserInfo v${project.version}</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>mrcraftcod.osuuserinfo.Main</mainClass>
+                            <mainClass>fr.mrcraftcod.osuuserinfo.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

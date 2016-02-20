@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.objects;
+package fr.mrcraftcod.osuuserinfo.objects;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

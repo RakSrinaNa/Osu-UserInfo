@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
 import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.PagedIterable;

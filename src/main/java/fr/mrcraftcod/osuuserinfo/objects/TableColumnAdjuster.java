@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.objects;
+package fr.mrcraftcod.osuuserinfo.objects;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;

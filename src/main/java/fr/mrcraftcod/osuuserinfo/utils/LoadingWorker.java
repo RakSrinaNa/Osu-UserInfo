@@ -1,7 +1,7 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
-import mrcraftcod.osuuserinfo.frames.LoadingFrame;
-import mrcraftcod.osuuserinfo.listeners.components.FollowComponentListener;
+import fr.mrcraftcod.osuuserinfo.frames.LoadingFrame;
+import fr.mrcraftcod.osuuserinfo.listeners.components.FollowComponentListener;
 import javax.swing.*;
 
 /**

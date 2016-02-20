@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo;
+package fr.mrcraftcod.osuuserinfo;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import java.io.IOException;
 
 /**

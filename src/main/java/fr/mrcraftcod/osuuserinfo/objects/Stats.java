@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.objects;
+package fr.mrcraftcod.osuuserinfo.objects;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

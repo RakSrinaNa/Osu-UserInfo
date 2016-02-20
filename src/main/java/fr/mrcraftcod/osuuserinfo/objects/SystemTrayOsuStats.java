@@ -1,7 +1,7 @@
-package mrcraftcod.osuuserinfo.objects;
+package fr.mrcraftcod.osuuserinfo.objects;
 
-import mrcraftcod.osuuserinfo.Main;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.Main;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

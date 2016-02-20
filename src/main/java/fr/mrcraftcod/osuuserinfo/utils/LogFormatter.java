@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

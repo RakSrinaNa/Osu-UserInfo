@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
-import mrcraftcod.osuuserinfo.Main;
+import fr.mrcraftcod.osuuserinfo.Main;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

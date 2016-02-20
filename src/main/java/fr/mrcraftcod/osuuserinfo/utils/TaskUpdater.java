@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
 import java.util.Timer;
 import java.util.TimerTask;
