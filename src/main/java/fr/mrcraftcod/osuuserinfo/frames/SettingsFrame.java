@@ -1,11 +1,11 @@
-package mrcraftcod.osuuserinfo.frames;
+package fr.mrcraftcod.osuuserinfo.frames;
 
-import mrcraftcod.osuuserinfo.enums.Fonts;
-import mrcraftcod.osuuserinfo.enums.Language;
-import mrcraftcod.osuuserinfo.frames.component.JTextFieldLimitNumbers;
-import mrcraftcod.osuuserinfo.listeners.actions.ButtonReturnSettingsActionListener;
-import mrcraftcod.osuuserinfo.utils.Configuration;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.enums.Fonts;
+import fr.mrcraftcod.osuuserinfo.enums.Language;
+import fr.mrcraftcod.osuuserinfo.frames.component.JTextFieldLimitNumbers;
+import fr.mrcraftcod.osuuserinfo.listeners.actions.ButtonReturnSettingsActionListener;
+import fr.mrcraftcod.osuuserinfo.utils.Configuration;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;

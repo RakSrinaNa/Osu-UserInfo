@@ -1,8 +1,8 @@
-package mrcraftcod.osuuserinfo.frames.component;
+package fr.mrcraftcod.osuuserinfo.frames.component;
 
-import mrcraftcod.osuuserinfo.interfaces.ImageChangeListener;
-import mrcraftcod.osuuserinfo.objects.ImageEvent;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.interfaces.ImageChangeListener;
+import fr.mrcraftcod.osuuserinfo.objects.ImageEvent;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;

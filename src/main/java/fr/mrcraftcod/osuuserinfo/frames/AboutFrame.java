@@ -1,11 +1,11 @@
-package mrcraftcod.osuuserinfo.frames;
+package fr.mrcraftcod.osuuserinfo.frames;
 
-import mrcraftcod.osuuserinfo.frames.component.JHoverLabel;
-import mrcraftcod.osuuserinfo.frames.component.JTableUneditableModel;
-import mrcraftcod.osuuserinfo.listeners.mouse.ChangelogMouseListener;
-import mrcraftcod.osuuserinfo.listeners.mouse.TraducersMouseListener;
-import mrcraftcod.osuuserinfo.objects.TableColumnAdjuster;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.frames.component.JHoverLabel;
+import fr.mrcraftcod.osuuserinfo.frames.component.JTableUneditableModel;
+import fr.mrcraftcod.osuuserinfo.listeners.mouse.ChangelogMouseListener;
+import fr.mrcraftcod.osuuserinfo.listeners.mouse.TraducersMouseListener;
+import fr.mrcraftcod.osuuserinfo.objects.TableColumnAdjuster;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import org.swingplus.JHyperlink;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

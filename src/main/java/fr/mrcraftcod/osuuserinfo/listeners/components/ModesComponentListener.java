@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.components;
+package fr.mrcraftcod.osuuserinfo.listeners.components;
 
-import mrcraftcod.osuuserinfo.frames.component.JButtonMode;
+import fr.mrcraftcod.osuuserinfo.frames.component.JButtonMode;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;

@@ -1,7 +1,7 @@
-package mrcraftcod.osuuserinfo.frames;
+package fr.mrcraftcod.osuuserinfo.frames;
 
-import mrcraftcod.osuuserinfo.listeners.actions.CloseNotificationActionListener;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.listeners.actions.CloseNotificationActionListener;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;

@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.interfaces;
+package fr.mrcraftcod.osuuserinfo.interfaces;
 
-import mrcraftcod.osuuserinfo.objects.ImageEvent;
+import fr.mrcraftcod.osuuserinfo.objects.ImageEvent;
 
 public interface ImageChangeListener
 {

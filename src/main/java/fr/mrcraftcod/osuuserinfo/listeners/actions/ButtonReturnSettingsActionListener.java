@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.actions;
+package fr.mrcraftcod.osuuserinfo.listeners.actions;
 
-import mrcraftcod.osuuserinfo.frames.SettingsFrame;
+import fr.mrcraftcod.osuuserinfo.frames.SettingsFrame;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

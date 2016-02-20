@@ -1,10 +1,10 @@
-package mrcraftcod.osuuserinfo.frames;
+package fr.mrcraftcod.osuuserinfo.frames;
 
-import mrcraftcod.osuuserinfo.Main;
-import mrcraftcod.osuuserinfo.frames.component.JChangelogPanel;
-import mrcraftcod.osuuserinfo.frames.component.SortedComboBoxModel;
-import mrcraftcod.osuuserinfo.utils.Updater;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.Main;
+import fr.mrcraftcod.osuuserinfo.frames.component.JChangelogPanel;
+import fr.mrcraftcod.osuuserinfo.frames.component.SortedComboBoxModel;
+import fr.mrcraftcod.osuuserinfo.utils.Updater;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import javax.swing.*;
 import java.awt.*;
 import java.text.MessageFormat;

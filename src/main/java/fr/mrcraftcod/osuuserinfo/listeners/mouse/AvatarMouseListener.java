@@ -1,7 +1,7 @@
-package mrcraftcod.osuuserinfo.listeners.mouse;
+package fr.mrcraftcod.osuuserinfo.listeners.mouse;
 
-import mrcraftcod.osuuserinfo.listeners.actions.ActionSaveAvatarListener;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.listeners.actions.ActionSaveAvatarListener;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

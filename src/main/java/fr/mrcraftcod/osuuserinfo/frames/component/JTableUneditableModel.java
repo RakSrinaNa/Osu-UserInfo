@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.frames.component;
+package fr.mrcraftcod.osuuserinfo.frames.component;
 
 import javax.swing.table.DefaultTableModel;
 

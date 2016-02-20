@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.enums;
+package fr.mrcraftcod.osuuserinfo.enums;
 
 /*
  * Copyright (C) 2012 Neo Visionaries Inc.

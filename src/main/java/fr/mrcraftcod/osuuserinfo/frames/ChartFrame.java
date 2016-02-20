@@ -1,10 +1,10 @@
-package mrcraftcod.osuuserinfo.frames;
+package fr.mrcraftcod.osuuserinfo.frames;
 
-import mrcraftcod.osuuserinfo.enums.GameMode;
-import mrcraftcod.osuuserinfo.frames.component.ChartPopupMenu;
-import mrcraftcod.osuuserinfo.listeners.change.GraphTabChangeListener;
-import mrcraftcod.osuuserinfo.objects.Stats;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.enums.GameMode;
+import fr.mrcraftcod.osuuserinfo.frames.component.ChartPopupMenu;
+import fr.mrcraftcod.osuuserinfo.listeners.change.GraphTabChangeListener;
+import fr.mrcraftcod.osuuserinfo.objects.Stats;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;

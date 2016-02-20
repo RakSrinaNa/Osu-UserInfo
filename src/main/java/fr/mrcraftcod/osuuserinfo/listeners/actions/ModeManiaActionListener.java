@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.actions;
+package fr.mrcraftcod.osuuserinfo.listeners.actions;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

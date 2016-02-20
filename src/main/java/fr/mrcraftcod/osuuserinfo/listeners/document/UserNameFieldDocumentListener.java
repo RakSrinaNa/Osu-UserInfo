@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.document;
+package fr.mrcraftcod.osuuserinfo.listeners.document;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 

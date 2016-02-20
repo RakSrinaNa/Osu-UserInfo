@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.listeners.actions;
+package fr.mrcraftcod.osuuserinfo.listeners.actions;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

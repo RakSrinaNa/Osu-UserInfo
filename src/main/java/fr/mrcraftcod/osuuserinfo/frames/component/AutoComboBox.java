@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.frames.component;
+package fr.mrcraftcod.osuuserinfo.frames.component;
 
 /* From http://java.sun.com/docs/books/tutorial/index.html */
 /*
@@ -34,8 +34,8 @@ package mrcraftcod.osuuserinfo.frames.component;
  * for use in the design, construction, operation or maintenance of any
  * nuclear facility.
  */
-import mrcraftcod.osuuserinfo.frames.component.AutoComboBox.Java2sAutoTextField.AutoDocument;
-import mrcraftcod.osuuserinfo.objects.ComparatorIgnoreCase;
+import fr.mrcraftcod.osuuserinfo.frames.component.AutoComboBox.Java2sAutoTextField.AutoDocument;
+import fr.mrcraftcod.osuuserinfo.objects.ComparatorIgnoreCase;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.text.AttributeSet;

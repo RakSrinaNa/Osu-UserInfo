@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.change;
+package fr.mrcraftcod.osuuserinfo.listeners.change;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;

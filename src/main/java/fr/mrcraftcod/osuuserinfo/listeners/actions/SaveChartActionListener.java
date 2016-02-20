@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.actions;
+package fr.mrcraftcod.osuuserinfo.listeners.actions;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import javax.swing.*;

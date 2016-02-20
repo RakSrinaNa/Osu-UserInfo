@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.mouse;
+package fr.mrcraftcod.osuuserinfo.listeners.mouse;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 

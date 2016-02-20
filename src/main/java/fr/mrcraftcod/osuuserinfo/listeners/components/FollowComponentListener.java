@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.listeners.components;
+package fr.mrcraftcod.osuuserinfo.listeners.components;
 
 import javax.swing.*;
 import java.awt.*;

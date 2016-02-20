@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.item;
+package fr.mrcraftcod.osuuserinfo.listeners.item;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;

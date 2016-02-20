@@ -1,7 +1,7 @@
-package mrcraftcod.osuuserinfo.frames.component;
+package fr.mrcraftcod.osuuserinfo.frames.component;
 
-import mrcraftcod.osuuserinfo.listeners.actions.SaveChartActionListener;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.listeners.actions.SaveChartActionListener;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import org.jfree.chart.JFreeChart;
 import javax.swing.*;
 

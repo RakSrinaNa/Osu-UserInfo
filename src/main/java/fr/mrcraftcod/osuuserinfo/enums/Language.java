@@ -1,4 +1,4 @@
-package mrcraftcod.osuuserinfo.enums;
+package fr.mrcraftcod.osuuserinfo.enums;
 
 import java.util.ArrayList;
 import java.util.Locale;

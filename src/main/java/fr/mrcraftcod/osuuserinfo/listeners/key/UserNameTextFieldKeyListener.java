@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.listeners.key;
+package fr.mrcraftcod.osuuserinfo.listeners.key;
 
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

@@ -1,6 +1,6 @@
-package mrcraftcod.osuuserinfo.utils;
+package fr.mrcraftcod.osuuserinfo.utils;
 
-import mrcraftcod.osuuserinfo.Main;
+import fr.mrcraftcod.osuuserinfo.Main;
 import org.kohsuke.github.GHRelease;
 import javax.swing.*;
 import java.io.File;

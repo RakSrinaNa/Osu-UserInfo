@@ -1,8 +1,8 @@
-package mrcraftcod.osuuserinfo.listeners.change;
+package fr.mrcraftcod.osuuserinfo.listeners.change;
 
-import mrcraftcod.osuuserinfo.interfaces.ImageChangeListener;
-import mrcraftcod.osuuserinfo.objects.ImageEvent;
-import mrcraftcod.osuuserinfo.utils.Utils;
+import fr.mrcraftcod.osuuserinfo.interfaces.ImageChangeListener;
+import fr.mrcraftcod.osuuserinfo.objects.ImageEvent;
+import fr.mrcraftcod.osuuserinfo.utils.Utils;
 
 public class AvatarImageChange implements ImageChangeListener
 {
