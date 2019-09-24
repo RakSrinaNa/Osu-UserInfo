@@ -18,6 +18,6 @@ Informations given/tracked
 How to help that project?
 -----------------------
 
-[If you find any bugs, please report them here](https://gitlab.com/MrCraftCod/Osu-UserInfo/issues)
+[If you find any bugs, please report them here](https://github.com/RakSrinaNa/Osu-UserInfo/issues)
 
-If you want, you can translate this project. [Fork the repository](https://gitlab.com/MrCraftCod/Osu-UserInfo/forks/new) and add your language file in src/resources/lang/
+If you want, you can translate this project. Fork the repository and add your language file in src/resources/lang/.
